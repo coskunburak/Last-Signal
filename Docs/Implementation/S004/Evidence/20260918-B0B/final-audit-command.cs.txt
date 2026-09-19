@@ -1,0 +1,66 @@
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.Animations;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+internal class CommandScript : IRunCommand
+{
+ public void Execute(ExecutionResult r)
+ {
+  if(EditorApplication.isPlaying) {r.Log("WAIT_FOR_TESTS");return;}
+  string e=LastSignal.Editor.ZombieAssetIntegration.Evidence;
+  string modelPath=LastSignal.Editor.ZombieAssetIntegration.Model;
+  var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(LastSignal.Editor.ZombieAssetIntegration.Prefab);
+  var model=AssetDatabase.LoadAssetAtPath<GameObject>(modelPath);
+  var instance=(GameObject)PrefabUtility.InstantiatePrefab(prefab);
+  var s=new StringBuilder();
+  try {
+   var anim=instance.GetComponentInChildren<Animator>();
+   var skins=instance.GetComponentsInChildren<SkinnedMeshRenderer>();
+   s.AppendLine("Unity="+Application.unityVersion+" UTC="+DateTime.UtcNow.ToString("o"));
+   s.AppendLine("prefab="+AssetDatabase.GetAssetPath(prefab)+" model="+modelPath);
+   s.AppendLine("avatar="+anim.avatar.name+" valid="+anim.avatar.isValid+" human="+anim.avatar.isHuman+" humanScale="+anim.humanScale);
+   s.AppendLine("rendererCount="+skins.Length+" materialCount="+skins.SelectMany(x=>x.sharedMaterials).Distinct().Count()+" LODGroups="+instance.GetComponentsInChildren<LODGroup>().Length);
+   foreach(var sk in skins){
+    var m=sk.sharedMesh;s.AppendLine("mesh="+m.name+" vertices="+m.vertexCount+" triangles="+m.triangles.Length/3+" submeshes="+m.subMeshCount+" bones="+sk.bones.Length+" blendShapes="+m.blendShapeCount+" rootBone="+sk.rootBone.name);
+    float lo=float.MaxValue,hi=float.MinValue;
+    var baked=new UnityEngine.Mesh();sk.BakeMesh(baked);foreach(var v in baked.vertices){var y=sk.transform.TransformPoint(v).y;lo=Mathf.Min(lo,y);hi=Mathf.Max(hi,y);}UnityEngine.Object.DestroyImmediate(baked);
+    s.AppendLine("Baked default skeleton reference skin in world (not gameplay Idle) minY="+lo+" maxY="+hi+" height="+(hi-lo));
+   }
+   var importer=(ModelImporter)AssetImporter.GetAtPath(modelPath);
+   s.AppendLine("globalScale="+importer.globalScale+" fileScale="+importer.fileScale+" useFileScale="+importer.useFileScale+" animationType="+importer.animationType+" avatarSetup="+importer.avatarSetup);
+   File.WriteAllText(e+"/model-importer-final.json",EditorJsonUtility.ToJson(importer,true));
+   s.AppendLine("shoulderJointWidth="+Vector3.Distance(anim.GetBoneTransform(HumanBodyBones.LeftUpperArm).position,anim.GetBoneTransform(HumanBodyBones.RightUpperArm).position));
+   s.AppendLine("headReference="+anim.GetBoneTransform(HumanBodyBones.Head).position.ToString("F6"));
+   s.AppendLine("mappedBones="+anim.avatar.humanDescription.human.Length+" skeletonTransforms="+model.GetComponentsInChildren<Transform>().Length);
+   s.AppendLine("playerCapsuleHeight="+AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab").GetComponent<CharacterController>().height);
+   var mat=skins[0].sharedMaterial;File.WriteAllText(e+"/material-final.json",EditorJsonUtility.ToJson(mat,true));
+   s.AppendLine("shader="+mat.shader.name+" supported="+mat.shader.isSupported+" opaque="+(mat.GetFloat("_Surface")==0));
+   long sum=0;foreach(string prop in new[]{"_BaseMap","_BumpMap","_MetallicGlossMap"}){var t=(Texture2D)mat.GetTexture(prop);long bytes=UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(t);sum+=bytes;s.AppendLine(prop+"="+AssetDatabase.GetAssetPath(t)+" "+t.width+"x"+t.height+" format="+t.format+" runtimeBytes="+bytes);}
+   s.AppendLine("uniqueTextureRuntimeBytes="+sum+" drawEstimate=1 main color draw plus pipeline shadow/depth passes; not a frame-debugger count");
+   var controller=(AnimatorController)anim.runtimeAnimatorController;
+   var mapping=new StringBuilder("state\tclip\tsource\tguid\tfileId\tloop\n");
+   foreach(var st in controller.layers[0].stateMachine.states){var clip=(AnimationClip)st.state.motion;AssetDatabase.TryGetGUIDAndLocalFileIdentifier(clip,out string guid,out long id);mapping.AppendLine(st.state.name+"\t"+clip.name+"\t"+AssetDatabase.GetAssetPath(clip)+"\t"+guid+"\t"+id+"\t"+clip.isLooping);}
+   File.WriteAllText(e+"/animator-mapping.tsv",mapping.ToString());
+   s.AppendLine("animatorLayers="+controller.layers.Length+" states="+controller.layers[0].stateMachine.states.Length+" parameters="+controller.parameters.Length+" applyRootMotion="+anim.applyRootMotion);
+   File.WriteAllText(e+"/model-performance-audit.txt",s.ToString());
+   var inventory=new StringBuilder("clip\tsource\tguid\tfileId\tduration\tfps\tloop\tloopPose\tbakeY\tbakeXZ\tbakeRotation\tavgX\tavgY\tavgZ\tangular\tevents\thuman\n");
+   var compatibility=new StringBuilder();
+   foreach(var path in AssetDatabase.FindAssets("t:AnimationClip",new[]{LastSignal.Editor.ZombieAssetIntegration.Sources+"/Animations"}).Select(AssetDatabase.GUIDToAssetPath).Distinct()){
+    var mi=(ModelImporter)AssetImporter.GetAtPath(path);var sourceModel=AssetDatabase.LoadAssetAtPath<GameObject>(path);var sourcePaths=sourceModel.GetComponentsInChildren<Transform>(true).Select(t=>AnimationUtility.CalculateTransformPath(t,sourceModel.transform)).ToHashSet();
+    var owner=AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GetAssetPath(mi.sourceAvatar));var sourceAnim=owner.GetComponent<Animator>();
+    int present=0,total=0;
+    for(int i=0;i<(int)HumanBodyBones.LastBone;i++){var t=sourceAnim.GetBoneTransform((HumanBodyBones)i);if(!t)continue;total++;if(sourcePaths.Contains(AnimationUtility.CalculateTransformPath(t,owner.transform)))present++;}
+    compatibility.AppendLine(path+" sourceAvatar="+AssetDatabase.GetAssetPath(mi.sourceAvatar)+" valid="+mi.sourceAvatar.isValid+" humanMappedHierarchyPaths="+present+"/"+total);
+    foreach(var c in AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>().Where(c=>!c.name.StartsWith("__preview"))){var cs=AnimationUtility.GetAnimationClipSettings(c);AssetDatabase.TryGetGUIDAndLocalFileIdentifier(c,out string guid,out long id);inventory.AppendLine(string.Join("\t",new object[]{c.name,path,guid,id,c.length,c.frameRate,c.isLooping,cs.loopBlend,cs.loopBlendPositionY,cs.loopBlendPositionXZ,cs.loopBlendOrientation,c.averageSpeed.x,c.averageSpeed.y,c.averageSpeed.z,c.averageAngularSpeed,c.events.Length,c.humanMotion}));}
+   }
+   File.WriteAllText(e+"/animation-inventory.tsv",inventory.ToString());File.WriteAllText(e+"/source-skeleton-compatibility.txt",compatibility.ToString());
+   var original=LastSignal.Editor.ZombieAssetIntegration.Clip("Zombie@Death01_A");var adapted=LastSignal.Editor.ZombieAssetIntegration.Clip("LS_Zombie_Death");int unchanged=0;var different=new StringBuilder();
+   foreach(var b in AnimationUtility.GetCurveBindings(original)){var a=AnimationUtility.GetEditorCurve(original,b);var z=AnimationUtility.GetEditorCurve(adapted,b);if(z!=null&&a.keys.SequenceEqual(z.keys))unchanged++;else different.AppendLine(b.propertyName);}
+   File.WriteAllText(e+"/death-adapter-provenance.txt","Source="+AssetDatabase.GetAssetPath(original)+" clip="+original.name+"\nAdapter="+AssetDatabase.GetAssetPath(adapted)+"\nUnchanged curves="+unchanged+"\nChanged curves:\n"+different+"Correction uses measured target mesh clearance; no muscles/rotations/root XZ changed.\n");
+   r.Log(s.ToString());
+  }finally{UnityEngine.Object.DestroyImmediate(instance);}
+ }
+}

@@ -1,0 +1,33 @@
+ .gitignore                                         |    4 +
+ Assets/Editor.meta                                 |    8 -
+ Assets/Editor/HubForceResolve.cs                   |   76 -
+ Assets/Editor/HubForceResolve.cs.meta              |    2 -
+ Assets/InputSystem_Actions.inputactions            |   86 +-
+ Assets/Scenes.meta                                 |    2 +-
+ Assets/Scenes/SampleScene.unity                    | 1935 ++++++++++++++++++--
+ Assets/Scenes/SampleScene.unity.meta               |    2 +-
+ Assets/Settings/DefaultVolumeProfile.asset         |    8 +-
+ Assets/Settings/Mobile_RPAsset.asset               |   16 +-
+ Assets/Settings/PC_RPAsset.asset                   |   34 +-
+ .../UniversalRenderPipelineGlobalSettings.asset    |   17 +-
+ Assets/TutorialInfo.meta                           |    8 -
+ Assets/TutorialInfo/Icons.meta                     |    9 -
+ Assets/TutorialInfo/Icons/URP.png                  |  Bin 24069 -> 0 bytes
+ Assets/TutorialInfo/Icons/URP.png.meta             |  134 --
+ Assets/TutorialInfo/Layout.wlt                     |  654 -------
+ Assets/TutorialInfo/Layout.wlt.meta                |    8 -
+ Assets/TutorialInfo/Scripts.meta                   |    9 -
+ Assets/TutorialInfo/Scripts/Editor.meta            |    9 -
+ Assets/TutorialInfo/Scripts/Editor/ReadmeEditor.cs |  242 ---
+ .../Scripts/Editor/ReadmeEditor.cs.meta            |   12 -
+ Assets/TutorialInfo/Scripts/Readme.cs              |   16 -
+ Assets/TutorialInfo/Scripts/Readme.cs.meta         |   12 -
+ Packages/manifest.json                             |   11 +-
+ Packages/packages-lock.json                        |   93 +-
+ ProjectSettings/EditorBuildSettings.asset          |    8 +-
+ ProjectSettings/NavMeshAreas.asset                 |   27 +-
+ ProjectSettings/PackageManagerSettings.asset       |   35 +-
+ ProjectSettings/ProjectSettings.asset              |   10 +-
+ ProjectSettings/ShaderGraphSettings.asset          |    1 +
+ ProjectSettings/URPProjectSettings.asset           |    3 +-
+ 32 files changed, 2081 insertions(+), 1410 deletions(-)

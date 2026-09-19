@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="34" result="Failed(Child)" total="34" passed="32" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-18 09:24:02Z" end-time="2026-09-18 09:24:05Z" duration="2.4056752">
+  <test-suite type="TestSuite" id="1000" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="34" result="Failed" site="Child" start-time="2026-09-18 09:24:02Z" end-time="2026-09-18 09:24:05Z" duration="2.405675" total="34" passed="32" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1039" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="34" result="Failed" site="Child" start-time="2026-09-18 09:24:03Z" end-time="2026-09-18 09:24:05Z" duration="2.309961" total="34" passed="32" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="60594" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1040" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="34" result="Failed" site="Child" start-time="2026-09-18 09:24:03Z" end-time="2026-09-18 09:24:05Z" duration="2.215488" total="34" passed="32" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1041" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="34" result="Failed" site="Child" start-time="2026-09-18 09:24:03Z" end-time="2026-09-18 09:24:05Z" duration="2.115506" total="34" passed="32" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1001" name="ProductionAssetTests" fullname="LastSignal.Tests.ProductionAssetTests" classname="LastSignal.Tests.ProductionAssetTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-18 09:24:03Z" end-time="2026-09-18 09:24:03Z" duration="0.195294" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1003" name="ProductionAnimatorReferencesEveryRequiredRealClip" fullname="LastSignal.Tests.ProductionAssetTests.ProductionAnimatorReferencesEveryRequiredRealClip" methodname="ProductionAnimatorReferencesEveryRequiredRealClip" classname="LastSignal.Tests.ProductionAssetTests" runstate="Runnable" seed="72020481" result="Failed" start-time="2026-09-18 09:24:03Z" end-time="2026-09-18 09:24:03Z" duration="0.077929" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected string length 25 but was 32. Strings differ at index 18.
+  Expected: "Assets/LastSignal/VAL.fbx"
+  But was:  "Assets/LastSignal/Assets/VAL.fbx"
+  -----------------------------^
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.ProductionAssetTests.ProductionAnimatorReferencesEveryRequiredRealClip () [0x00076] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/ProductionAssetTests.cs:34
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1002" name="ProductionPrefabUsesSourceMeshesAndOneAnimatedMagazine" fullname="LastSignal.Tests.ProductionAssetTests.ProductionPrefabUsesSourceMeshesAndOneAnimatedMagazine" methodname="ProductionPrefabUsesSourceMeshesAndOneAnimatedMagazine" classname="LastSignal.Tests.ProductionAssetTests" runstate="Runnable" seed="1449235725" result="Failed" start-time="2026-09-18 09:24:03Z" end-time="2026-09-18 09:24:03Z" duration="0.003819" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected string length 71 but was 78. Strings differ at index 18.
+  Expected: ".../MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx"
+  But was:  ".../Assets/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx"
+  ---------------^
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.ProductionAssetTests.ProductionPrefabUsesSourceMeshesAndOneAnimatedMagazine () [0x00050] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/ProductionAssetTests.cs:18
+]]></stack-trace>
+              </failure>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1004" name="SerializedContractTests" fullname="LastSignal.Tests.SerializedContractTests" classname="LastSignal.Tests.SerializedContractTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-18 09:24:03Z" end-time="2026-09-18 09:24:04Z" duration="1.398312" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1007" name="AcceptanceSceneContainsSessionAndBothDoorFixturesWithoutMissingScripts" fullname="LastSignal.Tests.SerializedContractTests.AcceptanceSceneContainsSessionAndBothDoorFixturesWithoutMissingScripts" methodname="AcceptanceSceneContainsSessionAndBothDoorFixturesWithoutMissingScripts" classname="LastSignal.Tests.SerializedContractTests" runstate="Runnable" seed="1580584791" result="Passed" start-time="2026-09-18 09:24:03Z" end-time="2026-09-18 09:24:04Z" duration="1.378223" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1006" name="InputAssetHasSeparateContextsAndTapInteraction" fullname="LastSignal.Tests.SerializedContractTests.InputAssetHasSeparateContextsAndTapInteraction" methodname="InputAssetHasSeparateContextsAndTapInteraction" classname="LastSignal.Tests.SerializedContractTests" runstate="Runnable" seed="841104223" result="Passed" start-time="2026-09-18 09:24:04Z" end-time="2026-09-18 09:24:04Z" duration="0.007730" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="PlayerPrefabHasSafeCapsuleAndCompleteReferences" fullname="LastSignal.Tests.SerializedContractTests.PlayerPrefabHasSafeCapsuleAndCompleteReferences" methodname="PlayerPrefabHasSafeCapsuleAndCompleteReferences" classname="LastSignal.Tests.SerializedContractTests" runstate="Runnable" seed="888537513" result="Passed" start-time="2026-09-18 09:24:04Z" end-time="2026-09-18 09:24:04Z" duration="0.006896" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1008" name="WeaponStateTests" fullname="LastSignal.Tests.WeaponStateTests" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" testcasecount="29" result="Passed" start-time="2026-09-18 09:24:04Z" end-time="2026-09-18 09:24:05Z" duration="0.419670" total="29" passed="29" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1038" name="AddReserveClampedToMax" fullname="LastSignal.Tests.WeaponStateTests.AddReserveClampedToMax" methodname="AddReserveClampedToMax" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1699877815" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.006538" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1037" name="AddReserveIncreasesTotal" fullname="LastSignal.Tests.WeaponStateTests.AddReserveIncreasesTotal" methodname="AddReserveIncreasesTotal" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1743799026" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000781" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1015" name="AmmoNeverGoesNegative" fullname="LastSignal.Tests.WeaponStateTests.AmmoNeverGoesNegative" methodname="AmmoNeverGoesNegative" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="940342594" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.002063" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1013" name="CannotFireDuringCooldown" fullname="LastSignal.Tests.WeaponStateTests.CannotFireDuringCooldown" methodname="CannotFireDuringCooldown" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="2141364823" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.002232" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1025" name="CannotFireWhileEquipping" fullname="LastSignal.Tests.WeaponStateTests.CannotFireWhileEquipping" methodname="CannotFireWhileEquipping" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1461410086" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000924" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="CannotFireWhileReloading" fullname="LastSignal.Tests.WeaponStateTests.CannotFireWhileReloading" methodname="CannotFireWhileReloading" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="190894685" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000706" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="CannotFireWithEmptyMagazine" fullname="LastSignal.Tests.WeaponStateTests.CannotFireWithEmptyMagazine" methodname="CannotFireWithEmptyMagazine" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1975217669" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000544" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="CannotReloadWhileAlreadyReloading" fullname="LastSignal.Tests.WeaponStateTests.CannotReloadWhileAlreadyReloading" methodname="CannotReloadWhileAlreadyReloading" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1616273406" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000674" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="CannotReloadWhileEquipping" fullname="LastSignal.Tests.WeaponStateTests.CannotReloadWhileEquipping" methodname="CannotReloadWhileEquipping" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="687886989" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000685" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="CannotReloadWithFullMagazine" fullname="LastSignal.Tests.WeaponStateTests.CannotReloadWithFullMagazine" methodname="CannotReloadWithFullMagazine" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1732575787" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000603" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="CannotReloadWithZeroReserve" fullname="LastSignal.Tests.WeaponStateTests.CannotReloadWithZeroReserve" methodname="CannotReloadWithZeroReserve" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="346013640" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.001060" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1011" name="ConsumeOneShotDecreasesMagazineByOne" fullname="LastSignal.Tests.WeaponStateTests.ConsumeOneShotDecreasesMagazineByOne" methodname="ConsumeOneShotDecreasesMagazineByOne" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1330382735" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000841" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1014" name="CooldownExpiresAllowsSecondShot" fullname="LastSignal.Tests.WeaponStateTests.CooldownExpiresAllowsSecondShot" methodname="CooldownExpiresAllowsSecondShot" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1457094156" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000471" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="EmptyReloadIsDetected" fullname="LastSignal.Tests.WeaponStateTests.EmptyReloadIsDetected" methodname="EmptyReloadIsDetected" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1758826531" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000711" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1024" name="EquipTransitionsToEquippingThenReady" fullname="LastSignal.Tests.WeaponStateTests.EquipTransitionsToEquippingThenReady" methodname="EquipTransitionsToEquippingThenReady" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1671002700" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.025357" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1032" name="FireCadenceMatchesRPM" fullname="LastSignal.Tests.WeaponStateTests.FireCadenceMatchesRPM" methodname="FireCadenceMatchesRPM" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1959599493" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000714" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1036" name="FireCooldownCalculation" fullname="LastSignal.Tests.WeaponStateTests.FireCooldownCalculation" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.051709" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1033" name="FireCooldownCalculation(300,0.2f)" fullname="LastSignal.Tests.WeaponStateTests.FireCooldownCalculation(300,0.2f)" methodname="FireCooldownCalculation" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1651530182" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.001462" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1034" name="FireCooldownCalculation(900,0.06666667f)" fullname="LastSignal.Tests.WeaponStateTests.FireCooldownCalculation(900,0.06666667f)" methodname="FireCooldownCalculation" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1657134952" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000461" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1035" name="FireCooldownCalculation(60,1.0f)" fullname="LastSignal.Tests.WeaponStateTests.FireCooldownCalculation(60,1.0f)" methodname="FireCooldownCalculation" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1053923172" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000343" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1030" name="ForceHolsterFromAnyState" fullname="LastSignal.Tests.WeaponStateTests.ForceHolsterFromAnyState" methodname="ForceHolsterFromAnyState" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="2095126894" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000812" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1010" name="InitialAmmoClampedToDefinitionBounds" fullname="LastSignal.Tests.WeaponStateTests.InitialAmmoClampedToDefinitionBounds" methodname="InitialAmmoClampedToDefinitionBounds" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="2116533489" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000795" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1009" name="InitialAmmoMatchesConstructorValues" fullname="LastSignal.Tests.WeaponStateTests.InitialAmmoMatchesConstructorValues" methodname="InitialAmmoMatchesConstructorValues" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="2119166831" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000655" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1023" name="InitialStateIsHolstered" fullname="LastSignal.Tests.WeaponStateTests.InitialStateIsHolstered" methodname="InitialStateIsHolstered" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="916817248" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000598" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="InsufficientReserveTransfersOnlyAvailable" fullname="LastSignal.Tests.WeaponStateTests.InsufficientReserveTransfersOnlyAvailable" methodname="InsufficientReserveTransfersOnlyAvailable" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="335960028" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000871" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1018" name="ReloadCancelBeforeCommitPreservesAmmo" fullname="LastSignal.Tests.WeaponStateTests.ReloadCancelBeforeCommitPreservesAmmo" methodname="ReloadCancelBeforeCommitPreservesAmmo" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1430369114" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.002791" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1019" name="ReloadCommitCannotBeDuplicated" fullname="LastSignal.Tests.WeaponStateTests.ReloadCommitCannotBeDuplicated" methodname="ReloadCommitCannotBeDuplicated" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1100000835" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000691" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1031" name="SemiAutoConsumesOnlyOneShotPerPress" fullname="LastSignal.Tests.WeaponStateTests.SemiAutoConsumesOnlyOneShotPerPress" methodname="SemiAutoConsumesOnlyOneShotPerPress" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1191334384" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000683" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="TacticalReloadTransfersCorrectAmount" fullname="LastSignal.Tests.WeaponStateTests.TacticalReloadTransfersCorrectAmount" methodname="TacticalReloadTransfersCorrectAmount" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="2036974887" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.000650" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="UnequipTransitionsToUnequippingThenHolstered" fullname="LastSignal.Tests.WeaponStateTests.UnequipTransitionsToUnequippingThenHolstered" methodname="UnequipTransitionsToUnequippingThenHolstered" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="548192966" result="Passed" start-time="2026-09-18 09:24:05Z" end-time="2026-09-18 09:24:05Z" duration="0.001294" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: Docs/Implementation/S004/Evidence/20260918-B0B/editmode-initial.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

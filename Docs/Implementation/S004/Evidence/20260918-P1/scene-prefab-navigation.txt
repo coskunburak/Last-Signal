@@ -1,0 +1,96 @@
+EDITOR VERIFIED 2026-09-17T21:24:31.1562280Z scene=Assets/Scenes/SampleScene.unity dirty=False playing=False
+BUILD Assets/LastSignal/Scenes/S001Acceptance.unity enabled=True exists=False
+BUILD Assets/LastSignal/Scenes/CombatAcceptance.unity enabled=True exists=False
+OBJECT Sun pos=(0.00, 0.00, 0.00) layer=0 active=True components=UnityEngine.Transform,UnityEngine.Light,UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+OBJECT Ground pos=(0.00, -0.25, 0.00) layer=0 active=True components=UnityEngine.Transform,UnityEngine.MeshFilter,UnityEngine.BoxCollider,UnityEngine.MeshRenderer
+ COLLIDER BoxCollider bounds=Center: (0.00, -0.25, 0.00), Extents: (20.00, 0.25, 20.00) trigger=False
+OBJECT CombatTarget_10m pos=(0.00, 1.00, 10.00) layer=0 active=True components=UnityEngine.Transform,UnityEngine.MeshFilter,UnityEngine.BoxCollider,UnityEngine.MeshRenderer,LastSignal.DamageableTarget
+ COLLIDER BoxCollider bounds=Center: (0.00, 1.00, 10.00), Extents: (0.50, 1.00, 0.50) trigger=False
+ REF DamageableTarget.m_Script=DamageableTarget Assets/LastSignal/Runtime/Combat/DamageableTarget.cs
+OBJECT CombatTarget_20m pos=(5.00, 1.00, 20.00) layer=0 active=True components=UnityEngine.Transform,UnityEngine.MeshFilter,UnityEngine.BoxCollider,UnityEngine.MeshRenderer,LastSignal.DamageableTarget
+ COLLIDER BoxCollider bounds=Center: (5.00, 1.00, 20.00), Extents: (0.50, 1.00, 0.50) trigger=False
+ REF DamageableTarget.m_Script=DamageableTarget Assets/LastSignal/Runtime/Combat/DamageableTarget.cs
+OBJECT Session pos=(0.00, 0.00, 0.00) layer=0 active=True components=UnityEngine.Transform,LastSignal.SessionFlow
+ REF SessionFlow.m_Script=SessionFlow Assets/LastSignal/Runtime/Session/SessionFlow.cs
+ REF SessionFlow.playerPrefab=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF SessionFlow.spawnPoint=Spawn 
+OBJECT HUD pos=(755.75, 357.50, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.Canvas,UnityEngine.UI.CanvasScaler,UnityEngine.UI.GraphicRaycaster,LastSignal.AcceptanceHud
+ REF AcceptanceHud.m_Script=AcceptanceHud Assets/LastSignal/Runtime/Session/AcceptanceHud.cs
+ REF AcceptanceHud.session=Session 
+ REF AcceptanceHud.prompt=Prompt 
+ REF AcceptanceHud.status=Controls 
+ REF AcceptanceHud.crosshair=Crosshair 
+ REF AcceptanceHud.panel=Menu 
+ REF AcceptanceHud.panelTitle=Title 
+ REF AcceptanceHud.startButton=Oyunu başlat 
+ REF AcceptanceHud.resumeButton=Devam et 
+ REF AcceptanceHud.menuButton=Ana menüye dön 
+ REF AcceptanceHud.ammoDisplay=AmmoDisplay 
+OBJECT HUD/Title pos=(755.75, 678.47, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Text
+OBJECT HUD/Controls pos=(755.75, 41.09, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Text
+OBJECT HUD/Prompt pos=(755.75, 298.14, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Text
+OBJECT HUD/Crosshair pos=(755.75, 357.50, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Text
+OBJECT HUD/Menu pos=(755.75, 357.50, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Image
+OBJECT HUD/Menu/Title pos=(755.75, 476.21, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Text
+OBJECT HUD/Menu/Oyunu başlat pos=(755.75, 384.90, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Image,UnityEngine.UI.Button
+OBJECT HUD/Menu/Oyunu başlat/Label pos=(755.75, 384.90, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Text
+OBJECT HUD/Menu/Devam et pos=(755.75, 384.90, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Image,UnityEngine.UI.Button
+OBJECT HUD/Menu/Devam et/Label pos=(755.75, 384.90, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Text
+OBJECT HUD/Menu/Ana menüye dön pos=(755.75, 320.97, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Image,UnityEngine.UI.Button
+OBJECT HUD/Menu/Ana menüye dön/Label pos=(755.75, 320.97, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Text
+OBJECT HUD/AmmoDisplay pos=(1374.52, 45.66, 0.00) layer=0 active=True components=UnityEngine.RectTransform,UnityEngine.CanvasRenderer,UnityEngine.UI.Text
+OBJECT EventSystem pos=(0.00, 0.00, 0.00) layer=0 active=True components=UnityEngine.Transform,UnityEngine.EventSystems.EventSystem,UnityEngine.InputSystem.UI.InputSystemUIInputModule
+NAV assets=
+Nav triangulation vertices=0
+AGENT Humanoid id=0 radius=0.5 height=2 slope=45 climb=0.75
+LAYER 0 Default
+LAYER 1 TransparentFX
+LAYER 2 Ignore Raycast
+LAYER 4 Water
+LAYER 5 UI
+PREFAB Assets/LastSignal/Prefabs/Player.prefab exists=True
+ REF PlayerInputReader.m_Script=PlayerInputReader Assets/LastSignal/Runtime/Player/PlayerInputReader.cs
+ REF PlayerInputReader.actions=InputSystem_Actions Assets/InputSystem_Actions.inputactions
+ REF PlayerStance.m_Script=PlayerStance Assets/LastSignal/Runtime/Player/PlayerStance.cs
+ REF PlayerStance.input=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF PlayerStance.capsule=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF PlayerStance.view=View Assets/LastSignal/Prefabs/Player.prefab
+ MASK PlayerStance.clearanceMask=-1
+ REF FirstPersonLook.m_Script=FirstPersonLook Assets/LastSignal/Runtime/Player/FirstPersonLook.cs
+ REF FirstPersonLook.input=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF FirstPersonLook.view=View Assets/LastSignal/Prefabs/Player.prefab
+ REF FirstPersonMotor.m_Script=FirstPersonMotor Assets/LastSignal/Runtime/Player/FirstPersonMotor.cs
+ REF FirstPersonMotor.input=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF FirstPersonMotor.capsule=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF FirstPersonMotor.stance=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF InteractionController.m_Script=InteractionController Assets/LastSignal/Runtime/Interaction/InteractionController.cs
+ REF InteractionController.input=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF InteractionController.origin=View Assets/LastSignal/Prefabs/Player.prefab
+ MASK InteractionController.visibilityMask=51
+ REF PlayerCombatController.m_Script=PlayerCombatController Assets/LastSignal/Runtime/Combat/PlayerCombatController.cs
+ REF PlayerCombatController.input=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF PlayerCombatController.look=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF PlayerCombatController.weaponParent=WeaponParent Assets/LastSignal/Prefabs/Player.prefab
+ REF PlayerCombatController.startingWeapon=Weapon_AssaultRifle Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+PREFAB Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab exists=True
+ REF WeaponController.m_Script=WeaponController Assets/LastSignal/Runtime/Combat/WeaponController.cs
+ REF WeaponController.definition=WeaponDefinition_AssaultRifle Assets/LastSignal/Runtime/Combat/WeaponDefinition_AssaultRifle.asset
+ REF WeaponController.muzzle=Muzzle Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ REF WeaponController.aimReference=AimReference Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ MASK WeaponController.hitMask=51
+ REF WeaponViewPresenter.m_Script=WeaponViewPresenter Assets/LastSignal/Runtime/Combat/WeaponViewPresenter.cs
+ REF WeaponViewPresenter.weapon=Weapon_AssaultRifle Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ REF WeaponViewPresenter.input=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF WeaponViewPresenter.viewmodelRoot=ViewmodelRoot Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ REF WeaponAnimationPresenter.m_Script=WeaponAnimationPresenter Assets/LastSignal/Runtime/Combat/WeaponAnimationPresenter.cs
+ REF WeaponAnimationPresenter.weapon=Weapon_AssaultRifle Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ REF WeaponAnimationPresenter.animator=VAL_Armature Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ REF WeaponRecoilController.m_Script=WeaponRecoilController Assets/LastSignal/Runtime/Combat/WeaponRecoilController.cs
+ REF WeaponRecoilController.weapon=Weapon_AssaultRifle Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ REF WeaponRecoilController.look=Player Assets/LastSignal/Prefabs/Player.prefab
+ REF WeaponVfxPresenter.m_Script=WeaponVfxPresenter Assets/LastSignal/Runtime/Combat/WeaponVfxPresenter.cs
+ REF WeaponVfxPresenter.weapon=Weapon_AssaultRifle Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ REF WeaponVfxPresenter.muzzleFlash=MuzzleFlash Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ REF WeaponVfxPresenter.casingEjectionPoint=CasingEjection Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+ REF WeaponVfxPresenter.casingPrefab=NULL
+ REF WeaponVfxPresenter.impactPrefab=NULL

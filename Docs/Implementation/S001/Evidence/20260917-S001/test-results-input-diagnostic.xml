@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-17 16:35:44Z" end-time="2026-09-17 16:35:44Z" duration="0.0749875">
+  <test-suite type="TestSuite" id="1024" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-09-17 16:35:44Z" end-time="2026-09-17 16:35:44Z" duration="0.074988" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1018" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-09-17 16:35:44Z" end-time="2026-09-17 16:35:44Z" duration="0.066048" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="20994" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1019" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-09-17 16:35:44Z" end-time="2026-09-17 16:35:44Z" duration="0.064876" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1020" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-09-17 16:35:44Z" end-time="2026-09-17 16:35:44Z" duration="0.064450" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1001" name="MovementAcceptanceTests" fullname="LastSignal.Tests.MovementAcceptanceTests" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-09-17 16:35:44Z" end-time="2026-09-17 16:35:44Z" duration="0.063470" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1015" name="PauseFocusAndHeldKeyReturnNeverLeakGameplay" fullname="LastSignal.Tests.MovementAcceptanceTests.PauseFocusAndHeldKeyReturnNeverLeakGameplay" methodname="PauseFocusAndHeldKeyReturnNeverLeakGameplay" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="676845914" result="Failed" start-time="2026-09-17 16:35:44Z" end-time="2026-09-17 16:35:44Z" duration="0.049360" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: greater than 0.899999976f
+  But was:  0.0f
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.MovementAcceptanceTests+<PauseFocusAndHeldKeyReturnNeverLeakGameplay>d__22.MoveNext () [0x001fd] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Tests/PlayMode/MovementAcceptanceTests.cs:179
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[INPUT_DIAG active=True keyboard=False move=(0.00, 0.00) enabled=True
+MOVE_DIAG (0.00, 0.00) map=Player
+MOVE_DIAG (0.00, 0.00) map=Player
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

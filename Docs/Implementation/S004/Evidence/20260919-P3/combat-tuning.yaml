@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fefeec64b2e854e99a64a58233111403, type: 3}
+  m_Name: Shambler
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieDefinition
+  sightDistance: 15
+  horizontalFov: 120
+  verticalHalfAngle: 60
+  perceptionInterval: 0.1
+  acquisitionTime: 0.35
+  confidenceDecayTime: 0.5
+  occlusionMask:
+    serializedVersion: 2
+    m_Bits: 1
+  lossGrace: 0.45
+  searchDuration: 12
+  speed: 0.92
+  acceleration: 2
+  turnSpeed: 120
+  stopDistance: 1.2
+  resumeDistance: 1.6
+  repathInterval: 0.3
+  repathDistance: 0.45
+  pathRetryInterval: 2
+  recoveryAttempts: 2
+  stuckTimeout: 2
+  stuckProgress: 0.12
+  spawnSampleRadius: 0.3
+  searchRadius: 2
+  searchArrivalDistance: 0.35
+  inspectionPause: 1
+  searchSampleRadius: 0.6
+  measuredWalkSpeed: 0.918734
+  animationBlendTime: 0.12
+  attackClip: {fileID: 1942785488916213143, guid: df45eaf8e6125d74d88e4d605fdf7a40, type: 3}
+  attackPlaybackSpeed: 0.8
+  attackCommitNormalized: 0.15
+  attackContactNormalized: 0.25
+  attackRecoveryNormalized: 0.325
+  attackDamage: 20
+  attackEnterRange: 1.08
+  attackReach: 1.24
+  attackAbortRange: 2.5
+  attackHalfAngle: 20
+  attackWindupTurnSpeed: 60

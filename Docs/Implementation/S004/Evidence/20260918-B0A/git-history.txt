@@ -1,0 +1,73 @@
+commit f9a6119a835189d9621f2213f62789b91a61b27c
+Author: Burak Coşkun <111977249+coskunburak@users.noreply.github.com>
+Date:   Thu Sep 17 16:38:56 2026 +0300
+
+    Initial check-in
+
+ .gitattributes                                     |  171 ++++
+ .gitignore                                         |  114 +++
+ Assets/Editor.meta                                 |    8 +
+ Assets/Editor/HubForceResolve.cs                   |   76 ++
+ Assets/Editor/HubForceResolve.cs.meta              |    2 +
+ Assets/InputSystem_Actions.inputactions            | 1057 ++++++++++++++++++++
+ Assets/InputSystem_Actions.inputactions.meta       |   14 +
+ Assets/Readme.asset                                |   34 +
+ Assets/Readme.asset.meta                           |    8 +
+ Assets/Scenes.meta                                 |    8 +
+ Assets/Scenes/SampleScene.unity                    |  432 ++++++++
+ Assets/Scenes/SampleScene.unity.meta               |    7 +
+ Assets/Settings.meta                               |    8 +
+ Assets/Settings/DefaultVolumeProfile.asset         |  982 ++++++++++++++++++
+ Assets/Settings/DefaultVolumeProfile.asset.meta    |    8 +
+ Assets/Settings/Mobile_RPAsset.asset               |  135 +++
+ Assets/Settings/Mobile_RPAsset.asset.meta          |    8 +
+ Assets/Settings/Mobile_Renderer.asset              |   52 +
+ Assets/Settings/Mobile_Renderer.asset.meta         |    8 +
+ Assets/Settings/PC_RPAsset.asset                   |  135 +++
+ Assets/Settings/PC_RPAsset.asset.meta              |    8 +
+ Assets/Settings/PC_Renderer.asset                  |   95 ++
+ Assets/Settings/PC_Renderer.asset.meta             |    8 +
+ Assets/Settings/SampleSceneProfile.asset           |  159 +++
+ Assets/Settings/SampleSceneProfile.asset.meta      |    8 +
+ .../UniversalRenderPipelineGlobalSettings.asset    |  449 +++++++++
+ ...niversalRenderPipelineGlobalSettings.asset.meta |    8 +
+ Assets/TutorialInfo.meta                           |    8 +
+ Assets/TutorialInfo/Icons.meta                     |    9 +
+ Assets/TutorialInfo/Icons/URP.png                  |  Bin 0 -> 24069 bytes
+ Assets/TutorialInfo/Icons/URP.png.meta             |  134 +++
+ Assets/TutorialInfo/Layout.wlt                     |  654 ++++++++++++
+ Assets/TutorialInfo/Layout.wlt.meta                |    8 +
+ Assets/TutorialInfo/Scripts.meta                   |    9 +
+ Assets/TutorialInfo/Scripts/Editor.meta            |    9 +
+ Assets/TutorialInfo/Scripts/Editor/ReadmeEditor.cs |  242 +++++
+ .../Scripts/Editor/ReadmeEditor.cs.meta            |   12 +
+ Assets/TutorialInfo/Scripts/Readme.cs              |   16 +
+ Assets/TutorialInfo/Scripts/Readme.cs.meta         |   12 +
+ Packages/manifest.json                             |   52 +
+ Packages/packages-lock.json                        |  470 +++++++++
+ ProjectSettings/AudioManager.asset                 |   19 +
+ ProjectSettings/ClusterInputManager.asset          |    6 +
+ ProjectSettings/DynamicsManager.asset              |   36 +
+ ProjectSettings/EditorBuildSettings.asset          |   12 +
+ ProjectSettings/EditorSettings.asset               |   53 +
+ ProjectSettings/GraphicsSettings.asset             |   80 ++
+ ProjectSettings/InputManager.asset                 |  487 +++++++++
+ ProjectSettings/MemorySettings.asset               |   35 +
+ ProjectSettings/MultiplayerManager.asset           |    7 +
+ ProjectSettings/NavMeshAreas.asset                 |   91 ++
+ ProjectSettings/PackageManagerSettings.asset       |   43 +
+ ProjectSettings/Physics2DSettings.asset            |   56 ++
+ ProjectSettings/PhysicsCoreProjectSettings2D.asset |    6 +
+ ProjectSettings/PresetManager.asset                |    7 +
+ ProjectSettings/ProjectSettings.asset              |  947 ++++++++++++++++++
+ ProjectSettings/ProjectVersion.txt                 |    2 +
+ ProjectSettings/QualitySettings.asset              |  134 +++
+ ProjectSettings/ShaderGraphSettings.asset          |   18 +
+ ProjectSettings/TagManager.asset                   |   76 ++
+ ProjectSettings/TimeManager.asset                  |    9 +
+ ProjectSettings/URPProjectSettings.asset           |   15 +
+ ProjectSettings/UnityConnectSettings.asset         |   40 +
+ ProjectSettings/VFXManager.asset                   |   12 +
+ ProjectSettings/VersionControlSettings.asset       |    8 +
+ ProjectSettings/XRSettings.asset                   |   10 +
+ 66 files changed, 7846 insertions(+)

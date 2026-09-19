@@ -1,0 +1,9 @@
+# Recovery inventory — 2026-09-19
+
+Entry Git status, full tracked diff and full untracked file listing are preserved alongside this file. No reset, cleanup or broad revert performed. Assets/LastSignal and Docs are wholly untracked relative to Git HEAD: authorship cannot be inferred from Git. Existing input, SampleScene, URP settings, packages, deleted template/editor files, Assets.zip and earlier project work are preserved as pre-existing changes. Vendor assets under Assets/LastSignal/Assets and B0A/B0B evidence/presentation assets are preserved.
+
+P2 additions identified by source/evidence: Runtime/AI (7 components/domain files), Session/ZombieEncounter, SessionFlow encounter hooks, Editor/ZombieAcceptanceAuthoring and ZombieValidationRunner, Shambler.asset, AcceptanceNavMesh, ZombieAcceptance scene, ZombieLogic/Navigation/Behavior tests. Runtime source SHA256 snapshot accompanies this inventory.
+
+Actual C# source contained no quoting corruption. Scan hits were legitimate bit shifts. Entry compile had two CS0103 errors from references to the absent ZombieRuntimeAuthoring. Temporarily changed those two unavailable commands to explicit failure, preserving all existing behavior. Unity 6000.5.0f1 then reports scriptCompilationFailed=False and Console contains zero errors/warnings.
+
+Previous evidence: entry EditMode 38/38, PlayMode 23/23; gate1 EditMode 45/45; gate3 navigation PlayMode 1/1; gate5–9 behavior PlayMode 3/3, including hidden A→B memory, search timeout, reacquisition and direct pause/destruction. Text probes supplement, not replace, tests; gate3 text reports initialized=False and alone proves no live gameplay integration. Last completed behavioral gate: 9. Session hooks and presenter exist but composition is absent; Gate 10 incomplete. Existing implementation report is stale and not accepted as truth.

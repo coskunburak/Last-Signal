@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-18 08:18:00Z" end-time="2026-09-18 08:18:06Z" duration="5.8292177">
+  <test-suite type="TestSuite" id="1031" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-09-18 08:18:00Z" end-time="2026-09-18 08:18:06Z" duration="5.829218" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1025" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-09-18 08:18:00Z" end-time="2026-09-18 08:18:06Z" duration="5.823603" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="55458" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1026" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-09-18 08:18:00Z" end-time="2026-09-18 08:18:06Z" duration="5.822780" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1027" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-09-18 08:18:00Z" end-time="2026-09-18 08:18:06Z" duration="5.822362" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1001" name="CombatAcceptanceTests" fullname="LastSignal.Tests.CombatAcceptanceTests" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-09-18 08:18:00Z" end-time="2026-09-18 08:18:06Z" duration="5.821103" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1005" name="ADS_ReducesFOVAndSensitivity" fullname="LastSignal.Tests.CombatAcceptanceTests.ADS_ReducesFOVAndSensitivity" methodname="ADS_ReducesFOVAndSensitivity" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="1313115609" result="Failed" start-time="2026-09-18 08:18:00Z" end-time="2026-09-18 08:18:02Z" duration="1.653247" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  FOV should decrease during ADS
+  Expected: less than 75.0f
+  But was:  75.0f
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.CombatAcceptanceTests+<ADS_ReducesFOVAndSensitivity>d__12.MoveNext () [0x0014b] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Tests/PlayMode/CombatAcceptanceTests.cs:170
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[B0A_ORDER UnitySetUp begin devices=3
+S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=3 active=True mouse=
+B0A_ORDER Setup before base devices=3
+B0A_ORDER Setup done devices=2
+B0A_ORDER ADS devices=2 active=True mouse=Mouse:/Mouse
+]]></output>
+            </test-case>
+            <test-case id="1004" name="AutoFire_FiresContinuouslyWhileHeld" fullname="LastSignal.Tests.CombatAcceptanceTests.AutoFire_FiresContinuouslyWhileHeld" methodname="AutoFire_FiresContinuouslyWhileHeld" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="1044418667" result="Failed" start-time="2026-09-18 08:18:02Z" end-time="2026-09-18 08:18:03Z" duration="1.441315" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Should have fired multiple shots
+  Expected: greater than 2
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.CombatAcceptanceTests+<AutoFire_FiresContinuouslyWhileHeld>d__11.MoveNext () [0x00117] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Tests/PlayMode/CombatAcceptanceTests.cs:155
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[B0A_ORDER UnitySetUp begin devices=3
+S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=3 active=True mouse=Mouse:/Mouse
+B0A_ORDER Setup before base devices=3
+B0A_ORDER Setup done devices=2
+]]></output>
+            </test-case>
+            <test-case id="1002" name="Fire_ConsumesAmmoAndDamagesTarget" fullname="LastSignal.Tests.CombatAcceptanceTests.Fire_ConsumesAmmoAndDamagesTarget" methodname="Fire_ConsumesAmmoAndDamagesTarget" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="1001612527" result="Failed" start-time="2026-09-18 08:18:03Z" end-time="2026-09-18 08:18:04Z" duration="0.947924" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Ammo should decrease
+  Expected: 29
+  But was:  30
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.CombatAcceptanceTests+<Fire_ConsumesAmmoAndDamagesTarget>d__9.MoveNext () [0x0010d] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Tests/PlayMode/CombatAcceptanceTests.cs:111
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[B0A_ORDER UnitySetUp begin devices=3
+S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=3 active=True mouse=Mouse:/Mouse
+B0A_ORDER Setup before base devices=3
+B0A_ORDER Setup done devices=2
+]]></output>
+            </test-case>
+            <test-case id="1003" name="Reload_TransfersAmmoAfterDuration" fullname="LastSignal.Tests.CombatAcceptanceTests.Reload_TransfersAmmoAfterDuration" methodname="Reload_TransfersAmmoAfterDuration" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="1274383528" result="Failed" start-time="2026-09-18 08:18:04Z" end-time="2026-09-18 08:18:06Z" duration="1.768102" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 25
+  But was:  30
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.CombatAcceptanceTests+<Reload_TransfersAmmoAfterDuration>d__10.MoveNext () [0x00137] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Tests/PlayMode/CombatAcceptanceTests.cs:127
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[B0A_ORDER UnitySetUp begin devices=3
+S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=3 active=True mouse=Mouse:/Mouse
+B0A_ORDER Setup before base devices=3
+B0A_ORDER Setup done devices=2
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

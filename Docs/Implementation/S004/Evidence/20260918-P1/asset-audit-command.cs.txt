@@ -1,0 +1,41 @@
+using UnityEngine;
+using UnityEditor;
+using System;
+using System.IO;
+using System.Text;
+using System.Linq;
+internal class CommandScript : IRunCommand {
+public void Execute(ExecutionResult result) {
+var b=new StringBuilder();
+b.AppendLine("EDITOR VERIFIED "+DateTime.UtcNow.ToString("O")+" Project="+Application.dataPath+" Unity="+Application.unityVersion);
+b.AppendLine("Compiling="+EditorApplication.isCompiling+" CompileFailed="+EditorUtility.scriptCompilationFailed+" Target="+EditorUserBuildSettings.activeBuildTarget);
+b.AppendLine("Pipeline="+UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline);
+foreach(var p in UnityEditor.PackageManager.PackageInfo.GetAllRegisteredPackages().Where(x=>x.name.Contains("navigation")||x.name.Contains("inputsystem")||x.name.Contains("render-pipelines")||x.name.Contains("test-framework")||x.name.Contains("timeline")||x.name.Contains("multiplayer"))) b.AppendLine("PACKAGE "+p.name+" "+p.version);
+foreach(var p in AssetDatabase.GetAllAssetPaths().Where(x=>x.StartsWith("Assets/")&&(x.EndsWith(".fbx",StringComparison.OrdinalIgnoreCase)||x.EndsWith(".anim")))) {
+b.AppendLine("\nMODEL/ANIMATION "+p);
+var mi=AssetImporter.GetAtPath(p) as ModelImporter;
+if(mi!=null) b.AppendLine("Importer rig="+mi.animationType+" avatarSetup="+mi.avatarSetup+" globalScale="+mi.globalScale+" fileScale="+mi.fileScale+" useFileScale="+mi.useFileScale+" motionNode="+mi.motionNodeName);
+var go=AssetDatabase.LoadAssetAtPath<GameObject>(p);
+if(go) {
+b.AppendLine("Root localPos="+go.transform.localPosition+" rot="+go.transform.localEulerAngles+" scale="+go.transform.localScale+" colliders="+go.GetComponentsInChildren<Collider>(true).Length+" rigidbodies="+go.GetComponentsInChildren<Rigidbody>(true).Length+" LODGroups="+go.GetComponentsInChildren<LODGroup>(true).Length);
+foreach(var a in go.GetComponentsInChildren<Animator>(true)) b.AppendLine("Animator "+a.name+" avatar="+(a.avatar?a.avatar.name:"NULL")+" valid="+(a.avatar&&a.avatar.isValid)+" human="+(a.avatar&&a.avatar.isHuman)+" rootMotion="+a.applyRootMotion+" controller="+a.runtimeAnimatorController);
+foreach(var a in AssetDatabase.LoadAllAssetsAtPath(p).OfType<Avatar>()) b.AppendLine("Avatar subasset "+a.name+" valid="+a.isValid+" human="+a.isHuman);
+foreach(var r in go.GetComponentsInChildren<Renderer>(true)) {
+var sk=r as SkinnedMeshRenderer; var mf=r.GetComponent<MeshFilter>(); var m=sk?sk.sharedMesh:(mf?mf.sharedMesh:null);
+b.AppendLine("Renderer "+r.name+" type="+r.GetType().Name+" bounds="+r.bounds+" mesh="+(m?m.name:"NULL")+" vertices="+(m?m.vertexCount:0)+" triangles="+(m?Enumerable.Range(0,m.subMeshCount).Sum(i=>(long)m.GetIndexCount(i)/3):0)+" slots="+r.sharedMaterials.Length+" bones="+(sk?sk.bones.Length:0)+" rootBone="+(sk&&sk.rootBone?sk.rootBone.name:"N/A"));
+foreach(var mat in r.sharedMaterials) b.AppendLine(" Material="+(mat?AssetDatabase.GetAssetPath(mat):"NULL")+" shader="+(mat&&mat.shader?mat.shader.name:"NULL")+" supported="+(mat&&mat.shader&&mat.shader.isSupported)+" texture="+(mat&&mat.mainTexture?AssetDatabase.GetAssetPath(mat.mainTexture):"NULL"));
+}
+if(p.Contains("/Character/")) foreach(var t in go.GetComponentsInChildren<Transform>(true)) b.AppendLine(" BONE "+AnimationUtility.CalculateTransformPath(t,go.transform)+" pos="+t.localPosition+" rot="+t.localEulerAngles+" scale="+t.localScale);
+}
+var clips=AssetDatabase.LoadAllAssetsAtPath(p).OfType<AnimationClip>().Where(c=>!c.name.StartsWith("__preview__")).ToArray();
+b.AppendLine("Actual non-preview clip count="+clips.Length);
+foreach(var c in clips) {var s=AnimationUtility.GetAnimationClipSettings(c); b.AppendLine(" CLIP "+c.name+" duration="+c.length+" fps="+c.frameRate+" loop="+c.isLooping+" legacy="+c.legacy+" human="+c.humanMotion+" hasRootCurves="+c.hasRootCurves+" hasMotionCurves="+c.hasMotionCurves+" averageSpeed="+c.averageSpeed+" averageAngularSpeed="+c.averageAngularSpeed+" bindings="+AnimationUtility.GetCurveBindings(c).Length+" events="+AnimationUtility.GetAnimationEvents(c).Length+" bakeXZ="+s.keepOriginalPositionXZ+" bakeY="+s.keepOriginalPositionY+" orientation="+s.orientationOffsetY); }
+}
+foreach(var p in AssetDatabase.FindAssets("t:Prefab",new[]{"Assets/LastSignal/tt-3d"}).Select(AssetDatabase.GUIDToAssetPath)) {
+var go=AssetDatabase.LoadAssetAtPath<GameObject>(p); b.AppendLine("\nVENDOR PREFAB "+p);
+foreach(var t in go.GetComponentsInChildren<Transform>(true)) {var cs=t.GetComponents<Component>(); if(cs.Any(c=>c==null)||cs.Length>1) b.AppendLine(t.name+" components="+string.Join(",",cs.Select(c=>c?c.GetType().FullName:"MISSING"))); }
+foreach(var r in go.GetComponentsInChildren<Renderer>(true)) b.AppendLine("Material "+r.name+" "+string.Join(",",r.sharedMaterials.Select(m=>m?m.name+" shader="+m.shader.name:"NULL")));
+}
+File.WriteAllText("Docs/Implementation/S004/Evidence/20260918-P1/imported-assets.txt",b.ToString());
+result.Log("Saved imported-assets.txt; chars="+b.Length);
+} }

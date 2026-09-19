@@ -1,0 +1,23 @@
+using UnityEngine; using UnityEditor; using UnityEditor.SceneManagement; using UnityEngine.AI; using System; using System.IO; using System.Linq; using System.Text;
+internal class CommandScript : IRunCommand {
+public void Execute(ExecutionResult result) {
+var b=new StringBuilder(); var scene=EditorSceneManager.GetActiveScene();
+b.AppendLine("EDITOR VERIFIED "+DateTime.UtcNow.ToString("O")+" scene="+scene.path+" dirty="+scene.isDirty+" playing="+EditorApplication.isPlaying);
+foreach(var s in EditorBuildSettings.scenes) b.AppendLine("BUILD "+s.path+" enabled="+s.enabled+" exists="+File.Exists(s.path));
+foreach(var r in scene.GetRootGameObjects()) foreach(var t in r.GetComponentsInChildren<Transform>(true)) {
+var cs=t.GetComponents<Component>(); if(cs.Length>1) b.AppendLine("OBJECT "+AnimationUtility.CalculateTransformPath(t,null)+" pos="+t.position+" layer="+t.gameObject.layer+" active="+t.gameObject.activeSelf+" components="+string.Join(",",cs.Select(c=>c?c.GetType().FullName:"MISSING")));
+foreach(var c in cs.OfType<Collider>()) b.AppendLine(" COLLIDER "+c.GetType().Name+" bounds="+c.bounds+" trigger="+c.isTrigger);
+foreach(var c in cs.OfType<MonoBehaviour>().Where(c=>c&&c.GetType().Namespace=="LastSignal")) {var it=new SerializedObject(c).GetIterator();while(it.NextVisible(true)) if(it.propertyType==SerializedPropertyType.ObjectReference) b.AppendLine(" REF "+c.GetType().Name+"."+it.propertyPath+"="+(it.objectReferenceValue?it.objectReferenceValue.name+" "+AssetDatabase.GetAssetPath(it.objectReferenceValue):"NULL")); }
+}
+b.AppendLine("NAV assets="+string.Join(",",AssetDatabase.FindAssets("t:NavMeshData").Select(AssetDatabase.GUIDToAssetPath)));
+b.AppendLine("Nav triangulation vertices="+NavMesh.CalculateTriangulation().vertices.Length);
+for(int i=0;i<NavMesh.GetSettingsCount();i++) {var s=NavMesh.GetSettingsByIndex(i);b.AppendLine("AGENT "+NavMesh.GetSettingsNameFromID(s.agentTypeID)+" id="+s.agentTypeID+" radius="+s.agentRadius+" height="+s.agentHeight+" slope="+s.agentSlope+" climb="+s.agentClimb); }
+for(int i=0;i<32;i++)if(LayerMask.LayerToName(i)!="") b.AppendLine("LAYER "+i+" "+LayerMask.LayerToName(i));
+for(int i=0;i<32;i++)for(int j=i;j<32;j++)if(Physics.GetIgnoreLayerCollision(i,j))b.AppendLine("IGNORED COLLISION "+i+","+j);
+foreach(var p in new[]{"Assets/LastSignal/Prefabs/Player.prefab","Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab"}) {
+var go=AssetDatabase.LoadAssetAtPath<GameObject>(p);b.AppendLine("PREFAB "+p+" exists="+(go!=null));
+if(!go)continue;
+foreach(var c in go.GetComponentsInChildren<MonoBehaviour>(true).Where(c=>c&&c.GetType().Namespace=="LastSignal")) {var it=new SerializedObject(c).GetIterator();while(it.NextVisible(true)) {if(it.propertyType==SerializedPropertyType.ObjectReference) b.AppendLine(" REF "+c.GetType().Name+"."+it.propertyPath+"="+(it.objectReferenceValue?it.objectReferenceValue.name+" "+AssetDatabase.GetAssetPath(it.objectReferenceValue):"NULL")); else if(it.propertyType==SerializedPropertyType.LayerMask) b.AppendLine(" MASK "+c.GetType().Name+"."+it.propertyPath+"="+it.intValue); }}
+}
+File.WriteAllText("Docs/Implementation/S004/Evidence/20260918-P1/scene-prefab-navigation.txt",b.ToString()); result.Log("Saved scene-prefab-navigation.txt");
+} }
