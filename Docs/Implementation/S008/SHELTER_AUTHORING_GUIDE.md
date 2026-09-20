@@ -1,0 +1,12 @@
+# Authoring a shelter
+Use Unity 6000.5.0f1. `Last Signal > Shelter > Create S008 acceptance scene` copies the existing scavenging scene into Assets/LastSignal/Scenes/ShelterAcceptance.unity and authors the cabin/UI. This menu rebuilds that dedicated acceptance asset; do not use it to overwrite designer edits. Existing S004–S007 scenes are not saved by this operation.
+
+On the SessionFlow object, add exactly one ShelterLoop. Configure storageCapacity (1–256, default48), insideAnchor, outsideAnchor, storagePoint, exitPoint, returnPoint and preparationUI. Place the PlayerSpawn inside. Author actual floor/walls/roof so enemies and shots cannot enter a sealed room. The supplied entry barrier is solid and the two anchors are adjacent on either side, representing door traversal rather than long-distance travel.
+
+Each point needs an enabled solid collider and ShelterPoint with the same loop and the matching Prepare/Leave/Return action. Existing InteractionController enforces first-hit occlusion and 2.2m view range; point additionally checks Player-root range (default2.5m). Put terminals at readable eye/hand height. Return is outside; leave is inside. Keep anchors clear of solid geometry, loot and actor capsules with valid floor support. Player uses layer8, which the anchor clearance mask excludes; triggers are ignored. Do not place an anchor inside other player-layer geometry.
+
+Use the provided preparation Canvas with references populated. Carried/stored scroll-grid slots expand once when a session binds if capacity increases; items remain authoritative in the domain. Empty initial stash is intentional. No production starter-content injection is supported.
+
+`Last Signal > Shelter > Validate active shelter` checks ownership/references/point actions/capacity. Selected-point gizmos show range; selected loop shows doorway anchors. Runtime also validates before enabling stash access. Geometry/nav access must still be play-tested: validation does not certify walkable routes or human usability.
+
+Acceptance: start normal session, open empty stash, leave, collect Security ammunition and another resource, return and deposit, withdraw a chosen amount, leave a second time without menu, confirm consumed loot remains absent, return and store again. Test full capacity, pause/Escape, death, menu and a clean new session. Build through LastSignal.Editor.ShelterAuthoring.Build to explicitly select this scene; existing historical build settings are preserved.

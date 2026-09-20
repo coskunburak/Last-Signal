@@ -12,7 +12,8 @@ namespace LastSignal
 
         [Header("Ammunition")]
         [SerializeField, Min(1)] int magazineCapacity = 30;
-        [SerializeField, Min(0)] int maxReserve = 120;
+        [SerializeField] LastSignal.Inventory.Data.ItemDefinition ammunition;
+        [SerializeField, Min(0)] int startingMagazine = 30;
 
         [Header("Fire")]
         [SerializeField] FireMode fireMode = FireMode.SemiAutomatic;
@@ -25,6 +26,7 @@ namespace LastSignal
         [SerializeField, Min(0)] float tacticalReloadSeconds = 1.8f;
         [SerializeField, Min(0)] float emptyReloadSeconds = 2.4f;
         [SerializeField, Range(0, 1)] float reloadCommitNormalized = .55f;
+        [SerializeField, Range(0, 1)] float emptyReloadCommitNormalized = .55f;
 
         [Header("Equip / Unequip")]
         [SerializeField, Min(0)] float equipSeconds = .6f;
@@ -45,7 +47,14 @@ namespace LastSignal
         // Public read-only accessors — gameplay code queries these, never modifies them.
         public string WeaponName => weaponName;
         public int MagazineCapacity => magazineCapacity;
-        public int MaxReserve => maxReserve;
+        public LastSignal.Inventory.Data.ItemDefinition Ammunition => ammunition;
+        public int StartingMagazine => startingMagazine;
+        public bool HasValidAmmunitionConfiguration => ammunition && ammunition.Id.IsValid &&
+            magazineCapacity > 0 && startingMagazine >= 0 && startingMagazine <= magazineCapacity &&
+            ValidDuration(tacticalReloadSeconds) && ValidDuration(emptyReloadSeconds) &&
+            ValidFraction(reloadCommitNormalized) && ValidFraction(emptyReloadCommitNormalized);
+        static bool ValidDuration(float value) => value > 0 && !float.IsInfinity(value) && !float.IsNaN(value);
+        static bool ValidFraction(float value) => value >= 0 && value <= 1 && !float.IsNaN(value);
         public FireMode FireMode => fireMode;
         public float RoundsPerMinute => roundsPerMinute;
         public float FireCooldownSeconds => 60f / Mathf.Max(1, roundsPerMinute);
@@ -55,6 +64,7 @@ namespace LastSignal
         public float TacticalReloadSeconds => tacticalReloadSeconds;
         public float EmptyReloadSeconds => emptyReloadSeconds;
         public float ReloadCommitNormalized => reloadCommitNormalized;
+        public float EmptyReloadCommitNormalized => emptyReloadCommitNormalized;
         public float EquipSeconds => equipSeconds;
         public float UnequipSeconds => unequipSeconds;
         public float AdsFovDegrees => adsFovDegrees;

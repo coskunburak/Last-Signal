@@ -38,7 +38,8 @@ namespace LastSignal.Editor
                 var so = new SerializedObject(def);
                 so.FindProperty("weaponName").stringValue = "Assault Rifle";
                 so.FindProperty("magazineCapacity").intValue = 30;
-                so.FindProperty("maxReserve").intValue = 120;
+                so.FindProperty("ammunition").objectReferenceValue = AssetDatabase.LoadAssetAtPath<LastSignal.Inventory.Data.ItemDefinition>("Assets/Game/Items/Definitions/ammo.rifle.asset");
+                so.FindProperty("startingMagazine").intValue = 30;
                 so.FindProperty("fireMode").enumValueIndex = (int)FireMode.Automatic;
                 so.FindProperty("roundsPerMinute").floatValue = 600;
                 so.FindProperty("baseDamage").floatValue = 30;

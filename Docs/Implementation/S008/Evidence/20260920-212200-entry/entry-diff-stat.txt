@@ -1,0 +1,107 @@
+ Assets/LastSignal/Loot/Materials/Clinic.mat        |   2 +-
+ Assets/LastSignal/Loot/Materials/Kitchen.mat       |   2 +-
+ Assets/LastSignal/Loot/Materials/Security.mat      |   2 +-
+ Assets/LastSignal/Loot/Materials/Workshop.mat      |   2 +-
+ Assets/LastSignal/Loot/Materials/ammo.rifle.mat    |   2 +-
+ Assets/LastSignal/Loot/Materials/tool.wrench.mat   |   2 +-
+ .../Scripts/Editor/CombatAcceptanceProject.cs      |   3 +-
+ .../Runtime/Combat/PlayerCombatController.cs       |   3 +
+ .../Scripts/Runtime/Combat/WeaponController.cs     |  72 ++++++++++++++----
+ .../Scripts/Runtime/Combat/WeaponDefinition.cs     |  14 +++-
+ .../Combat/WeaponDefinition_AssaultRifle.asset     |   8 +-
+ .../Scripts/Runtime/Combat/WeaponRuntimeState.cs   |  47 ++++++------
+ .../Scripts/Runtime/Inventory/PlayerInventory.cs   |  17 +++++
+ .../Scripts/Runtime/Session/AcceptanceHud.cs       |  69 +++++++++++------
+ .../Scripts/Tests/EditMode/WeaponStateTests.cs     |  84 +++++++++++++--------
+ .../Tests/PlayMode/CombatAcceptanceTests.cs        |   1 +
+ .../Tests/PlayMode/MovementAcceptanceTests.cs      |   2 +-
+ .../Scripts/Tests/PlayMode/RuntimeSmokeTests.cs    |   3 +-
+ .../S004/Evidence/20260919-P4/performance.txt      |   4 +-
+ .../20260919-P4/regression-P3/performance.txt      |   4 +-
+ .../regression-P3/visual/backstep-contact-fps.png  | Bin 131 -> 234817 bytes
+ .../regression-P3/visual/backstep-contact-side.png | Bin 131 -> 181259 bytes
+ .../regression-P3/visual/backstep-recovery-fps.png | Bin 131 -> 220250 bytes
+ .../visual/backstep-recovery-side.png              | Bin 131 -> 176518 bytes
+ .../20260919-P4/regression-P3/visual/death-fps.png | Bin 131 -> 206826 bytes
+ .../regression-P3/visual/death-side.png            | Bin 131 -> 159993 bytes
+ .../regression-P3/visual/hit-commit-fps.png        | Bin 131 -> 259221 bytes
+ .../regression-P3/visual/hit-commit-side.png       | Bin 131 -> 167823 bytes
+ .../regression-P3/visual/hit-contact-fps.png       | Bin 131 -> 230209 bytes
+ .../regression-P3/visual/hit-contact-side.png      | Bin 131 -> 162329 bytes
+ .../regression-P3/visual/hit-next-windup-fps.png   | Bin 131 -> 249854 bytes
+ .../regression-P3/visual/hit-next-windup-side.png  | Bin 131 -> 165937 bytes
+ .../regression-P3/visual/hit-recovery-fps.png      | Bin 131 -> 236722 bytes
+ .../regression-P3/visual/hit-recovery-side.png     | Bin 131 -> 160831 bytes
+ .../regression-P3/visual/hit-start-fps.png         | Bin 131 -> 249779 bytes
+ .../regression-P3/visual/hit-start-side.png        | Bin 131 -> 165943 bytes
+ .../regression-P3/visual/motor-sidestep-fps.png    | Bin 131 -> 245146 bytes
+ .../regression-P3/visual/motor-sidestep-side.png   | Bin 131 -> 165422 bytes
+ .../regression-P3/visual/normal-approach-fps.png   | Bin 131 -> 232898 bytes
+ .../regression-P3/visual/normal-approach-side.png  | Bin 131 -> 167082 bytes
+ .../regression-P3/visual/normal-hit-fps.png        | Bin 131 -> 233319 bytes
+ .../regression-P3/visual/normal-hit-side.png       | Bin 131 -> 165634 bytes
+ .../visual/pause-AttackCommit-fps.png              | Bin 131 -> 259239 bytes
+ .../visual/pause-AttackCommit-side.png             | Bin 131 -> 167790 bytes
+ .../visual/pause-AttackWindup-fps.png              | Bin 131 -> 249835 bytes
+ .../visual/pause-AttackWindup-side.png             | Bin 131 -> 165966 bytes
+ .../regression-P3/visual/rear-contact-fps.png      | Bin 131 -> 228423 bytes
+ .../regression-P3/visual/rear-contact-side.png     | Bin 131 -> 159487 bytes
+ .../regression-P3/visual/rear-recovery-fps.png     | Bin 131 -> 242411 bytes
+ .../regression-P3/visual/rear-recovery-side.png    | Bin 131 -> 154808 bytes
+ .../regression-P3/visual/restart-fps.png           | Bin 131 -> 244248 bytes
+ .../regression-P3/visual/sidestep-contact-fps.png  | Bin 131 -> 275150 bytes
+ .../regression-P3/visual/sidestep-contact-side.png | Bin 131 -> 144584 bytes
+ .../regression-P3/visual/sidestep-recovery-fps.png | Bin 131 -> 265446 bytes
+ .../visual/sidestep-recovery-side.png              | Bin 131 -> 140087 bytes
+ .../20260919-P4/regression-P3/visual/trace.txt     |  60 +++++++++++++++
+ .../regression-P3/visual/wall-contact-fps.png      | Bin 131 -> 222098 bytes
+ .../regression-P3/visual/wall-contact-side.png     | Bin 131 -> 163342 bytes
+ .../regression-P3/visual/wall-recovery-fps.png     | Bin 131 -> 231591 bytes
+ .../regression-P3/visual/wall-recovery-side.png    | Bin 131 -> 158494 bytes
+ .../S004/Evidence/20260919-P4/rifle-trace.txt      |  48 ++++++++++++
+ .../20260919-P4/visual/body-hit-react-peak-fps.png | Bin 131 -> 227422 bytes
+ .../visual/body-hit-react-peak-side.png            | Bin 131 -> 135248 bytes
+ .../visual/body-hit-react-start-fps.png            | Bin 131 -> 228210 bytes
+ .../visual/body-hit-react-start-side.png           | Bin 131 -> 135155 bytes
+ .../20260919-P4/visual/corpse-final-fps.png        | Bin 131 -> 208030 bytes
+ .../20260919-P4/visual/corpse-final-side.png       | Bin 131 -> 126136 bytes
+ .../20260919-P4/visual/corpse-inactive-fps.png     | Bin 131 -> 209311 bytes
+ .../20260919-P4/visual/corpse-inactive-side.png    | Bin 131 -> 126136 bytes
+ .../20260919-P4/visual/death-middle-fps.png        | Bin 131 -> 208869 bytes
+ .../20260919-P4/visual/death-middle-side.png       | Bin 131 -> 121625 bytes
+ .../Evidence/20260919-P4/visual/head-shot-fps.png  | Bin 131 -> 228485 bytes
+ .../Evidence/20260919-P4/visual/head-shot-side.png | Bin 131 -> 135257 bytes
+ .../20260919-P4/visual/layout-Attack-fps.png       | Bin 131 -> 228603 bytes
+ .../20260919-P4/visual/layout-Attack-side.png      | Bin 131 -> 139062 bytes
+ .../20260919-P4/visual/layout-HitReact-fps.png     | Bin 131 -> 228603 bytes
+ .../20260919-P4/visual/layout-HitReact-side.png    | Bin 131 -> 139062 bytes
+ .../20260919-P4/visual/layout-Locomotion-fps.png   | Bin 131 -> 228603 bytes
+ .../20260919-P4/visual/layout-Locomotion-side.png  | Bin 131 -> 139808 bytes
+ .../20260919-P4/visual/layout-idle-fps.png         | Bin 131 -> 228603 bytes
+ .../20260919-P4/visual/layout-idle-side.png        | Bin 131 -> 139062 bytes
+ .../20260919-P4/visual/lethal-AttackCommit-fps.png | Bin 131 -> 249325 bytes
+ .../visual/lethal-AttackCommit-side.png            | Bin 131 -> 144519 bytes
+ .../20260919-P4/visual/lethal-AttackWindup-fps.png | Bin 131 -> 247768 bytes
+ .../visual/lethal-AttackWindup-side.png            | Bin 131 -> 144409 bytes
+ .../20260919-P4/visual/lethal-Recovering-fps.png   | Bin 131 -> 249359 bytes
+ .../20260919-P4/visual/lethal-Recovering-side.png  | Bin 131 -> 144422 bytes
+ .../20260919-P4/visual/lethal-body-fps.png         | Bin 131 -> 217342 bytes
+ .../20260919-P4/visual/lethal-body-side.png        | Bin 131 -> 135429 bytes
+ .../20260919-P4/visual/loop-body-reaction-fps.png  | Bin 131 -> 269905 bytes
+ .../20260919-P4/visual/loop-body-reaction-side.png | Bin 131 -> 163460 bytes
+ .../Evidence/20260919-P4/visual/loop-chase-fps.png | Bin 131 -> 253218 bytes
+ .../20260919-P4/visual/loop-chase-side.png         | Bin 131 -> 157172 bytes
+ .../20260919-P4/visual/loop-complete-fps.png       | Bin 131 -> 246814 bytes
+ .../20260919-P4/visual/loop-complete-side.png      | Bin 131 -> 155306 bytes
+ .../Evidence/20260919-P4/visual/loop-dodge-fps.png | Bin 131 -> 269819 bytes
+ .../20260919-P4/visual/loop-dodge-side.png         | Bin 131 -> 163460 bytes
+ .../20260919-P4/visual/loop-lethal-fps.png         | Bin 131 -> 311719 bytes
+ .../20260919-P4/visual/loop-lethal-side.png        | Bin 131 -> 162640 bytes
+ .../20260919-P4/visual/loop-player-hit-fps.png     | Bin 131 -> 287942 bytes
+ .../20260919-P4/visual/loop-player-hit-side.png    | Bin 131 -> 163634 bytes
+ .../20260919-P4/visual/new-session-alive-fps.png   | Bin 131 -> 241350 bytes
+ .../20260919-P4/visual/reaction-recovered-fps.png  | Bin 131 -> 228518 bytes
+ .../20260919-P4/visual/reaction-recovered-side.png | Bin 131 -> 135257 bytes
+ .../S004/Evidence/20260919-P4/visual/trace.tsv     |  69 +++++++++++++++++
+ ProjectSettings/ProjectSettings.asset              |   2 +-
+ 106 files changed, 407 insertions(+), 115 deletions(-)

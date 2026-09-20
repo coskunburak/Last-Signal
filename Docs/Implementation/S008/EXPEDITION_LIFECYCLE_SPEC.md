@@ -1,0 +1,10 @@
+# Expedition lifecycle
+States: Inactive, Shelter, Preparing, Expedition, Dead. Operations are synchronous, so transient Leaving/Returning states are represented by an explicit transition guard, not additional externally visible states.
+
+BeginSession creates the Player and normal inventory/encounter/loot, then initializes ShelterLoop and empty storage. The authored PlayerSpawn is inside the cabin. Opening the storage terminal through IInteractable enters Preparing and uses SessionFlow.Pause for gameplay-map disabling, cursor release and reload timer freezing. Preparation close returns to Shelter and resumes through the existing policy. Escape/Resume close preparation before restoring gameplay. HUD suppresses the ordinary pause panel while preparation owns the screen.
+
+Leave requires living unpaused Player, Shelter state, correct authored exit point and range. Destination capsule clearance is tested before any state/movement change. Success releases fire/aim while retaining S007 reload timing, crosses the adjacent doorway with the existing Player and increments the sequence once. No gear minimum. Repeated leave in Expedition is rejected. Return requires Expedition, current return point and physical range, checks the interior anchor and enters Shelter once. Repeated return in Shelter is rejected. Inventory, stash, magazine, world and session identities remain unchanged.
+
+Death closes preparation and enters Dead, preserving storage but rejecting further transfers/transitions. No respawn or item-loss policy is introduced. Pause prevents world interactions. Focus loss retains the existing SessionFlow pause policy. ReturnToMenu unbinds preparation, detaches death listeners, releases session references and then performs normal world teardown. End is repeatable; Session B constructs a fresh stash and resets expedition index to zero.
+
+World loot remains loaded and resolves once per session. No return-driven respawn, random reroll, partial-stack reset or dropped-item recreation. Future scene streaming/save systems must preserve these semantics, but neither is added here.

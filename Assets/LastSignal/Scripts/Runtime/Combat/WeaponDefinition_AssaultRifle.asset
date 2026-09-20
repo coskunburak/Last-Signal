@@ -14,15 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.WeaponDefinition
   weaponName: Assault Rifle
   magazineCapacity: 30
-  maxReserve: 120
+  ammunition: {fileID: 11400000, guid: 0f5e06eb56ca44fab8bbe72a5a6f347c, type: 2}
+  startingMagazine: 30
   fireMode: 1
   roundsPerMinute: 600
   muzzleObstructionRange: 0.5
   maxRange: 200
   baseDamage: 30
   tacticalReloadSeconds: 2.5
-  emptyReloadSeconds: 3.33
-  reloadCommitNormalized: 0.55
+  emptyReloadSeconds: 3.3333333
+  reloadCommitNormalized: 0.6666667
+  emptyReloadCommitNormalized: 0.55
   equipSeconds: 0.5
   unequipSeconds: 0.5
   adsFovDegrees: 55

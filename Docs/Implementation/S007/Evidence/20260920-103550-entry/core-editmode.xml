@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="48" result="Failed(Child)" total="48" passed="7" failed="41" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.1745868">
+  <test-suite type="TestSuite" id="1000" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="136" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.174587" total="48" passed="7" failed="41" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1163" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="136" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.169688" total="48" passed="7" failed="41" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="6179" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1164" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="136" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.168698" total="48" passed="7" failed="41" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1165" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="136" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.167878" total="48" passed="7" failed="41" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1001" name="AmmunitionTransactionTests" fullname="LastSignal.Tests.AmmunitionTransactionTests" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" testcasecount="19" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.116297" total="19" passed="2" failed="17" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1014" name="BoundaryCrossingAtDifferentRatesCommitsOnce" fullname="LastSignal.Tests.AmmunitionTransactionTests.BoundaryCrossingAtDifferentRatesCommitsOnce" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.025317" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1010" name="BoundaryCrossingAtDifferentRatesCommitsOnce(30)" fullname="LastSignal.Tests.AmmunitionTransactionTests.BoundaryCrossingAtDifferentRatesCommitsOnce(30)" methodname="BoundaryCrossingAtDifferentRatesCommitsOnce" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="1983874284" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.009627" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.BoundaryCrossingAtDifferentRatesCommitsOnce (System.Int32 hz) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:48 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1011" name="BoundaryCrossingAtDifferentRatesCommitsOnce(60)" fullname="LastSignal.Tests.AmmunitionTransactionTests.BoundaryCrossingAtDifferentRatesCommitsOnce(60)" methodname="BoundaryCrossingAtDifferentRatesCommitsOnce" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="1215596081" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000671" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.BoundaryCrossingAtDifferentRatesCommitsOnce (System.Int32 hz) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:48 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1012" name="BoundaryCrossingAtDifferentRatesCommitsOnce(120)" fullname="LastSignal.Tests.AmmunitionTransactionTests.BoundaryCrossingAtDifferentRatesCommitsOnce(120)" methodname="BoundaryCrossingAtDifferentRatesCommitsOnce" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="196911081" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000237" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.BoundaryCrossingAtDifferentRatesCommitsOnce (System.Int32 hz) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:48 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1013" name="BoundaryCrossingAtDifferentRatesCommitsOnce(1)" fullname="LastSignal.Tests.AmmunitionTransactionTests.BoundaryCrossingAtDifferentRatesCommitsOnce(1)" methodname="BoundaryCrossingAtDifferentRatesCommitsOnce" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="19486879" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000338" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.BoundaryCrossingAtDifferentRatesCommitsOnce (System.Int32 hz) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:48 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1017" name="CancellationKeepsOnlyCommittedTransfer" fullname="LastSignal.Tests.AmmunitionTransactionTests.CancellationKeepsOnlyCommittedTransfer" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.012858" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1015" name="CancellationKeepsOnlyCommittedTransfer(False)" fullname="LastSignal.Tests.AmmunitionTransactionTests.CancellationKeepsOnlyCommittedTransfer(False)" methodname="CancellationKeepsOnlyCommittedTransfer" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="728470036" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000770" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.CancellationKeepsOnlyCommittedTransfer (System.Boolean committed) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:57 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1016" name="CancellationKeepsOnlyCommittedTransfer(True)" fullname="LastSignal.Tests.AmmunitionTransactionTests.CancellationKeepsOnlyCommittedTransfer(True)" methodname="CancellationKeepsOnlyCommittedTransfer" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="743640061" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000335" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.CancellationKeepsOnlyCommittedTransfer (System.Boolean committed) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:57 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1019" name="ExhaustedReserveBeforeCommitCannotManufactureAmmo" fullname="LastSignal.Tests.AmmunitionTransactionTests.ExhaustedReserveBeforeCommitCannotManufactureAmmo" methodname="ExhaustedReserveBeforeCommitCannotManufactureAmmo" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="55632430" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000343" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.ExhaustedReserveBeforeCommitCannotManufactureAmmo () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:68 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1018" name="InventoryChangeBeforeCommitUsesCurrentReserve" fullname="LastSignal.Tests.AmmunitionTransactionTests.InventoryChangeBeforeCommitUsesCurrentReserve" methodname="InventoryChangeBeforeCommitUsesCurrentReserve" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="544465512" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000289" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.InventoryChangeBeforeCommitUsesCurrentReserve () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:64 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1024" name="MissingInventoryNeverCreatesReserve" fullname="LastSignal.Tests.AmmunitionTransactionTests.MissingInventoryNeverCreatesReserve" methodname="MissingInventoryNeverCreatesReserve" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="1257749758" result="Passed" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.004720" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="MultiStackExactRemovalFailsAtomicallyAndNotifiesOnce" fullname="LastSignal.Tests.AmmunitionTransactionTests.MultiStackExactRemovalFailsAtomicallyAndNotifiesOnce" methodname="MultiStackExactRemovalFailsAtomicallyAndNotifiesOnce" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="189141431" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.030651" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.MultiStackExactRemovalFailsAtomicallyAndNotifiesOnce () [0x00006] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:71 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1023" name="ProductionConfigurationUsesExistingAmmoAndMeasuredTiming" fullname="LastSignal.Tests.AmmunitionTransactionTests.ProductionConfigurationUsesExistingAmmoAndMeasuredTiming" methodname="ProductionConfigurationUsesExistingAmmoAndMeasuredTiming" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="122472823" result="Passed" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.001133" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="ReentrantObserverSeesConservationAndCannotRepeatCommit" fullname="LastSignal.Tests.AmmunitionTransactionTests.ReentrantObserverSeesConservationAndCannotRepeatCommit" methodname="ReentrantObserverSeesConservationAndCannotRepeatCommit" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="604698800" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000298" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.ReentrantObserverSeesConservationAndCannotRepeatCommit () [0x00006] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:77 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1006" name="ReloadConservesExactQuantity" fullname="LastSignal.Tests.AmmunitionTransactionTests.ReloadConservesExactQuantity" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.001690" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1002" name="ReloadConservesExactQuantity(0,60,30,30)" fullname="LastSignal.Tests.AmmunitionTransactionTests.ReloadConservesExactQuantity(0,60,30,30)" methodname="ReloadConservesExactQuantity" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="1706219803" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000325" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.ReloadConservesExactQuantity (System.Int32 mag, System.Int32 reserve, System.Int32 expectedMag, System.Int32 expectedReserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:36 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1003" name="ReloadConservesExactQuantity(8,50,30,28)" fullname="LastSignal.Tests.AmmunitionTransactionTests.ReloadConservesExactQuantity(8,50,30,28)" methodname="ReloadConservesExactQuantity" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="66308534" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000150" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.ReloadConservesExactQuantity (System.Int32 mag, System.Int32 reserve, System.Int32 expectedMag, System.Int32 expectedReserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:36 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1004" name="ReloadConservesExactQuantity(8,6,14,0)" fullname="LastSignal.Tests.AmmunitionTransactionTests.ReloadConservesExactQuantity(8,6,14,0)" methodname="ReloadConservesExactQuantity" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="1766801367" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000137" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.ReloadConservesExactQuantity (System.Int32 mag, System.Int32 reserve, System.Int32 expectedMag, System.Int32 expectedReserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:36 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1005" name="ReloadConservesExactQuantity(24,20,30,14)" fullname="LastSignal.Tests.AmmunitionTransactionTests.ReloadConservesExactQuantity(24,20,30,14)" methodname="ReloadConservesExactQuantity" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="1967221345" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000138" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.ReloadConservesExactQuantity (System.Int32 mag, System.Int32 reserve, System.Int32 expectedMag, System.Int32 expectedReserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:36 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1022" name="ThrowingObserverCannotLoseOrDuplicateCommittedAmmo" fullname="LastSignal.Tests.AmmunitionTransactionTests.ThrowingObserverCannotLoseOrDuplicateCommittedAmmo" methodname="ThrowingObserverCannotLoseOrDuplicateCommittedAmmo" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="1515962469" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000447" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.ThrowingObserverCannotLoseOrDuplicateCommittedAmmo () [0x00006] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:83 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1009" name="UnavailableReloadIsNoOp" fullname="LastSignal.Tests.AmmunitionTransactionTests.UnavailableReloadIsNoOp" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.001072" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1007" name="UnavailableReloadIsNoOp(30,10)" fullname="LastSignal.Tests.AmmunitionTransactionTests.UnavailableReloadIsNoOp(30,10)" methodname="UnavailableReloadIsNoOp" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="1033046903" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000300" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.AmmunitionTransactionTests.Ready (System.Int32 magazine, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:27 
+  at LastSignal.Tests.AmmunitionTransactionTests.UnavailableReloadIsNoOp (System.Int32 mag, System.Int32 reserve) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:44 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1008" name="UnavailableReloadIsNoOp(0,0)" fullname="LastSignal.Tests.AmmunitionTransactionTests.UnavailableReloadIsNoOp(0,0)" methodname="UnavailableReloadIsNoOp" classname="LastSignal.Tests.AmmunitionTransactionTests" runstate="Runnable" seed="123268904" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000245" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.GetTotalQuantity (LastSignal.Inventory.Data.ItemDefinition item) [0x0004b] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:183 
+  at LastSignal.WeaponRuntimeState.get_ReserveAmmo () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Combat/WeaponRuntimeState.cs:24 
+  at LastSignal.WeaponRuntimeState.get_CanReload () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Combat/WeaponRuntimeState.cs:108 
+  at LastSignal.WeaponRuntimeState.TryBeginReload () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Combat/WeaponRuntimeState.cs:114 
+  at LastSignal.Tests.AmmunitionTransactionTests.UnavailableReloadIsNoOp (System.Int32 mag, System.Int32 reserve) [0x00009] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/AmmunitionTransactionTests.cs:44 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1065" name="WeaponStateTests" fullname="LastSignal.Tests.WeaponStateTests" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" testcasecount="29" result="Failed" site="Child" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.038693" total="29" passed="5" failed="24" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1094" name="AddReserveIncreasesTotal" fullname="LastSignal.Tests.WeaponStateTests.AddReserveIncreasesTotal" methodname="AddReserveIncreasesTotal" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1468392796" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.003453" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.AddReserveIncreasesTotal () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:358 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1072" name="AmmoNeverGoesNegative" fullname="LastSignal.Tests.WeaponStateTests.AmmoNeverGoesNegative" methodname="AmmoNeverGoesNegative" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1076561865" result="Passed" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.001958" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="CannotFireDuringCooldown" fullname="LastSignal.Tests.WeaponStateTests.CannotFireDuringCooldown" methodname="CannotFireDuringCooldown" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="844335624" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000415" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.CannotFireDuringCooldown () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:104 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1082" name="CannotFireWhileEquipping" fullname="LastSignal.Tests.WeaponStateTests.CannotFireWhileEquipping" methodname="CannotFireWhileEquipping" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="618207194" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000302" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.CannotFireWhileEquipping () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:255 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1083" name="CannotFireWhileReloading" fullname="LastSignal.Tests.WeaponStateTests.CannotFireWhileReloading" methodname="CannotFireWhileReloading" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="227708916" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000281" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.CannotFireWhileReloading () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:265 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1069" name="CannotFireWithEmptyMagazine" fullname="LastSignal.Tests.WeaponStateTests.CannotFireWithEmptyMagazine" methodname="CannotFireWithEmptyMagazine" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1835455098" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000320" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.CannotFireWithEmptyMagazine () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:93 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1085" name="CannotReloadWhileAlreadyReloading" fullname="LastSignal.Tests.WeaponStateTests.CannotReloadWhileAlreadyReloading" methodname="CannotReloadWhileAlreadyReloading" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="80116752" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000288" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.CannotReloadWhileAlreadyReloading () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:285 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1084" name="CannotReloadWhileEquipping" fullname="LastSignal.Tests.WeaponStateTests.CannotReloadWhileEquipping" methodname="CannotReloadWhileEquipping" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1147082866" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000862" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.CannotReloadWhileEquipping () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:275 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1077" name="CannotReloadWithFullMagazine" fullname="LastSignal.Tests.WeaponStateTests.CannotReloadWithFullMagazine" methodname="CannotReloadWithFullMagazine" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1687784994" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000365" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.CannotReloadWithFullMagazine () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:201 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1078" name="CannotReloadWithZeroReserve" fullname="LastSignal.Tests.WeaponStateTests.CannotReloadWithZeroReserve" methodname="CannotReloadWithZeroReserve" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1472229288" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000334" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.GetTotalQuantity (LastSignal.Inventory.Data.ItemDefinition item) [0x0004b] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:183 
+  at LastSignal.WeaponRuntimeState.get_ReserveAmmo () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Combat/WeaponRuntimeState.cs:24 
+  at LastSignal.WeaponRuntimeState.get_CanReload () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Combat/WeaponRuntimeState.cs:108 
+  at LastSignal.WeaponRuntimeState.TryBeginReload () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Combat/WeaponRuntimeState.cs:114 
+  at LastSignal.Tests.WeaponStateTests.CannotReloadWithZeroReserve () [0x0004d] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:212 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1068" name="ConsumeOneShotDecreasesMagazineByOne" fullname="LastSignal.Tests.WeaponStateTests.ConsumeOneShotDecreasesMagazineByOne" methodname="ConsumeOneShotDecreasesMagazineByOne" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1397788566" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000361" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.ConsumeOneShotDecreasesMagazineByOne () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:79 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1071" name="CooldownExpiresAllowsSecondShot" fullname="LastSignal.Tests.WeaponStateTests.CooldownExpiresAllowsSecondShot" methodname="CooldownExpiresAllowsSecondShot" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1330590486" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000278" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.CooldownExpiresAllowsSecondShot () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:115 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1074" name="EmptyReloadIsDetected" fullname="LastSignal.Tests.WeaponStateTests.EmptyReloadIsDetected" methodname="EmptyReloadIsDetected" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1149497783" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000292" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.EmptyReloadIsDetected () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:157 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1081" name="EquipTransitionsToEquippingThenReady" fullname="LastSignal.Tests.WeaponStateTests.EquipTransitionsToEquippingThenReady" methodname="EquipTransitionsToEquippingThenReady" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="778649724" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000354" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.EquipTransitionsToEquippingThenReady () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:241 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1089" name="FireCadenceMatchesRPM" fullname="LastSignal.Tests.WeaponStateTests.FireCadenceMatchesRPM" methodname="FireCadenceMatchesRPM" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1796773272" result="Passed" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000649" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1093" name="FireCooldownCalculation" fullname="LastSignal.Tests.WeaponStateTests.FireCooldownCalculation" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.001386" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1090" name="FireCooldownCalculation(300,0.2f)" fullname="LastSignal.Tests.WeaponStateTests.FireCooldownCalculation(300,0.2f)" methodname="FireCooldownCalculation" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1589508094" result="Passed" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000315" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1091" name="FireCooldownCalculation(900,0.06666667f)" fullname="LastSignal.Tests.WeaponStateTests.FireCooldownCalculation(900,0.06666667f)" methodname="FireCooldownCalculation" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1808753935" result="Passed" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000170" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1092" name="FireCooldownCalculation(60,1.0f)" fullname="LastSignal.Tests.WeaponStateTests.FireCooldownCalculation(60,1.0f)" methodname="FireCooldownCalculation" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1445914293" result="Passed" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000170" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1087" name="ForceHolsterFromAnyState" fullname="LastSignal.Tests.WeaponStateTests.ForceHolsterFromAnyState" methodname="ForceHolsterFromAnyState" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="492960467" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000371" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.ForceHolsterFromAnyState () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:308 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1067" name="InitialAmmoClampedToDefinitionBounds" fullname="LastSignal.Tests.WeaponStateTests.InitialAmmoClampedToDefinitionBounds" methodname="InitialAmmoClampedToDefinitionBounds" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="2033567776" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000371" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.InitialAmmoClampedToDefinitionBounds () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:70 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1066" name="InitialAmmoMatchesConstructorValues" fullname="LastSignal.Tests.WeaponStateTests.InitialAmmoMatchesConstructorValues" methodname="InitialAmmoMatchesConstructorValues" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1975195720" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000329" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.InitialAmmoMatchesConstructorValues () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:60 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1080" name="InitialStateIsHolstered" fullname="LastSignal.Tests.WeaponStateTests.InitialStateIsHolstered" methodname="InitialStateIsHolstered" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1489732557" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000264" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.InitialStateIsHolstered () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:233 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1079" name="InsufficientReserveTransfersOnlyAvailable" fullname="LastSignal.Tests.WeaponStateTests.InsufficientReserveTransfersOnlyAvailable" methodname="InsufficientReserveTransfersOnlyAvailable" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="823246946" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000317" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.InsufficientReserveTransfersOnlyAvailable () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:219 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1095" name="InventoryReserveIsNotClampedByRetiredWeaponLimit" fullname="LastSignal.Tests.WeaponStateTests.InventoryReserveIsNotClampedByRetiredWeaponLimit" methodname="InventoryReserveIsNotClampedByRetiredWeaponLimit" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="111488992" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000289" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.InventoryReserveIsNotClampedByRetiredWeaponLimit () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:367 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1075" name="ReloadCancelBeforeCommitPreservesAmmo" fullname="LastSignal.Tests.WeaponStateTests.ReloadCancelBeforeCommitPreservesAmmo" methodname="ReloadCancelBeforeCommitPreservesAmmo" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="937077346" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000380" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.ReloadCancelBeforeCommitPreservesAmmo () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:167 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1076" name="ReloadCommitCannotBeDuplicated" fullname="LastSignal.Tests.WeaponStateTests.ReloadCommitCannotBeDuplicated" methodname="ReloadCommitCannotBeDuplicated" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="722303636" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000355" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.ReloadCommitCannotBeDuplicated () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:184 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1088" name="SemiAutoConsumesOnlyOneShotPerPress" fullname="LastSignal.Tests.WeaponStateTests.SemiAutoConsumesOnlyOneShotPerPress" methodname="SemiAutoConsumesOnlyOneShotPerPress" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="1835684366" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000328" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.SemiAutoConsumesOnlyOneShotPerPress () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:321 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1073" name="TacticalReloadTransfersCorrectAmount" fullname="LastSignal.Tests.WeaponStateTests.TacticalReloadTransfersCorrectAmount" methodname="TacticalReloadTransfersCorrectAmount" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="931327409" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.010701" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.TacticalReloadTransfersCorrectAmount () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:141 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1086" name="UnequipTransitionsToUnequippingThenHolstered" fullname="LastSignal.Tests.WeaponStateTests.UnequipTransitionsToUnequippingThenHolstered" methodname="UnequipTransitionsToUnequippingThenHolstered" classname="LastSignal.Tests.WeaponStateTests" runstate="Runnable" seed="817672716" result="Failed" label="Error" start-time="2026-09-20 08:15:04Z" end-time="2026-09-20 08:15:04Z" duration="0.000512" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Inventory.PlayerInventory.TryAdd (LastSignal.Inventory.Data.ItemDefinition item, System.Int32 quantity) [0x00079] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs:45 
+  at LastSignal.Tests.WeaponStateTests.CreateState (LastSignal.WeaponDefinition def, System.Int32 mag, System.Int32 reserve) [0x0001e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:21 
+  at LastSignal.Tests.WeaponStateTests.UnequipTransitionsToUnequippingThenHolstered () [0x0002a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/WeaponStateTests.cs:295 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -19,6 +19,13 @@ namespace LastSignal
         Transform cameraTransform;
         GameObject instigator;
         bool fireInputHeld;
+        bool dryFireReported;
+        LastSignal.Inventory.PlayerInventory inventory;
+        PlayerInputReader input;
+        PlayerHealth health;
+        public event Action AmmoChanged;
+        bool GameplayAllowed => isActiveAndEnabled && instigator && instigator.activeInHierarchy &&
+            Time.timeScale > 0 && (!input || input.GameplayActive) && (!health || health.IsAlive);
 
         // ── Public state (read-only for presentation) ───────────────────
         public WeaponRuntimeState RuntimeState => runtimeState;
@@ -35,19 +42,30 @@ namespace LastSignal
 
         // ── Initialization ──────────────────────────────────────────────
 
-        public void Initialize(Transform camera, GameObject shooter, int magazine = -1, int reserve = -1)
+        public void Initialize(Transform camera, GameObject shooter, int magazine = -1)
         {
             if (!definition) { Debug.LogError("WeaponController requires a WeaponDefinition.", this); enabled = false; return; }
+            if (!definition.HasValidAmmunitionConfiguration)
+            { Debug.LogError("WeaponController requires valid ammunition configuration.", this); enabled = false; return; }
+            UnsubscribeAmmo();
+            runtimeState?.ForceHolster();
             cameraTransform = camera;
             instigator = shooter;
-            int mag = magazine >= 0 ? magazine : definition.MagazineCapacity;
-            int res = reserve >= 0 ? reserve : definition.MaxReserve;
-            runtimeState = new WeaponRuntimeState(definition, mag, res);
+            inventory = shooter ? shooter.GetComponent<LastSignal.Inventory.PlayerInventory>() : null;
+            input = shooter ? shooter.GetComponent<PlayerInputReader>() : null;
+            health = shooter ? shooter.GetComponent<PlayerHealth>() : null;
+            if (!inventory)
+            { Debug.LogError("WeaponController requires the shooter's PlayerInventory.", this); enabled = false; return; }
+            int mag = magazine >= 0 ? magazine : definition.StartingMagazine;
+            runtimeState = new WeaponRuntimeState(definition, mag, inventory);
+            fireInputHeld = dryFireReported = false;
+            SubscribeAmmo();
+            NotifyAmmoChanged();
         }
 
         void Update()
         {
-            if (runtimeState == null) return;
+            if (runtimeState == null || !GameplayAllowed) return;
             runtimeState.Tick(Time.deltaTime);
             ProcessStateTimers();
             ProcessAutoFire();
@@ -57,8 +75,10 @@ namespace LastSignal
 
         public void OnFirePressed()
         {
-            if (runtimeState == null || runtimeState.State != WeaponState.Ready) return;
+            if (runtimeState == null || !GameplayAllowed || runtimeState.State != WeaponState.Ready) return;
+            if (fireInputHeld) return;
             fireInputHeld = true;
+            dryFireReported = false;
             runtimeState.FireRequestConsumed = false;
             TryFire();
         }
@@ -66,12 +86,13 @@ namespace LastSignal
         public void OnFireReleased()
         {
             fireInputHeld = false;
+            dryFireReported = false;
             if (runtimeState != null) runtimeState.FireRequestConsumed = false;
         }
 
         public void OnReloadRequested()
         {
-            if (runtimeState == null) return;
+            if (runtimeState == null || !GameplayAllowed) return;
             var previous = runtimeState.State;
             if (runtimeState.TryBeginReload())
             {
@@ -108,26 +129,24 @@ namespace LastSignal
 
         void TryFire()
         {
+            if (!GameplayAllowed || !cameraTransform || !muzzle) return;
             // Semi-auto gate: already consumed this press.
             if (definition.FireMode == FireMode.SemiAutomatic && runtimeState.FireRequestConsumed)
                 return;
 
             if (!runtimeState.CanFire)
             {
-                if (runtimeState.CurrentMagazine == 0)
-                    ShotRejected?.Invoke(); // Dry fire
+                if (runtimeState.CurrentMagazine == 0 && !dryFireReported)
+                {
+                    dryFireReported = true;
+                    ShotRejected?.Invoke(); // At most once until trigger release.
+                }
                 return;
             }
 
             if (!runtimeState.TryConsumeShot()) return;
 
-            // Resolve the shot.
-            if (!cameraTransform || !muzzle)
-            {
-                Debug.LogWarning("WeaponController: missing camera or muzzle transform.");
-                return;
-            }
-
+            // Resolve accepted shots once; misses and wall impacts still cost a round.
             var result = WeaponFireResolver.Resolve(
                 cameraTransform.position, cameraTransform.forward,
                 muzzle.position,
@@ -183,8 +202,29 @@ namespace LastSignal
             }
         }
 
+        void NotifyAmmoChanged() => AmmoChanged?.Invoke();
+        void SubscribeAmmo()
+        {
+            UnsubscribeAmmo();
+            if (inventory) inventory.InventoryChanged += NotifyAmmoChanged;
+            if (runtimeState != null) runtimeState.MagazineChanged += NotifyAmmoChanged;
+        }
+        void UnsubscribeAmmo()
+        {
+            if (inventory) inventory.InventoryChanged -= NotifyAmmoChanged;
+            if (runtimeState != null) runtimeState.MagazineChanged -= NotifyAmmoChanged;
+        }
+        void OnEnable() => SubscribeAmmo();
+        void OnDisable()
+        {
+            OnFireReleased();
+            runtimeState?.ForceHolster();
+            UnsubscribeAmmo();
+            NotifyAmmoChanged();
+        }
         void OnDestroy()
         {
+            UnsubscribeAmmo();
             runtimeState?.ForceHolster();
         }
     }

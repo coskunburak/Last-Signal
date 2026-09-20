@@ -18,6 +18,7 @@ namespace LastSignal
         bool aimInputHeld;
 
         public WeaponController ActiveWeapon => activeWeapon;
+        public event System.Action WeaponChanged;
 
         void Start()
         {
@@ -70,6 +71,7 @@ namespace LastSignal
             if (recoil) recoil.Configure(activeWeapon, look);
             activeWeapon.Initialize(cam ? cam.transform : transform, gameObject);
             activeWeapon.RequestEquip();
+            WeaponChanged?.Invoke();
         }
 
         public void UnequipWeapon()
@@ -79,6 +81,7 @@ namespace LastSignal
             activeWeapon.gameObject.SetActive(false);
             Destroy(activeWeapon.gameObject);
             activeWeapon = null;
+            WeaponChanged?.Invoke();
             if (look) look.SetFOVOverride(-1);
             if (look) look.SetSensitivityMultiplier(1);
         }

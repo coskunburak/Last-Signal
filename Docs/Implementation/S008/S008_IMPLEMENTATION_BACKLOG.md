@@ -1,0 +1,2 @@
+# Deferred systems
+Disk save/load; shelter claim/upgrades/construction; crafting/workbench; hunger/thirst/sleep/fatigue/temperature; generator/power; armor/clothing/medical effects; vendors/NPC survivors/quests/skills; extra weapons/attachments; vehicles; procedural containers; streaming; final death consequences and permanent loss; final balance; Windows shipping certification. These are not implicitly implemented by the S008 foundation.

@@ -16,6 +16,8 @@ namespace LastSignal
         PlayerHealth health;
         LastSignal.Inventory.PlayerInventory inventory;
         LastSignal.Loot.LootPopulationService loot;
+        Shelter.ShelterLoop shelter;
+        public bool PreparationOpen => shelter && shelter.Preparing;
         public bool PlayerDead => health && !health.IsAlive;
         public void Configure(GameObject prefab, Transform spawn, DoorInteractable[] sceneDoors)
         { playerPrefab = prefab; spawnPoint = spawn; doors = sceneDoors; }
@@ -62,12 +64,14 @@ namespace LastSignal
             if (zombieEncounter) zombieEncounter.Begin(Player);
             loot = GetComponent<LastSignal.Loot.LootPopulationService>();
             if (loot) loot.Begin(Player);
+            shelter = GetComponent<Shelter.ShelterLoop>();
+            if (shelter) shelter.Begin(this);
             SetPaused(false);
             Debug.Log("S001 session started: one player, local input.");
         }
-        public void TogglePause() { if (Player) SetPaused(!Paused); }
+        public void TogglePause() { if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(!Paused); }
         public void Pause() { if (Player) SetPaused(true); }
-        public void Resume() { if (Player) SetPaused(false); }
+        public void Resume() { if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(false); }
         void SetPaused(bool value)
         {
             Paused = value;
@@ -92,6 +96,7 @@ namespace LastSignal
         }
         public void ReturnToMenu()
         {
+            if (shelter) shelter.End();
             if (loot) loot.End();
             if (health) health.Died -= OnPlayerDied;
             health = null;

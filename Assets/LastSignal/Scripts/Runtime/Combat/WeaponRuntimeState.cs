@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using LastSignal.Inventory;
 
 namespace LastSignal
 {
@@ -15,10 +16,12 @@ namespace LastSignal
     public sealed class WeaponRuntimeState
     {
         readonly WeaponDefinition definition;
+        readonly PlayerInventory inventory;
+        public event Action MagazineChanged;
 
         public WeaponState State { get; private set; } = WeaponState.Holstered;
         public int CurrentMagazine { get; private set; }
-        public int ReserveAmmo { get; private set; }
+        public int ReserveAmmo => inventory ? inventory.GetTotalQuantity(definition.Ammunition) : 0;
         public float FireCooldownRemaining { get; private set; }
         public float StateTimer { get; private set; }
         public float AimAmount { get; set; } // 0 = hip, 1 = ADS. Interpolated externally.
@@ -28,14 +31,13 @@ namespace LastSignal
 
         // Track total ammo for invariant enforcement.
         public int TotalAmmo => CurrentMagazine + ReserveAmmo;
-        int initialTotal;
 
-        public WeaponRuntimeState(WeaponDefinition def, int magazine, int reserve)
+
+        public WeaponRuntimeState(WeaponDefinition def, int magazine, PlayerInventory reserveInventory)
         {
             definition = def ?? throw new ArgumentNullException(nameof(def));
             CurrentMagazine = Mathf.Clamp(magazine, 0, def.MagazineCapacity);
-            ReserveAmmo = Mathf.Clamp(reserve, 0, def.MaxReserve);
-            initialTotal = TotalAmmo;
+            inventory = reserveInventory;
         }
 
         public WeaponDefinition Definition => definition;
@@ -97,7 +99,7 @@ namespace LastSignal
             CurrentMagazine--;
             FireCooldownRemaining = definition.FireCooldownSeconds;
             FireRequestConsumed = true;
-            EnforceInvariant();
+            MagazineChanged?.Invoke();
             return true;
         }
 
@@ -123,13 +125,22 @@ namespace LastSignal
         {
             if (State != WeaponState.Reloading || ReloadCommitted) return false;
             float duration = IsEmptyReload ? definition.EmptyReloadSeconds : definition.TacticalReloadSeconds;
-            if (StateTimer < duration * definition.ReloadCommitNormalized) return false;
+            float commit = IsEmptyReload ? definition.EmptyReloadCommitNormalized : definition.ReloadCommitNormalized;
+            if (StateTimer < duration * commit) return false;
             int need = definition.MagazineCapacity - CurrentMagazine;
             int transfer = Mathf.Min(need, ReserveAmmo);
-            CurrentMagazine += transfer;
-            ReserveAmmo -= transfer;
+            // Publish only after both owners agree. Inventory removal validates before mutation,
+            // then synchronously notifies observers; stage the magazine and guard first so even
+            // reentrant observers see conserved totals and cannot commit twice.
             ReloadCommitted = true;
-            EnforceInvariant();
+            if (transfer <= 0) return true;
+            CurrentMagazine += transfer;
+            if (!inventory.TryRemove(definition.Ammunition, transfer))
+            {
+                CurrentMagazine -= transfer;
+                return false;
+            }
+            MagazineChanged?.Invoke();
             return true;
         }
 
@@ -140,6 +151,7 @@ namespace LastSignal
             if (StateTimer < duration) return false;
             // Auto-commit if not yet committed (safety net — should not normally happen).
             if (!ReloadCommitted) TryCommitReload();
+            if (State != WeaponState.Reloading) return false; // A commit observer may cancel/holster.
             TransitionTo(WeaponState.Ready);
             return true;
         }
@@ -162,15 +174,6 @@ namespace LastSignal
             TransitionTo(WeaponState.Holstered);
         }
 
-        // ── Reserve manipulation (pickup, cheat) ────────────────────────
-
-        public void AddReserve(int amount)
-        {
-            if (amount <= 0) return;
-            ReserveAmmo = Mathf.Min(ReserveAmmo + amount, definition.MaxReserve);
-            initialTotal = TotalAmmo; // Legitimate total change.
-        }
-
         // ── Internal ─────────────────────────────────────────────────────
 
         void TransitionTo(WeaponState next)
@@ -179,11 +182,5 @@ namespace LastSignal
             StateTimer = 0;
         }
 
-        void EnforceInvariant()
-        {
-            if (CurrentMagazine < 0) { Debug.LogError("AMMO INVARIANT VIOLATED: negative magazine"); CurrentMagazine = 0; }
-            if (ReserveAmmo < 0) { Debug.LogError("AMMO INVARIANT VIOLATED: negative reserve"); ReserveAmmo = 0; }
-            if (TotalAmmo > initialTotal) { Debug.LogError("AMMO INVARIANT VIOLATED: ammo increased from " + initialTotal + " to " + TotalAmmo); }
-        }
     }
 }

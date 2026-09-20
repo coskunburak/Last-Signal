@@ -28,7 +28,7 @@ namespace LastSignal.Tests
             keyboard = InputSystem.AddDevice<Keyboard>(); mouse = InputSystem.AddDevice<Mouse>();
             floor = Box("Test ground", new Vector3(0, -.25f, 0), new Vector3(100, .5f, 100));
 #if UNITY_EDITOR
-            player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab"), new Vector3(0, .05f, 0), Quaternion.identity);
+            player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab"), new Vector3(0, .05f, 0), Quaternion.identity); player.AddComponent<LastSignal.Inventory.PlayerInventory>().Initialize(24);
 #endif
             input = player.GetComponent<PlayerInputReader>();
             stance = player.GetComponent<PlayerStance>();

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Passed" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-20 18:43:50Z" end-time="2026-09-20 18:44:07Z" duration="17.642853">
+  <test-suite type="TestSuite" id="1115" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="90" result="Passed" start-time="2026-09-20 18:43:50Z" end-time="2026-09-20 18:44:07Z" duration="17.642853" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1108" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="90" result="Passed" start-time="2026-09-20 18:43:50Z" end-time="2026-09-20 18:44:07Z" duration="17.636254" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13728" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1109" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="90" result="Passed" start-time="2026-09-20 18:43:50Z" end-time="2026-09-20 18:44:07Z" duration="17.634774" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1110" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="90" result="Passed" start-time="2026-09-20 18:43:50Z" end-time="2026-09-20 18:44:07Z" duration="17.633788" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1049" name="ShelterIntegrationTests" fullname="LastSignal.Tests.ShelterIntegrationTests" classname="LastSignal.Tests.ShelterIntegrationTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-20 18:43:50Z" end-time="2026-09-20 18:44:07Z" duration="17.630574" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1052" name="DeathAndMenuFromPreparationReleasePresentationAndSessionBIsFresh" fullname="LastSignal.Tests.ShelterIntegrationTests.DeathAndMenuFromPreparationReleasePresentationAndSessionBIsFresh" methodname="DeathAndMenuFromPreparationReleasePresentationAndSessionBIsFresh" classname="LastSignal.Tests.ShelterIntegrationTests" runstate="Runnable" seed="847522777" result="Passed" start-time="2026-09-20 18:43:50Z" end-time="2026-09-20 18:43:53Z" duration="2.828041" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1053" name="PartialWorldAndDroppedItemsRemainAcrossReturn" fullname="LastSignal.Tests.ShelterIntegrationTests.PartialWorldAndDroppedItemsRemainAcrossReturn" methodname="PartialWorldAndDroppedItemsRemainAcrossReturn" classname="LastSignal.Tests.ShelterIntegrationTests" runstate="Runnable" seed="402000281" result="Passed" start-time="2026-09-20 18:43:53Z" end-time="2026-09-20 18:43:54Z" duration="1.162154" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1050" name="ProductionTwoExpeditionsPreserveWorldStorageAndAmmo" fullname="LastSignal.Tests.ShelterIntegrationTests.ProductionTwoExpeditionsPreserveWorldStorageAndAmmo" methodname="ProductionTwoExpeditionsPreserveWorldStorageAndAmmo" classname="LastSignal.Tests.ShelterIntegrationTests" runstate="Runnable" seed="90650942" result="Passed" start-time="2026-09-20 18:43:54Z" end-time="2026-09-20 18:43:58Z" duration="3.929855" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1054" name="ReturnDuringReloadBeforeAndAfterCommitPreservesExistingTiming" fullname="LastSignal.Tests.ShelterIntegrationTests.ReturnDuringReloadBeforeAndAfterCommitPreservesExistingTiming" methodname="ReturnDuringReloadBeforeAndAfterCommitPreservesExistingTiming" classname="LastSignal.Tests.ShelterIntegrationTests" runstate="Runnable" seed="1867294789" result="Passed" start-time="2026-09-20 18:43:58Z" end-time="2026-09-20 18:44:05Z" duration="7.395175" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1055" name="TenExpeditionSoakConservesIdentityAndMeasuresTransitions" fullname="LastSignal.Tests.ShelterIntegrationTests.TenExpeditionSoakConservesIdentityAndMeasuresTransitions" methodname="TenExpeditionSoakConservesIdentityAndMeasuresTransitions" classname="LastSignal.Tests.ShelterIntegrationTests" runstate="Runnable" seed="662337776" result="Passed" start-time="2026-09-20 18:44:05Z" end-time="2026-09-20 18:44:06Z" duration="1.195059" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1051" name="TenOpenCloseCyclesOneClickOneTransferAndInputOwnership" fullname="LastSignal.Tests.ShelterIntegrationTests.TenOpenCloseCyclesOneClickOneTransferAndInputOwnership" methodname="TenOpenCloseCyclesOneClickOneTransferAndInputOwnership" classname="LastSignal.Tests.ShelterIntegrationTests" runstate="Runnable" seed="1394825887" result="Passed" start-time="2026-09-20 18:44:06Z" end-time="2026-09-20 18:44:07Z" duration="1.107681" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

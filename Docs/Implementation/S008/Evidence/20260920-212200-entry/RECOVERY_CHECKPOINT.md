@@ -1,0 +1,8 @@
+# S008 recovery
+Gate 29-30: full final regression.
+Entry compile + full EditMode136/136 + PlayMode84/84 PASS. Focused domain/S00733/33. Focused S008 PlayMode r3=6/6 PASS; two-expedition production interaction/UI/combat/loot continuity acceptance and 10-expedition soak succeeded.
+Final EditMode150/150 PASS. Full PlayMode currently running -> final-playmode.xml/log. Adds disabled UI/blocked-anchor/dead-expedition checks and isolated performance sampling. No second editor while active.
+New optional Development-only ShelterStandaloneAcceptance driver (-s008Acceptance <evidence-path>) uses production scene/interaction rays/UI buttons/rifle/reload and records screenshots/conservation/menu/Session B. Fixture positioning is explicit, not manual traversal proof. Absent from release builds and inactive in normal play.
+Prior failure evidence retained: integration test GetInstanceID compile obsolete; r2 test incorrectly expected reload cancellation; r3 corrected to frozen S007 timing and passed. No combat code changed.
+Only pre-existing source files modified since entry (hash comparison): PlayerInventory.cs (minimal shared container extraction); SessionFlow.cs (optional shelter lifecycle/modal hooks); AcceptanceHud.cs (one modal visibility condition). New S008 runtime/domain/UI/editor/test files and separate ShelterAcceptance scene. Prior S007 dirty work preserved.
+Next: inspect final full PlayMode; if failures reproduce/fix and focused rerun, then final regression as warranted. Build via LastSignal.Editor.ShelterAuthoring.Build, run Development standalone driver and inspect screenshots/log, normal launch UI/traversal check via computer-use, finalize documentation/evidence/matrix. Do not PASS before mandatory standalone and full-suite evidence.

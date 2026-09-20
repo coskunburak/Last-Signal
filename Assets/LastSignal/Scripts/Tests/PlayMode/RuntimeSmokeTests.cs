@@ -67,7 +67,8 @@ namespace LastSignal.Tests
                 Assert.That(combat.ActiveWeapon.RuntimeState.CurrentMagazine, Is.EqualTo(initialAmmo - 1), "Fire should consume one round");
                 Assert.That(target10m.CurrentHealth, Is.LessThan(initialHealth), "Target should be damaged");
 
-                // 4. Reload
+                // 4. Reload: explicit S007 inventory fixture; no hidden weapon reserve.
+                player.GetComponent<LastSignal.Inventory.PlayerInventory>().TryAdd(combat.ActiveWeapon.Definition.Ammunition, 1);
                 combat.ActiveWeapon.OnReloadRequested();
                 yield return new WaitForSeconds(combat.ActiveWeapon.Definition.TacticalReloadSeconds + 0.1f);
                 Assert.That(combat.ActiveWeapon.RuntimeState.CurrentMagazine, Is.GreaterThan(initialAmmo - 1), "Reload should transfer ammo");

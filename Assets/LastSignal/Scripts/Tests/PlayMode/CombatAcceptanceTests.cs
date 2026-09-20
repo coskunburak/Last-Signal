@@ -97,6 +97,7 @@ namespace LastSignal.Tests
         public IEnumerator Reload_TransfersAmmoAfterDuration()
         {
             yield return LoadCombatScene(); var state = combat.ActiveWeapon.RuntimeState;
+            combat.GetComponent<LastSignal.Inventory.PlayerInventory>().TryAdd(state.Definition.Ammunition, 5); // Explicit reserve fixture.
             // Fire 5 shots
             for (int i=0; i<5; i++)
             {
