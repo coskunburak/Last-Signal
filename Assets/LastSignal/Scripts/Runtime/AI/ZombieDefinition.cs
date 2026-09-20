@@ -37,6 +37,18 @@ namespace LastSignal
         [Header("Presentation")]
         [SerializeField, Min(.1f)] float measuredWalkSpeed = .918734f;
         [SerializeField, Min(.01f)] float animationBlendTime = .12f;
+        [Header("Damage presentation")]
+        [SerializeField] AnimationClip hitReactClip;
+        [SerializeField] AnimationClip deathClip;
+        [SerializeField, Min(.01f)] float hitReactCooldown = 1.5f;
+        public AnimationClip HitReactClip => hitReactClip;
+        public AnimationClip DeathClip => deathClip;
+        public float HitReactDuration => hitReactClip ? hitReactClip.length : 0;
+        public float DeathDuration => deathClip ? deathClip.length : 0;
+        public float HitReactCooldown => hitReactCooldown;
+        public bool IsDamagePresentationValid => hitReactClip && deathClip &&
+            !hitReactClip.isLooping && !deathClip.isLooping && HitReactDuration > 0 && DeathDuration > 0 &&
+            float.IsFinite(hitReactCooldown) && hitReactCooldown > HitReactDuration;
         [Header("Melee — measured Zombie@Attack01")]
         [SerializeField] AnimationClip attackClip;
         [SerializeField, Range(.5f, 1.25f)] float attackPlaybackSpeed = .8f;

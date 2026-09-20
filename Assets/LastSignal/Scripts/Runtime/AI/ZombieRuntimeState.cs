@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LastSignal
 {
-    public enum ZombieState { Idle, Chasing, Searching, AttackWindup, AttackCommit, Recovering }
+    public enum ZombieState { Idle, Chasing, Searching, AttackWindup, AttackCommit, Recovering, HitReact, Dead }
 
     // Only ZombieController writes this per-actor domain state. No Transform reference is retained.
     public sealed class ZombieRuntimeState
@@ -20,6 +20,7 @@ namespace LastSignal
 
         public void Observe(bool visible, Vector3 observedPosition, Vector3 observedDirection, float seconds, ZombieDefinition tuning)
         {
+            if (State == ZombieState.Dead) return;
             Visible = visible;
             Confidence = Mathf.Clamp01(Confidence + (visible ? seconds / tuning.AcquisitionTime : -seconds / tuning.ConfidenceDecayTime));
             if (!visible) return; // Hidden samples cannot change remembered information.
@@ -30,12 +31,15 @@ namespace LastSignal
 
         public void Advance(float seconds)
         {
-            if (seconds <= 0) return;
+            if (seconds <= 0 || State == ZombieState.Dead) return;
             if (HasMemory) MemoryAge += seconds;
             if (State == ZombieState.Searching) SearchAge += seconds;
         }
 
         public static bool IsLegal(ZombieState from, ZombieState to) =>
+            from != ZombieState.Dead && to == ZombieState.Dead ||
+            from != ZombieState.Dead && from != ZombieState.HitReact && to == ZombieState.HitReact ||
+            from == ZombieState.HitReact && (to == ZombieState.Idle || to == ZombieState.Chasing || to == ZombieState.Searching) ||
             from == ZombieState.Idle && to == ZombieState.Chasing ||
             from == ZombieState.Chasing && (to == ZombieState.Searching || to == ZombieState.AttackWindup) ||
             from == ZombieState.Searching && (to == ZombieState.Chasing || to == ZombieState.Idle) ||
@@ -46,17 +50,17 @@ namespace LastSignal
         public void Transition(ZombieState next)
         {
             if (!IsLegal(State, next)) throw new InvalidOperationException("Illegal zombie state transition: " + State + " -> " + next);
-            Exit(State); State = next; Transitions++; Enter(next);
+            var previous = State; Exit(State, next); State = next; Transitions++; Enter(next, previous);
         }
-        void Exit(ZombieState previous) { if (previous == ZombieState.Searching) SearchAge = 0; }
-        void Enter(ZombieState next)
+        void Exit(ZombieState previous, ZombieState next) { if (previous == ZombieState.Searching && next != ZombieState.HitReact) SearchAge = 0; }
+        void Enter(ZombieState next, ZombieState previous)
         {
-            if (next == ZombieState.Searching) SearchAge = 0;
-            if (next == ZombieState.Idle) ClearKnowledge();
+            if (next == ZombieState.Searching && previous != ZombieState.HitReact) SearchAge = 0;
+            if (next == ZombieState.Idle && previous != ZombieState.HitReact || next == ZombieState.Dead) ClearKnowledge();
         }
         void ClearKnowledge()
         { Confidence = 0; Visible = false; HasMemory = false; LastKnownPosition = LastSeenDirection = Vector3.zero; MemoryAge = SearchAge = 0; }
-        public void Reset() { State = ZombieState.Idle; Transitions = 0; ClearKnowledge(); }
+        public void Reset() { if (State == ZombieState.Dead) return; State = ZombieState.Idle; Transitions = 0; ClearKnowledge(); }
     }
 
     public sealed class ZombieDestinationPolicy

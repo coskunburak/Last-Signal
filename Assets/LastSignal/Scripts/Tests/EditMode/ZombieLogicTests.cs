@@ -29,6 +29,9 @@ namespace LastSignal.Tests
             foreach (ZombieState from in System.Enum.GetValues(typeof(ZombieState)))
                 foreach (ZombieState to in System.Enum.GetValues(typeof(ZombieState)))
                     Assert.That(ZombieRuntimeState.IsLegal(from, to), Is.EqualTo(
+                        from != ZombieState.Dead && to == ZombieState.Dead ||
+                        from != ZombieState.Dead && from != ZombieState.HitReact && to == ZombieState.HitReact ||
+                        from == ZombieState.HitReact && (to == ZombieState.Idle || to == ZombieState.Chasing || to == ZombieState.Searching) ||
                         from == ZombieState.Idle && to == ZombieState.Chasing ||
                         from == ZombieState.Chasing && (to == ZombieState.Searching || to == ZombieState.AttackWindup) ||
                         from == ZombieState.Searching && (to == ZombieState.Chasing || to == ZombieState.Idle) ||

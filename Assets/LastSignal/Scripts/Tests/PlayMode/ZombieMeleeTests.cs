@@ -18,7 +18,7 @@ namespace LastSignal.Tests
 {
     public class ZombieMeleeTests
     {
-        const string Evidence = "Docs/Implementation/S004/Evidence/20260919-P3";
+        const string Evidence = "Docs/Implementation/S004/Evidence/20260919-P4/regression-P3";
         SessionFlow session;
         ZombieController zombie;
         PlayerHealth health;

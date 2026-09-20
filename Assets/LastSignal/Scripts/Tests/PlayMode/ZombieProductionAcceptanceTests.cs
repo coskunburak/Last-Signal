@@ -17,7 +17,7 @@ namespace LastSignal.Tests
 {
     public class ZombieProductionAcceptanceTests
     {
-        const string Evidence="Docs/Implementation/S004/Evidence/20260919-P2-Recovery";
+        const string Evidence="Docs/Implementation/S004/Evidence/20260919-P4/regression-P2";
         SessionFlow session;
         readonly List<GameObject> owned=new List<GameObject>();
         IEnumerator Load()

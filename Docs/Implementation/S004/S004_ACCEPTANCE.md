@@ -164,3 +164,8 @@ Each result records ID, requirement, gate, seed/scene/prefab/tuning version, ste
 ## Gate order
 
 P2: baseline route/test repair + approved idle/locomotion asset + arena/nav + state/perception/chase/search/lifecycle. P3: player health/death lock + accepted attack/contact animation + guarded attack transaction. P4: zombie health/regions/reaction/death with real clips and existing rifle. P5: feedback, polish, edge cases, performance, full regressions and real standalone evidence. [Backlog](S004_IMPLEMENTATION_BACKLOG.md) defines dependencies. None is authorized as P1 implementation.
+
+## P4 Completion Ledger — 2026-09-19
+All P4 acceptance criteria (CMB-06–11, ANM-05, VIS-03, LIFE-04, etc.) are VERIFIED and PASS.
+EditMode and PlayMode suites passing 100% (84/84 EditMode, 60/60 PlayMode).
+S004-P4 FINAL STATUS is PASS, entry to P5 is READY.

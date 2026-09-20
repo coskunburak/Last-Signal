@@ -38,3 +38,14 @@ Backstep beyond reach, motor-driven sidestep outside arc, rear position and inse
 P2 stop/resume remains 1.2/1.6 m center distance; stop tolerance is .08 m. Attack entry uses 1.08 m capsule-surface clearance to include this stopping tolerance. Hard abort 2.5 m, entry 1.08 m and contact 1.24 m provide separate envelopes. No frame-by-frame attack/chase oscillation at contact reach.
 
 Pause freezes both controller and manual attack-presentation clocks. Menu/disable/new binding cancels pending sequence; session owns input gating and terminal weapon unequip. New player instances initialize full health. The existing menu panel provides minimal death feedback and ReturnToMenu; no respawn/checkpoint/game-over framework is added.
+
+
+## P4 reciprocal combat (2026-09-19)
+
+Every living state can enter HitReact on an eligible surviving damage transaction, or terminal Dead on lethal damage. HitReact returns to its prior Idle/Chasing/Searching state; interrupted melee returns to Chasing if last observation was visible, otherwise Searching. Pending contact is cleared before presentation changes. A hit during AttackCommit cancels any unspent contact; damage already delivered before the bullet cannot be undone. Cooldown-suppressed damage preserves the attack and plays no contradictory recoil.
+
+HitReact uses the real .5-second clip. Eligibility is at most once per 1.5 simulation seconds, with no timer restart on subsequent hits. Damage always applies independently. During reaction, perception and search progress freeze; remembered positions and the existing search plan remain intact. Taking damage never observes the shooter. After reaction the normal P2 observation runs immediately and governs chase/search normally. Pause freezes the reaction and cooldown clocks.
+
+Dead clears attack sequence/time/contact, knowledge, search and target references once. It disables perception, navigation/agent and all owned colliders. Controller no longer ticks AI; it advances only the 1.333333-second corrected Death presentation, then returns without simulation work. Final skeleton is held with Animator disabled. Reset, rebinding and Initialize cannot resurrect this instance. New sessions create fresh actors at full health.
+
+Corpse policy: no player/zombie collision, no bullet collision, no interaction, no gameplay damage, no loot. Corpse remains visible until encounter/session teardown. Flat-ground animation only; slope-aware placement and corpse density limits remain P5 work.

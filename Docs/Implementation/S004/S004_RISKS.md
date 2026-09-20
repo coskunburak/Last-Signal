@@ -65,3 +65,15 @@ No baseline failure was fixed or concealed in P1. Missing production art/timing 
 - Open: live ScriptableObject edits during a running session are unsupported; tuning is activation-validated, not immutable-snapshotted. Existing P2 uses the same convention.
 - Open: existing third-person player material/viewmodel rendering; external QA hides layer-30 body and adds a clearly identified capsule visualization. First-person camera uses the real production rig/weapon.
 - Open: commercial entitlement evidence, Windows/standalone shipping performance, audio/damage polish and full death UX. These are not falsely closed by P3.
+
+
+## P4 risk disposition — validation in progress
+
+New health/region ownership, one-dispatch damage, reaction cooldown, lethal attack cancellation, terminal death, disabled corpse queries and fresh-session tests are implemented. Final gate status belongs to S004_P4_IMPLEMENTATION_REPORT.md and its XML evidence. R11/R12 are addressed by the small context extension and single-nearest-hit dispatch; no penetration/pellet/network semantics are claimed. R14/R15 use explicit layer-8 query colliders with physical collisions disabled. R18/R19 are covered by reaction/death contact cancellation and cooldown tests.
+
+Retained: human balance/readability playtests, coarse box approximation around animated joints, flat-ground-only corpse acceptance, P5 crowd density/LOD/101-bone cost, audio/VFX polish, hearing/population systems, Windows build/standalone performance and commercial entitlement. Dead colliders intentionally allow bullets/movement through corpses. Corpses accumulate only within the current fixed encounter scope; this is not a spawning/population budget.
+Update on R13: The short muzzle obstruction issue was successfully reproduced using the `MuzzleInsideColliderTest`. The weapon barrel indeed clipped inside the `EnemyHitRegion` collider at very close ranges, causing the muzzle obstruction raycast to return false. This was minimally fixed by adding a `Physics.Linecast` from `cameraOrigin` to `muzzlePosition` before the forward raycast in `WeaponFireResolver.Resolve`. The `clipHit` is properly evaluated for damage, ensuring reliable close-range registration without sacrificing physical wall-clipping logic.
+
+## Final P4 Status — 2026-09-19
+All P4 risks are formally closed or transitioned to P5 limitations (e.g., population balance, crowd density, audio, shipping performance). 
+P4 validation complete. Status: PASS.

@@ -14,6 +14,8 @@ namespace LastSignal
         public bool InMenu => !Player;
         PlayerInputReader input;
         PlayerHealth health;
+        LastSignal.Inventory.PlayerInventory inventory;
+        LastSignal.Loot.LootPopulationService loot;
         public bool PlayerDead => health && !health.IsAlive;
         public void Configure(GameObject prefab, Transform spawn, DoorInteractable[] sceneDoors)
         { playerPrefab = prefab; spawnPoint = spawn; doors = sceneDoors; }
@@ -26,10 +28,40 @@ namespace LastSignal
             Player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
             input = Player.GetComponent<PlayerInputReader>();
             health = Player.GetComponent<PlayerHealth>();
+            
+            // S005: Initialize Inventory
+            inventory = Player.AddComponent<LastSignal.Inventory.PlayerInventory>();
+            var cam = Player.GetComponentInChildren<Camera>();
+            inventory.ConfigureDrop(cam ? cam.transform : Player.transform);
+
+            // S005: Bind minimal UI if we can find it. HUD is usually in scene.
+            var ui = FindObjectOfType<LastSignal.Inventory.UI.InventoryUI>(true);
+            if (!ui)
+            {
+                var canvasGO = new GameObject("S005_InventoryCanvas");
+                var canvas = canvasGO.AddComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                canvasGO.AddComponent<UnityEngine.UI.CanvasScaler>();
+                canvasGO.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+                
+                var panelGO = new GameObject("Panel");
+                panelGO.transform.SetParent(canvasGO.transform, false);
+                var img = panelGO.AddComponent<UnityEngine.UI.Image>();
+                img.color = new Color(0, 0, 0, 0.8f);
+                
+                ui = canvasGO.AddComponent<LastSignal.Inventory.UI.InventoryUI>();
+                // We use reflection to set the private 'panel' field
+                var panelField = typeof(LastSignal.Inventory.UI.InventoryUI).GetField("panel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                panelField.SetValue(ui, panelGO);
+            }
+            if (ui) ui.Bind(inventory, this, input);
+
             if (health) health.Died += OnPlayerDied;
             input.PauseRequested += TogglePause;
             input.FocusLost += Pause;
             if (zombieEncounter) zombieEncounter.Begin(Player);
+            loot = GetComponent<LastSignal.Loot.LootPopulationService>();
+            if (loot) loot.Begin(Player);
             SetPaused(false);
             Debug.Log("S001 session started: one player, local input.");
         }
@@ -60,6 +92,7 @@ namespace LastSignal
         }
         public void ReturnToMenu()
         {
+            if (loot) loot.End();
             if (health) health.Died -= OnPlayerDied;
             health = null;
             if (zombieEncounter) zombieEncounter.End();
@@ -69,9 +102,12 @@ namespace LastSignal
                 input.FocusLost -= Pause;
                 input.SetGameplay(false);
             }
+            var ui = FindObjectOfType<LastSignal.Inventory.UI.InventoryUI>(true);
+            if (ui) ui.Unbind();
             if (Player) { Player.SetActive(false); Destroy(Player); }
             Player = null;
             input = null;
+            inventory = null;
             Paused = false;
             Time.timeScale = 0;
             Cursor.lockState = CursorLockMode.None;

@@ -39,3 +39,10 @@ Exact GUID/file IDs, settings, sample data and state mapping: [inventory](Eviden
 Fresh actual-rig samples and accepted baked pose renders: [clip audit](Evidence/20260919-P3/clip-audit/README.md). Source clip remains 1.333333 s, 30 fps, zero events, non-looping. P3 uses .8 playback: commit normalized .15 / .25 s; contact normalized .25 / .416667 s; Recovering begins normalized .325 / .541667 s; completion normalized 1 / 1.666667 s. Right-hand z reaches 1.234 m at source .333333 s. Recovery retains the rest of the real clip, with no extra hidden cooldown.
 
 Attack begins once on AttackWindup entry. Gameplay drives presentation time; pause freezes it. Runtime test checks actual Animator normalized time against gameplay timer (tolerance .03 normalized). Root motion stays off, navigation stops, no lunge or post-commit tracking. HitReact and Death are still presentation assets only, reserved for P4.
+
+
+## P4 authoritative HitReact / Death use
+
+Fresh 121-sample audits per clip: `Evidence/20260919-P4/clip-audit/`. HitReact uses Zombie@Damage01, .5 s / 30 fps / non-looping / no events. Head displacement reaches .254814 m; first >1 cm displacement occurs at .008333 s (a numerical onset, not a human readability threshold). Actor root translation and yaw remain zero. Sampled skin minimum -3.43 mm.
+
+Death uses unchanged LS_Zombie_Death, 1.333333 s / 30 fps / non-looping / no events. Actor root translation/yaw remain zero. Worst sampled skin minimum -5.74 mm, final minimum +5 mm. Existing B0B floor correction is preserved. Both states enter once per authorized transaction, with automatic Animator speed zero between manual advances. Death clamps presentation time to clip length and disables Animator at the evaluated final pose; no outgoing Idle transition. Pause freezes both.

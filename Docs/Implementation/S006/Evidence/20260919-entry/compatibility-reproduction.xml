@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-19 14:24:55Z" end-time="2026-09-19 14:24:55Z" duration="0.0441593">
+  <test-suite type="TestSuite" id="1099" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="76" result="Failed" site="Child" start-time="2026-09-19 14:24:55Z" end-time="2026-09-19 14:24:55Z" duration="0.044159" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1092" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="76" result="Failed" site="Child" start-time="2026-09-19 14:24:55Z" end-time="2026-09-19 14:24:55Z" duration="0.038556" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="36586" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1093" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="76" result="Failed" site="Child" start-time="2026-09-19 14:24:55Z" end-time="2026-09-19 14:24:55Z" duration="0.036560" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1094" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="76" result="Failed" site="Child" start-time="2026-09-19 14:24:55Z" end-time="2026-09-19 14:24:55Z" duration="0.035754" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1006" name="LootCompatibilityTests" fullname="LastSignal.Tests.LootCompatibilityTests" classname="LastSignal.Tests.LootCompatibilityTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-19 14:24:55Z" end-time="2026-09-19 14:24:55Z" duration="0.033029" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1008" name="RebindingSlotDoesNotDoubleInvokeClick" fullname="LastSignal.Tests.LootCompatibilityTests.RebindingSlotDoesNotDoubleInvokeClick" methodname="RebindingSlotDoesNotDoubleInvokeClick" classname="LastSignal.Tests.LootCompatibilityTests" runstate="Runnable" seed="1787100821" result="Failed" start-time="2026-09-19 14:24:55Z" end-time="2026-09-19 14:24:55Z" duration="0.015266" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.LootCompatibilityTests+<RebindingSlotDoesNotDoubleInvokeClick>d__1.MoveNext () [0x000cf] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/Loot/LootCompatibilityTests.cs:30
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1007" name="SeedItemsHaveVisibleWorldRepresentation" fullname="LastSignal.Tests.LootCompatibilityTests.SeedItemsHaveVisibleWorldRepresentation" methodname="SeedItemsHaveVisibleWorldRepresentation" classname="LastSignal.Tests.LootCompatibilityTests" runstate="Runnable" seed="25795746" result="Failed" start-time="2026-09-19 14:24:55Z" end-time="2026-09-19 14:24:55Z" duration="0.005701" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  medical.bandage has no visible world representation
+  Expected: not <empty>
+  But was:  <empty>
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.LootCompatibilityTests.SeedItemsHaveVisibleWorldRepresentation () [0x00054] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/Loot/LootCompatibilityTests.cs:20
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

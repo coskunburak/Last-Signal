@@ -11,7 +11,7 @@ namespace LastSignal
         InputActionAsset instance;
         InputActionMap gameplay, ui;
         InputAction move, look, sprint, crouch, interact, pause, cancel;
-        InputAction attack, aim, reload;
+        InputAction attack, aim, reload, inventory;
         bool neutralRequired = true;
         public bool GameplayActive { get; private set; }
         public Vector2 Move { get; private set; }
@@ -22,6 +22,7 @@ namespace LastSignal
         public event Action InteractRequested;
         public event Action CrouchRequested;
         public event Action PauseRequested;
+        public event Action InventoryRequested;
         public event Action FocusLost;
         public event Action FirePressed;
         public event Action FireReleased;
@@ -47,6 +48,7 @@ namespace LastSignal
             attack = gameplay.FindAction("Attack", true);
             aim = gameplay.FindAction("Aim", false); // May not exist in older asset versions
             reload = gameplay.FindAction("Reload", false);
+            inventory = gameplay.FindAction("Inventory", false);
         }
 
         void OnEnable()
@@ -55,6 +57,7 @@ namespace LastSignal
             interact.performed += OnInteract;
             crouch.performed += OnCrouch;
             pause.performed += OnPause;
+            if (inventory != null) inventory.performed += OnInventory;
             cancel.performed += OnPause;
             attack.performed += OnFirePressed;
             attack.canceled += OnFireReleased;
@@ -69,6 +72,7 @@ namespace LastSignal
             interact.performed -= OnInteract;
             crouch.performed -= OnCrouch;
             pause.performed -= OnPause;
+            if (inventory != null) inventory.performed -= OnInventory;
             cancel.performed -= OnPause;
             attack.performed -= OnFirePressed;
             attack.canceled -= OnFireReleased;
@@ -101,7 +105,7 @@ namespace LastSignal
             {
                 neutralRequired = move.ReadValue<Vector2>().sqrMagnitude > .001f ||
                     sprint.IsPressed() || crouch.IsPressed() || interact.IsPressed() ||
-                    attack.IsPressed() || (aim != null && aim.IsPressed());
+                    attack.IsPressed() || (aim != null && aim.IsPressed()) || (inventory != null && inventory.IsPressed());
                 Clear();
                 return;
             }
@@ -115,6 +119,7 @@ namespace LastSignal
         void OnInteract(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) InteractRequested?.Invoke(); }
         void OnCrouch(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) CrouchRequested?.Invoke(); }
         void OnPause(InputAction.CallbackContext _) => PauseRequested?.Invoke();
+        void OnInventory(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) InventoryRequested?.Invoke(); }
         void OnFirePressed(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) FirePressed?.Invoke(); }
         void OnFireReleased(InputAction.CallbackContext _) { if (GameplayActive) FireReleased?.Invoke(); }
         void OnAimPressed(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) AimPressed?.Invoke(); }

@@ -9,6 +9,12 @@ namespace LastSignal
         static readonly ProfilerMarker Marker = new ProfilerMarker("LastSignal.Zombie.AI");
         [SerializeField] ZombieDefinition definition;
         [SerializeField] Transform meleeOrigin;
+        ZombieHealth health;
+        Collider[] ownedColliders;
+        float reactionRemaining, reactionReadyAt;
+        ZombieState reactionReturn;
+        public bool IsDead => runtime.State == ZombieState.Dead;
+        public float ReactionRemaining => reactionRemaining;
         PlayerHealth targetHealth;
         CharacterController targetCapsule;
         bool combatReady, contactConsumed;
@@ -54,6 +60,7 @@ namespace LastSignal
         public void Configure(ZombieDefinition value) => definition = value;
         public bool Initialize()
         {
+            if (IsDead) return false;
             if (!definition || !definition.IsValid(out _))
             { Debug.LogError("Zombie requires a valid Shambler definition.", this); enabled = false; return false; }
             navigation = GetComponent<ZombieNavigation>(); perception = GetComponent<ZombiePerception>();
@@ -64,14 +71,26 @@ namespace LastSignal
             combatReady = presentation && meleeOrigin && definition.IsAttackValid(out _) && presentation.HasAttackPresentation(definition.AttackClip);
             if (presentation && !combatReady)
             { Debug.LogError("Zombie melee requires MeleeOrigin and valid measured attack tuning. Combat disabled.", this); initialized = false; }
+            health = GetComponent<ZombieHealth>();
+            if (health)
+            {
+                health.Damaged -= OnDamaged; health.Died -= OnDeath;
+                health.Damaged += OnDamaged; health.Died += OnDeath;
+                ownedColliders = GetComponentsInChildren<Collider>(true);
+                if (!presentation || !presentation.HasDamagePresentation() || !health.IsAlive) initialized = false;
+                health.SetDamageEnabled(initialized);
+            }
             // Stable per-instance phase. No shared scheduler or per-tick randomness.
             perceptionDue = (uint)GetEntityId().GetHashCode() % 17 / 17f * definition.PerceptionInterval;
             return initialized;
         }
         public bool Bind(GameObject player)
         {
+            if (IsDead) return false;
             // Rebinding is an explicit lifecycle boundary, including a rejected/null replacement.
             // A strike committed against A can never become a strike against B.
+            if (presentation) presentation.EndReaction();
+            reactionRemaining = reactionReadyAt = 0;
             ClearAttack(); runtime.Reset(); search.Clear(); holding = false;
             target = null; targetHealth = null; targetCapsule = null;
             if (navigation) navigation.Stop();
@@ -85,12 +104,16 @@ namespace LastSignal
         }
         public void SetPaused(bool value)
         {
-            paused = value; if (navigation) navigation.Suspend(value);
+            paused = value; if (health) health.SetDamageEnabled(initialized && !value && !IsDead);
+            if (navigation && !IsDead) navigation.Suspend(value);
             if (presentation) presentation.SetPaused(value);
             if (!value) { perceptionDue = clock; observationAge = 0; } // Revalidate immediately; no paused evidence accrues.
         }
         public void Shutdown()
         {
+            if (health) health.SetDamageEnabled(false);
+            if (presentation && !IsDead) presentation.EndReaction();
+            reactionRemaining = reactionReadyAt = 0;
             target = null; targetHealth = null; targetCapsule = null;
             ClearAttack(); sequence = 0; ContactAttempts = SuccessfulHits = 0; LastContactSequence = 0;
             initialized = false; runtime.Reset(); search.Clear(); holding = false;
@@ -101,6 +124,7 @@ namespace LastSignal
         public void Simulate(float seconds)
         {
             if (!isActiveAndEnabled || !float.IsFinite(seconds)) return;
+            if (IsDead) { if (!paused && seconds > 0 && presentation) presentation.AdvanceDamage(seconds); return; }
             if (!initialized) return;
             if (!target || !target.activeInHierarchy) { Shutdown(); return; }
             if (targetHealth && !targetHealth.IsAlive) { Shutdown(); return; }
@@ -115,7 +139,20 @@ namespace LastSignal
         }
         void Tick(float seconds)
         {
-            clock += seconds; observationAge += seconds; runtime.Advance(seconds);
+            clock += seconds;
+            if (runtime.State == ZombieState.HitReact)
+            {
+                reactionRemaining = Mathf.Max(0, reactionRemaining - seconds);
+                presentation.AdvanceDamage(seconds);
+                if (reactionRemaining <= 0)
+                {
+                    presentation.EndReaction();
+                    runtime.Transition(reactionReturn);
+                    perceptionDue = clock; observationAge = 0;
+                }
+                return; // Freeze memory/search progress; no source-position knowledge is introduced.
+            }
+            observationAge += seconds; runtime.Advance(seconds);
             if (clock >= perceptionDue)
             {
                 var observation = perception.Evaluate(definition);
@@ -151,6 +188,34 @@ namespace LastSignal
             }
             navigation.Tick(seconds, clock);
             if (presentation && !Attacking) presentation.Present(navigation.Velocity.magnitude, seconds, false);
+        }
+        void OnDamaged(DamageInfo info)
+        {
+            if (!initialized || paused || IsDead || runtime.State == ZombieState.HitReact || clock < reactionReadyAt) return;
+            reactionReturn = Attacking ? (runtime.Visible ? ZombieState.Chasing : ZombieState.Searching) : runtime.State;
+            // Preserve search progress when already searching; an interrupted melee starts search only if unseen.
+            if (Attacking && reactionReturn == ZombieState.Searching)
+                search.Begin(runtime.LastKnownPosition, runtime.LastSeenDirection);
+            ClearAttack(); navigation.Stop(); holding = false;
+            runtime.Transition(ZombieState.HitReact);
+            reactionRemaining = definition.HitReactDuration; reactionReadyAt = clock + definition.HitReactCooldown;
+            presentation.BeginDamage(false);
+        }
+        void OnDeath()
+        {
+            if (IsDead) return;
+            ClearAttack(); reactionRemaining = 0; sequence = 0;
+            runtime.Transition(ZombieState.Dead); search.Clear(); holding = false;
+            target = null; targetHealth = null; targetCapsule = null;
+            initialized = false; combatReady = false;
+            if (perception) { perception.Clear(); perception.enabled = false; }
+            if (navigation) { navigation.Stop(); navigation.enabled = false; }
+            if (ownedColliders != null) foreach (var collider in ownedColliders) if (collider) collider.enabled = false;
+            if (presentation) presentation.BeginDamage(true);
+        }
+        void OnDestroy()
+        {
+            if (health) { health.Damaged -= OnDamaged; health.Died -= OnDeath; }
         }
         bool TryBeginAttack()
         {
@@ -200,7 +265,7 @@ namespace LastSignal
                     if (LastMeleeResult == MeleeResult.Hit)
                     {
                         SuccessfulHits++;
-                        targetHealth.TakeDamage(new DamageInfo { Amount = definition.AttackDamage, Instigator = gameObject,
+                        targetHealth.TakeDamage(new DamageInfo { Amount = definition.AttackDamage, Instigator = gameObject, Category = DamageCategory.Melee,
                             SourcePosition = MeleeOrigin, HitPoint = point, HitNormal = -lockedForward });
                         if (!initialized || !target) return; // A health listener may end the session synchronously.
                     }

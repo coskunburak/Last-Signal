@@ -65,3 +65,14 @@ P3-01 implemented: production health, existing damage contract, death input/weap
 P3-02 implemented: measured timer authority, bounded windup turn, locked commitment, one contact attempt, collider-aware range/arc/world validation, true misses and visible recovery.
 P3-03 implemented: real Attack presentation synchronization, actual motor evasion, pause/lifecycle/normal-route tests and visual captures.
 P3-G closure and P4 entry are recorded only in S004_P3_IMPLEMENTATION_REPORT.md after full regression. P4 source is not implemented. P5 balance/crowd/audio/platform and commercial-release gates remain future work.
+
+
+## P4 implementation ledger — 2026-09-19
+
+P4-01: health, contextual region proxies, measured head/torso bounds, non-head limb coverage and production rifle mask implemented.
+P4-02: .5 s reaction, 1.5 s eligibility interval, attack cancellation and memory/search preservation implemented.
+P4-03: terminal death, navigation/perception shutdown, final-pose freeze and session cleanup implemented.
+P4-G: final status and P5 entry are exclusively in S004_P4_IMPLEMENTATION_REPORT.md; historical statements above describe earlier phase snapshots. P5 audio, VFX, LOD/crowd, platform builds and polish are not part of this implementation.
+
+## P4 Final Closure — 2026-09-19
+P4-G is VERIFIED. All combat routes including real-weapon near-contact, reaction cooldowns, terminal death logic, and zombie cleanup successfully passed automated PlayMode (60/60) and EditMode (84/84) test suites. S004-P4 FINAL STATUS: PASS. P5 Entry: READY.

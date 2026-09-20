@@ -1,19 +1,19 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LastSignal
 {
     /// <summary>
     /// Resolves a single valid shot: camera ray → target → muzzle obstruction check → damage.
-    /// Static utility. No state. Handles the classic camera-vs-muzzle exploit.
+    /// Static utility with diagnostic shot IDs. Handles camera-vs-muzzle obstruction.
     /// </summary>
     public static class WeaponFireResolver
     {
-        // Reusable hash set for multi-collider deduplication per shot.
-        static readonly HashSet<Transform> hitRoots = new HashSet<Transform>();
+        // Trace identity only; health remains per target. One nearest hit means one dispatch.
+        static ulong nextShotId;
 
         public struct ShotResult
         {
+            public ulong ShotId;
             public bool Hit;
             public bool MuzzleObstructed;
             public Vector3 HitPoint;
@@ -44,7 +44,7 @@ namespace LastSignal
             float damage, GameObject instigator,
             LayerMask hitMask)
         {
-            var result = new ShotResult();
+            var result = new ShotResult { ShotId = ++nextShotId };
 
             // Step 1: Camera ray — where does the player INTEND to shoot?
             Vector3 targetPoint;
@@ -55,23 +55,26 @@ namespace LastSignal
 
             // Step 2: Muzzle obstruction — is there geometry between muzzle and the nearby area?
             Vector3 muzzleForward = (targetPoint - muzzlePosition).normalized;
-            if (Physics.Raycast(muzzlePosition, muzzleForward, out RaycastHit obstructionHit, muzzleObstructionRange, hitMask, QueryTriggerInteraction.Ignore))
-            {
-                // The weapon muzzle is blocked by nearby geometry. Shot is physically blocked.
-                result.MuzzleObstructed = true;
-                result.HitPoint = obstructionHit.point;
-                result.HitNormal = obstructionHit.normal;
-                result.Collider = obstructionHit.collider;
-                // Still apply impact VFX at obstruction point, but no target damage at distance.
-                return result;
-            }
+            RaycastHit muzzleHit;
 
-            // Step 3: Full muzzle-to-target ray for actual hit resolution.
-            float fullDistance = Vector3.Distance(muzzlePosition, targetPoint) + .1f;
-            if (!Physics.Raycast(muzzlePosition, muzzleForward, out RaycastHit muzzleHit, fullDistance, hitMask, QueryTriggerInteraction.Ignore))
+            // If the weapon barrel has clipped into or through a collider, the muzzle raycast will fail 
+            // because it starts inside. We detect this by tracing from the camera (eye) to the muzzle.
+            if (Physics.Linecast(cameraOrigin, muzzlePosition, out RaycastHit clipHit, hitMask, QueryTriggerInteraction.Ignore))
             {
-                // Missed — no geometry hit from muzzle.
-                return result;
+                muzzleHit = clipHit;
+                result.MuzzleObstructed = true;
+            }
+            else if (Physics.Raycast(muzzlePosition, muzzleForward, out muzzleHit, muzzleObstructionRange, hitMask, QueryTriggerInteraction.Ignore))
+            {
+                // The nearest obstruction receives the shot, including a damageable at contact range.
+                // Never continue through it to the camera-selected distant target.
+                result.MuzzleObstructed = true;
+            }
+            else
+            {
+                float fullDistance = Vector3.Distance(muzzlePosition, targetPoint) + .1f;
+                if (!Physics.Raycast(muzzlePosition, muzzleForward, out muzzleHit, fullDistance, hitMask, QueryTriggerInteraction.Ignore))
+                    return result;
             }
 
             result.Hit = true;
@@ -80,18 +83,18 @@ namespace LastSignal
             result.Distance = muzzleHit.distance;
             result.Collider = muzzleHit.collider;
 
-            // Step 4: Find damageable on the hit object. Deduplicate multi-collider hits.
-            hitRoots.Clear();
+            // Step 4: Dispatch once for the one selected collider (short or full ray).
             var damageable = muzzleHit.collider.GetComponentInParent<IDamageable>();
             if (damageable != null)
             {
-                Transform root = (damageable as Component)?.transform;
-                if (root != null && hitRoots.Add(root))
+                if (damageable is Component)
                 {
                     result.Target = damageable;
                     damageable.TakeDamage(new DamageInfo
                     {
-                        Amount = damage,
+                        Amount = damage, BaseAmount = damage, Multiplier = 1,
+                        ShotId = result.ShotId, HitCollider = muzzleHit.collider,
+                        Direction = muzzleForward, Category = DamageCategory.Bullet,
                         SourcePosition = muzzlePosition,
                         HitPoint = muzzleHit.point,
                         HitNormal = muzzleHit.normal,

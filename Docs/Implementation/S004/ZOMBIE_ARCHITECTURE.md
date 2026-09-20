@@ -36,3 +36,14 @@ Future P3/P4 contracts and discovery details are preserved in Evidence/20260919-
 Runtime prefab adds only a project-owned MeleeOrigin child at (0,1.05,0). Vendor skeleton and B0B presentation prefab remain unchanged. No ZombieHealth or enemy IDamageable/hitbox adapter is introduced.
 
 Combat test entrypoint: `ZombieMeleeTests`, `PlayerHealthTests`, `ZombieMeleeLogicTests`; evidence and report under the P3 run. Existing P2 tests preserve perception/search/navigation coverage; only explicit obsolete no-health/no-attack assertions change.
+
+
+## P4 damage ownership (2026-09-19)
+
+`AI/ZombieHealth.cs` owns finite-positive intake, HP clamp, one terminal event and per-instance damage trace. It implements existing IDamageable with no AI/Animator/NavMesh references. `AI/ZombieHitRegion.cs` implements the same interface on project-owned bone children, caching health/collider and configured Head/Body multiplier. Head is x2; torso, pelvis, upper/lower arms and legs are Body x1. No vendor asset changes.
+
+Existing WeaponController consumes ammunition and invokes WeaponFireResolver once. The resolver retains camera aim, muzzle obstruction and nearest physical raycast, then dispatches once through IDamageable. The redundant static HashSet is removed: there is exactly one selected collider and one dispatch. DamageInfo additionally carries collider, direction, Bullet/Melee category and shot trace ID. Region forwarding enriches base amount, multiplier and region. Root health rejects collider-addressed calls from unrelated children; owned region forwarding is explicit. A trace ID is diagnostic, not a network/pellet replay cache.
+
+Layer 8 `EnemyHitRegion` is query-only in purpose but uses non-trigger colliders because existing rifle queries ignore triggers. Its physical collision matrix excludes all layers. Serialized rifle mask is 307 (51 plus bit 8). Movement capsule stays on layer 2; LOS remains opaque-world mask 1. No per-frame hierarchy traversal is introduced; region owners are serialized. Existing resolver performs its existing parent interface lookup on the single hit.
+
+Controller subscribes to health at initialization, handles eligible reactions and terminal shutdown, and unsubscribes on destruction. All colliders are cached once at initialization. Presenter remains the sole Animator owner and manually advances reaction/death with gameplay delta. Death overrides reaction and attack. Authoring utility `ZombieDamageAuthoring.Compose` updates the runtime wrapper, Shambler tuning, rifle mask and collision layer. `Audit` records actual retargeted clips.

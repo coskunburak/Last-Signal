@@ -10,6 +10,11 @@ namespace LastSignal
         [SerializeField] Animator animator;
         ZombieDefinition tuning;
         static readonly int Attack = Animator.StringToHash("Attack");
+        static readonly int HitReact = Animator.StringToHash("HitReact"), Death = Animator.StringToHash("Death");
+        bool damagePresentation, dead, paused;
+        float damageTime;
+        public bool CorpseSettled { get; private set; }
+        public float DamageTime => damageTime;
         bool attacking;
         AnimatorCullingMode savedCulling;
         int current;
@@ -33,9 +38,41 @@ namespace LastSignal
             animator.Rebind(); animator.speed = 1; animator.Play(Idle,0,0); animator.Update(0);
             animator.cullingMode = culling; return true;
         }
+        public bool HasDamagePresentation() => tuning && tuning.IsDamagePresentationValid &&
+            HasAttackPresentation(tuning.HitReactClip) && animator.HasState(0, HitReact) &&
+            HasAttackPresentation(tuning.DeathClip) && animator.HasState(0, Death);
+        public void BeginDamage(bool lethal)
+        {
+            if (!animator || dead) return;
+            EndAttack();
+            if (!damagePresentation) savedCulling = animator.cullingMode;
+            damagePresentation = true; dead = lethal; damageTime = 0;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            current = lethal ? Death : HitReact;
+            animator.speed = 0; animator.Play(current, 0, 0); animator.Update(0);
+        }
+        public void AdvanceDamage(float seconds)
+        {
+            if (!animator || !damagePresentation || paused || CorpseSettled || seconds <= 0) return;
+            float duration = dead ? tuning.DeathDuration : tuning.HitReactDuration;
+            float step = Mathf.Min(seconds, Mathf.Max(0, duration - damageTime));
+            damageTime += step; animator.speed = 1; animator.Update(step); animator.speed = 0;
+            if (dead && damageTime >= duration)
+            {
+                // Hold the evaluated final skeleton; no more Animator work for this corpse.
+                CorpseSettled = true; animator.enabled = false;
+            }
+        }
+        public void EndReaction()
+        {
+            if (!animator || !damagePresentation || dead) return;
+            damagePresentation = false; animator.cullingMode = savedCulling;
+            current = Idle; smoothedSpeed = 0; animator.speed = paused ? 0 : 1;
+            animator.CrossFadeInFixedTime(Idle, tuning.AnimationBlendTime);
+        }
         public void BeginAttack()
         {
-            if (!animator || attacking) return;
+            if (!animator || attacking || damagePresentation) return;
             attacking = true; current = Attack;
             savedCulling = animator.cullingMode; animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             animator.speed = 0; animator.Play(Attack, 0, 0); animator.Update(0);
@@ -54,10 +91,10 @@ namespace LastSignal
             animator.CrossFadeInFixedTime(Idle, tuning.AnimationBlendTime);
         }
         public void SetPaused(bool paused)
-        { if (animator) animator.speed = paused || attacking ? 0 : 1; }
+        { this.paused = paused; if (animator) animator.speed = paused || attacking || damagePresentation ? 0 : 1; }
         public void Present(float actualSpeed, float seconds, bool paused)
         {
-            if (!animator || !tuning || attacking) return;
+            if (!animator || !tuning || attacking || damagePresentation) return;
             using (Marker.Auto())
             {
                 if (paused) { animator.speed = 0; return; }
