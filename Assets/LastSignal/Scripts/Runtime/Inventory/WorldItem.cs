@@ -8,6 +8,17 @@ namespace LastSignal.Inventory
         [SerializeField] ItemDefinition definition;
         [SerializeField, Min(1)] int quantity = 1;
 
+        string persistentId;
+        System.Action<string,int> persistenceChanged;
+        internal void BindPersistence(System.Action<string,int> listener) => persistenceChanged = listener;
+        LastSignal.Persistence.WorldItemOrigin origin = LastSignal.Persistence.WorldItemOrigin.Drop;
+        // New runtime drops receive an ID once. Restore replaces it with the SAVED ID before activation.
+        public string PersistentId => persistentId;
+        public LastSignal.Persistence.WorldItemOrigin Origin => origin;
+        void Awake() { if (string.IsNullOrEmpty(persistentId)) persistentId = System.Guid.NewGuid().ToString("N"); }
+        internal void AssignPersistentIdentity(string id, LastSignal.Persistence.WorldItemOrigin source)
+        { persistentId = id; origin = source; }
+
         public ItemDefinition Definition => definition;
         public int Quantity => quantity;
         public bool Available => isActiveAndEnabled && definition != null && quantity > 0;
@@ -17,6 +28,7 @@ namespace LastSignal.Inventory
         {
             definition = item;
             quantity = initialQuantity;
+            persistenceChanged?.Invoke(persistentId, quantity);
             if (quantity <= 0) Destroy(gameObject);
         }
 
@@ -27,22 +39,26 @@ namespace LastSignal.Inventory
 
         public bool TryInteract()
         {
-            if (!Available) return false;
+            if (!Available || LastSignal.Persistence.OwnershipTransaction.Active) return false;
             
             var playerInventory = FindObjectOfType<PlayerInventory>();
             if (playerInventory == null) return false;
 
-            int accepted = playerInventory.TryAdd(definition, quantity);
-            if (accepted > 0)
+            LastSignal.Persistence.OwnershipTransaction.Enter();
+            try
             {
-                quantity -= accepted;
-                if (quantity <= 0)
+                int accepted = playerInventory.Container.BeginWorldAdd(definition, quantity);
+                if (accepted <= 0) return false;
+                try
                 {
-                    Destroy(gameObject);
+                    quantity -= accepted;
+                    persistenceChanged?.Invoke(persistentId, quantity);
+                    if (quantity <= 0) Destroy(gameObject);
                 }
+                finally { playerInventory.Container.CompleteWorldMutation(); }
                 return true;
             }
-            return false;
+            finally { LastSignal.Persistence.OwnershipTransaction.Exit(); }
         }
     }
 }

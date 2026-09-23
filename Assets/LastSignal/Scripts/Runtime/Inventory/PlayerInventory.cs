@@ -30,7 +30,7 @@ namespace LastSignal.Inventory
 
         public bool TryDrop(int slotIndex, int amount)
         {
-            if (Container.IsBusy || slotIndex < 0 || slotIndex >= Capacity || amount <= 0) return false;
+            if (LastSignal.Persistence.OwnershipTransaction.Active || Container.IsBusy || slotIndex < 0 || slotIndex >= Capacity || amount <= 0) return false;
             var slot = GetSlot(slotIndex);
             if (slot.IsEmpty || slot.Quantity < amount) return false;
             
@@ -44,14 +44,23 @@ namespace LastSignal.Inventory
                 spawnPos = hit.point - dropOrigin.forward * 0.2f;
             }
 
-            var go = Instantiate(def.WorldPrefab, spawnPos, Quaternion.identity);
-            var worldItem = go.GetComponent<WorldItem>();
-            if (!worldItem) worldItem = go.AddComponent<WorldItem>();
-            
-            worldItem.Configure(def, amount);
-
-            Container.TryRemove(slotIndex, amount);
-            return true;
+            LastSignal.Persistence.OwnershipTransaction.Enter();
+            try
+            {
+                var go = Instantiate(def.WorldPrefab, spawnPos, Quaternion.identity);
+                var worldItem = go.GetComponent<WorldItem>();
+                if (!worldItem) worldItem = go.AddComponent<WorldItem>();
+                worldItem.Configure(def, amount);
+                if (Container.BeginWorldRemove(slotIndex, amount))
+                {
+                    Container.CompleteWorldMutation();
+                    return true;
+                }
+                // A prefab callback must not leave a new owner if the removal was rejected.
+                go.SetActive(false); Destroy(go);
+                return false;
+            }
+            finally { LastSignal.Persistence.OwnershipTransaction.Exit(); }
         }
     }
 }

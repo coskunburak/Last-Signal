@@ -73,7 +73,7 @@ namespace LastSignal.Tests
             Place(actor.transform.position+actor.transform.forward*3);yield return State(ZombieState.Chasing);
             Assert.That(nav.Exhausted,Is.False);Assert.That(zombie.Runtime.SearchAge,Is.Zero);
         }
-        [TearDown]public void Teardown(){if(actor)Object.DestroyImmediate(actor);if(session)session.ReturnToMenu();Time.timeScale=1;}
+        [UnityTearDown]public IEnumerator Teardown(){if(actor)Object.DestroyImmediate(actor);if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
     }
 }
 #endif

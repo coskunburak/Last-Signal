@@ -300,10 +300,10 @@ namespace LastSignal.Tests
             }
             File.WriteAllText(Evidence + "/contact-rate-audit.txt", report.ToString());
         }
-        [TearDown] public void Cleanup()
+        [UnityTearDown] public IEnumerator Cleanup()
         {
             foreach (var go in owned) if (go) Object.DestroyImmediate(go); owned.Clear();
-            if (session) session.ReturnToMenu(); Time.timeScale = 1;
+            if (session) session.ReturnToMenu(); Time.timeScale = 1; yield return null;
         }
     }
 }

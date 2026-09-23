@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Failed(Child)" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.5199299">
+  <test-suite type="TestSuite" id="1000" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="194" result="Failed" site="Child" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.519930" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1229" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="194" result="Failed" site="Child" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.427857" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="50012" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1230" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="194" result="Failed" site="Child" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.332721" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1231" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="194" result="Failed" site="Child" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.232543" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1025" name="InventorySnapshotTests" fullname="LastSignal.Tests.InventorySnapshotTests" classname="LastSignal.Tests.InventorySnapshotTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.131634" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1026" name="OrderedSlotsAndCapacitySurviveFiftyRestoresWithoutDuplication" fullname="LastSignal.Tests.InventorySnapshotTests.OrderedSlotsAndCapacitySurviveFiftyRestoresWithoutDuplication" methodname="OrderedSlotsAndCapacitySurviveFiftyRestoresWithoutDuplication" classname="LastSignal.Tests.InventorySnapshotTests" runstate="Runnable" seed="879281085" result="Passed" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.020845" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1030" name="PickupObserverCannotCaptureHalfCommittedTransfer" fullname="LastSignal.Tests.InventorySnapshotTests.PickupObserverCannotCaptureHalfCommittedTransfer" methodname="PickupObserverCannotCaptureHalfCommittedTransfer" classname="LastSignal.Tests.InventorySnapshotTests" runstate="Runnable" seed="1402719052" result="Failed" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.004247" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Inventory event occurs before world decrement: capture must reject until both owners commit.
+  Expected: Busy
+  But was:  None
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.InventorySnapshotTests.PickupObserverCannotCaptureHalfCommittedTransfer () [0x00085] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/InventorySnapshotTests.cs:86
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1029" name="RestorePublishesOnlyCoherentStateAndRejectsReentrantMutation" fullname="LastSignal.Tests.InventorySnapshotTests.RestorePublishesOnlyCoherentStateAndRejectsReentrantMutation" methodname="RestorePublishesOnlyCoherentStateAndRejectsReentrantMutation" classname="LastSignal.Tests.InventorySnapshotTests" runstate="Runnable" seed="1889216881" result="Passed" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.000516" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="ShelterUsesSameSnapshotAndReplaceContract" fullname="LastSignal.Tests.InventorySnapshotTests.ShelterUsesSameSnapshotAndReplaceContract" methodname="ShelterUsesSameSnapshotAndReplaceContract" classname="LastSignal.Tests.InventorySnapshotTests" runstate="Runnable" seed="1163838043" result="Passed" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.000489" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="UnknownFinalSlotCannotEraseOrPartiallyRestoreContainer" fullname="LastSignal.Tests.InventorySnapshotTests.UnknownFinalSlotCannotEraseOrPartiallyRestoreContainer" methodname="UnknownFinalSlotCannotEraseOrPartiallyRestoreContainer" classname="LastSignal.Tests.InventorySnapshotTests" runstate="Runnable" seed="211637421" result="Passed" start-time="2026-09-21 08:58:07Z" end-time="2026-09-21 08:58:07Z" duration="0.000251" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/RoadmapRecovery/Evidence/20260921-112305/snapshot-before-fix.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

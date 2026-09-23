@@ -1,0 +1,101 @@
+{
+  "success": true,
+  "message": "Tool 'GetConsoleLogs' executed successfully",
+  "data": {
+    "logs": [
+      {
+        "message": "<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Recovered from domain reload - reapplying No Throttling.\nUnityEngine.Debug:Log (object)\nMCPForUnity.Editor.Helpers.McpLog:Info (string,bool) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:40)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle:.cctor () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:53)\nUnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.ReadOnlySpan`1<intptr>) (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorAssemblies.cs:155)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[00:35:59]"
+      },
+      {
+        "message": "<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Applied No Throttling for test run.\nUnityEngine.Debug:Log (object)\nMCPForUnity.Editor.Helpers.McpLog:Info (string,bool) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:40)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle:ApplyNoThrottling () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:101)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle:.cctor () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:54)\nUnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.ReadOnlySpan`1<intptr>) (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorAssemblies.cs:155)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[00:35:59]"
+      },
+      {
+        "message": "<b><color=#cc7a00>MCP-FOR-UNITY</color></b>: [TestJobManager] Clearing stale job 83c40824e4c94ff7b3613f6ed09dc933 (last update 13831s ago)\nUnityEngine.Debug:LogWarning (object)\nMCPForUnity.Editor.Helpers.McpLog:Warn (string) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:45)\nMCPForUnity.Editor.Services.TestJobManager:TryRestoreFromSessionState () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestJobManager.cs:230)\nMCPForUnity.Editor.Services.TestJobManager:.cctor () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestJobManager.cs:71)\nMCPForUnity.Editor.Services.EditorStateCache:BuildSnapshot (string) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/EditorStateCache.cs:391)\nMCPForUnity.Editor.Services.EditorStateCache:.cctor () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/EditorStateCache.cs:257)\nUnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.ReadOnlySpan`1<intptr>) (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorAssemblies.cs:155)\n",
+        "stackTrace": "",
+        "type": "Warning",
+        "timestamp": "[00:35:59]"
+      },
+      {
+        "message": "S001 session started: one player, local input.\nUnityEngine.Debug:Log (object)\nLastSignal.SessionFlow:BeginSession () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:27)\nLastSignal.SessionFlow:Start () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:16)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[00:36:04]"
+      },
+      {
+        "message": "Account API did not become accessible within 30 seconds. This may be due to network issues or editor focus.\nUnityEngine.Debug:LogWarning (object)\nUnity.AI.Toolkit.Accounts.Services.States.ApiAccessibleState/<WaitForCloudProjectSettings>d__4:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.Toolkit.Accounts/Services/States/ApiAccessibleState.cs:46)\nSystem.Threading.Tasks.TaskCompletionSource`1<bool>:TrySetResult (bool)\nUnity.AI.Toolkit.EditorTask/<>c__DisplayClass22_0:<WaitForCondition>b__0 () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.Toolkit.Async/EditorTask.cs:420)\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Warning",
+        "timestamp": "[00:36:30]"
+      },
+      {
+        "message": "S001 session started: one player, local input.\nUnityEngine.Debug:Log (object)\nLastSignal.SessionFlow:BeginSession () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:27)\nUnity.AI.Assistant.Agent.Dynamic.Extension.Editor.CommandScript:Execute (Unity.AI.Assistant.Agent.Dynamic.Extension.Editor.ExecutionResult)\nUnity.AI.Assistant.Editor.RunCommand.AgentRunCommand:Execute (Unity.AI.Assistant.Agent.Dynamic.Extension.Editor.ExecutionResult&,string) (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Editor/Assistant/RunCommand/AgentRunCommand.cs:56)\nUnity.AI.Assistant.Editor.RunCommand.RunCommandUtils:Execute (Unity.AI.Assistant.Editor.RunCommand.AgentRunCommand,string) (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Editor/Assistant/RunCommand/RunCommandUtils.cs:75)\nUnity.AI.Assistant.Tools.Editor.RunCommandTool/<ExecuteCommand>d__6:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.Assistant.Tools/Scripting/RunCommandTool.cs:73)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Unity.AI.Assistant.Tools.Editor.RunCommandTool/ExecutionOutput>:Start<Unity.AI.Assistant.Tools.Editor.RunCommandTool/<ExecuteCommand>d__6> (Unity.AI.Assistant.Tools.Editor.RunCommandTool/<ExecuteCommand>d__6&)\nUnity.AI.Assistant.Tools.Editor.RunCommandTool:ExecuteCommand (Unity.AI.Assistant.FunctionCalling.ToolExecutionContext,string,string)\nUnity.AI.MCP.Editor.Tools.RunCommand/<HandleCommand>d__4:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/Tools/RunCommand.cs:155)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<object>:Start<Unity.AI.MCP.Editor.Tools.RunCommand/<HandleCommand>d__4> (Unity.AI.MCP.Editor.Tools.RunCommand/<HandleCommand>d__4&)\nUnity.AI.MCP.Editor.Tools.RunCommand:HandleCommand (Unity.AI.MCP.Editor.Tools.Parameters.RunCommandParams)\nSystem.Reflection.MethodBase:Invoke (object,object[])\nUnity.AI.MCP.Editor.ToolRegistry.TypedToolHandler:ExecuteAsync (Newtonsoft.Json.Linq.JObject) (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/ToolRegistry/IToolHandler.cs:164)\nUnity.AI.MCP.Editor.ToolRegistry.McpToolRegistry/<ExecuteToolAsync>d__14:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/ToolRegistry/McpToolRegistry.cs:244)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<object>:Start<Unity.AI.MCP.Editor.ToolRegistry.McpToolRegistry/<ExecuteToolAsync>d__14> (Unity.AI.MCP.Editor.ToolRegistry.McpToolRegistry/<ExecuteToolAsync>d__14&)\nUnity.AI.MCP.Editor.ToolRegistry.McpToolRegistry:ExecuteToolAsync (string,Newtonsoft.Json.Linq.JObject)\nUnity.AI.MCP.Editor.Bridge/<ExecuteCommandAsync>d__75:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/Bridge.cs:1783)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<string>:Start<Unity.AI.MCP.Editor.Bridge/<ExecuteCommandAsync>d__75> (Unity.AI.MCP.Editor.Bridge/<ExecuteCommandAsync>d__75&)\nUnity.AI.MCP.Editor.Bridge:ExecuteCommandAsync (Unity.AI.MCP.Editor.Models.Command,Unity.AI.MCP.Editor.Connection.IConnectionTransport,System.Threading.CancellationToken)\nUnity.AI.MCP.Editor.Bridge:ProcessCommands () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/Bridge.cs:1537)\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[00:37:04]"
+      },
+      {
+        "message": "Releasing render texture that is set as Camera.targetTexture!\nUnityEngine.Object:DestroyImmediate (UnityEngine.Object)\nUnity.AI.Assistant.Agent.Dynamic.Extension.Editor.CommandScript:Execute (Unity.AI.Assistant.Agent.Dynamic.Extension.Editor.ExecutionResult)\nUnity.AI.Assistant.Editor.RunCommand.AgentRunCommand:Execute (Unity.AI.Assistant.Agent.Dynamic.Extension.Editor.ExecutionResult&,string) (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Editor/Assistant/RunCommand/AgentRunCommand.cs:56)\nUnity.AI.Assistant.Editor.RunCommand.RunCommandUtils:Execute (Unity.AI.Assistant.Editor.RunCommand.AgentRunCommand,string) (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Editor/Assistant/RunCommand/RunCommandUtils.cs:75)\nUnity.AI.Assistant.Tools.Editor.RunCommandTool/<ExecuteCommand>d__6:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.Assistant.Tools/Scripting/RunCommandTool.cs:73)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Unity.AI.Assistant.Tools.Editor.RunCommandTool/ExecutionOutput>:Start<Unity.AI.Assistant.Tools.Editor.RunCommandTool/<ExecuteCommand>d__6> (Unity.AI.Assistant.Tools.Editor.RunCommandTool/<ExecuteCommand>d__6&)\nUnity.AI.Assistant.Tools.Editor.RunCommandTool:ExecuteCommand (Unity.AI.Assistant.FunctionCalling.ToolExecutionContext,string,string)\nUnity.AI.MCP.Editor.Tools.RunCommand/<HandleCommand>d__4:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/Tools/RunCommand.cs:155)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<object>:Start<Unity.AI.MCP.Editor.Tools.RunCommand/<HandleCommand>d__4> (Unity.AI.MCP.Editor.Tools.RunCommand/<HandleCommand>d__4&)\nUnity.AI.MCP.Editor.Tools.RunCommand:HandleCommand (Unity.AI.MCP.Editor.Tools.Parameters.RunCommandParams)\nSystem.Reflection.MethodBase:Invoke (object,object[])\nUnity.AI.MCP.Editor.ToolRegistry.TypedToolHandler:ExecuteAsync (Newtonsoft.Json.Linq.JObject) (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/ToolRegistry/IToolHandler.cs:164)\nUnity.AI.MCP.Editor.ToolRegistry.McpToolRegistry/<ExecuteToolAsync>d__14:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/ToolRegistry/McpToolRegistry.cs:244)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<object>:Start<Unity.AI.MCP.Editor.ToolRegistry.McpToolRegistry/<ExecuteToolAsync>d__14> (Unity.AI.MCP.Editor.ToolRegistry.McpToolRegistry/<ExecuteToolAsync>d__14&)\nUnity.AI.MCP.Editor.ToolRegistry.McpToolRegistry:ExecuteToolAsync (string,Newtonsoft.Json.Linq.JObject)\nUnity.AI.MCP.Editor.Bridge/<ExecuteCommandAsync>d__75:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/Bridge.cs:1783)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<string>:Start<Unity.AI.MCP.Editor.Bridge/<ExecuteCommandAsync>d__75> (Unity.AI.MCP.Editor.Bridge/<ExecuteCommandAsync>d__75&)\nUnity.AI.MCP.Editor.Bridge:ExecuteCommandAsync (Unity.AI.MCP.Editor.Models.Command,Unity.AI.MCP.Editor.Connection.IConnectionTransport,System.Threading.CancellationToken)\nUnity.AI.MCP.Editor.Bridge:ProcessCommands () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/Bridge.cs:1537)\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions ()\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[00:40:52]"
+      },
+      {
+        "message": "Releasing render texture that is set as Camera.targetTexture!\nUnityEngine.Object:DestroyImmediate (UnityEngine.Object)\nUnity.AI.Assistant.Agent.Dynamic.Extension.Editor.CommandScript:Execute (Unity.AI.Assistant.Agent.Dynamic.Extension.Editor.ExecutionResult)\nUnity.AI.Assistant.Editor.RunCommand.AgentRunCommand:Execute (Unity.AI.Assistant.Agent.Dynamic.Extension.Editor.ExecutionResult&,string) (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Editor/Assistant/RunCommand/AgentRunCommand.cs:56)\nUnity.AI.Assistant.Editor.RunCommand.RunCommandUtils:Execute (Unity.AI.Assistant.Editor.RunCommand.AgentRunCommand,string) (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Editor/Assistant/RunCommand/RunCommandUtils.cs:75)\nUnity.AI.Assistant.Tools.Editor.RunCommandTool/<ExecuteCommand>d__6:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.Assistant.Tools/Scripting/RunCommandTool.cs:73)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Unity.AI.Assistant.Tools.Editor.RunCommandTool/ExecutionOutput>:Start<Unity.AI.Assistant.Tools.Editor.RunCommandTool/<ExecuteCommand>d__6> (Unity.AI.Assistant.Tools.Editor.RunCommandTool/<ExecuteCommand>d__6&)\nUnity.AI.Assistant.Tools.Editor.RunCommandTool:ExecuteCommand (Unity.AI.Assistant.FunctionCalling.ToolExecutionContext,string,string)\nUnity.AI.MCP.Editor.Tools.RunCommand/<HandleCommand>d__4:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/Tools/RunCommand.cs:155)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<object>:Start<Unity.AI.MCP.Editor.Tools.RunCommand/<HandleCommand>d__4> (Unity.AI.MCP.Editor.Tools.RunCommand/<HandleCommand>d__4&)\nUnity.AI.MCP.Editor.Tools.RunCommand:HandleCommand (Unity.AI.MCP.Editor.Tools.Parameters.RunCommandParams)\nSystem.Reflection.MethodBase:Invoke (object,object[])\nUnity.AI.MCP.Editor.ToolRegistry.TypedToolHandler:ExecuteAsync (Newtonsoft.Json.Linq.JObject) (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/ToolRegistry/IToolHandler.cs:164)\nUnity.AI.MCP.Editor.ToolRegistry.McpToolRegistry/<ExecuteToolAsync>d__14:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/ToolRegistry/McpToolRegistry.cs:244)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<object>:Start<Unity.AI.MCP.Editor.ToolRegistry.McpToolRegistry/<ExecuteToolAsync>d__14> (Unity.AI.MCP.Editor.ToolRegistry.McpToolRegistry/<ExecuteToolAsync>d__14&)\nUnity.AI.MCP.Editor.ToolRegistry.McpToolRegistry:ExecuteToolAsync (string,Newtonsoft.Json.Linq.JObject)\nUnity.AI.MCP.Editor.Bridge/<ExecuteCommandAsync>d__75:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/Bridge.cs:1783)\nSystem.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<string>:Start<Unity.AI.MCP.Editor.Bridge/<ExecuteCommandAsync>d__75> (Unity.AI.MCP.Editor.Bridge/<ExecuteCommandAsync>d__75&)\nUnity.AI.MCP.Editor.Bridge:ExecuteCommandAsync (Unity.AI.MCP.Editor.Models.Command,Unity.AI.MCP.Editor.Connection.IConnectionTransport,System.Threading.CancellationToken)\nUnity.AI.MCP.Editor.Bridge:ProcessCommands () (at ./Library/PackageCache/com.unity.ai.assistant@8d1e3e89e3a7/Modules/Unity.AI.MCP.Editor/Bridge.cs:1537)\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions ()\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[00:41:00]"
+      },
+      {
+        "message": "Executing IPrebuildSetup for: Unity.PerformanceTesting.Editor.TestRunBuilder.\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:34:48]"
+      },
+      {
+        "message": "<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Applied No Throttling for test run.\nUnityEngine.Debug:Log (object)\nMCPForUnity.Editor.Helpers.McpLog:Info (string,bool) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:40)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle:ApplyNoThrottling () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:101)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle/TestCallbacks:RunStarted (UnityEditor.TestTools.TestRunner.Api.ITestAdaptor) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:138)\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:34:48]"
+      },
+      {
+        "message": "Saving results to: Docs/Implementation/S004/Evidence/20260918-P2-Entry/editmode-results.xml\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:34:50]"
+      },
+      {
+        "message": "REAL_ASSET_REGRESSION Failed passed=33 failed=1\nUnityEngine.Debug:Log (object)\nLastSignal.Editor.CombatRegressionRunner/Results:RunFinished (UnityEditor.TestTools.TestRunner.Api.ITestResultAdaptor) (at Assets/LastSignal/Editor/CombatRegressionRunner.cs:33)\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:34:50]"
+      },
+      {
+        "message": "<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.\nUnityEngine.Debug:Log (object)\nMCPForUnity.Editor.Helpers.McpLog:Info (string,bool) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:40)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle:RestoreThrottling () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:114)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle/TestCallbacks:RunFinished (UnityEditor.TestTools.TestRunner.Api.ITestResultAdaptor) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:143)\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:34:50]"
+      },
+      {
+        "message": "Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:34:50]"
+      },
+      {
+        "message": "Executing IPostBuildCleanup for: Unity.PerformanceTesting.Editor.TestRunBuilder.\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:34:51]"
+      }
+    ],
+    "totalCount": 15,
+    "errorCount": 2,
+    "warningCount": 2
+  }
+}

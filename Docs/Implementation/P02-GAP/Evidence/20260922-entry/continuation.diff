@@ -1,0 +1,1624 @@
+diff --git a/Assets/LastSignal/Scripts/Runtime/AI/ZombieHealth.cs b/Assets/LastSignal/Scripts/Runtime/AI/ZombieHealth.cs
+index 490e3eb..8bf3a40 100644
+--- a/Assets/LastSignal/Scripts/Runtime/AI/ZombieHealth.cs
++++ b/Assets/LastSignal/Scripts/Runtime/AI/ZombieHealth.cs
+@@ -22,6 +22,11 @@ void Awake()
+         {
+             CurrentHealth = float.IsFinite(maxHealth) && maxHealth > 0 ? maxHealth : 0;
+         }
++        internal void RestoreHealth(float value)
++        {
++            CurrentHealth = value; DamageTransactions = 0; LastDamage = default;
++            if (!IsAlive) Died?.Invoke();
++        }
+         public void SetDamageEnabled(bool value) => accepting = value;
+         public void TakeDamage(DamageInfo info)
+         {
+diff --git a/Assets/LastSignal/Scripts/Runtime/Interaction/DoorInteractable.cs b/Assets/LastSignal/Scripts/Runtime/Interaction/DoorInteractable.cs
+index b45adc4..5f0c196 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Interaction/DoorInteractable.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Interaction/DoorInteractable.cs
+@@ -62,6 +62,12 @@ void Update()
+                 if (Mathf.Approximately(angle, destination)) { IsOpen = destination > 0; Busy = false; }
+             }
+         }
++        internal void RestoreOpen(bool open)
++        {
++            angle = destination = open ? openAngleDegrees : 0;
++            IsOpen = open; Busy = Obstructed = false;
++            hinge.localRotation = closedRotation * Quaternion.Euler(0, angle, 0);
++        }
+         public void ResetDoor()
+         {
+             angle = destination = 0;
+diff --git a/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs b/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
+index 2dffcce..ef2d11f 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
+@@ -207,8 +207,54 @@ public void Clear()
+             Notify();
+         }
+ 
++        // Persistence adapter prevalidates detached slots. Replace rather than append so repeated
++        // load cannot duplicate quantities; publish only after the whole container is coherent.
++        internal void ReplaceValidatedSlots(InventorySlot[] replacement)
++        {
++            if (IsBusy) throw new InvalidOperationException("Container transaction already in progress.");
++            IsBusy = true;
++            try
++            {
++                slots = replacement;
++                capacity = replacement.Length;
++                InventoryChanged?.Invoke();
++            }
++            finally { IsBusy = false; }
++        }
++
+         void Notify() { if (!silent) InventoryChanged?.Invoke(); }
+ 
++        // Cross-owner world operations stage this owner silently, then let the caller commit
++        // the world quantity before any observer runs. Existing normal/reload notifications
++        // keep their original exception contract.
++        internal int BeginWorldAdd(ItemDefinition item, int quantity)
++        {
++            if (IsBusy) return 0;
++            int accepted;
++            silent = true;
++            try { accepted = TryAdd(item, quantity); }
++            finally { silent = false; }
++            if (accepted > 0) IsBusy = true;
++            return accepted;
++        }
++        internal bool BeginWorldRemove(int index, int quantity)
++        {
++            if (IsBusy) return false;
++            bool removed;
++            silent = true;
++            try { removed = TryRemove(index, quantity); }
++            finally { silent = false; }
++            if (removed) IsBusy = true;
++            return removed;
++        }
++        internal void CompleteWorldMutation()
++        {
++            // Quantities are already committed. Preserve normal observer exception propagation;
++            // the caller's finally releases the ownership barrier without rolling back state.
++            try { InventoryChanged?.Invoke(); }
++            finally { IsBusy = false; }
++        }
++
+         internal TransferResult TransferTo(InventoryContainer destination, ItemDefinition item, int requested)
+         {
+             if (destination == null || destination == this || !item || !item.Id.IsValid || item.MaxStack < 1 || requested <= 0)
+diff --git a/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs b/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
+index ff57746..271777b 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
+@@ -30,7 +30,7 @@ public sealed class PlayerInventory : MonoBehaviour
+ 
+         public bool TryDrop(int slotIndex, int amount)
+         {
+-            if (Container.IsBusy || slotIndex < 0 || slotIndex >= Capacity || amount <= 0) return false;
++            if (LastSignal.Persistence.OwnershipTransaction.Active || Container.IsBusy || slotIndex < 0 || slotIndex >= Capacity || amount <= 0) return false;
+             var slot = GetSlot(slotIndex);
+             if (slot.IsEmpty || slot.Quantity < amount) return false;
+             
+@@ -44,14 +44,23 @@ public bool TryDrop(int slotIndex, int amount)
+                 spawnPos = hit.point - dropOrigin.forward * 0.2f;
+             }
+ 
+-            var go = Instantiate(def.WorldPrefab, spawnPos, Quaternion.identity);
+-            var worldItem = go.GetComponent<WorldItem>();
+-            if (!worldItem) worldItem = go.AddComponent<WorldItem>();
+-            
+-            worldItem.Configure(def, amount);
+-
+-            Container.TryRemove(slotIndex, amount);
+-            return true;
++            LastSignal.Persistence.OwnershipTransaction.Enter();
++            try
++            {
++                var go = Instantiate(def.WorldPrefab, spawnPos, Quaternion.identity);
++                var worldItem = go.GetComponent<WorldItem>();
++                if (!worldItem) worldItem = go.AddComponent<WorldItem>();
++                worldItem.Configure(def, amount);
++                if (Container.BeginWorldRemove(slotIndex, amount))
++                {
++                    Container.CompleteWorldMutation();
++                    return true;
++                }
++                // A prefab callback must not leave a new owner if the removal was rejected.
++                go.SetActive(false); Destroy(go);
++                return false;
++            }
++            finally { LastSignal.Persistence.OwnershipTransaction.Exit(); }
+         }
+     }
+ }
+diff --git a/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs b/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
+index 9e32171..c8b656d 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
+@@ -8,6 +8,17 @@ public sealed class WorldItem : MonoBehaviour, IInteractable
+         [SerializeField] ItemDefinition definition;
+         [SerializeField, Min(1)] int quantity = 1;
+ 
++        string persistentId;
++        System.Action<string,int> persistenceChanged;
++        internal void BindPersistence(System.Action<string,int> listener) => persistenceChanged = listener;
++        LastSignal.Persistence.WorldItemOrigin origin = LastSignal.Persistence.WorldItemOrigin.Drop;
++        // New runtime drops receive an ID once. Restore replaces it with the SAVED ID before activation.
++        public string PersistentId => persistentId;
++        public LastSignal.Persistence.WorldItemOrigin Origin => origin;
++        void Awake() { if (string.IsNullOrEmpty(persistentId)) persistentId = System.Guid.NewGuid().ToString("N"); }
++        internal void AssignPersistentIdentity(string id, LastSignal.Persistence.WorldItemOrigin source)
++        { persistentId = id; origin = source; }
++
+         public ItemDefinition Definition => definition;
+         public int Quantity => quantity;
+         public bool Available => isActiveAndEnabled && definition != null && quantity > 0;
+@@ -17,6 +28,7 @@ public void Configure(ItemDefinition item, int initialQuantity)
+         {
+             definition = item;
+             quantity = initialQuantity;
++            persistenceChanged?.Invoke(persistentId, quantity);
+             if (quantity <= 0) Destroy(gameObject);
+         }
+ 
+@@ -27,22 +39,26 @@ void OnValidate()
+ 
+         public bool TryInteract()
+         {
+-            if (!Available) return false;
++            if (!Available || LastSignal.Persistence.OwnershipTransaction.Active) return false;
+             
+             var playerInventory = FindObjectOfType<PlayerInventory>();
+             if (playerInventory == null) return false;
+ 
+-            int accepted = playerInventory.TryAdd(definition, quantity);
+-            if (accepted > 0)
++            LastSignal.Persistence.OwnershipTransaction.Enter();
++            try
+             {
+-                quantity -= accepted;
+-                if (quantity <= 0)
++                int accepted = playerInventory.Container.BeginWorldAdd(definition, quantity);
++                if (accepted <= 0) return false;
++                try
+                 {
+-                    Destroy(gameObject);
++                    quantity -= accepted;
++                    persistenceChanged?.Invoke(persistentId, quantity);
++                    if (quantity <= 0) Destroy(gameObject);
+                 }
++                finally { playerInventory.Container.CompleteWorldMutation(); }
+                 return true;
+             }
+-            return false;
++            finally { LastSignal.Persistence.OwnershipTransaction.Exit(); }
+         }
+     }
+ }
+diff --git a/Assets/LastSignal/Scripts/Runtime/Loot/LootPopulationService.cs b/Assets/LastSignal/Scripts/Runtime/Loot/LootPopulationService.cs
+index e0b81bb..e4abf59 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Loot/LootPopulationService.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Loot/LootPopulationService.cs
+@@ -23,6 +23,9 @@ public sealed class LootPopulationService : MonoBehaviour
+         [SerializeField] int explicitSeed = 12345;
+         readonly List<LootPopulationResult> results = new List<LootPopulationResult>();
+         readonly HashSet<WorldItem> preexisting = new HashSet<WorldItem>();
++        readonly Dictionary<string,bool> consumedLoot = new Dictionary<string,bool>(StringComparer.Ordinal);
++        internal bool TryGetConsumed(string id, out bool consumed) => consumedLoot.TryGetValue(id,out consumed);
++        void RecordQuantity(string id,int quantity) { consumedLoot[id] = quantity <= 0; }
+         GameObject runtimeRoot;
+         bool populated;
+         public int Seed { get; private set; }
+@@ -41,7 +44,7 @@ public void Begin(GameObject player, int? seed = null)
+             {
+                 populated = true;
+                 Seed = seed ?? (overrideSeed ? explicitSeed : BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0));
+-                results.Clear(); preexisting.Clear(); GeneratedCount = 0; SpawnMilliseconds = 0;
++                results.Clear(); preexisting.Clear(); consumedLoot.Clear(); GeneratedCount = 0; SpawnMilliseconds = 0;
+                 var points = new List<LootSpawnPoint>();
+                 foreach (var root in gameObject.scene.GetRootGameObjects())
+                 {
+@@ -69,7 +72,10 @@ public void Begin(GameObject player, int? seed = null)
+                     using (SpawnMarker.Auto())
+                     {
+                         var go = Instantiate(selection.Item.WorldPrefab,point.transform.position,point.transform.rotation,runtimeRoot.transform);
+-                        go.GetComponent<WorldItem>().Configure(selection.Item,selection.Quantity);
++                        var worldItem = go.GetComponent<WorldItem>();
++                        worldItem.Configure(selection.Item,selection.Quantity);
++                        worldItem.AssignPersistentIdentity("loot:" + point.StableId, LastSignal.Persistence.WorldItemOrigin.Loot);
++                        consumedLoot.Add(worldItem.PersistentId,false); worldItem.BindPersistence(RecordQuantity);
+                     }
+                     SpawnMilliseconds += (System.Diagnostics.Stopwatch.GetTimestamp()-start)*1000.0/System.Diagnostics.Stopwatch.Frequency;
+                     GeneratedCount++;
+@@ -123,7 +129,46 @@ public void End()
+                     foreach (var item in root.GetComponentsInChildren<WorldItem>(true))
+                         if (item && !preexisting.Contains(item)) { item.gameObject.SetActive(false); Destroy(item.gameObject); }
+             if (runtimeRoot) { runtimeRoot.SetActive(false); Destroy(runtimeRoot); }
+-            runtimeRoot=null; preexisting.Clear(); results.Clear(); GeneratedCount=0; populated=false;
++            runtimeRoot=null; preexisting.Clear(); results.Clear(); consumedLoot.Clear(); GeneratedCount=0; populated=false;
++        }
++        internal void Restore(LastSignal.Persistence.SaveGame save, LastSignal.Inventory.Data.ItemCatalog catalog)
++        {
++            if (populated) throw new InvalidOperationException("Restore must precede loot population.");
++            runtimeRoot = new GameObject("Session Loot"); runtimeRoot.SetActive(false);
++            SceneManager.MoveGameObjectToScene(runtimeRoot, gameObject.scene);
++            Seed = save.header.seed; results.Clear(); preexisting.Clear(); consumedLoot.Clear(); GeneratedCount = 0;
++            var byId = new Dictionary<string, LastSignal.Persistence.WorldItemSnapshot>(StringComparer.Ordinal);
++            foreach (var item in save.world.items)
++            {
++                byId.Add(item.id, item);
++                if(item.origin==LastSignal.Persistence.WorldItemOrigin.Loot)
++                    consumedLoot.Add(item.id,item.disposition==LastSignal.Persistence.EntityDisposition.Consumed);
++            }
++            // Mark ownership before fallible instantiation so End() can clean an interrupted hydrate.
++            populated = true;
++            foreach (var opportunity in save.world.opportunities)
++            {
++                if (opportunity.outcome == LastSignal.Persistence.OpportunityOutcome.Generated)
++                {
++                    var item = byId[opportunity.entityId];
++                    var definition = catalog.GetItem(new LastSignal.Inventory.Data.StableItemId(item.definitionId));
++                    results.Add(new LootPopulationResult(opportunity.id, new LootSelection(LootOutcome.Spawned, definition, item.quantity)));
++                    GeneratedCount++;
++                }
++                else results.Add(new LootPopulationResult(opportunity.id, new LootSelection(
++                    opportunity.outcome == LastSignal.Persistence.OpportunityOutcome.Empty ? LootOutcome.Empty : LootOutcome.Blocked)));
++            }
++            foreach (var item in save.world.items)
++            {
++                if (item.disposition == LastSignal.Persistence.EntityDisposition.Consumed) continue;
++                var definition = catalog.GetItem(new LastSignal.Inventory.Data.StableItemId(item.definitionId));
++                var pose = item.transform;
++                var go = Instantiate(definition.WorldPrefab, new Vector3(pose.x,pose.y,pose.z), new Quaternion(pose.qx,pose.qy,pose.qz,pose.qw), runtimeRoot.transform);
++                var worldItem = go.GetComponent<WorldItem>(); worldItem.Configure(definition,item.quantity);
++                worldItem.AssignPersistentIdentity(item.id,item.origin);
++                if(item.origin==LastSignal.Persistence.WorldItemOrigin.Loot) worldItem.BindPersistence(RecordQuantity);
++            }
++            runtimeRoot.SetActive(true);
+         }
+         void OnDestroy() => End();
+     }
+diff --git a/Assets/LastSignal/Scripts/Runtime/Player/FirstPersonLook.cs b/Assets/LastSignal/Scripts/Runtime/Player/FirstPersonLook.cs
+index d91c56f..4206efa 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Player/FirstPersonLook.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Player/FirstPersonLook.cs
+@@ -38,6 +38,9 @@ public void ApplyLook(Vector2 mouseDelta)
+             view.transform.localRotation = Quaternion.Euler(Pitch, 0, 0);
+         }
+ 
++        internal void RestorePitch(float value)
++        { Pitch = value; view.transform.localRotation = Quaternion.Euler(Pitch, 0, 0); }
++
+         /// <summary>Apply camera recoil (pitch up, yaw). Separate from mouse look.</summary>
+         public void ApplyRecoil(float pitchDegrees, float yawDegrees)
+         {
+diff --git a/Assets/LastSignal/Scripts/Runtime/Player/PlayerHealth.cs b/Assets/LastSignal/Scripts/Runtime/Player/PlayerHealth.cs
+index 1b85030..615f1b7 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Player/PlayerHealth.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Player/PlayerHealth.cs
+@@ -29,6 +29,18 @@ public void ResetForSession()
+             LastDamage = default;
+             HealthChanged?.Invoke();
+         }
++        internal void RestoreHealth(float value)
++        {
++            CurrentHealth = value; DamageTransactions = 0; LastDamage = default;
++            HealthChanged?.Invoke();
++        }
++        public void RecoverHealth(float amount)
++        {
++            if (!isActiveAndEnabled || !IsAlive || float.IsNaN(amount) || float.IsInfinity(amount) || amount <= 0) return;
++            float next = Mathf.Min(maxHealth, CurrentHealth + amount);
++            if (next == CurrentHealth) return;
++            CurrentHealth = next; HealthChanged?.Invoke();
++        }
+         public void TakeDamage(DamageInfo info)
+         {
+             if (!isActiveAndEnabled || !IsAlive || info.Amount <= 0 ||
+diff --git a/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs b/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
+index 4bb3327..addb399 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
+@@ -11,6 +11,8 @@ public sealed class SessionFlow : MonoBehaviour
+         public void ConfigureEncounter(ZombieEncounter encounter) => zombieEncounter = encounter;
+         public GameObject Player { get; private set; }
+         public bool Paused { get; private set; }
++        public long Generation { get; private set; }
++        public bool Restoring { get; private set; }
+         public bool InMenu => !Player;
+         PlayerInputReader input;
+         PlayerHealth health;
+@@ -22,9 +24,13 @@ public sealed class SessionFlow : MonoBehaviour
+         public void Configure(GameObject prefab, Transform spawn, DoorInteractable[] sceneDoors)
+         { playerPrefab = prefab; spawnPoint = spawn; doors = sceneDoors; }
+         void Start() => BeginSession();
+-        public void BeginSession()
++        public void BeginSession() => BeginSession(false);
++        internal void BeginRestoreSession() => BeginSession(true);
++        internal void CompleteRestore() { Restoring = false; SetPaused(false); }
++        void BeginSession(bool restoring)
+         {
+             if (Player) return;
++            Generation++; Restoring = restoring;
+             if (!playerPrefab || !spawnPoint) { Debug.LogError("Session requires player prefab and spawn point.", this); return; }
+             foreach (var door in doors) if (door) door.ResetDoor();
+             Player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
+@@ -63,15 +69,17 @@ public void BeginSession()
+             input.FocusLost += Pause;
+             if (zombieEncounter) zombieEncounter.Begin(Player);
+             loot = GetComponent<LastSignal.Loot.LootPopulationService>();
+-            if (loot) loot.Begin(Player);
++            if (loot && !restoring) loot.Begin(Player);
+             shelter = GetComponent<Shelter.ShelterLoop>();
+             if (shelter) shelter.Begin(this);
+-            SetPaused(false);
++            var worldClock = GetComponent<WorldTime.WorldClock>();
++            if (worldClock) worldClock.Begin();
++            SetPaused(restoring);
+             Debug.Log("S001 session started: one player, local input.");
+         }
+-        public void TogglePause() { if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(!Paused); }
++        public void TogglePause() { if (Restoring) return; if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(!Paused); }
+         public void Pause() { if (Player) SetPaused(true); }
+-        public void Resume() { if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(false); }
++        public void Resume() { if (Restoring) return; if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(false); }
+         void SetPaused(bool value)
+         {
+             Paused = value;
+@@ -96,6 +104,9 @@ void OnPlayerDied()
+         }
+         public void ReturnToMenu()
+         {
++            Generation++; Restoring = false;
++            var worldClock = GetComponent<WorldTime.WorldClock>();
++            if (worldClock) worldClock.End();
+             if (shelter) shelter.End();
+             if (loot) loot.End();
+             if (health) health.Died -= OnPlayerDied;
+diff --git a/Assets/LastSignal/Scripts/Runtime/Shelter/ShelterLoop.cs b/Assets/LastSignal/Scripts/Runtime/Shelter/ShelterLoop.cs
+index 98422b7..7bfe735 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Shelter/ShelterLoop.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Shelter/ShelterLoop.cs
+@@ -55,6 +55,11 @@ public void Begin(SessionFlow flow)
+             preparationUI.Bind(this);
+             Changed?.Invoke();
+         }
++        internal void RestoreExpedition(bool onExpedition, int index)
++        {
++            State = onExpedition ? ExpeditionState.Expedition : ExpeditionState.Shelter;
++            ExpeditionIndex = index; preparationUI.Hide(); Changed?.Invoke();
++        }
+         public void End()
+         {
+             if (health) health.Died -= OnDeath;
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
+index 45ae486..01c0338 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
+@@ -102,7 +102,7 @@ public IEnumerator Reload_TransfersAmmoAfterDuration()
+             for (int i=0; i<5; i++)
+             {
+                 Press(mouse.leftButton); yield return null;
+-                Release(mouse.leftButton); yield return new WaitForSeconds(0.15f);
++                Release(mouse.leftButton); yield return new WaitForSeconds(0.2f);
+             }
+             int expectedAmmo = state.Definition.MagazineCapacity - 5;
+             Assert.That(state.CurrentMagazine, Is.EqualTo(expectedAmmo));
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieBehaviorTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieBehaviorTests.cs
+index c7202c5..e9425e2 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieBehaviorTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieBehaviorTests.cs
+@@ -73,7 +73,7 @@ IEnumerator State(ZombieState expected,float timeout=3)
+             Place(actor.transform.position+actor.transform.forward*3);yield return State(ZombieState.Chasing);
+             Assert.That(nav.Exhausted,Is.False);Assert.That(zombie.Runtime.SearchAge,Is.Zero);
+         }
+-        [TearDown]public void Teardown(){if(actor)Object.DestroyImmediate(actor);if(session)session.ReturnToMenu();Time.timeScale=1;}
++        [UnityTearDown]public IEnumerator Teardown(){if(actor)Object.DestroyImmediate(actor);if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
+     }
+ }
+ #endif
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieDamagePlayTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieDamagePlayTests.cs
+index 94a4d07..ad5545c 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieDamagePlayTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieDamagePlayTests.cs
+@@ -308,8 +308,8 @@ void Capture(string name, bool hitboxes = false)
+             Assert.That(health.DamageTransactions-before,Is.EqualTo(1000));Assert.That(damageBytes,Is.Zero);
+             report.AppendLine("warmed_resolver_hits=1000 direct_damage_bytes="+damageBytes);File.WriteAllText(Evidence+"/performance.txt",report.ToString());
+         }
+-        [TearDown] public void Cleanup()
+-        {foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;}
++        [UnityTearDown] public IEnumerator Cleanup()
++        {foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
+     }
+ }
+ #endif
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
+index c5cec60..ac0f498 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
+@@ -300,10 +300,10 @@ void CaptureCamera(Camera cam, string name)
+             }
+             File.WriteAllText(Evidence + "/contact-rate-audit.txt", report.ToString());
+         }
+-        [TearDown] public void Cleanup()
++        [UnityTearDown] public IEnumerator Cleanup()
+         {
+             foreach (var go in owned) if (go) Object.DestroyImmediate(go); owned.Clear();
+-            if (session) session.ReturnToMenu(); Time.timeScale = 1;
++            if (session) session.ReturnToMenu(); Time.timeScale = 1; yield return null;
+         }
+     }
+ }
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs
+index 2ee4162..983a5f7 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs
+@@ -100,7 +100,7 @@ void Capture(string directory,string label,ZombieController z)
+             }
+             File.WriteAllText(Evidence+"/performance-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+".txt",report.ToString());
+         }
+-        [TearDown]public void Cleanup(){foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;}
++        [UnityTearDown]public IEnumerator Cleanup(){foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
+     }
+ }
+ #endif
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieRecoveryTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieRecoveryTests.cs
+index 0bd06d9..f38d75f 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieRecoveryTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieRecoveryTests.cs
+@@ -104,7 +104,7 @@ IEnumerator Load(string path)
+             animator.cullingMode=AnimatorCullingMode.AlwaysAnimate;animator.Update(0);
+             Assert.That(Vector3.Distance(initial,hand.position),Is.LessThan(.001f),"First rendered pose must already be evaluated Idle, not bind pose");
+         }
+-        [TearDown]public void Cleanup(){if(probe)Object.DestroyImmediate(probe);if(session)session.ReturnToMenu();Time.timeScale=1;}
++        [UnityTearDown]public IEnumerator Cleanup(){if(probe)Object.DestroyImmediate(probe);if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
+     }
+ }
+ #endif
+diff --git a/Assets/LastSignal/Shelter/Cabin.mat b/Assets/LastSignal/Shelter/Cabin.mat
+index f8c2581..340b8a2 100644
+--- a/Assets/LastSignal/Shelter/Cabin.mat
++++ b/Assets/LastSignal/Shelter/Cabin.mat
+@@ -117,7 +117,7 @@ Material:
+     - _ZWrite: 1
+     m_Colors:
+     - _BaseColor: {r: 0.26, g: 0.2, b: 0.14, a: 1}
+-    - _Color: {r: 1, g: 1, b: 1, a: 1}
++    - _Color: {r: 0.25999996, g: 0.19999996, b: 0.13999996, a: 1}
+     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+   m_BuildTextureStacks: []
+diff --git a/Assets/LastSignal/Shelter/Terminal.mat b/Assets/LastSignal/Shelter/Terminal.mat
+index 63d4ff6..0eb3066 100644
+--- a/Assets/LastSignal/Shelter/Terminal.mat
++++ b/Assets/LastSignal/Shelter/Terminal.mat
+@@ -117,7 +117,7 @@ Material:
+     - _ZWrite: 1
+     m_Colors:
+     - _BaseColor: {r: 0.16, g: 0.45, b: 0.4, a: 1}
+-    - _Color: {r: 1, g: 1, b: 1, a: 1}
++    - _Color: {r: 0.15999997, g: 0.45, b: 0.39999998, a: 1}
+     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+   m_BuildTextureStacks: []
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/performance.txt b/Docs/Implementation/S004/Evidence/20260919-P4/performance.txt
+index e82057d..2ec5b04 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/performance.txt
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/performance.txt
+@@ -1,4 +1,4 @@
+ Editor smoke. Mean marker totals; overlapping nested CPU markers. Direct GC covers synchronous owned paths only.
+-live=1 dead=1 frames=16980 seconds=5.000104 AI_ms=0.00279787449941107 perception_ms=2.19081272084806E-05 nav_ms=0.000634641283863369 animator_ms=0.0217383280918728 valid=True,True,True,True direct_AI_bytes=0
+-live=10 dead=10 frames=12651 seconds=5.000398 AI_ms=0.0261599393723816 perception_ms=8.00433957789898E-05 nav_ms=0.000434725318156667 animator_ms=0.0691148124258952 valid=True,True,True,True direct_AI_bytes=0
++live=1 dead=1 frames=2753 seconds=5.000552 AI_ms=0.0136620377769706 perception_ms=0.000179122048674174 nav_ms=0.00341324809298947 animator_ms=0.0700836026153287 valid=True,True,True,True direct_AI_bytes=0
++live=10 dead=10 frames=2552 seconds=5.002845 AI_ms=0.0440528189655172 perception_ms=0.000565597962382445 nav_ms=0.00156546120689655 animator_ms=0.18371280799373 valid=True,True,True,True direct_AI_bytes=0
+ warmed_resolver_hits=1000 direct_damage_bytes=0
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/performance.txt b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/performance.txt
+index b71229f..a5715ad 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/performance.txt
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/performance.txt
+@@ -1,3 +1,3 @@
+ Editor technical combat smoke; CPU marker totals, not standalone certification. Direct synchronous actor bytes include presentation.
+-actors=1 frames=16632 seconds=5.000105 AI_ms=0.0351245963203463 attack_ms=0.0348859616402116 validation_ms=2.58032708032708E-06 animator_ms=0.0737527204184704 marker_valid=True,True,True,True direct_bytes=0 ticks=16632 transactions=5
+-actors=10 frames=6456 seconds=5.000525 AI_ms=0.322805307465923 attack_ms=0.320841436802974 validation_ms=3.70906133828996E-05 animator_ms=0.442576210966543 marker_valid=True,True,True,True direct_bytes=0 ticks=64560 transactions=46
++actors=1 frames=2986 seconds=5.000086 AI_ms=0.0491439611520429 attack_ms=0.048017003683858 validation_ms=2.2633288680509E-05 animator_ms=0.0748501982585398 marker_valid=True,True,True,True direct_bytes=0 ticks=2986 transactions=4
++actors=10 frames=2308 seconds=5.000842 AI_ms=0.312628149913345 attack_ms=0.308913178076257 validation_ms=0.000185605719237435 animator_ms=0.401770979636049 marker_valid=True,True,True,True direct_bytes=0 ticks=23080 transactions=43
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-fps.png
+index 00b650f..7d17566 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:658b300ce895ba7fa38f203bf30e2747159d2d94ea8a3a068e32d8a967ef9b4d
+-size 234910
++oid sha256:25a69c1b5c629fb944a31ac9b45a3361605d34877cb89dadebb74d639f01b6c8
++size 234388
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-side.png
+index a017390..b31aa72 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:29ec89a010a59fe51c546cc4b63b417ba0c92b8c1042085ccae6f941c53ed8f0
+-size 181275
++oid sha256:ec2e6353623342e4a2dfa14b7006cb2858d6dcc11fa0fbcc7b98236711a6b8d7
++size 181358
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-fps.png
+index 3f4e1f1..ffc5c7c 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:43587a15a28bc2df43078bcea64a70b19ce11d1f2f1f86a462bbe5a113b1cc53
+-size 220232
++oid sha256:32cf968f21aba37a2a1144c84b618e547854feb810c370d34c28a6bed4b7a66c
++size 220129
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-side.png
+index 4b1f9e0..7484208 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:83f898c34eecd4e6034e9e3a3a191110280a9d61f5ccbb94a670cef3c313a042
+-size 176569
++oid sha256:2a9e93568364795b9f6d39e17ce347897bf0ce602f86724548cfed1c96d6fbee
++size 176603
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-fps.png
+index bcdb13c..0673fdc 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:a8eab4e1db07d3371128a66827c606e80e58735588328539638b348b37530011
+-size 206728
++oid sha256:5d7bf4e872cb33f1970d2ba94d3679271b10e7e9161e246ae64f054d891c1e0e
++size 207935
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-side.png
+index aae6f8c..c189529 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:f263047267be01bca4f94cf68885db1895861bd70bfc01299b7ab7818b1e418f
+-size 160016
++oid sha256:8a47335ffd1a0a184d36b0e2866ca080a1a866f47ebab3220cdab9d412189766
++size 160320
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-fps.png
+index 7951bc1..7c7b806 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0b280273c93cbf479ff076094896a23cb46c3f6fa579231fdd3f73dea9e41881
+-size 259200
++oid sha256:80ee1f9a78f8a11c8b92d4779f96ba3b2429f47881ed50eb5f2e5adeb68f8d2b
++size 259690
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-side.png
+index 1e9bd57..33ebefe 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:178a330298cfb844e66b434909c12c7bd22c9b3c924f7d70d8af128ba38abba2
+-size 167861
++oid sha256:eab2f324fc87f502f211cfbb6344be7722039f313a0cb06bef236835d2570033
++size 167704
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-fps.png
+index 6005301..eaa83b8 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:22bc179f3d0bd37741ebd23d1cece36fa255636acdc0ff3a325436ed7d284b81
+-size 230150
++oid sha256:bd5d2472dd6a44c1df65b30e163569694bd958f4eebb264892128bbc01ca8174
++size 231484
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-side.png
+index ed5201f..005ea3f 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:00c2186f003b6734cc337559a4adc67df62054db57e33467a37f7732a84258cb
+-size 162350
++oid sha256:c9594d72790baaadfada1fbe918ddf88677d63880cd60e10461bb72c63c70554
++size 162702
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-fps.png
+index 086f75c..66b1f90 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:35abfd4ffcbe80317df1fd420adec2d64df310ad4c2791a54ffde0888e2eb819
+-size 249853
++oid sha256:e62a8f62859cab74ac1e79b5142fb8a049be3a7224af3fdec052b88676d16971
++size 249501
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-side.png
+index 510f629..9a47b56 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:3ab86b3f974ddf9f63d089339844d74b203fdbee21979ecfda2289b187f14ca3
+-size 165939
++oid sha256:5c95fc8281eaa8f834a0080b0ba14e0a61a999f4c3ef3f216d3da1aa64b12751
++size 165940
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-fps.png
+index c99ac2c..05c012a 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:2f4ddc274022ea3c0f4881652c4ff1542957f88e2967f1f3897a16fd600b8061
+-size 236607
++oid sha256:14dae7316de50dbed23484e80f86253338ebbbb212a3617cb98a63c8ade2267a
++size 236196
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-side.png
+index 210042b..50212b5 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:6fb27b005f01474584630bf608a0d830808800df7f8aa7946c89a39afc54d81a
+-size 160926
++oid sha256:98948670cc711f1c3e336712b86df7d851d651dcbd212b7c5b907c9a54187c9c
++size 160785
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-fps.png
+index fa338a3..c0859e1 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0ed87cbd41bc9619db8d111145240753d69c555f9bedb295edb42a1052dfbaf9
+-size 249864
++oid sha256:a1dd936d28603d024a3da18a4b016c81fe867680c702d9ed9e5bc95086ef784d
++size 251749
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-side.png
+index ebdb6bf..470f1a2 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:a9996ff04d847f7b03d29c770e6cc29e871bb06462c39d2f7f18c26bea19a4bc
+-size 165943
++oid sha256:4de64b065e01dcf7bad6888786efb1b6072fe2191ffde148a1f027e46a2b6819
++size 165262
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-fps.png
+index 5ac7a2e..0fbc7cc 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:90e90aa5fb99a16d0327bef29690d4abf2f84adc65939a0950f64b86cef42504
+-size 245107
++oid sha256:8941ebd50b123e74e1344357b36e7d73b96cbafe894a20f007df2dd207cf24cb
++size 245320
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-side.png
+index 6af9ad1..16ff48d 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:25acfc78060fa9406dbee750baecc89d4bbc89005fd21e05e931388b1d6360cc
+-size 165577
++oid sha256:7b5de91d3cb881e922f4c5cfa61bc795b5bbfec83ad9c4c294921934f0689213
++size 165373
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-fps.png
+index c47a266..0286cc4 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:748970324c85268beb2ae50ad4af86b44176cc38f16dd7aa2ae76fb9b3e13fbb
+-size 232722
++oid sha256:ec01b298daa918b1dc2937f1164e44cb239048a93a9153fcb410aece8b302f69
++size 232875
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-side.png
+index c9774d6..c5fbe5a 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:b2db74b7ebea5ec099724b6f5e1bedbcc6bb694cca5c9c9f2976c5ef65ad1bed
+-size 167033
++oid sha256:5e147b4ca0dadba557b7c01f0a0d5908bf61939b6825ab4ae2e2bc9908c83b75
++size 167031
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-fps.png
+index f20459d..75a9d09 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:c72eee4ac2384952fb96213d5f5a0ae33b363cc00aa3033e734fe75b0dece3f4
+-size 233233
++oid sha256:6dad367a1b67fe95fc8e8604da82717142b2bb3d6b7a5e7412116a2b8be526ff
++size 233227
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-side.png
+index 0114e1f..75244c3 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:d3bc26fe6de64673f870624f632e8366af2e9786c53ff7849a8014a0b9081d6a
+-size 165693
++oid sha256:8b402a97f5bc1e436e8cde1230cfbe1c2fb88fbb307a95484021e58822061dd3
++size 165661
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-fps.png
+index 273d203..99f8671 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:432de1d153bcabce06534a0e029eb7b781fbed91273fd9c5a16cd245177a6e07
+-size 259230
++oid sha256:04d53095c701b6e18090fdf34d420511fafbafae4f8f73914d18a143d031bb36
++size 259194
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-side.png
+index f88fbdd..7632208 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:f41bbcee3ebe42243eeec94a2c09b15b827c2660070d6168d269abfa7bbd76af
+-size 167783
++oid sha256:dd440776659c86f889702b4511a4463b58f4a95b490eaccc8b14c5078a735e98
++size 167799
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-fps.png
+index bf08e52..32f72ae 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:3d38bf19998b353439e868456f04227ee180555a33bb4cb6f1e8933fb768661b
+-size 250196
++oid sha256:d423a9eb42cf0244581cf5652498c55de7de07137b7f7b5341b068d163496265
++size 250245
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-side.png
+index ef5f226..e8e3176 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:53641edcccc2d0c92a94db03fdad33b11b3fd0589b5036b3282d603c04961584
+-size 165977
++oid sha256:c4779f8eb5656b2bd3e6c4139d9fc7d6571297f298f4140d3b07ba7f94a0c7f5
++size 165938
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-fps.png
+index 3aa2b07..4aa53c9 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:d2c05093b7d01e396bef4035924ac429fec45571798f28f416f6e84353b5c647
+-size 228545
++oid sha256:d4828e9983f13f509bfcea80feab81405a07f66fceb758a106d591f38741b7bb
++size 228561
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-side.png
+index 63f8314..6fbb7a2 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:33569c6135f5048a4a2ebb6a2de0ed17218096d27f693ffb8e7856aca6e419ef
+-size 159396
++oid sha256:0214a1597a9cea6c46e10b17ae3e424448a1710141037e0c81d6113b605da510
++size 159606
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-fps.png
+index 72c911e..5923553 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:c9785568b8beb3fc951e85c9591975f78b03b1f89d36c5fd9c7a8233fbedf4a7
+-size 242273
++oid sha256:3ccdef0dbe3a905c8de7c5aea938f423fb4acb5b5946f0b43e2fffa209c84515
++size 242402
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-side.png
+index e07bd4e..b009608 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:6995b52160205353874d1373f98569e9b562a754e40ce9eaec34159e1dafad0f
+-size 154948
++oid sha256:77c06a3cca58065b4b23653018c26a2172848de4fcef0eddef09759eab8684af
++size 154986
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/restart-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/restart-fps.png
+index fb95883..36fe44d 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/restart-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/restart-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:033f0d8cdfce246f91366a5872d5dc99f410618b7099fa486c2b382a8cf619fa
+-size 244190
++oid sha256:0d0947f10e0a8cf0d0afbad46f7b5bf73e9f7e5ec1eba8529d5e956c37f0b82d
++size 244218
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-fps.png
+index 107e56e..0a678d0 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:575d5cadd385cfc2e53dbfcd7144e5e0f52e2634bbe84c56f0075cbe8fe042ff
+-size 275179
++oid sha256:c0547d90a371dede10547b863564feb18bbada35a1b18f745d105a52329f3e14
++size 274619
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-side.png
+index 6500f72..a6b7ce4 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:bce39151173fc92c38b04cf6a3ca2aa565405bbb4e8afec009fb5fbbcc3e69df
+-size 144586
++oid sha256:a66eb56abe8f0e60f5ddfd5180e223b2fdda13d8cb1c4f6a194fd7ed134be990
++size 144515
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-fps.png
+index dbf553f..7ba9d00 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:ef935d9f5bc0f0d88aa12cd2e8915804c127c18211d7f05df1185fa43b72b574
+-size 265213
++oid sha256:46aeb25264e87b583aea0cdf042f40640a45eb95715c6729c6481d3f7a279516
++size 265277
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-side.png
+index 0ba37e5..9e86de1 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:4ae49110e4f7d1b34bf96f13e779774f01ccf3d39066ad84cc6c07c8e57a80a8
+-size 140077
++oid sha256:ba71d4c9daaec1fbd7e0f10c8c11afbd865ec86aa5cc731777c7149b039a1d3b
++size 140131
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/trace.txt b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/trace.txt
+index 18fa244..3a78f01 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/trace.txt
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/trace.txt
+@@ -218,3 +218,63 @@ hit-commit seq=1 state=AttackCommit timer=0.2501068 result=None attempts=0 hits=
+ hit-contact seq=1 state=AttackCommit timer=0.4168038 result=Hit attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
+ hit-recovery seq=1 state=Recovering timer=0.5418133 result=Hit attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
+ hit-next-windup seq=2 state=AttackWindup timer=0 result=None attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++motor-sidestep seq=1 state=AttackCommit timer=0.418185 result=OutsideArc attempts=1 hits=0 health=100 distance=1.119711 angle=23.17421 facing=(0.00, 0.00, 1.00)
++backstep-contact seq=1 state=AttackCommit timer=0.4175263 result=OutOfRange attempts=1 hits=0 health=100 distance=1.86 angle=0 facing=(0.00, 0.00, 1.00)
++backstep-recovery seq=1 state=Recovering timer=0.5417387 result=OutOfRange attempts=1 hits=0 health=100 distance=1.86 angle=0 facing=(0.00, 0.00, 1.00)
++sidestep-contact seq=1 state=AttackCommit timer=0.4177333 result=OutsideArc attempts=1 hits=0 health=100 distance=1.142932 angle=40.6013 facing=(0.00, 0.00, 1.00)
++sidestep-recovery seq=1 state=Recovering timer=0.5420405 result=OutsideArc attempts=1 hits=0 health=100 distance=1.142932 angle=40.6013 facing=(0.00, 0.00, 1.00)
++rear-contact seq=1 state=AttackCommit timer=0.4182241 result=OutsideArc attempts=1 hits=0 health=100 distance=0.86 angle=180 facing=(0.00, 0.00, 1.00)
++rear-recovery seq=1 state=Recovering timer=0.5428443 result=OutsideArc attempts=1 hits=0 health=100 distance=0.86 angle=180 facing=(0.00, 0.00, 1.00)
++wall-contact seq=1 state=AttackCommit timer=0.4169148 result=Occluded attempts=1 hits=0 health=100 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++wall-recovery seq=1 state=Recovering timer=0.5427434 result=Occluded attempts=1 hits=0 health=100 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++death seq=5 state=AttackCommit timer=0.4176484 result=Hit attempts=5 hits=5 health=0 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++restart seq=0 state=Idle timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++normal-approach seq=0 state=Chasing timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, -1.00)
++normal-hit seq=1 state=AttackCommit timer=0.4177469 result=Hit attempts=1 hits=1 health=80 distance=1.079955 angle=0 facing=(0.00, 0.00, -1.00)
++pause-AttackWindup seq=1 state=AttackWindup timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++pause-AttackCommit seq=1 state=AttackCommit timer=0.2516584 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++hit-start seq=1 state=AttackWindup timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++hit-commit seq=1 state=AttackCommit timer=0.250619 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++hit-contact seq=1 state=AttackCommit timer=0.4176835 result=Hit attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++hit-recovery seq=1 state=Recovering timer=0.5429372 result=Hit attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++hit-next-windup seq=2 state=AttackWindup timer=0 result=None attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++motor-sidestep seq=1 state=AttackCommit timer=0.416945 result=OutsideArc attempts=1 hits=0 health=100 distance=1.11906 angle=23.10993 facing=(0.00, 0.00, 1.00)
++backstep-contact seq=1 state=AttackCommit timer=0.4167298 result=OutOfRange attempts=1 hits=0 health=100 distance=1.86 angle=0 facing=(0.00, 0.00, 1.00)
++backstep-recovery seq=1 state=Recovering timer=0.5419187 result=OutOfRange attempts=1 hits=0 health=100 distance=1.86 angle=0 facing=(0.00, 0.00, 1.00)
++sidestep-contact seq=1 state=AttackCommit timer=0.4167025 result=OutsideArc attempts=1 hits=0 health=100 distance=1.142932 angle=40.6013 facing=(0.00, 0.00, 1.00)
++sidestep-recovery seq=1 state=Recovering timer=0.5419031 result=OutsideArc attempts=1 hits=0 health=100 distance=1.142932 angle=40.6013 facing=(0.00, 0.00, 1.00)
++rear-contact seq=1 state=AttackCommit timer=0.4168132 result=OutsideArc attempts=1 hits=0 health=100 distance=0.86 angle=180 facing=(0.00, 0.00, 1.00)
++rear-recovery seq=1 state=Recovering timer=0.5419179 result=OutsideArc attempts=1 hits=0 health=100 distance=0.86 angle=180 facing=(0.00, 0.00, 1.00)
++wall-contact seq=1 state=AttackCommit timer=0.4169131 result=Occluded attempts=1 hits=0 health=100 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++wall-recovery seq=1 state=Recovering timer=0.5417172 result=Occluded attempts=1 hits=0 health=100 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++death seq=5 state=AttackCommit timer=0.4168025 result=Hit attempts=5 hits=5 health=0 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++restart seq=0 state=Idle timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++normal-approach seq=0 state=Chasing timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, -1.00)
++normal-hit seq=1 state=AttackCommit timer=0.4167083 result=Hit attempts=1 hits=1 health=80 distance=1.079923 angle=0 facing=(0.00, 0.00, -1.00)
++pause-AttackWindup seq=1 state=AttackWindup timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++pause-AttackCommit seq=1 state=AttackCommit timer=0.2500145 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++hit-start seq=1 state=AttackWindup timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++hit-commit seq=1 state=AttackCommit timer=0.2500087 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++hit-contact seq=1 state=AttackCommit timer=0.4167028 result=Hit attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++hit-recovery seq=1 state=Recovering timer=0.5418016 result=Hit attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++hit-next-windup seq=2 state=AttackWindup timer=0 result=None attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++motor-sidestep seq=1 state=AttackCommit timer=0.4180997 result=OutsideArc attempts=1 hits=0 health=100 distance=1.120035 angle=23.20601 facing=(0.00, 0.00, 1.00)
++backstep-contact seq=1 state=AttackCommit timer=0.4180397 result=OutOfRange attempts=1 hits=0 health=100 distance=1.86 angle=0 facing=(0.00, 0.00, 1.00)
++backstep-recovery seq=1 state=Recovering timer=0.5439656 result=OutOfRange attempts=1 hits=0 health=100 distance=1.86 angle=0 facing=(0.00, 0.00, 1.00)
++sidestep-contact seq=1 state=AttackCommit timer=0.417501 result=OutsideArc attempts=1 hits=0 health=100 distance=1.142932 angle=40.6013 facing=(0.00, 0.00, 1.00)
++sidestep-recovery seq=1 state=Recovering timer=0.542258 result=OutsideArc attempts=1 hits=0 health=100 distance=1.142932 angle=40.6013 facing=(0.00, 0.00, 1.00)
++rear-contact seq=1 state=AttackCommit timer=0.4173248 result=OutsideArc attempts=1 hits=0 health=100 distance=0.86 angle=180 facing=(0.00, 0.00, 1.00)
++rear-recovery seq=1 state=Recovering timer=0.5420762 result=OutsideArc attempts=1 hits=0 health=100 distance=0.86 angle=180 facing=(0.00, 0.00, 1.00)
++wall-contact seq=1 state=AttackCommit timer=0.4169745 result=Occluded attempts=1 hits=0 health=100 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++wall-recovery seq=1 state=Recovering timer=0.5428292 result=Occluded attempts=1 hits=0 health=100 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++death seq=5 state=AttackCommit timer=0.4170993 result=Hit attempts=5 hits=5 health=0 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++restart seq=0 state=Idle timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++normal-approach seq=0 state=Chasing timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, -1.00)
++normal-hit seq=1 state=AttackCommit timer=0.4189855 result=Hit attempts=1 hits=1 health=80 distance=1.078635 angle=0 facing=(0.00, 0.00, -1.00)
++pause-AttackWindup seq=1 state=AttackWindup timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++pause-AttackCommit seq=1 state=AttackCommit timer=0.2502432 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++hit-start seq=1 state=AttackWindup timer=0 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++hit-commit seq=1 state=AttackCommit timer=0.2511016 result=None attempts=0 hits=0 health=100 distance=0 angle=0 facing=(0.00, 0.00, 1.00)
++hit-contact seq=1 state=AttackCommit timer=0.4171616 result=Hit attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++hit-recovery seq=1 state=Recovering timer=0.5425279 result=Hit attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
++hit-next-windup seq=2 state=AttackWindup timer=0 result=None attempts=1 hits=1 health=80 distance=1.01 angle=0 facing=(0.00, 0.00, 1.00)
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-fps.png
+index 04b41a1..85ab8a7 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:403b5755076f4af143dd7773f9a5c9e4b18e77951d5052a4fd3f6b77bc8525c6
+-size 222031
++oid sha256:dece69d1265b0d304b8a6f241b01ce638da2a01f05ad714cf0c7bf3cda5e75a7
++size 223255
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-side.png
+index 2883df7..5d6bfdb 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:ccf40ab4af081122317462acbc6f311461d0037417968968c858759bb589ad1c
+-size 163230
++oid sha256:ed0b3a007ff3537a4abfc99404c052b1af0759cc94ff391e0a46460fa97266fd
++size 163882
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-fps.png
+index ad8b165..50302ef 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0b218af18add56c89d0076b505e32e4c237277d427b7f779ce3e3733fb65d147
+-size 231488
++oid sha256:7005ea56e2776e54f80927dd3096d285bc402818a564ae6af07abf858a1042b5
++size 231567
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-side.png
+index f2a2b50..1748a64 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:2bf3c9092f490a5344f31e6f3def1e2e82965180820e6cd95396223908eb312d
+-size 158581
++oid sha256:2561347f721dbd6562393454294a6a557f66c76adb7df55e19ccd9e3c3b3e0dd
++size 158631
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/rifle-trace.txt b/Docs/Implementation/S004/Evidence/20260919-P4/rifle-trace.txt
+index 6da084c..726ce71 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/rifle-trace.txt
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/rifle-trace.txt
+@@ -190,3 +190,52 @@ id=74 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state
+ id=75 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
+ id=76 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
+ id=81 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=60 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=61 intended=Body hit=True obstruction=True collider=Damage_Chest HP=70 state=HitReact
++id=62 intended=Head hit=True obstruction=True collider=Damage_Head HP=10 state=AttackCommit
++id=63 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=69 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=70 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=71 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=72 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=73 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=74 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=75 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=76 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=77 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=82 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=1 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=2 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=3 intended=Body hit=True obstruction=False collider=Damage_Chest HP=0 state=Dead
++id=59 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=60 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=61 intended=Body hit=True obstruction=False collider=Damage_Chest HP=0 state=Dead
++id=62 intended=Body hit=True obstruction=True collider=Damage_Chest HP=70 state=HitReact
++id=63 intended=Head hit=True obstruction=True collider=Damage_Head HP=10 state=AttackCommit
++id=64 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=70 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=71 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=72 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=73 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=74 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=75 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=76 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=77 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=78 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=83 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=60 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=61 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=62 intended=Body hit=True obstruction=False collider=Damage_Chest HP=0 state=Dead
++id=63 intended=Body hit=True obstruction=True collider=Damage_Chest HP=70 state=HitReact
++id=64 intended=Head hit=True obstruction=True collider=Damage_Head HP=10 state=AttackCommit
++id=65 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=71 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=72 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=73 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=74 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=75 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=76 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=77 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
++id=78 intended=Head hit=True obstruction=False collider=Damage_Head HP=10 state=Chasing
++id=79 intended=Body hit=True obstruction=True collider=Damage_Chest HP=0 state=Dead
++id=84 intended=Body hit=True obstruction=False collider=Damage_Chest HP=70 state=HitReact
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-fps.png
+index 5042d01..22f60b0 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:64191ca73eac90604127491a4b309060df20e1df5fb372dba732403c976d7998
+-size 227556
++oid sha256:a87ceaf1fda2e51bbec234f605c46ed15b5d5a3d6bbd39a18da0c89ae0ed6498
++size 227804
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-side.png
+index b462d66..0f9e2a3 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:671f6fcd72e543a9d24c64391de40a3a186f2a5a6518f9f3280118edce2ce323
+-size 135255
++oid sha256:c526f4f0cdf4bd1726a3eef6c794f404308b57ca31081aa979babb8f7fb5c79f
++size 135263
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-fps.png
+index b4b6a47..2e6f56b 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:3db3c7d49f3e53f5ad853df2d01f5a3c222dfde616cdda8617db8d9bdac99b53
+-size 228185
++oid sha256:1eb5a3041f4d366b78be9c7d3b2afc8faf6b3c7b731ae42e2ed50edee6692f9c
++size 228374
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-side.png
+index 94c5242..ba6d1f0 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:1947e93b350e649716f9e1258838f18fcc7689498497c317e43b3a71904324ed
+-size 135110
++oid sha256:8bb7732ed670dac31005d31b0e987c045f817ec8fbf41ad2b7d42cc86bf89e33
++size 135133
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-fps.png
+index 8517af1..e02b91c 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:d29ca6d810a5b6b1e811bff7b4c82bb3c2a2dae16ac345d06640b136a0eee72f
+-size 208348
++oid sha256:a80ceb38de150ad3add6c389a2cf361b7d6108cef5447ea452406754d39c036f
++size 208282
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-side.png
+index 4d97d65..4eb7e06 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:c314cb53382c97fbeaea3b11f99076cce211d9089bdb4669f53c1765ed25fb3d
+-size 126128
++oid sha256:cc1805c8f409c599ad3c4f53a5bb85bf1cba827ccef3e647ff31fb8bec8ba3de
++size 126133
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-fps.png
+index 145194a..6fe6a6d 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:9fafa7bdaa52a27e150c8ace2f767eeab2146b62f09e905f75079749c8813e2e
+-size 209517
++oid sha256:42be534c06904b10007c3da2b8c8eecbe095d6127dc7415828804a58bcc5610d
++size 209252
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-side.png
+index 4d97d65..4eb7e06 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:c314cb53382c97fbeaea3b11f99076cce211d9089bdb4669f53c1765ed25fb3d
+-size 126128
++oid sha256:cc1805c8f409c599ad3c4f53a5bb85bf1cba827ccef3e647ff31fb8bec8ba3de
++size 126133
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-fps.png
+index e3c8a7d..7d648b6 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:5b905139b5cfc4f675da97aa3598558a85b4d1b5bc393001708ed943cf60cbed
+-size 208795
++oid sha256:b31254ec7c73f8d51288a429fc4439cb7f7eb5234021c4d0f1fc8b38d5f98124
++size 209256
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-side.png
+index c9d8169..ea875dd 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:4d4dab96e675d3c98a4694edabc4b04bf68bf6048fb18a1e764d58b2f687ca0f
+-size 121616
++oid sha256:5f764703def559173d1ebe59e4c914a85c391bb533f82eb2977973fc89aea5cd
++size 121718
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-fps.png
+index 2cf1a04..c3d0946 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:f335f1b07b9b10ebf42ac3c415fcb91b723f5c1dbc8f9191e3b8ab19f05deacf
+-size 228472
++oid sha256:76ac75c372d7bf0bafa0535dbf263b26763f8ae168957774fa1ecb4926e18662
++size 228974
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-side.png
+index 058eb8d..eec6add 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:daaf3232f65a2acba08b0edeec4ecf6e26262945faa2e26e16f044235fefef83
+-size 135252
++oid sha256:a8a27d372ea488670e81051fd28cf19a37d51987fdf014f6db9496a0872bdcde
++size 135262
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-fps.png
+index c303f3e..172cac8 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0ed7ab6c807b94244fd3ed4df4f32653fdbe46103268cf25642169a9be0a60ee
+-size 228451
++oid sha256:0ec84d5244a9894d47c751f1299f80820cc97ab4898da693cfb964c8df269934
++size 228532
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-side.png
+index 71922c2..afffc4f 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0eddcb4ad48e4cacffb2eeb48229ea251ea1a2622e72ee5d8c6f345e7d5ced5c
+-size 139026
++oid sha256:12afa90a4930b11a5f8cdfed045d627df0a0b2fa22341d8b1d93dcb3d9af0fd8
++size 138737
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-fps.png
+index c303f3e..172cac8 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0ed7ab6c807b94244fd3ed4df4f32653fdbe46103268cf25642169a9be0a60ee
+-size 228451
++oid sha256:0ec84d5244a9894d47c751f1299f80820cc97ab4898da693cfb964c8df269934
++size 228532
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-side.png
+index 71922c2..afffc4f 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0eddcb4ad48e4cacffb2eeb48229ea251ea1a2622e72ee5d8c6f345e7d5ced5c
+-size 139026
++oid sha256:12afa90a4930b11a5f8cdfed045d627df0a0b2fa22341d8b1d93dcb3d9af0fd8
++size 138737
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-fps.png
+index c303f3e..172cac8 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0ed7ab6c807b94244fd3ed4df4f32653fdbe46103268cf25642169a9be0a60ee
+-size 228451
++oid sha256:0ec84d5244a9894d47c751f1299f80820cc97ab4898da693cfb964c8df269934
++size 228532
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-side.png
+index 244496d..7d80fd9 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:3329856439baa9e552a48ce1f47a4e3dd9a2dd789313963ee22915f12d6e93f4
+-size 139803
++oid sha256:753ef3919942704e93bba19a6cc1c97cf972335d935c5883c0c69ea36ac04d9f
++size 139526
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-fps.png
+index c303f3e..172cac8 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0ed7ab6c807b94244fd3ed4df4f32653fdbe46103268cf25642169a9be0a60ee
+-size 228451
++oid sha256:0ec84d5244a9894d47c751f1299f80820cc97ab4898da693cfb964c8df269934
++size 228532
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-side.png
+index 71922c2..afffc4f 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0eddcb4ad48e4cacffb2eeb48229ea251ea1a2622e72ee5d8c6f345e7d5ced5c
+-size 139026
++oid sha256:12afa90a4930b11a5f8cdfed045d627df0a0b2fa22341d8b1d93dcb3d9af0fd8
++size 138737
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-fps.png
+index 9bf3b56..b5ea346 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:c3bac8a564fef9670555f499b41e01f457582e262003cb9ef77bfcd0cde92906
+-size 249406
++oid sha256:41f8607c6d63451725e447eaf6baca231dd3d8c897f25014f81fc5cba2337026
++size 234607
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-side.png
+index ceeba04..e18287c 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:b119bc17cea0e6e5f73b85745fa1d1f224e03feccebd978a2461c611a446956a
+-size 144514
++oid sha256:5478719380fc7d79a47f89a87831be9560f1443c19985e0142e6bf1bcc594bbf
++size 145450
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-fps.png
+index 97dadf8..fb97199 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:55d9d47fba0d334f4685101fc61d9fd61f612fefef58ac018dbbcc71f3a00bf1
+-size 248012
++oid sha256:d36e9f4760f7b31e52277bf5a92da387cabc4abc816ec53c285edbc950a2cf5b
++size 231169
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-side.png
+index 45ca5c9..3c0288b 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:037cb860819036e947809a47718df72f210eba6b8c3c21abc6d4beeb8457c0dd
+-size 144415
++oid sha256:c0692e3db8d0039fb6ed4a455be6147d6f750c835eb78fc43817bed66344a6c4
++size 144158
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-fps.png
+index cc92ff6..aa32926 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0a0d75d31bf52251a1be4b814382b3d5745a3e3ea2a32940491a6a9d0793f93a
+-size 249458
++oid sha256:8739e7caf0b42a5de10ec3857ab952feec477ea8c0b6231f2497522476fea037
++size 221688
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-side.png
+index 43b4055..2cd9b94 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:b25cfe0d225dd12f7bdfc3c7664dc53e80722cb1083e582a902e30775d6806e6
+-size 144381
++oid sha256:912bd53a3998a6f3ba6dac261341b797a99a99614ef7ab6ba21a2a12fd1913a2
++size 142837
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-fps.png
+index 62ea5bf..d570c02 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:2a9d6b2ee00721ff451bed65edc1a98b8453c28a73972494ef9c06f8d6f18b71
+-size 217200
++oid sha256:df5ea07397acacb8eeee0b434f7e8ce412c74097390eb11a9dff6df19e080e21
++size 216627
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-side.png
+index f9446d5..838f57e 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:ae02d8ee93d9a4283279bcd15ddf1bb5cc86937998c6bffd884787c504f1dfdc
+-size 135452
++oid sha256:e9d67aa5f8e26782bd1d5ab8c37edb5bb6f17f30f126e71471ee9db7f26895c9
++size 135750
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-fps.png
+index 89bff93..9a16368 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:43308c4963ad0eb292fbaa87f79007b04cf3a771952d8317bdb0749e33e4e7dc
+-size 269337
++oid sha256:70a309e79662709a3caf35432901f77261276abbcebd81b749b66241069de427
++size 272166
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-side.png
+index ab1f1b3..20ec6b3 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:638785b72bf6e5f0bb9169da368497e4143d8d7bb80a7846667bf66583c0222e
+-size 163345
++oid sha256:e3732a3b7631e0d2128b8337a8b83651d9de9456de15e536a8f1924a148cf071
++size 163393
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-fps.png
+index 8e74f94..8a28e81 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:a771558d87af568eabf74890a4636b45ff37a916220b7aa19465f2d996a9a2d7
+-size 253102
++oid sha256:4a2c118f732b2e2a9aaef8cd5f28768b0341995170237839916e24059025830f
++size 252831
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-side.png
+index 9730ef9..3d1abba 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:ec1bff8b3368e6054e9ebc6a057d2d1f6b993dd55483196d322b52671fa161b9
+-size 157134
++oid sha256:be72c3eb4fa4b46422d80f02da1e32939327f2fbfc33d219998cc82b874c5e27
++size 157277
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-fps.png
+index fe8de50..da1e757 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:4176e3f6790b86e2e330a7611ac3b3c2e3088964a51e34bf748f8dfbafee49e6
+-size 246640
++oid sha256:91f915ed3eb88f8ad6fc4dc858382e1f0e6d5b50d0ee2f05c3d56213eded372d
++size 246634
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-side.png
+index 94d2777..eb1d9b5 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:adaef2d4b45f2601172c3f2a137723fe3bd6abf10bcb2dc81ac2066ac7823b8e
+-size 155272
++oid sha256:eb68a838133c7b3d0af045d825458f35913ebd3e4d9dbfc2e04eddcac41f7c80
++size 155287
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-fps.png
+index a0d854e..d109b53 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:90eea760f1c85b87c2f2882387ef414a03df7675b09f19beef9b0c5cca85a2a1
+-size 269346
++oid sha256:249ad38afd8d0ce26dddecee9331095f036dc2057a65a848611b3c9e29314e1b
++size 272148
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-side.png
+index 4e3bb1e..20ec6b3 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:1735e5eb0109ab9db4ee45973e3dfeee094f8a214cf2c3b9d4d3782af6d0c688
+-size 163341
++oid sha256:e3732a3b7631e0d2128b8337a8b83651d9de9456de15e536a8f1924a148cf071
++size 163393
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-fps.png
+index b3ed8d5..a740f59 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:e4b1d5e1385eeded9a014151284784f328731374796eae06c6abd3df08443787
+-size 311639
++oid sha256:00f0aada0c1f4861bed6bead3f20525758b32d55862d8f02f5839127bc9b2cef
++size 282358
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-side.png
+index 120ec94..3a46b9c 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:3864580bc3477c8829d248aedeac70b9c34685c1a7d7491903a4f6f9d81bc2a9
+-size 162654
++oid sha256:d5f53fa743bd41df60463c89e476186cb58b1bccd572fdbc1a1603b4300dab90
++size 161211
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-fps.png
+index a37d8ff..eb104d8 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:3622063c9baf4738c59231c2ec68a611b97848f225fe9c6f17b809963610a532
+-size 287840
++oid sha256:d0876cdc137dcc330df0396c0f8511e34d3de2364995972f8aed5ffe76e1db31
++size 288178
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-side.png
+index 999aa52..d98609f 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:59c372221a913a8e614647957f2e10bdcdc0d4bea44899b94769d66be19611ad
+-size 163720
++oid sha256:3dfc00ae0397bb422a088cd57f3445e39d2000c44c6bd94582634e59082ad6ab
++size 163754
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/new-session-alive-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/new-session-alive-fps.png
+index 4744924..e9be63c 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/new-session-alive-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/new-session-alive-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:0c4f4cebb7384634851155acacf6bda9ad83f8db6c8ef0183a6e1ff0751ab869
+-size 241208
++oid sha256:9e9aee0db3b977245ba89e9869b0e8a8da29c6ed19de2eda00fd74e0ddc0ccad
++size 241195
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-fps.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-fps.png
+index 497e659..e21e1b1 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-fps.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-fps.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:3c79362104091d7394b1005763a0033e8d0002ac02600f5b6d12feaff6daadeb
+-size 228499
++oid sha256:704b0cdf206ddb1f9639037016305857bc2bf219a0a2ab543f350771daf35e09
++size 229054
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-side.png b/Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-side.png
+index 058eb8d..eec6add 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-side.png
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-side.png
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:daaf3232f65a2acba08b0edeec4ecf6e26262945faa2e26e16f044235fefef83
+-size 135252
++oid sha256:a8a27d372ea488670e81051fd28cf19a37d51987fdf014f6db9496a0872bdcde
++size 135262
+diff --git a/Docs/Implementation/S004/Evidence/20260919-P4/visual/trace.tsv b/Docs/Implementation/S004/Evidence/20260919-P4/visual/trace.tsv
+index b59c39d..8feb6f1 100644
+--- a/Docs/Implementation/S004/Evidence/20260919-P4/visual/trace.tsv
++++ b/Docs/Implementation/S004/Evidence/20260919-P4/visual/trace.tsv
+@@ -274,3 +274,78 @@ lethal-AttackWindup	Dead	70	Body	30	1	30	10	0	3
+ lethal-AttackCommit	Dead	73	Body	30	1	30	10	0	3
+ lethal-Recovering	Dead	76	Body	30	1	30	10	0	3
+ new-session-alive	Idle	0	Unspecified	0	0	0	0	100	0
++layout-idle	Chasing	0	Unspecified	0	0	0	0	100	0
++body-hit-react-start	HitReact	60	Body	30	1	30	100	70	1
++loop-chase	Chasing	0	Unspecified	0	0	0	0	100	0
++loop-dodge	AttackCommit	0	Unspecified	0	0	0	0	100	0
++loop-body-reaction	HitReact	61	Body	30	1	30	100	70	1
++loop-player-hit	AttackCommit	61	Body	30	1	30	100	70	1
++loop-lethal	Dead	63	Body	30	1	30	10	0	3
++loop-complete	Dead	63	Body	30	1	30	10	0	3
++layout-Idle	Chasing	64	Head	0.01	2	0.02	100	99.98	1
++layout-Locomotion	Chasing	65	Head	0.01	2	0.02	99.98	99.96001	2
++layout-Attack	Chasing	66	Head	0.01	2	0.02	99.96001	99.94001	3
++layout-HitReact	Chasing	67	Head	0.01	2	0.02	99.94001	99.92001	4
++lethal-AttackWindup	Dead	71	Body	30	1	30	10	0	3
++lethal-AttackCommit	Dead	74	Body	30	1	30	10	0	3
++lethal-Recovering	Dead	77	Body	30	1	30	10	0	3
++new-session-alive	Idle	0	Unspecified	0	0	0	0	100	0
++layout-idle	Chasing	0	Unspecified	0	0	0	0	100	0
++body-hit-react-start	HitReact	1	Body	30	1	30	100	70	1
++body-hit-react-peak	HitReact	1	Body	30	1	30	100	70	1
++reaction-recovered	Chasing	1	Body	30	1	30	100	70	1
++head-shot	Chasing	2	Head	30	2	60	70	10	2
++lethal-body	Dead	3	Body	30	1	30	10	0	3
++death-middle	Dead	3	Body	30	1	30	10	0	3
++corpse-final	Dead	3	Body	30	1	30	10	0	3
++corpse-inactive	Dead	3	Body	30	1	30	10	0	3
++layout-Idle	Chasing	4	Head	0.01	2	0.02	100	99.98	1
++layout-Locomotion	Chasing	5	Head	0.01	2	0.02	99.98	99.96001	2
++layout-Attack	Chasing	6	Head	0.01	2	0.02	99.96001	99.94001	3
++layout-HitReact	Chasing	7	Head	0.01	2	0.02	99.94001	99.92001	4
++layout-idle	Chasing	0	Unspecified	0	0	0	0	100	0
++body-hit-react-start	HitReact	59	Body	30	1	30	100	70	1
++body-hit-react-peak	HitReact	59	Body	30	1	30	100	70	1
++reaction-recovered	Chasing	59	Body	30	1	30	100	70	1
++head-shot	Chasing	60	Head	30	2	60	70	10	2
++lethal-body	Dead	61	Body	30	1	30	10	0	3
++death-middle	Dead	61	Body	30	1	30	10	0	3
++corpse-final	Dead	61	Body	30	1	30	10	0	3
++corpse-inactive	Dead	61	Body	30	1	30	10	0	3
++loop-chase	Chasing	0	Unspecified	0	0	0	0	100	0
++loop-dodge	AttackCommit	0	Unspecified	0	0	0	0	100	0
++loop-body-reaction	HitReact	62	Body	30	1	30	100	70	1
++loop-player-hit	AttackCommit	62	Body	30	1	30	100	70	1
++loop-lethal	Dead	64	Body	30	1	30	10	0	3
++loop-complete	Dead	64	Body	30	1	30	10	0	3
++layout-Idle	Chasing	65	Head	0.01	2	0.02	100	99.98	1
++layout-Locomotion	Chasing	66	Head	0.01	2	0.02	99.98	99.96001	2
++layout-Attack	Chasing	67	Head	0.01	2	0.02	99.96001	99.94001	3
++layout-HitReact	Chasing	68	Head	0.01	2	0.02	99.94001	99.92001	4
++lethal-AttackWindup	Dead	72	Body	30	1	30	10	0	3
++lethal-AttackCommit	Dead	75	Body	30	1	30	10	0	3
++lethal-Recovering	Dead	78	Body	30	1	30	10	0	3
++new-session-alive	Idle	0	Unspecified	0	0	0	0	100	0
++layout-idle	Chasing	0	Unspecified	0	0	0	0	100	0
++body-hit-react-start	HitReact	60	Body	30	1	30	100	70	1
++body-hit-react-peak	HitReact	60	Body	30	1	30	100	70	1
++reaction-recovered	Chasing	60	Body	30	1	30	100	70	1
++head-shot	Chasing	61	Head	30	2	60	70	10	2
++lethal-body	Dead	62	Body	30	1	30	10	0	3
++death-middle	Dead	62	Body	30	1	30	10	0	3
++corpse-final	Dead	62	Body	30	1	30	10	0	3
++corpse-inactive	Dead	62	Body	30	1	30	10	0	3
++loop-chase	Chasing	0	Unspecified	0	0	0	0	100	0
++loop-dodge	AttackCommit	0	Unspecified	0	0	0	0	100	0
++loop-body-reaction	HitReact	63	Body	30	1	30	100	70	1
++loop-player-hit	AttackCommit	63	Body	30	1	30	100	70	1
++loop-lethal	Dead	65	Body	30	1	30	10	0	3
++loop-complete	Dead	65	Body	30	1	30	10	0	3
++layout-Idle	Chasing	66	Head	0.01	2	0.02	100	99.98	1
++layout-Locomotion	Chasing	67	Head	0.01	2	0.02	99.98	99.96001	2
++layout-Attack	Chasing	68	Head	0.01	2	0.02	99.96001	99.94001	3
++layout-HitReact	Chasing	69	Head	0.01	2	0.02	99.94001	99.92001	4
++lethal-AttackWindup	Dead	73	Body	30	1	30	10	0	3
++lethal-AttackCommit	Dead	76	Body	30	1	30	10	0	3
++lethal-Recovering	Dead	79	Body	30	1	30	10	0	3
++new-session-alive	Idle	0	Unspecified	0	0	0	0	100	0
+diff --git a/Docs/Implementation/S007/Evidence/20260920-103550-entry/pickup-to-reload.txt b/Docs/Implementation/S007/Evidence/20260920-103550-entry/pickup-to-reload.txt
+index 72af7fa..997403e 100644
+--- a/Docs/Implementation/S007/Evidence/20260920-103550-entry/pickup-to-reload.txt
++++ b/Docs/Implementation/S007/Evidence/20260920-103550-entry/pickup-to-reload.txt
+@@ -1 +1 @@
+-Actual Security seed 12345 -> WorldItem -> Inventory -> empty partial reload -> miss -> second pickup -> drop/re-pick -> tactical reload. picked=13+8 shots=1 finalTotal=20; conserved.
++Actual Security seed 12345 -> WorldItem -> Inventory -> empty partial reload -> miss -> second pickup -> drop/re-pick -> tactical reload. picked=8+13 shots=1 finalTotal=20; conserved.
+diff --git a/Docs/Implementation/S008/Evidence/20260920-212200-entry/10-expedition-soak.txt b/Docs/Implementation/S008/Evidence/20260920-212200-entry/10-expedition-soak.txt
+index 4227a83..acbcb05 100644
+--- a/Docs/Implementation/S008/Evidence/20260920-212200-entry/10-expedition-soak.txt
++++ b/Docs/Implementation/S008/Evidence/20260920-212200-entry/10-expedition-soak.txt
+@@ -8,4 +8,4 @@ Expedition 7: same player/stash/world, 90 total rounds, no new loot; pass
+ Expedition 8: same player/stash/world, 90 total rounds, no new loot; pass
+ Expedition 9: same player/stash/world, 90 total rounds, no new loot; pass
+ Expedition 10: same player/stash/world, 90 total rounds, no new loot; pass
+-10 leave+return pairs incl fixture placement, actual ray interactions, assertions: 0.264 ms total, 0 B; this includes test overhead, not isolated transition cost.
++10 leave+return pairs incl fixture placement, actual ray interactions, assertions: 0.5822 ms total, 0 B; this includes test overhead, not isolated transition cost.
+diff --git a/Docs/Implementation/S008/Evidence/20260920-212200-entry/performance.txt b/Docs/Implementation/S008/Evidence/20260920-212200-entry/performance.txt
+index 1aeb2c0..6a05905 100644
+--- a/Docs/Implementation/S008/Evidence/20260920-212200-entry/performance.txt
++++ b/Docs/Implementation/S008/Evidence/20260920-212200-entry/performance.txt
+@@ -1,5 +1,5 @@
+ Unity 6000.5.0f1 Editor, synchronous warmed current-thread measurements; no assertion inside measured loops.
+-2000 domain transfers no UI observers: 0 B, 1.7301 ms.
++2000 domain transfers no UI observers: 0 B, 1.9474 ms.
+ 200 gameplay transfers with live UI/HUD observers: 0 B total; instrumented UI Refresh portion 0 B.
+-200 actual doorway transitions via ShelterLoop.TryUse: 0 B, 0.6458 ms total (0.003229 ms/transition). No fixture placement inside measured transition loop.
++200 actual doorway transitions via ShelterLoop.TryUse: 0 B, 0.9408 ms total (0.004704 ms/transition). No fixture placement inside measured transition loop.
+ Idle UI project Refresh allocations measured over 60 frames separately in ui-idle.txt; excludes engine Canvas rendering.
+diff --git a/Docs/Implementation/S008/Evidence/20260920-212200-entry/two-expedition-acceptance.txt b/Docs/Implementation/S008/Evidence/20260920-212200-entry/two-expedition-acceptance.txt
+index 1dda21d..54ee049 100644
+--- a/Docs/Implementation/S008/Evidence/20260920-212200-entry/two-expedition-acceptance.txt
++++ b/Docs/Implementation/S008/Evidence/20260920-212200-entry/two-expedition-acceptance.txt
+@@ -1 +1 @@
+-PASS actual authored Shelter scene, production InteractionController rays, initial empty stash and 30/0 weapon, both expeditions without menu. First pickup ammo=8 other=3 material.scrap; live Shambler damaged by actual rifle. Deposit/withdraw using actual UI buttons; second expedition reload uses 1 withdrawn round, second pickup=13; shots=2 final magazine=29 reserve=0 stash=20. Player, stash and Session Loot identities preserved, seed=12345, generated=14. Test positions Player to interaction points; manual traversal/standalone acceptance separate.
++PASS actual authored Shelter scene, production InteractionController rays, initial empty stash and 30/0 weapon, both expeditions without menu. First pickup ammo=8 other=1 tool.wrench; live Shambler damaged by actual rifle. Deposit/withdraw using actual UI buttons; second expedition reload uses 1 withdrawn round, second pickup=13; shots=2 final magazine=29 reserve=0 stash=20. Player, stash and Session Loot identities preserved, seed=12345, generated=14. Test positions Player to interaction points; manual traversal/standalone acceptance separate.
+diff --git a/Docs/Implementation/S008/S008_ACCEPTANCE.md b/Docs/Implementation/S008/S008_ACCEPTANCE.md
+index 7a67845..1f4a8b6 100644
+--- a/Docs/Implementation/S008/S008_ACCEPTANCE.md
++++ b/Docs/Implementation/S008/S008_ACCEPTANCE.md
+@@ -1,4 +1,12 @@
+ # S008 acceptance status
++PASS — final verified actual S008 shelter/expedition scope.
++
++Authoritative evidence: `Evidence/20260920-212200-entry/final-editmode.xml` (150/150), `final-playmode.xml` (92/92), zero failed/skipped/inconclusive; `build-result.txt` (macOS Development succeeded, 0 errors); `standalone-result.txt` (automated two-expedition acceptance PASS, project errors 0). Human continuous traversal and Windows certification remain separate.
++
++Reconciled 2026-09-21 against the saved final artifacts. These historical results do not substitute for RoadmapRecovery fresh tests or save/load acceptance.
++
++## Historical intermediate status (retained)
++
+ IN PROGRESS. No final PASS claimed.
+ Evidence: Evidence/20260920-212200-entry.
+ Entry compilation PASS; full entry EditMode136/136 and PlayMode84/84, zero failures/skips/inconclusive. First focused domain/S007 package33/33 PASS (14 S008 cases +19 ammunition cases); the inventory namespace filter was too short, so its legacy cases await the full EditMode gate.
+diff --git a/Docs/Last_Signal_Production_Plan_v1.0_TR/MASTER_PLAN.md b/Docs/Last_Signal_Production_Plan_v1.0_TR/MASTER_PLAN.md
+index bb9a5ee..7dcab20 100644
+--- a/Docs/Last_Signal_Production_Plan_v1.0_TR/MASTER_PLAN.md
++++ b/Docs/Last_Signal_Production_Plan_v1.0_TR/MASTER_PLAN.md
+@@ -12,6 +12,10 @@ implementation_status: NOT_VERIFIED
+ 
+ Bu planın ilk ürünü **single-player** oyundur. S001–S048 / D001–D480 geliştirme, yayın ve stabilizasyonu kapsar. S049–S060 / D481–D600 yalnız ayrı co-op GO kararıyla uygulanır. Kartlar uygulama veya test başarısı değildir. Çalışma adı Project Last Signal kesin ticari isim değildir.
+ 
++## Uygulama kimliği uzlaştırması — 2026-09-22
++
++Canonical **S008/D071–D080** dünya zamanı, hava ve kontrollü uykudur. Tarihsel `Docs/Implementation/S008` ise sığınak/hazırlık/sefer/dönüş uygulamasıdır; canonical S010 ile kısmen örtüşür ve yeniden numaralandırılmaz. Güncel gap çalışması ve gerçek kanıt durumu: [P02-GAP uzlaştırması](../Implementation/P02-GAP/P02_GAP_RECONCILIATION.md), [kabul](../Implementation/P02-GAP/P02_GAP_ACCEPTANCE.md). Canonical S007 iki-cell/CellReady açığı ayrıca korunur; bu not sprint tablosundaki plan kimliklerini veya G2 kapısını tamamlanmış ilan etmez.
++
+ ## Dönemlerin ilişkisi
+ 
+ ```mermaid

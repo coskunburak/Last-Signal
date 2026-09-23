@@ -11,6 +11,8 @@ namespace LastSignal
         public void ConfigureEncounter(ZombieEncounter encounter) => zombieEncounter = encounter;
         public GameObject Player { get; private set; }
         public bool Paused { get; private set; }
+        public long Generation { get; private set; }
+        public bool Restoring { get; private set; }
         public bool InMenu => !Player;
         PlayerInputReader input;
         PlayerHealth health;
@@ -22,9 +24,13 @@ namespace LastSignal
         public void Configure(GameObject prefab, Transform spawn, DoorInteractable[] sceneDoors)
         { playerPrefab = prefab; spawnPoint = spawn; doors = sceneDoors; }
         void Start() => BeginSession();
-        public void BeginSession()
+        public void BeginSession() => BeginSession(false);
+        internal void BeginRestoreSession() => BeginSession(true);
+        internal void CompleteRestore() { Restoring = false; SetPaused(false); }
+        void BeginSession(bool restoring)
         {
             if (Player) return;
+            Generation++; Restoring = restoring;
             if (!playerPrefab || !spawnPoint) { Debug.LogError("Session requires player prefab and spawn point.", this); return; }
             foreach (var door in doors) if (door) door.ResetDoor();
             Player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
@@ -63,15 +69,17 @@ namespace LastSignal
             input.FocusLost += Pause;
             if (zombieEncounter) zombieEncounter.Begin(Player);
             loot = GetComponent<LastSignal.Loot.LootPopulationService>();
-            if (loot) loot.Begin(Player);
+            if (loot && !restoring) loot.Begin(Player);
             shelter = GetComponent<Shelter.ShelterLoop>();
             if (shelter) shelter.Begin(this);
-            SetPaused(false);
+            var worldClock = GetComponent<WorldTime.WorldClock>();
+            if (worldClock) worldClock.Begin();
+            SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }
-        public void TogglePause() { if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(!Paused); }
+        public void TogglePause() { if (Restoring) return; if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(!Paused); }
         public void Pause() { if (Player) SetPaused(true); }
-        public void Resume() { if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(false); }
+        public void Resume() { if (Restoring) return; if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(false); }
         void SetPaused(bool value)
         {
             Paused = value;
@@ -96,6 +104,9 @@ namespace LastSignal
         }
         public void ReturnToMenu()
         {
+            Generation++; Restoring = false;
+            var worldClock = GetComponent<WorldTime.WorldClock>();
+            if (worldClock) worldClock.End();
             if (shelter) shelter.End();
             if (loot) loot.End();
             if (health) health.Died -= OnPlayerDied;

@@ -22,6 +22,11 @@ namespace LastSignal
         {
             CurrentHealth = float.IsFinite(maxHealth) && maxHealth > 0 ? maxHealth : 0;
         }
+        internal void RestoreHealth(float value)
+        {
+            CurrentHealth = value; DamageTransactions = 0; LastDamage = default;
+            if (!IsAlive) Died?.Invoke();
+        }
         public void SetDamageEnabled(bool value) => accepting = value;
         public void TakeDamage(DamageInfo info)
         {

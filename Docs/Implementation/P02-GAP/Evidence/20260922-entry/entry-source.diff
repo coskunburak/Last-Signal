@@ -1,0 +1,470 @@
+diff --git a/Assets/LastSignal/Scripts/Runtime/AI/ZombieHealth.cs b/Assets/LastSignal/Scripts/Runtime/AI/ZombieHealth.cs
+index 490e3eb..8bf3a40 100644
+--- a/Assets/LastSignal/Scripts/Runtime/AI/ZombieHealth.cs
++++ b/Assets/LastSignal/Scripts/Runtime/AI/ZombieHealth.cs
+@@ -22,6 +22,11 @@ void Awake()
+         {
+             CurrentHealth = float.IsFinite(maxHealth) && maxHealth > 0 ? maxHealth : 0;
+         }
++        internal void RestoreHealth(float value)
++        {
++            CurrentHealth = value; DamageTransactions = 0; LastDamage = default;
++            if (!IsAlive) Died?.Invoke();
++        }
+         public void SetDamageEnabled(bool value) => accepting = value;
+         public void TakeDamage(DamageInfo info)
+         {
+diff --git a/Assets/LastSignal/Scripts/Runtime/Interaction/DoorInteractable.cs b/Assets/LastSignal/Scripts/Runtime/Interaction/DoorInteractable.cs
+index b45adc4..5f0c196 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Interaction/DoorInteractable.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Interaction/DoorInteractable.cs
+@@ -62,6 +62,12 @@ void Update()
+                 if (Mathf.Approximately(angle, destination)) { IsOpen = destination > 0; Busy = false; }
+             }
+         }
++        internal void RestoreOpen(bool open)
++        {
++            angle = destination = open ? openAngleDegrees : 0;
++            IsOpen = open; Busy = Obstructed = false;
++            hinge.localRotation = closedRotation * Quaternion.Euler(0, angle, 0);
++        }
+         public void ResetDoor()
+         {
+             angle = destination = 0;
+diff --git a/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs b/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
+index 2dffcce..ef2d11f 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
+@@ -207,8 +207,54 @@ public void Clear()
+             Notify();
+         }
+ 
++        // Persistence adapter prevalidates detached slots. Replace rather than append so repeated
++        // load cannot duplicate quantities; publish only after the whole container is coherent.
++        internal void ReplaceValidatedSlots(InventorySlot[] replacement)
++        {
++            if (IsBusy) throw new InvalidOperationException("Container transaction already in progress.");
++            IsBusy = true;
++            try
++            {
++                slots = replacement;
++                capacity = replacement.Length;
++                InventoryChanged?.Invoke();
++            }
++            finally { IsBusy = false; }
++        }
++
+         void Notify() { if (!silent) InventoryChanged?.Invoke(); }
+ 
++        // Cross-owner world operations stage this owner silently, then let the caller commit
++        // the world quantity before any observer runs. Existing normal/reload notifications
++        // keep their original exception contract.
++        internal int BeginWorldAdd(ItemDefinition item, int quantity)
++        {
++            if (IsBusy) return 0;
++            int accepted;
++            silent = true;
++            try { accepted = TryAdd(item, quantity); }
++            finally { silent = false; }
++            if (accepted > 0) IsBusy = true;
++            return accepted;
++        }
++        internal bool BeginWorldRemove(int index, int quantity)
++        {
++            if (IsBusy) return false;
++            bool removed;
++            silent = true;
++            try { removed = TryRemove(index, quantity); }
++            finally { silent = false; }
++            if (removed) IsBusy = true;
++            return removed;
++        }
++        internal void CompleteWorldMutation()
++        {
++            // Quantities are already committed. Preserve normal observer exception propagation;
++            // the caller's finally releases the ownership barrier without rolling back state.
++            try { InventoryChanged?.Invoke(); }
++            finally { IsBusy = false; }
++        }
++
+         internal TransferResult TransferTo(InventoryContainer destination, ItemDefinition item, int requested)
+         {
+             if (destination == null || destination == this || !item || !item.Id.IsValid || item.MaxStack < 1 || requested <= 0)
+diff --git a/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs b/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
+index ff57746..271777b 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
+@@ -30,7 +30,7 @@ public sealed class PlayerInventory : MonoBehaviour
+ 
+         public bool TryDrop(int slotIndex, int amount)
+         {
+-            if (Container.IsBusy || slotIndex < 0 || slotIndex >= Capacity || amount <= 0) return false;
++            if (LastSignal.Persistence.OwnershipTransaction.Active || Container.IsBusy || slotIndex < 0 || slotIndex >= Capacity || amount <= 0) return false;
+             var slot = GetSlot(slotIndex);
+             if (slot.IsEmpty || slot.Quantity < amount) return false;
+             
+@@ -44,14 +44,23 @@ public bool TryDrop(int slotIndex, int amount)
+                 spawnPos = hit.point - dropOrigin.forward * 0.2f;
+             }
+ 
+-            var go = Instantiate(def.WorldPrefab, spawnPos, Quaternion.identity);
+-            var worldItem = go.GetComponent<WorldItem>();
+-            if (!worldItem) worldItem = go.AddComponent<WorldItem>();
+-            
+-            worldItem.Configure(def, amount);
+-
+-            Container.TryRemove(slotIndex, amount);
+-            return true;
++            LastSignal.Persistence.OwnershipTransaction.Enter();
++            try
++            {
++                var go = Instantiate(def.WorldPrefab, spawnPos, Quaternion.identity);
++                var worldItem = go.GetComponent<WorldItem>();
++                if (!worldItem) worldItem = go.AddComponent<WorldItem>();
++                worldItem.Configure(def, amount);
++                if (Container.BeginWorldRemove(slotIndex, amount))
++                {
++                    Container.CompleteWorldMutation();
++                    return true;
++                }
++                // A prefab callback must not leave a new owner if the removal was rejected.
++                go.SetActive(false); Destroy(go);
++                return false;
++            }
++            finally { LastSignal.Persistence.OwnershipTransaction.Exit(); }
+         }
+     }
+ }
+diff --git a/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs b/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
+index 9e32171..c8b656d 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
+@@ -8,6 +8,17 @@ public sealed class WorldItem : MonoBehaviour, IInteractable
+         [SerializeField] ItemDefinition definition;
+         [SerializeField, Min(1)] int quantity = 1;
+ 
++        string persistentId;
++        System.Action<string,int> persistenceChanged;
++        internal void BindPersistence(System.Action<string,int> listener) => persistenceChanged = listener;
++        LastSignal.Persistence.WorldItemOrigin origin = LastSignal.Persistence.WorldItemOrigin.Drop;
++        // New runtime drops receive an ID once. Restore replaces it with the SAVED ID before activation.
++        public string PersistentId => persistentId;
++        public LastSignal.Persistence.WorldItemOrigin Origin => origin;
++        void Awake() { if (string.IsNullOrEmpty(persistentId)) persistentId = System.Guid.NewGuid().ToString("N"); }
++        internal void AssignPersistentIdentity(string id, LastSignal.Persistence.WorldItemOrigin source)
++        { persistentId = id; origin = source; }
++
+         public ItemDefinition Definition => definition;
+         public int Quantity => quantity;
+         public bool Available => isActiveAndEnabled && definition != null && quantity > 0;
+@@ -17,6 +28,7 @@ public void Configure(ItemDefinition item, int initialQuantity)
+         {
+             definition = item;
+             quantity = initialQuantity;
++            persistenceChanged?.Invoke(persistentId, quantity);
+             if (quantity <= 0) Destroy(gameObject);
+         }
+ 
+@@ -27,22 +39,26 @@ void OnValidate()
+ 
+         public bool TryInteract()
+         {
+-            if (!Available) return false;
++            if (!Available || LastSignal.Persistence.OwnershipTransaction.Active) return false;
+             
+             var playerInventory = FindObjectOfType<PlayerInventory>();
+             if (playerInventory == null) return false;
+ 
+-            int accepted = playerInventory.TryAdd(definition, quantity);
+-            if (accepted > 0)
++            LastSignal.Persistence.OwnershipTransaction.Enter();
++            try
+             {
+-                quantity -= accepted;
+-                if (quantity <= 0)
++                int accepted = playerInventory.Container.BeginWorldAdd(definition, quantity);
++                if (accepted <= 0) return false;
++                try
+                 {
+-                    Destroy(gameObject);
++                    quantity -= accepted;
++                    persistenceChanged?.Invoke(persistentId, quantity);
++                    if (quantity <= 0) Destroy(gameObject);
+                 }
++                finally { playerInventory.Container.CompleteWorldMutation(); }
+                 return true;
+             }
+-            return false;
++            finally { LastSignal.Persistence.OwnershipTransaction.Exit(); }
+         }
+     }
+ }
+diff --git a/Assets/LastSignal/Scripts/Runtime/Loot/LootPopulationService.cs b/Assets/LastSignal/Scripts/Runtime/Loot/LootPopulationService.cs
+index e0b81bb..e4abf59 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Loot/LootPopulationService.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Loot/LootPopulationService.cs
+@@ -23,6 +23,9 @@ public sealed class LootPopulationService : MonoBehaviour
+         [SerializeField] int explicitSeed = 12345;
+         readonly List<LootPopulationResult> results = new List<LootPopulationResult>();
+         readonly HashSet<WorldItem> preexisting = new HashSet<WorldItem>();
++        readonly Dictionary<string,bool> consumedLoot = new Dictionary<string,bool>(StringComparer.Ordinal);
++        internal bool TryGetConsumed(string id, out bool consumed) => consumedLoot.TryGetValue(id,out consumed);
++        void RecordQuantity(string id,int quantity) { consumedLoot[id] = quantity <= 0; }
+         GameObject runtimeRoot;
+         bool populated;
+         public int Seed { get; private set; }
+@@ -41,7 +44,7 @@ public void Begin(GameObject player, int? seed = null)
+             {
+                 populated = true;
+                 Seed = seed ?? (overrideSeed ? explicitSeed : BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0));
+-                results.Clear(); preexisting.Clear(); GeneratedCount = 0; SpawnMilliseconds = 0;
++                results.Clear(); preexisting.Clear(); consumedLoot.Clear(); GeneratedCount = 0; SpawnMilliseconds = 0;
+                 var points = new List<LootSpawnPoint>();
+                 foreach (var root in gameObject.scene.GetRootGameObjects())
+                 {
+@@ -69,7 +72,10 @@ public void Begin(GameObject player, int? seed = null)
+                     using (SpawnMarker.Auto())
+                     {
+                         var go = Instantiate(selection.Item.WorldPrefab,point.transform.position,point.transform.rotation,runtimeRoot.transform);
+-                        go.GetComponent<WorldItem>().Configure(selection.Item,selection.Quantity);
++                        var worldItem = go.GetComponent<WorldItem>();
++                        worldItem.Configure(selection.Item,selection.Quantity);
++                        worldItem.AssignPersistentIdentity("loot:" + point.StableId, LastSignal.Persistence.WorldItemOrigin.Loot);
++                        consumedLoot.Add(worldItem.PersistentId,false); worldItem.BindPersistence(RecordQuantity);
+                     }
+                     SpawnMilliseconds += (System.Diagnostics.Stopwatch.GetTimestamp()-start)*1000.0/System.Diagnostics.Stopwatch.Frequency;
+                     GeneratedCount++;
+@@ -123,7 +129,46 @@ public void End()
+                     foreach (var item in root.GetComponentsInChildren<WorldItem>(true))
+                         if (item && !preexisting.Contains(item)) { item.gameObject.SetActive(false); Destroy(item.gameObject); }
+             if (runtimeRoot) { runtimeRoot.SetActive(false); Destroy(runtimeRoot); }
+-            runtimeRoot=null; preexisting.Clear(); results.Clear(); GeneratedCount=0; populated=false;
++            runtimeRoot=null; preexisting.Clear(); results.Clear(); consumedLoot.Clear(); GeneratedCount=0; populated=false;
++        }
++        internal void Restore(LastSignal.Persistence.SaveGame save, LastSignal.Inventory.Data.ItemCatalog catalog)
++        {
++            if (populated) throw new InvalidOperationException("Restore must precede loot population.");
++            runtimeRoot = new GameObject("Session Loot"); runtimeRoot.SetActive(false);
++            SceneManager.MoveGameObjectToScene(runtimeRoot, gameObject.scene);
++            Seed = save.header.seed; results.Clear(); preexisting.Clear(); consumedLoot.Clear(); GeneratedCount = 0;
++            var byId = new Dictionary<string, LastSignal.Persistence.WorldItemSnapshot>(StringComparer.Ordinal);
++            foreach (var item in save.world.items)
++            {
++                byId.Add(item.id, item);
++                if(item.origin==LastSignal.Persistence.WorldItemOrigin.Loot)
++                    consumedLoot.Add(item.id,item.disposition==LastSignal.Persistence.EntityDisposition.Consumed);
++            }
++            // Mark ownership before fallible instantiation so End() can clean an interrupted hydrate.
++            populated = true;
++            foreach (var opportunity in save.world.opportunities)
++            {
++                if (opportunity.outcome == LastSignal.Persistence.OpportunityOutcome.Generated)
++                {
++                    var item = byId[opportunity.entityId];
++                    var definition = catalog.GetItem(new LastSignal.Inventory.Data.StableItemId(item.definitionId));
++                    results.Add(new LootPopulationResult(opportunity.id, new LootSelection(LootOutcome.Spawned, definition, item.quantity)));
++                    GeneratedCount++;
++                }
++                else results.Add(new LootPopulationResult(opportunity.id, new LootSelection(
++                    opportunity.outcome == LastSignal.Persistence.OpportunityOutcome.Empty ? LootOutcome.Empty : LootOutcome.Blocked)));
++            }
++            foreach (var item in save.world.items)
++            {
++                if (item.disposition == LastSignal.Persistence.EntityDisposition.Consumed) continue;
++                var definition = catalog.GetItem(new LastSignal.Inventory.Data.StableItemId(item.definitionId));
++                var pose = item.transform;
++                var go = Instantiate(definition.WorldPrefab, new Vector3(pose.x,pose.y,pose.z), new Quaternion(pose.qx,pose.qy,pose.qz,pose.qw), runtimeRoot.transform);
++                var worldItem = go.GetComponent<WorldItem>(); worldItem.Configure(definition,item.quantity);
++                worldItem.AssignPersistentIdentity(item.id,item.origin);
++                if(item.origin==LastSignal.Persistence.WorldItemOrigin.Loot) worldItem.BindPersistence(RecordQuantity);
++            }
++            runtimeRoot.SetActive(true);
+         }
+         void OnDestroy() => End();
+     }
+diff --git a/Assets/LastSignal/Scripts/Runtime/Player/FirstPersonLook.cs b/Assets/LastSignal/Scripts/Runtime/Player/FirstPersonLook.cs
+index d91c56f..4206efa 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Player/FirstPersonLook.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Player/FirstPersonLook.cs
+@@ -38,6 +38,9 @@ public void ApplyLook(Vector2 mouseDelta)
+             view.transform.localRotation = Quaternion.Euler(Pitch, 0, 0);
+         }
+ 
++        internal void RestorePitch(float value)
++        { Pitch = value; view.transform.localRotation = Quaternion.Euler(Pitch, 0, 0); }
++
+         /// <summary>Apply camera recoil (pitch up, yaw). Separate from mouse look.</summary>
+         public void ApplyRecoil(float pitchDegrees, float yawDegrees)
+         {
+diff --git a/Assets/LastSignal/Scripts/Runtime/Player/PlayerHealth.cs b/Assets/LastSignal/Scripts/Runtime/Player/PlayerHealth.cs
+index 1b85030..867d484 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Player/PlayerHealth.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Player/PlayerHealth.cs
+@@ -29,6 +29,11 @@ public void ResetForSession()
+             LastDamage = default;
+             HealthChanged?.Invoke();
+         }
++        internal void RestoreHealth(float value)
++        {
++            CurrentHealth = value; DamageTransactions = 0; LastDamage = default;
++            HealthChanged?.Invoke();
++        }
+         public void TakeDamage(DamageInfo info)
+         {
+             if (!isActiveAndEnabled || !IsAlive || info.Amount <= 0 ||
+diff --git a/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs b/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
+index 4bb3327..fd6d0ec 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
+@@ -11,6 +11,8 @@ public sealed class SessionFlow : MonoBehaviour
+         public void ConfigureEncounter(ZombieEncounter encounter) => zombieEncounter = encounter;
+         public GameObject Player { get; private set; }
+         public bool Paused { get; private set; }
++        public long Generation { get; private set; }
++        public bool Restoring { get; private set; }
+         public bool InMenu => !Player;
+         PlayerInputReader input;
+         PlayerHealth health;
+@@ -22,9 +24,13 @@ public sealed class SessionFlow : MonoBehaviour
+         public void Configure(GameObject prefab, Transform spawn, DoorInteractable[] sceneDoors)
+         { playerPrefab = prefab; spawnPoint = spawn; doors = sceneDoors; }
+         void Start() => BeginSession();
+-        public void BeginSession()
++        public void BeginSession() => BeginSession(false);
++        internal void BeginRestoreSession() => BeginSession(true);
++        internal void CompleteRestore() { Restoring = false; SetPaused(false); }
++        void BeginSession(bool restoring)
+         {
+             if (Player) return;
++            Generation++; Restoring = restoring;
+             if (!playerPrefab || !spawnPoint) { Debug.LogError("Session requires player prefab and spawn point.", this); return; }
+             foreach (var door in doors) if (door) door.ResetDoor();
+             Player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
+@@ -63,15 +69,15 @@ public void BeginSession()
+             input.FocusLost += Pause;
+             if (zombieEncounter) zombieEncounter.Begin(Player);
+             loot = GetComponent<LastSignal.Loot.LootPopulationService>();
+-            if (loot) loot.Begin(Player);
++            if (loot && !restoring) loot.Begin(Player);
+             shelter = GetComponent<Shelter.ShelterLoop>();
+             if (shelter) shelter.Begin(this);
+-            SetPaused(false);
++            SetPaused(restoring);
+             Debug.Log("S001 session started: one player, local input.");
+         }
+-        public void TogglePause() { if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(!Paused); }
++        public void TogglePause() { if (Restoring) return; if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(!Paused); }
+         public void Pause() { if (Player) SetPaused(true); }
+-        public void Resume() { if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(false); }
++        public void Resume() { if (Restoring) return; if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(false); }
+         void SetPaused(bool value)
+         {
+             Paused = value;
+@@ -96,6 +102,7 @@ void OnPlayerDied()
+         }
+         public void ReturnToMenu()
+         {
++            Generation++; Restoring = false;
+             if (shelter) shelter.End();
+             if (loot) loot.End();
+             if (health) health.Died -= OnPlayerDied;
+diff --git a/Assets/LastSignal/Scripts/Runtime/Shelter/ShelterLoop.cs b/Assets/LastSignal/Scripts/Runtime/Shelter/ShelterLoop.cs
+index 98422b7..7bfe735 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Shelter/ShelterLoop.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Shelter/ShelterLoop.cs
+@@ -55,6 +55,11 @@ public void Begin(SessionFlow flow)
+             preparationUI.Bind(this);
+             Changed?.Invoke();
+         }
++        internal void RestoreExpedition(bool onExpedition, int index)
++        {
++            State = onExpedition ? ExpeditionState.Expedition : ExpeditionState.Shelter;
++            ExpeditionIndex = index; preparationUI.Hide(); Changed?.Invoke();
++        }
+         public void End()
+         {
+             if (health) health.Died -= OnDeath;
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
+index 45ae486..01c0338 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
+@@ -102,7 +102,7 @@ public IEnumerator Reload_TransfersAmmoAfterDuration()
+             for (int i=0; i<5; i++)
+             {
+                 Press(mouse.leftButton); yield return null;
+-                Release(mouse.leftButton); yield return new WaitForSeconds(0.15f);
++                Release(mouse.leftButton); yield return new WaitForSeconds(0.2f);
+             }
+             int expectedAmmo = state.Definition.MagazineCapacity - 5;
+             Assert.That(state.CurrentMagazine, Is.EqualTo(expectedAmmo));
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieBehaviorTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieBehaviorTests.cs
+index c7202c5..e9425e2 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieBehaviorTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieBehaviorTests.cs
+@@ -73,7 +73,7 @@ IEnumerator State(ZombieState expected,float timeout=3)
+             Place(actor.transform.position+actor.transform.forward*3);yield return State(ZombieState.Chasing);
+             Assert.That(nav.Exhausted,Is.False);Assert.That(zombie.Runtime.SearchAge,Is.Zero);
+         }
+-        [TearDown]public void Teardown(){if(actor)Object.DestroyImmediate(actor);if(session)session.ReturnToMenu();Time.timeScale=1;}
++        [UnityTearDown]public IEnumerator Teardown(){if(actor)Object.DestroyImmediate(actor);if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
+     }
+ }
+ #endif
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieDamagePlayTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieDamagePlayTests.cs
+index 94a4d07..ad5545c 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieDamagePlayTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieDamagePlayTests.cs
+@@ -308,8 +308,8 @@ void Capture(string name, bool hitboxes = false)
+             Assert.That(health.DamageTransactions-before,Is.EqualTo(1000));Assert.That(damageBytes,Is.Zero);
+             report.AppendLine("warmed_resolver_hits=1000 direct_damage_bytes="+damageBytes);File.WriteAllText(Evidence+"/performance.txt",report.ToString());
+         }
+-        [TearDown] public void Cleanup()
+-        {foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;}
++        [UnityTearDown] public IEnumerator Cleanup()
++        {foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
+     }
+ }
+ #endif
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
+index c5cec60..ac0f498 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
+@@ -300,10 +300,10 @@ void CaptureCamera(Camera cam, string name)
+             }
+             File.WriteAllText(Evidence + "/contact-rate-audit.txt", report.ToString());
+         }
+-        [TearDown] public void Cleanup()
++        [UnityTearDown] public IEnumerator Cleanup()
+         {
+             foreach (var go in owned) if (go) Object.DestroyImmediate(go); owned.Clear();
+-            if (session) session.ReturnToMenu(); Time.timeScale = 1;
++            if (session) session.ReturnToMenu(); Time.timeScale = 1; yield return null;
+         }
+     }
+ }
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs
+index 2ee4162..983a5f7 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs
+@@ -100,7 +100,7 @@ void Capture(string directory,string label,ZombieController z)
+             }
+             File.WriteAllText(Evidence+"/performance-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+".txt",report.ToString());
+         }
+-        [TearDown]public void Cleanup(){foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;}
++        [UnityTearDown]public IEnumerator Cleanup(){foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
+     }
+ }
+ #endif
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieRecoveryTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieRecoveryTests.cs
+index 0bd06d9..f38d75f 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieRecoveryTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieRecoveryTests.cs
+@@ -104,7 +104,7 @@ IEnumerator Load(string path)
+             animator.cullingMode=AnimatorCullingMode.AlwaysAnimate;animator.Update(0);
+             Assert.That(Vector3.Distance(initial,hand.position),Is.LessThan(.001f),"First rendered pose must already be evaluated Idle, not bind pose");
+         }
+-        [TearDown]public void Cleanup(){if(probe)Object.DestroyImmediate(probe);if(session)session.ReturnToMenu();Time.timeScale=1;}
++        [UnityTearDown]public IEnumerator Cleanup(){if(probe)Object.DestroyImmediate(probe);if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
+     }
+ }
+ #endif

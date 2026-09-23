@@ -1,0 +1,139 @@
+diff --git a/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs b/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
+index 2dffcce..ff5c48a 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
+@@ -207,8 +207,52 @@ public void Clear()
+             Notify();
+         }
+ 
++        // Persistence adapter prevalidates detached slots. Replace rather than append so repeated
++        // load cannot duplicate quantities; publish only after the whole container is coherent.
++        internal void ReplaceValidatedSlots(InventorySlot[] replacement)
++        {
++            if (IsBusy) throw new InvalidOperationException("Container transaction already in progress.");
++            IsBusy = true;
++            try
++            {
++                slots = replacement;
++                capacity = replacement.Length;
++                PublishTransfer();
++            }
++            finally { IsBusy = false; }
++        }
++
+         void Notify() { if (!silent) InventoryChanged?.Invoke(); }
+ 
++        // Cross-owner world operations stage this owner silently, then let the caller commit
++        // the world quantity before any observer runs. Existing normal/reload notifications
++        // keep their original exception contract.
++        internal int BeginWorldAdd(ItemDefinition item, int quantity)
++        {
++            if (IsBusy) return 0;
++            int accepted;
++            silent = true;
++            try { accepted = TryAdd(item, quantity); }
++            finally { silent = false; }
++            if (accepted > 0) IsBusy = true;
++            return accepted;
++        }
++        internal bool BeginWorldRemove(int index, int quantity)
++        {
++            if (IsBusy) return false;
++            bool removed;
++            silent = true;
++            try { removed = TryRemove(index, quantity); }
++            finally { silent = false; }
++            if (removed) IsBusy = true;
++            return removed;
++        }
++        internal void CompleteWorldMutation()
++        {
++            try { PublishTransfer(); }
++            finally { IsBusy = false; }
++        }
++
+         internal TransferResult TransferTo(InventoryContainer destination, ItemDefinition item, int requested)
+         {
+             if (destination == null || destination == this || !item || !item.Id.IsValid || item.MaxStack < 1 || requested <= 0)
+diff --git a/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs b/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
+index ff57746..271777b 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
+@@ -30,7 +30,7 @@ public sealed class PlayerInventory : MonoBehaviour
+ 
+         public bool TryDrop(int slotIndex, int amount)
+         {
+-            if (Container.IsBusy || slotIndex < 0 || slotIndex >= Capacity || amount <= 0) return false;
++            if (LastSignal.Persistence.OwnershipTransaction.Active || Container.IsBusy || slotIndex < 0 || slotIndex >= Capacity || amount <= 0) return false;
+             var slot = GetSlot(slotIndex);
+             if (slot.IsEmpty || slot.Quantity < amount) return false;
+             
+@@ -44,14 +44,23 @@ public bool TryDrop(int slotIndex, int amount)
+                 spawnPos = hit.point - dropOrigin.forward * 0.2f;
+             }
+ 
+-            var go = Instantiate(def.WorldPrefab, spawnPos, Quaternion.identity);
+-            var worldItem = go.GetComponent<WorldItem>();
+-            if (!worldItem) worldItem = go.AddComponent<WorldItem>();
+-            
+-            worldItem.Configure(def, amount);
+-
+-            Container.TryRemove(slotIndex, amount);
+-            return true;
++            LastSignal.Persistence.OwnershipTransaction.Enter();
++            try
++            {
++                var go = Instantiate(def.WorldPrefab, spawnPos, Quaternion.identity);
++                var worldItem = go.GetComponent<WorldItem>();
++                if (!worldItem) worldItem = go.AddComponent<WorldItem>();
++                worldItem.Configure(def, amount);
++                if (Container.BeginWorldRemove(slotIndex, amount))
++                {
++                    Container.CompleteWorldMutation();
++                    return true;
++                }
++                // A prefab callback must not leave a new owner if the removal was rejected.
++                go.SetActive(false); Destroy(go);
++                return false;
++            }
++            finally { LastSignal.Persistence.OwnershipTransaction.Exit(); }
+         }
+     }
+ }
+diff --git a/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs b/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
+index 9e32171..cec1829 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
+@@ -27,22 +27,25 @@ void OnValidate()
+ 
+         public bool TryInteract()
+         {
+-            if (!Available) return false;
++            if (!Available || LastSignal.Persistence.OwnershipTransaction.Active) return false;
+             
+             var playerInventory = FindObjectOfType<PlayerInventory>();
+             if (playerInventory == null) return false;
+ 
+-            int accepted = playerInventory.TryAdd(definition, quantity);
+-            if (accepted > 0)
++            LastSignal.Persistence.OwnershipTransaction.Enter();
++            try
+             {
+-                quantity -= accepted;
+-                if (quantity <= 0)
++                int accepted = playerInventory.Container.BeginWorldAdd(definition, quantity);
++                if (accepted <= 0) return false;
++                try
+                 {
+-                    Destroy(gameObject);
++                    quantity -= accepted;
++                    if (quantity <= 0) Destroy(gameObject);
+                 }
++                finally { playerInventory.Container.CompleteWorldMutation(); }
+                 return true;
+             }
+-            return false;
++            finally { LastSignal.Persistence.OwnershipTransaction.Exit(); }
+         }
+     }
+ }

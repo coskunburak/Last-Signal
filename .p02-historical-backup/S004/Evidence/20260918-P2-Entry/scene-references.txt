@@ -1,0 +1,16 @@
+ProjectSettings/EditorBuildSettings.asset:9:    path: Assets/LastSignal/Scenes/S001Acceptance.unity
+ProjectSettings/EditorBuildSettings.asset:12:    path: Assets/LastSignal/Scenes/CombatAcceptance.unity
+Assets/LastSignal/Editor/S001Project.cs:17:        public const string ScenePath = "Assets/LastSignal/Scenes/S001Acceptance.unity";
+Assets/LastSignal/Editor/S001Project.cs:219:                "Assets/LastSignal/Scenes/S001Acceptance.unity",
+Assets/LastSignal/Editor/S001Project.cs:220:                "Assets/LastSignal/Scenes/CombatAcceptance.unity"
+Assets/LastSignal/Editor/RealAssetIntegration.cs:176:                new EditorBuildSettingsScene("Assets/LastSignal/Scenes/S001Acceptance.unity", true),
+Assets/LastSignal/Editor/RealAssetIntegration.cs:177:                new EditorBuildSettingsScene("Assets/LastSignal/Scenes/CombatAcceptance.unity", true) };
+Assets/LastSignal/Editor/CombatAcceptanceProject.cs:10:    public static class CombatAcceptanceProject
+Assets/LastSignal/Editor/CombatAcceptanceProject.cs:25:            if (!AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/LastSignal/Scenes/CombatAcceptance.unity")) CreateTestScene();
+Assets/LastSignal/Editor/CombatAcceptanceProject.cs:312:            EditorSceneManager.SaveScene(scene, "Assets/LastSignal/Scenes/CombatAcceptance.unity");
+Assets/LastSignal/Tests/EditMode/SerializedContractTests.cs:40:            var scene = EditorSceneManager.OpenScene("Assets/LastSignal/Scenes/S001Acceptance.unity");
+Assets/LastSignal/Tests/PlayMode/CombatAcceptanceTests.cs:10:    public class CombatAcceptanceTests : InputTestFixture
+Assets/LastSignal/Tests/PlayMode/CombatAcceptanceTests.cs:31:            UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode("Assets/LastSignal/Scenes/CombatAcceptance.unity", new UnityEngine.SceneManagement.LoadSceneParameters(UnityEngine.SceneManagement.LoadSceneMode.Single));
+Assets/LastSignal/Tests/PlayMode/CombatAcceptanceTests.cs:33:            SceneManager.LoadScene("CombatAcceptance");
+Assets/LastSignal/Tests/PlayMode/MovementAcceptanceTests.cs:223:            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/S001Acceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+Assets/LastSignal/Tests/PlayMode/MovementAcceptanceTests.cs:267:            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/S001Acceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));

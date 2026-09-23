@@ -1,0 +1,14 @@
+using UnityEngine; using UnityEditor; using UnityEditor.SceneManagement; using UnityEngine.SceneManagement; using System.IO; using System.Linq;
+internal class CommandScript : IRunCommand { public void Execute(ExecutionResult result) {
+if(EditorApplication.isPlaying){result.LogError("Requires edit mode");return;}
+var preview=EditorSceneManager.NewPreviewScene(); var root=new GameObject("P1 temporary import inspection");SceneManager.MoveGameObjectToScene(root,preview);
+RenderTexture rt=null;Texture2D tex=null;var active=RenderTexture.active;
+try{
+string[] names={"alien_enemy","space_crew_man","spaceship_captain"};
+for(int i=0;i<3;i++){var source=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/tt-3d/LowPolySci-FiStarterPack/Character/Prefabs/"+names[i]+".prefab");var obj=Object.Instantiate(source,root.transform);obj.transform.position=new Vector3((i-1)*1.8f,0,0);foreach(var r in obj.GetComponentsInChildren<SkinnedMeshRenderer>())r.updateWhenOffscreen=true;}
+var cg=new GameObject("PreviewCamera");cg.transform.SetParent(root.transform);var cam=cg.AddComponent<Camera>();cam.scene=preview;cam.transform.position=new Vector3(0,1.15f,5.5f);cam.transform.LookAt(new Vector3(0,.9f,0));cam.clearFlags=CameraClearFlags.SolidColor;cam.backgroundColor=new Color(.12f,.15f,.18f);cam.nearClipPlane=.01f;cam.fieldOfView=40;
+var lg=new GameObject("PreviewLight");lg.transform.SetParent(root.transform);var light=lg.AddComponent<Light>();light.type=LightType.Directional;light.intensity=2;lg.transform.rotation=Quaternion.Euler(30,150,0);
+rt=new RenderTexture(1200,600,24);tex=new Texture2D(1200,600,TextureFormat.RGB24,false);cam.targetTexture=rt;cam.Render();RenderTexture.active=rt;tex.ReadPixels(new Rect(0,0,1200,600),0,0);tex.Apply();File.WriteAllBytes("Docs/Implementation/S004/Evidence/20260918-P1/vendor-materials-urp.png",tex.EncodeToPNG());
+result.Log("Rendered original vendor materials in isolated preview scene under current URP. Screen left captain, middle crew, right alien. No source changes.");
+} finally{foreach(var camera in root.GetComponentsInChildren<Camera>())camera.targetTexture=null;RenderTexture.active=active;if(rt){rt.Release();Object.DestroyImmediate(rt);}if(tex)Object.DestroyImmediate(tex);Object.DestroyImmediate(root);EditorSceneManager.ClosePreviewScene(preview);}
+} }

@@ -1,0 +1,101 @@
+{
+  "success": true,
+  "message": "Tool 'GetConsoleLogs' executed successfully",
+  "data": {
+    "logs": [
+      {
+        "message": "<b><color=#cc7a00>MCP-FOR-UNITY</color></b>: [TestJobManager] Clearing stale job 83c40824e4c94ff7b3613f6ed09dc933 (last update 50287s ago)\nUnityEngine.Debug:LogWarning (object)\nMCPForUnity.Editor.Helpers.McpLog:Warn (string) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:45)\nMCPForUnity.Editor.Services.TestJobManager:TryRestoreFromSessionState () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestJobManager.cs:230)\nMCPForUnity.Editor.Services.TestJobManager:.cctor () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestJobManager.cs:71)\nMCPForUnity.Editor.Services.EditorStateCache:BuildSnapshot (string) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/EditorStateCache.cs:391)\nMCPForUnity.Editor.Services.EditorStateCache:.cctor () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/EditorStateCache.cs:257)\nUnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.ReadOnlySpan`1<intptr>) (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorAssemblies.cs:155)\n",
+        "stackTrace": "",
+        "type": "Warning",
+        "timestamp": "[10:43:35]"
+      },
+      {
+        "message": "<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Applied No Throttling for test run.\nUnityEngine.Debug:Log (object)\nMCPForUnity.Editor.Helpers.McpLog:Info (string,bool) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:40)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle:ApplyNoThrottling () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:101)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle/TestCallbacks:RunStarted (UnityEditor.TestTools.TestRunner.Api.ITestAdaptor) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:138)\nUnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:43:39]"
+      },
+      {
+        "message": "S001 session started: one player, local input.\nUnityEngine.Debug:Log (object)\nLastSignal.SessionFlow:BeginSession () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:27)\nLastSignal.SessionFlow:Start () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:16)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:43:44]"
+      },
+      {
+        "message": "IndexOutOfRangeException: Index was outside the bounds of the array.\nUnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)\nUnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)\nUnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputActionMap map) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:975)\nUnityEngine.InputSystem.InputActionState.EnableAllActions (UnityEngine.InputSystem.InputActionMap map) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:935)\nUnityEngine.InputSystem.InputActionMap.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionMap.cs:548)\nLastSignal.PlayerInputReader.SetGameplay (System.Boolean active) (at Assets/LastSignal/Runtime/Player/PlayerInputReader.cs:91)\nLastSignal.SessionFlow.ReturnToMenu () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:46)\nLastSignal.SessionFlow.OnDestroy () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:58)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:43:42]"
+      },
+      {
+        "message": "IndexOutOfRangeException: Index was outside the bounds of the array.\nUnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)\nUnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)\nUnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1031)\nUnityEngine.InputSystem.InputActionState.EnableSingleAction (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:984)\nUnityEngine.InputSystem.InputAction.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs:922)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableInputAction (UnityEngine.InputSystem.InputActionReference inputActionReference) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1749)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableAllActions () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1704)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.OnEnable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1652)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:43:42]"
+      },
+      {
+        "message": "IndexOutOfRangeException: Index was outside the bounds of the array.\nUnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)\nUnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)\nUnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1031)\nUnityEngine.InputSystem.InputActionState.EnableSingleAction (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:984)\nUnityEngine.InputSystem.InputAction.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs:922)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableInputAction (UnityEngine.InputSystem.InputActionReference inputActionReference) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1749)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableAllActions () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1704)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.OnEnable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1652)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:43:43]"
+      },
+      {
+        "message": "IndexOutOfRangeException: Index was outside the bounds of the array.\nUnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)\nUnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)\nUnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1031)\nUnityEngine.InputSystem.InputActionState.EnableSingleAction (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:984)\nUnityEngine.InputSystem.InputAction.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs:922)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableInputAction (UnityEngine.InputSystem.InputActionReference inputActionReference) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1749)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableAllActions () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1704)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.OnEnable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1652)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:43:44]"
+      },
+      {
+        "message": "There are 2 audio listeners in the scene. Please ensure there is always exactly one audio listener in the scene.\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:43:49]"
+      },
+      {
+        "message": "IndexOutOfRangeException: Index was outside the bounds of the array.\nUnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)\nUnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)\nUnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1031)\nUnityEngine.InputSystem.InputActionState.EnableSingleAction (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:984)\nUnityEngine.InputSystem.InputAction.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs:922)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableInputAction (UnityEngine.InputSystem.InputActionReference inputActionReference) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1749)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableAllActions () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1704)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.OnEnable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1652)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:43:49]"
+      },
+      {
+        "message": "IndexOutOfRangeException: Index was outside the bounds of the array.\nUnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)\nUnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)\nUnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1031)\nUnityEngine.InputSystem.InputActionState.EnableSingleAction (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:984)\nUnityEngine.InputSystem.InputAction.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs:922)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableInputAction (UnityEngine.InputSystem.InputActionReference inputActionReference) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1749)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableAllActions () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1704)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.OnEnable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1652)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:43:50]"
+      },
+      {
+        "message": "Saving results to: Docs/Implementation/S004/Evidence/20260918-B0A/playmode-after-recovery.xml\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:43:50]"
+      },
+      {
+        "message": "REAL_ASSET_REGRESSION Failed passed=12 failed=8\nUnityEngine.Debug:Log (object)\nLastSignal.Editor.CombatRegressionRunner/Results:RunFinished (UnityEditor.TestTools.TestRunner.Api.ITestResultAdaptor) (at Assets/LastSignal/Editor/CombatRegressionRunner.cs:33)\nUnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:43:50]"
+      },
+      {
+        "message": "<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.\nUnityEngine.Debug:Log (object)\nMCPForUnity.Editor.Helpers.McpLog:Info (string,bool) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:40)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle:RestoreThrottling () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:114)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle/TestCallbacks:RunFinished (UnityEditor.TestTools.TestRunner.Api.ITestResultAdaptor) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:143)\nUnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:43:50]"
+      },
+      {
+        "message": "Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:43:50]"
+      },
+      {
+        "message": "Executing IPostBuildCleanup for: Unity.PerformanceTesting.Editor.TestRunBuilder.\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:43:51]"
+      }
+    ],
+    "totalCount": 15,
+    "errorCount": 6,
+    "warningCount": 1
+  }
+}

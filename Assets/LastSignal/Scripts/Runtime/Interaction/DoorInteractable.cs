@@ -62,6 +62,12 @@ namespace LastSignal
                 if (Mathf.Approximately(angle, destination)) { IsOpen = destination > 0; Busy = false; }
             }
         }
+        internal void RestoreOpen(bool open)
+        {
+            angle = destination = open ? openAngleDegrees : 0;
+            IsOpen = open; Busy = Obstructed = false;
+            hinge.localRotation = closedRotation * Quaternion.Euler(0, angle, 0);
+        }
         public void ResetDoor()
         {
             angle = destination = 0;

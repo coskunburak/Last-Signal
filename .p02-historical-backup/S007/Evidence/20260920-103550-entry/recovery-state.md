@@ -1,0 +1,1 @@
+Recovered original run, same commit 9576c85db8e7a30abb7c9b2328ddcf2a2dcd45ce. No production diff. Entry EditMode 117/117 PASS; entry PlayMode 76/76 PASS, 252.30 s, zero failures/skips/inconclusive. Unity active through official connector; no duplicate suite started. Existing evidence retained.

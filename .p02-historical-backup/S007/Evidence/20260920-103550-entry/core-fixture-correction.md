@@ -1,0 +1,1 @@
+First core run: 7/48 pass, 41 fail with null slots. Root cause: new EditMode fixtures assumed AddComponent invokes Awake; PlayerInventory requires explicit Initialize in EditMode, as existing inventory domain fixtures already do. Corrected fixture setup only; no inventory production workaround. All assertions retained. See core-editmode.xml for original failures.

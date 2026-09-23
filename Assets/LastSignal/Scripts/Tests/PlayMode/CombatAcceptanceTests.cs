@@ -102,7 +102,7 @@ namespace LastSignal.Tests
             for (int i=0; i<5; i++)
             {
                 Press(mouse.leftButton); yield return null;
-                Release(mouse.leftButton); yield return new WaitForSeconds(0.15f);
+                Release(mouse.leftButton); yield return new WaitForSeconds(0.2f);
             }
             int expectedAmmo = state.Definition.MagazineCapacity - 5;
             Assert.That(state.CurrentMagazine, Is.EqualTo(expectedAmmo));

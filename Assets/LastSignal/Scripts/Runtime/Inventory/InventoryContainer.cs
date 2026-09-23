@@ -207,7 +207,53 @@ namespace LastSignal.Inventory
             Notify();
         }
 
+        // Persistence adapter prevalidates detached slots. Replace rather than append so repeated
+        // load cannot duplicate quantities; publish only after the whole container is coherent.
+        internal void ReplaceValidatedSlots(InventorySlot[] replacement)
+        {
+            if (IsBusy) throw new InvalidOperationException("Container transaction already in progress.");
+            IsBusy = true;
+            try
+            {
+                slots = replacement;
+                capacity = replacement.Length;
+                InventoryChanged?.Invoke();
+            }
+            finally { IsBusy = false; }
+        }
+
         void Notify() { if (!silent) InventoryChanged?.Invoke(); }
+
+        // Cross-owner world operations stage this owner silently, then let the caller commit
+        // the world quantity before any observer runs. Existing normal/reload notifications
+        // keep their original exception contract.
+        internal int BeginWorldAdd(ItemDefinition item, int quantity)
+        {
+            if (IsBusy) return 0;
+            int accepted;
+            silent = true;
+            try { accepted = TryAdd(item, quantity); }
+            finally { silent = false; }
+            if (accepted > 0) IsBusy = true;
+            return accepted;
+        }
+        internal bool BeginWorldRemove(int index, int quantity)
+        {
+            if (IsBusy) return false;
+            bool removed;
+            silent = true;
+            try { removed = TryRemove(index, quantity); }
+            finally { silent = false; }
+            if (removed) IsBusy = true;
+            return removed;
+        }
+        internal void CompleteWorldMutation()
+        {
+            // Quantities are already committed. Preserve normal observer exception propagation;
+            // the caller's finally releases the ownership barrier without rolling back state.
+            try { InventoryChanged?.Invoke(); }
+            finally { IsBusy = false; }
+        }
 
         internal TransferResult TransferTo(InventoryContainer destination, ItemDefinition item, int requested)
         {

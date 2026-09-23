@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-19 06:43:00Z" end-time="2026-09-19 06:43:34Z" duration="33.6716315">
+  <test-suite type="TestSuite" id="1049" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="32" result="Failed" site="Child" start-time="2026-09-19 06:43:00Z" end-time="2026-09-19 06:43:34Z" duration="33.671632" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1043" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="32" result="Failed" site="Child" start-time="2026-09-19 06:43:00Z" end-time="2026-09-19 06:43:34Z" duration="33.663973" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="60594" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1044" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="32" result="Failed" site="Child" start-time="2026-09-19 06:43:00Z" end-time="2026-09-19 06:43:34Z" duration="33.662691" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1045" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="32" result="Failed" site="Child" start-time="2026-09-19 06:43:00Z" end-time="2026-09-19 06:43:34Z" duration="33.661775" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1036" name="ZombieProductionAcceptanceTests" fullname="LastSignal.Tests.ZombieProductionAcceptanceTests" classname="LastSignal.Tests.ZombieProductionAcceptanceTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-19 06:43:00Z" end-time="2026-09-19 06:43:34Z" duration="33.659457" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1037" name="ProductionVisualSequenceAndStableNonDamagingStop" fullname="LastSignal.Tests.ZombieProductionAcceptanceTests.ProductionVisualSequenceAndStableNonDamagingStop" methodname="ProductionVisualSequenceAndStableNonDamagingStop" classname="LastSignal.Tests.ZombieProductionAcceptanceTests" runstate="Runnable" seed="417356358" result="Failed" start-time="2026-09-19 06:43:00Z" end-time="2026-09-19 06:43:30Z" duration="30.242587" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.ZombieProductionAcceptanceTests+<ProductionVisualSequenceAndStableNonDamagingStop>d__7.MoveNext () [0x005bc] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs:61
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S001 session started: one player, local input.
+Account API did not become accessible within 30 seconds. This may be due to network issues or editor focus.
+]]></output>
+            </test-case>
+            <test-case id="1038" name="ProfileOneTenAndTwentyFiveProductionActors" fullname="LastSignal.Tests.ZombieProductionAcceptanceTests.ProfileOneTenAndTwentyFiveProductionActors" methodname="ProfileOneTenAndTwentyFiveProductionActors" classname="LastSignal.Tests.ZombieProductionAcceptanceTests" runstate="Runnable" seed="1437690396" result="Passed" start-time="2026-09-19 06:43:30Z" end-time="2026-09-19 06:43:34Z" duration="3.403465" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+Saving results to: Docs/Implementation/S004/Evidence/20260919-P2-Recovery/production-focused-01.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

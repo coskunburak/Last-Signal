@@ -1,0 +1,17 @@
+using UnityEngine;using UnityEditor;using UnityEditor.SceneManagement;using UnityEngine.SceneManagement;using System;using System.IO;using System.Linq;
+internal class CommandScript:IRunCommand {public void Execute(ExecutionResult r){
+var lights=UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).Where(l=>l.enabled).ToArray();foreach(var l in lights)l.enabled=false;
+var previous=SceneManager.GetActiveScene();var scene=EditorSceneManager.OpenScene(LastSignal.Editor.ZombieAssetIntegration.ScenePath,OpenSceneMode.Additive);SceneManager.SetActiveScene(scene);
+Directory.CreateDirectory("/tmp/lastsignal-b0b-video");int index=0;var ledger=new System.Text.StringBuilder("24 fps deterministic evaluation of production Animator Controller; three views; presentation only.\n");
+try{
+foreach(var go in scene.GetRootGameObjects())foreach(var t in go.GetComponentsInChildren<Transform>(true))t.gameObject.layer=31;
+var animator=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<Animator>()).Single();var camera=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<Camera>()).Single();camera.cullingMask=1<<31;animator.cullingMode=AnimatorCullingMode.AlwaysAnimate;animator.Rebind();animator.Update(0);
+string[] states={"Idle","Locomotion","Attack","HitReact","Death"};float[] duration={5.066667f,2.933333f,1.333333f,.5f,2.833333f};
+for(int s=0;s<states.Length;s++){animator.Play(states[s],0,0);animator.Update(0);ledger.AppendLine(states[s]+" starts frame="+index+" duration="+duration[s]);
+for(int frame=0;frame<(int)Math.Ceiling(duration[s]*24);frame++){
+for(int angle=0;angle<3;angle++){var focus=states[s]=="Death"?new Vector3(0,.65f,-.6f):new Vector3(0,.9f,0);var delta=angle==0?new Vector3(0,.4f,4):angle==1?new Vector3(4,.4f,0):new Vector3(0,.4f,-4);if(states[s]=="Death")delta=delta.normalized*5+Vector3.up;camera.transform.position=focus+delta;camera.transform.LookAt(focus);LastSignal.Editor.ZombieAssetIntegration.Render(camera,"/tmp/lastsignal-b0b-video/frame_"+index.ToString("D5")+"_"+angle+".png",480,480);}
+index++;animator.Update(1f/24);
+}}
+File.WriteAllText(LastSignal.Editor.ZombieAssetIntegration.Evidence+"/continuous-preview-ledger.txt",ledger.ToString());r.Log("Rendered "+index+" controller frames from three angles");
+}finally{SceneManager.SetActiveScene(previous);EditorSceneManager.CloseScene(scene,true);foreach(var l in lights)if(l)l.enabled=true;}
+}}

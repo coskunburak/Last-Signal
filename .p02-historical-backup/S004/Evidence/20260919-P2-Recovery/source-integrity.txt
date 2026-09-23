@@ -1,0 +1,4 @@
+Actual C# scan of 22 files. Candidate hits (review; not automatically corruption):
+Assets/LastSignal/Scripts/Editor/RealAssetIntegration.cs:157:                 var camera = player.GetComponentInChildren<Camera>(); camera.nearClipPlane = .01f; camera.cullingMask &= ~(1 << 30);
+Assets/LastSignal/Scripts/Editor/RealAssetIntegration.cs:204:                 var cam = cameraObject.AddComponent<Camera>(); cam.cullingMask = 1 << 31;
+Assets/LastSignal/Scripts/Editor/ZombieAssetIntegration.cs:198:                 camera.cullingMask = 1 << 31;

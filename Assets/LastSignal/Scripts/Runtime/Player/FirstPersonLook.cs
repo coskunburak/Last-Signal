@@ -38,6 +38,9 @@ namespace LastSignal
             view.transform.localRotation = Quaternion.Euler(Pitch, 0, 0);
         }
 
+        internal void RestorePitch(float value)
+        { Pitch = value; view.transform.localRotation = Quaternion.Euler(Pitch, 0, 0); }
+
         /// <summary>Apply camera recoil (pitch up, yaw). Separate from mouse look.</summary>
         public void ApplyRecoil(float pitchDegrees, float yawDegrees)
         {

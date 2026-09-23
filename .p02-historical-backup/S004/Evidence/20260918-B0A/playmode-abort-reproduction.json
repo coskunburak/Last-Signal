@@ -1,0 +1,53 @@
+{
+  "success": true,
+  "message": "Tool 'GetConsoleLogs' executed successfully",
+  "data": {
+    "logs": [
+      {
+        "message": "<b><color=#cc7a00>MCP-FOR-UNITY</color></b>: [TestJobManager] Clearing stale job 83c40824e4c94ff7b3613f6ed09dc933 (last update 50097s ago)\nUnityEngine.Debug:LogWarning (object)\nMCPForUnity.Editor.Helpers.McpLog:Warn (string) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:45)\nMCPForUnity.Editor.Services.TestJobManager:TryRestoreFromSessionState () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestJobManager.cs:230)\nMCPForUnity.Editor.Services.TestJobManager:.cctor () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestJobManager.cs:71)\nMCPForUnity.Editor.Services.EditorStateCache:BuildSnapshot (string) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/EditorStateCache.cs:391)\nMCPForUnity.Editor.Services.EditorStateCache:.cctor () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/EditorStateCache.cs:257)\nUnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.ReadOnlySpan`1<intptr>) (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorAssemblies.cs:155)\n",
+        "stackTrace": "",
+        "type": "Warning",
+        "timestamp": "[10:40:25]"
+      },
+      {
+        "message": "<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Applied No Throttling for test run.\nUnityEngine.Debug:Log (object)\nMCPForUnity.Editor.Helpers.McpLog:Info (string,bool) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Helpers/McpLog.cs:40)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle:ApplyNoThrottling () (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:101)\nMCPForUnity.Editor.Services.TestRunnerNoThrottle/TestCallbacks:RunStarted (UnityEditor.TestTools.TestRunner.Api.ITestAdaptor) (at ./Library/PackageCache/com.coplaydev.unity-mcp@7b7db7b31f4e/Editor/Services/TestRunnerNoThrottle.cs:138)\nUnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:40:31]"
+      },
+      {
+        "message": "B0A_TEARDOWN_ROOT Code-based tests runner components=UnityEngine.Transform,UnityEngine.TestTools.TestRunner.PlaymodeTestsController\nUnityEngine.Debug:Log (object)\nLastSignal.Tests.MovementAcceptanceTests:TearDown () (at Assets/LastSignal/Tests/PlayMode/MovementAcceptanceTests.cs:46)\nSystem.Reflection.MethodBase:Invoke (object,object[])\nNUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])\nNUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)\nUnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)\n",
+        "stackTrace": "",
+        "type": "Info",
+        "timestamp": "[10:40:31]"
+      },
+      {
+        "message": "NullReferenceException: MonoBehaviour coroutine runner not set\nUnityEngine.TestRunner.NUnitExtensions.Runner.CoroutineTestWorkItem.get_monoBehaviourCoroutineRunner () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CoroutineTestWorkItem.cs:24)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CoroutineTestWorkItem+<PerformWork>d__6.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CoroutineTestWorkItem.cs:50)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<RunChildren>d__17.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:207)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<PerformWork>d__13.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:82)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<RunChildren>d__17.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:207)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<PerformWork>d__13.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:82)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<RunChildren>d__17.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:207)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<PerformWork>d__13.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:82)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<RunChildren>d__17.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:207)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<PerformWork>d__13.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:82)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<RunChildren>d__17.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:207)\nUnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem+<PerformWork>d__13.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:82)\nUnityEngine.TestTools.TestRunner.PlaymodeTestsController+<TestRunnerCoroutine>d__24.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/TestRunner/PlaymodeTestsController.cs:101)\nUnityEngine.SetupCoroutine.InvokeMoveNext (System.Collections.IEnumerator enumerator, System.IntPtr returnValueAddress) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:40:31]"
+      },
+      {
+        "message": "NullReferenceException: MonoBehaviour coroutine runner not set\nUnityEditor.TestTools.TestRunner.TestRun.Tasks.PlayModeRunTask+<Execute>d__1.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEditor.TestRunner/TestRun/Tasks/PlayModeRunTask.cs:66)\nUnityEditor.TestTools.TestRunner.TestRun.TestJobRunner.ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions() (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:40:31]"
+      },
+      {
+        "message": "An unexpected error happened while running tests.\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:40:31]"
+      },
+      {
+        "message": "Too many instant steps in test execution mode: Error. Current task ExitPlayModeTask.\nUnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /Users/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:403)\n",
+        "stackTrace": "",
+        "type": "Error",
+        "timestamp": "[10:40:31]"
+      }
+    ],
+    "totalCount": 7,
+    "errorCount": 4,
+    "warningCount": 1
+  }
+}

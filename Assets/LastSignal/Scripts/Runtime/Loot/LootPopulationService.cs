@@ -23,6 +23,9 @@ namespace LastSignal.Loot
         [SerializeField] int explicitSeed = 12345;
         readonly List<LootPopulationResult> results = new List<LootPopulationResult>();
         readonly HashSet<WorldItem> preexisting = new HashSet<WorldItem>();
+        readonly Dictionary<string,bool> consumedLoot = new Dictionary<string,bool>(StringComparer.Ordinal);
+        internal bool TryGetConsumed(string id, out bool consumed) => consumedLoot.TryGetValue(id,out consumed);
+        void RecordQuantity(string id,int quantity) { consumedLoot[id] = quantity <= 0; }
         GameObject runtimeRoot;
         bool populated;
         public int Seed { get; private set; }
@@ -41,7 +44,7 @@ namespace LastSignal.Loot
             {
                 populated = true;
                 Seed = seed ?? (overrideSeed ? explicitSeed : BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0));
-                results.Clear(); preexisting.Clear(); GeneratedCount = 0; SpawnMilliseconds = 0;
+                results.Clear(); preexisting.Clear(); consumedLoot.Clear(); GeneratedCount = 0; SpawnMilliseconds = 0;
                 var points = new List<LootSpawnPoint>();
                 foreach (var root in gameObject.scene.GetRootGameObjects())
                 {
@@ -69,7 +72,10 @@ namespace LastSignal.Loot
                     using (SpawnMarker.Auto())
                     {
                         var go = Instantiate(selection.Item.WorldPrefab,point.transform.position,point.transform.rotation,runtimeRoot.transform);
-                        go.GetComponent<WorldItem>().Configure(selection.Item,selection.Quantity);
+                        var worldItem = go.GetComponent<WorldItem>();
+                        worldItem.Configure(selection.Item,selection.Quantity);
+                        worldItem.AssignPersistentIdentity("loot:" + point.StableId, LastSignal.Persistence.WorldItemOrigin.Loot);
+                        consumedLoot.Add(worldItem.PersistentId,false); worldItem.BindPersistence(RecordQuantity);
                     }
                     SpawnMilliseconds += (System.Diagnostics.Stopwatch.GetTimestamp()-start)*1000.0/System.Diagnostics.Stopwatch.Frequency;
                     GeneratedCount++;
@@ -123,7 +129,46 @@ namespace LastSignal.Loot
                     foreach (var item in root.GetComponentsInChildren<WorldItem>(true))
                         if (item && !preexisting.Contains(item)) { item.gameObject.SetActive(false); Destroy(item.gameObject); }
             if (runtimeRoot) { runtimeRoot.SetActive(false); Destroy(runtimeRoot); }
-            runtimeRoot=null; preexisting.Clear(); results.Clear(); GeneratedCount=0; populated=false;
+            runtimeRoot=null; preexisting.Clear(); results.Clear(); consumedLoot.Clear(); GeneratedCount=0; populated=false;
+        }
+        internal void Restore(LastSignal.Persistence.SaveGame save, LastSignal.Inventory.Data.ItemCatalog catalog)
+        {
+            if (populated) throw new InvalidOperationException("Restore must precede loot population.");
+            runtimeRoot = new GameObject("Session Loot"); runtimeRoot.SetActive(false);
+            SceneManager.MoveGameObjectToScene(runtimeRoot, gameObject.scene);
+            Seed = save.header.seed; results.Clear(); preexisting.Clear(); consumedLoot.Clear(); GeneratedCount = 0;
+            var byId = new Dictionary<string, LastSignal.Persistence.WorldItemSnapshot>(StringComparer.Ordinal);
+            foreach (var item in save.world.items)
+            {
+                byId.Add(item.id, item);
+                if(item.origin==LastSignal.Persistence.WorldItemOrigin.Loot)
+                    consumedLoot.Add(item.id,item.disposition==LastSignal.Persistence.EntityDisposition.Consumed);
+            }
+            // Mark ownership before fallible instantiation so End() can clean an interrupted hydrate.
+            populated = true;
+            foreach (var opportunity in save.world.opportunities)
+            {
+                if (opportunity.outcome == LastSignal.Persistence.OpportunityOutcome.Generated)
+                {
+                    var item = byId[opportunity.entityId];
+                    var definition = catalog.GetItem(new LastSignal.Inventory.Data.StableItemId(item.definitionId));
+                    results.Add(new LootPopulationResult(opportunity.id, new LootSelection(LootOutcome.Spawned, definition, item.quantity)));
+                    GeneratedCount++;
+                }
+                else results.Add(new LootPopulationResult(opportunity.id, new LootSelection(
+                    opportunity.outcome == LastSignal.Persistence.OpportunityOutcome.Empty ? LootOutcome.Empty : LootOutcome.Blocked)));
+            }
+            foreach (var item in save.world.items)
+            {
+                if (item.disposition == LastSignal.Persistence.EntityDisposition.Consumed) continue;
+                var definition = catalog.GetItem(new LastSignal.Inventory.Data.StableItemId(item.definitionId));
+                var pose = item.transform;
+                var go = Instantiate(definition.WorldPrefab, new Vector3(pose.x,pose.y,pose.z), new Quaternion(pose.qx,pose.qy,pose.qz,pose.qw), runtimeRoot.transform);
+                var worldItem = go.GetComponent<WorldItem>(); worldItem.Configure(definition,item.quantity);
+                worldItem.AssignPersistentIdentity(item.id,item.origin);
+                if(item.origin==LastSignal.Persistence.WorldItemOrigin.Loot) worldItem.BindPersistence(RecordQuantity);
+            }
+            runtimeRoot.SetActive(true);
         }
         void OnDestroy() => End();
     }

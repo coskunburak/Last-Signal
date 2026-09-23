@@ -308,8 +308,8 @@ namespace LastSignal.Tests
             Assert.That(health.DamageTransactions-before,Is.EqualTo(1000));Assert.That(damageBytes,Is.Zero);
             report.AppendLine("warmed_resolver_hits=1000 direct_damage_bytes="+damageBytes);File.WriteAllText(Evidence+"/performance.txt",report.ToString());
         }
-        [TearDown] public void Cleanup()
-        {foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;}
+        [UnityTearDown] public IEnumerator Cleanup()
+        {foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
     }
 }
 #endif

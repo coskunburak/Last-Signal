@@ -100,7 +100,7 @@ namespace LastSignal.Tests
             }
             File.WriteAllText(Evidence+"/performance-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+".txt",report.ToString());
         }
-        [TearDown]public void Cleanup(){foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;}
+        [UnityTearDown]public IEnumerator Cleanup(){foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
     }
 }
 #endif

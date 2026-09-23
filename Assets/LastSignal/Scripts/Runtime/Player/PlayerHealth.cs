@@ -29,6 +29,18 @@ namespace LastSignal
             LastDamage = default;
             HealthChanged?.Invoke();
         }
+        internal void RestoreHealth(float value)
+        {
+            CurrentHealth = value; DamageTransactions = 0; LastDamage = default;
+            HealthChanged?.Invoke();
+        }
+        public void RecoverHealth(float amount)
+        {
+            if (!isActiveAndEnabled || !IsAlive || float.IsNaN(amount) || float.IsInfinity(amount) || amount <= 0) return;
+            float next = Mathf.Min(maxHealth, CurrentHealth + amount);
+            if (next == CurrentHealth) return;
+            CurrentHealth = next; HealthChanged?.Invoke();
+        }
         public void TakeDamage(DamageInfo info)
         {
             if (!isActiveAndEnabled || !IsAlive || info.Amount <= 0 ||

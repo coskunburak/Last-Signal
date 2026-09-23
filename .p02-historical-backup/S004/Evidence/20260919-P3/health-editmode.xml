@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.6169118">
+  <test-suite type="TestSuite" id="1000" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="59" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.616912" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1070" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="59" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.515841" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="60594" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1071" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="59" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.426369" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1072" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="59" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.326357" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="PlayerHealthTests" fullname="LastSignal.Tests.PlayerHealthTests" classname="LastSignal.Tests.PlayerHealthTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.225349" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1008" name="InvalidDamageIsRejected" fullname="LastSignal.Tests.PlayerHealthTests.InvalidDamageIsRejected" classname="LastSignal.Tests.PlayerHealthTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.123297" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1004" name="InvalidDamageIsRejected(-1.0f)" fullname="LastSignal.Tests.PlayerHealthTests.InvalidDamageIsRejected(-1.0f)" methodname="InvalidDamageIsRejected" classname="LastSignal.Tests.PlayerHealthTests" runstate="Runnable" seed="839679898" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.020970" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1005" name="InvalidDamageIsRejected(0.0f)" fullname="LastSignal.Tests.PlayerHealthTests.InvalidDamageIsRejected(0.0f)" methodname="InvalidDamageIsRejected" classname="LastSignal.Tests.PlayerHealthTests" runstate="Runnable" seed="2121340235" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.000202" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1006" name="InvalidDamageIsRejected(float.NaN)" fullname="LastSignal.Tests.PlayerHealthTests.InvalidDamageIsRejected(float.NaN)" methodname="InvalidDamageIsRejected" classname="LastSignal.Tests.PlayerHealthTests" runstate="Runnable" seed="886889639" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.000109" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1007" name="InvalidDamageIsRejected(float.PositiveInfinity)" fullname="LastSignal.Tests.PlayerHealthTests.InvalidDamageIsRejected(float.PositiveInfinity)" methodname="InvalidDamageIsRejected" classname="LastSignal.Tests.PlayerHealthTests" runstate="Runnable" seed="1755278252" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.000102" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1003" name="OverkillClampsAndDeathOccursOnce" fullname="LastSignal.Tests.PlayerHealthTests.OverkillClampsAndDeathOccursOnce" methodname="OverkillClampsAndDeathOccursOnce" classname="LastSignal.Tests.PlayerHealthTests" runstate="Runnable" seed="1074885069" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.000471" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1009" name="SessionResetClearsDeathAndTransactions" fullname="LastSignal.Tests.PlayerHealthTests.SessionResetClearsDeathAndTransactions" methodname="SessionResetClearsDeathAndTransactions" classname="LastSignal.Tests.PlayerHealthTests" runstate="Runnable" seed="1192306084" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.000244" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="StartsFullAndReceivesExistingDamageContract" fullname="LastSignal.Tests.PlayerHealthTests.StartsFullAndReceivesExistingDamageContract" methodname="StartsFullAndReceivesExistingDamageContract" classname="LastSignal.Tests.PlayerHealthTests" runstate="Runnable" seed="321798646" result="Passed" start-time="2026-09-19 07:28:24Z" end-time="2026-09-19 07:28:24Z" duration="0.000173" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: Docs/Implementation/S004/Evidence/20260919-P3/health-editmode.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

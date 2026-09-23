@@ -1,0 +1,8 @@
+Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:87:            Time.timeScale = value ? 0 : 1;
+Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:128:            Time.timeScale = 0;
+Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:135:            Time.timeScale = 1;
+Assets/LastSignal/Scripts/Runtime/Persistence/SaveSession.cs:133:                    buildId=string.IsNullOrEmpty(Application.buildGUID)?"editor-"+Application.unityVersion:Application.buildGUID,timestampUtc=DateTimeOffset.UtcNow.ToString("O") },
+Assets/LastSignal/Scripts/Runtime/Combat/WeaponController.cs:28:            Time.timeScale > 0 && (!input || input.GameplayActive) && (!health || health.IsAlive);
+Assets/LastSignal/Scripts/Runtime/Inventory/UI/InventoryUI.cs:89:                if (session) session.Pause(); // Pause uses Time.timeScale=0 and unlocks cursor. Let's rely on that since it handles cursor.
+Assets/LastSignal/Scripts/Runtime/Persistence/SaveValidation.cs:40:            if (h.generation < 1 || !Id(h.buildId) || !DateTimeOffset.TryParseExact(h.timestampUtc, "O", CultureInfo.InvariantCulture,
+Assets/LastSignal/Scripts/Runtime/Persistence/SaveValidation.cs:41:                DateTimeStyles.None, out var timestamp) || timestamp.Offset != TimeSpan.Zero) return Invalid("Invalid generation/build/timestamp.");

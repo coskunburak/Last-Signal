@@ -55,6 +55,11 @@ namespace LastSignal.Shelter
             preparationUI.Bind(this);
             Changed?.Invoke();
         }
+        internal void RestoreExpedition(bool onExpedition, int index)
+        {
+            State = onExpedition ? ExpeditionState.Expedition : ExpeditionState.Shelter;
+            ExpeditionIndex = index; preparationUI.Hide(); Changed?.Invoke();
+        }
         public void End()
         {
             if (health) health.Died -= OnDeath;

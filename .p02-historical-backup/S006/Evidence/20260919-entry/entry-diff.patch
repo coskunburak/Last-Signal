@@ -1,0 +1,2009 @@
+diff --git a/Assets/InputSystem_Actions.inputactions b/Assets/InputSystem_Actions.inputactions
+index 0efb4e1..25da0a2 100644
+--- a/Assets/InputSystem_Actions.inputactions
++++ b/Assets/InputSystem_Actions.inputactions
+@@ -112,6 +112,15 @@
+                     "processors": "",
+                     "interactions": "",
+                     "initialStateCheck": false
++                },
++                {
++                    "name": "Inventory",
++                    "type": "Button",
++                    "id": "ab55a7e0-d1c1-42e0-be96-2bc61aacc4d5",
++                    "expectedControlType": "Button",
++                    "processors": "",
++                    "interactions": "",
++                    "initialStateCheck": false
+                 }
+             ],
+             "bindings": [
+@@ -554,6 +563,28 @@
+                     "action": "Reload",
+                     "isComposite": false,
+                     "isPartOfComposite": false
++                },
++                {
++                    "name": "",
++                    "id": "e726c09c-83be-4f73-99f1-1d4c4f53d22f",
++                    "path": "<Keyboard>/tab",
++                    "interactions": "",
++                    "processors": "",
++                    "groups": "Keyboard&Mouse",
++                    "action": "Inventory",
++                    "isComposite": false,
++                    "isPartOfComposite": false
++                },
++                {
++                    "name": "",
++                    "id": "9c478af4-fee4-4988-a630-0100c4073126",
++                    "path": "<Gamepad>/select",
++                    "interactions": "",
++                    "processors": "",
++                    "groups": "Gamepad",
++                    "action": "Inventory",
++                    "isComposite": false,
++                    "isPartOfComposite": false
+                 }
+             ]
+         },
+@@ -1136,4 +1167,4 @@
+             ]
+         }
+     ]
+-}
++}
+\ No newline at end of file
+diff --git a/Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab b/Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab
+index 8279cf2..588fbe2 100644
+--- a/Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab
++++ b/Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab
+@@ -1,5 +1,75 @@
+ %YAML 1.1
+ %TAG !u! tag:unity3d.com,2011:
++--- !u!1 &1282464884414688
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 2555929347235611755}
++  - component: {fileID: 2930247106202898842}
++  - component: {fileID: 3255669219612980981}
++  m_Layer: 8
++  m_Name: Damage_LeftLowerLeg
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &2555929347235611755
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 1282464884414688}
++  serializedVersion: 2
++  m_LocalRotation: {x: 8.4308427e-10, y: 1, z: -0.000072152376, w: 0.000011684775}
++  m_LocalPosition: {x: 0.0000048987567, y: -0.000030249357, z: -0.20962135}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 1601264082025662375}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!65 &2930247106202898842
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 1282464884414688}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 3
++  m_Size: {x: 0.11, y: 0.11, z: 0.4192427}
++  m_Center: {x: 0, y: 0, z: 0}
++--- !u!114 &3255669219612980981
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 1282464884414688}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 2930247106202898842}
+ --- !u!1 &56022184089702717
+ GameObject:
+   m_ObjectHideFlags: 0
+@@ -8,30 +78,600 @@ GameObject:
+   m_PrefabAsset: {fileID: 0}
+   serializedVersion: 6
+   m_Component:
+-  - component: {fileID: 4262686158740656952}
+-  m_Layer: 0
+-  m_Name: MeleeOrigin
++  - component: {fileID: 4262686158740656952}
++  m_Layer: 0
++  m_Name: MeleeOrigin
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &4262686158740656952
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 56022184089702717}
++  serializedVersion: 2
++  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
++  m_LocalPosition: {x: 0, y: 1.05, z: 0}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 2599735282879440275}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!1 &429500430943225896
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 9134084779723953586}
++  - component: {fileID: 6431774224050421084}
++  - component: {fileID: 319199298169536808}
++  m_Layer: 8
++  m_Name: Damage_RightLowerLeg
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &9134084779723953586
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 429500430943225896}
++  serializedVersion: 2
++  m_LocalRotation: {x: -8.906195e-10, y: 1, z: -0.00007824355, w: -0.000011382657}
++  m_LocalPosition: {x: -0.000004772097, y: -0.000032803044, z: -0.20962138}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 6899868300843736814}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!65 &6431774224050421084
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 429500430943225896}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 3
++  m_Size: {x: 0.11, y: 0.11, z: 0.41924277}
++  m_Center: {x: 0, y: 0, z: 0}
++--- !u!114 &319199298169536808
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 429500430943225896}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 6431774224050421084}
++--- !u!1 &1493611921598151316
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 5281343397402356485}
++  - component: {fileID: 6123041909560597501}
++  - component: {fileID: 9053477717462723382}
++  m_Layer: 8
++  m_Name: Damage_Head
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &5281343397402356485
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 1493611921598151316}
++  serializedVersion: 2
++  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
++  m_LocalPosition: {x: 0, y: 0, z: 0}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 8282333649934334113}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!65 &6123041909560597501
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 1493611921598151316}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 3
++  m_Size: {x: 0.2, y: 0.27, z: 0.24}
++  m_Center: {x: 0.00046, y: -0.0243, z: -0.06782}
++--- !u!114 &9053477717462723382
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 1493611921598151316}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 2
++  damageMultiplier: 2
++  hitCollider: {fileID: 6123041909560597501}
++--- !u!1 &1676900955815904315
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 4338185580291104353}
++  - component: {fileID: 5288331499850396209}
++  - component: {fileID: 7609898284956240751}
++  m_Layer: 8
++  m_Name: Damage_LeftUpperLeg
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &4338185580291104353
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 1676900955815904315}
++  serializedVersion: 2
++  m_LocalRotation: {x: -1.9884037e-10, y: 1, z: -0.000010890251, w: -0.000018258566}
++  m_LocalPosition: {x: -0.000007376109, y: -0.000004399452, z: -0.20199037}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 3575022389577343814}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!65 &5288331499850396209
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 1676900955815904315}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 3
++  m_Size: {x: 0.17, y: 0.17, z: 0.40398073}
++  m_Center: {x: 0, y: 0, z: 0}
++--- !u!114 &7609898284956240751
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 1676900955815904315}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 5288331499850396209}
++--- !u!1 &2375695918528859942
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 9208754075587332125}
++  - component: {fileID: 5341006703563512854}
++  - component: {fileID: 1385147986387974683}
++  m_Layer: 8
++  m_Name: Damage_Pelvis
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &9208754075587332125
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 2375695918528859942}
++  serializedVersion: 2
++  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
++  m_LocalPosition: {x: 0, y: 0, z: 0}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 264238785770456726}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!65 &5341006703563512854
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 2375695918528859942}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 3
++  m_Size: {x: 0.33, y: 0.27, z: 0.19}
++  m_Center: {x: 0.001, y: 0.0096, z: 0.0191}
++--- !u!114 &1385147986387974683
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 2375695918528859942}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 5341006703563512854}
++--- !u!1 &2411730097683112903
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 8667448203642430739}
++  - component: {fileID: 8633890404679623602}
++  - component: {fileID: 1680944022224046762}
++  m_Layer: 8
++  m_Name: Damage_RightUpperArm
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &8667448203642430739
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 2411730097683112903}
++  serializedVersion: 2
++  m_LocalRotation: {x: -5.699522e-12, y: 1, z: -0.0000024236624, w: -0.0000023516154}
++  m_LocalPosition: {x: -0.0000006649643, y: -0.000000685337, z: -0.14138459}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 1034017283945830523}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!65 &8633890404679623602
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 2411730097683112903}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 3
++  m_Size: {x: 0.11, y: 0.11, z: 0.28276917}
++  m_Center: {x: 0, y: 0, z: 0}
++--- !u!114 &1680944022224046762
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 2411730097683112903}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 8633890404679623602}
++--- !u!1 &3282210821492457384
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 2599735282879440275}
++  - component: {fileID: 8455988902288173414}
++  - component: {fileID: 6769869588568270357}
++  - component: {fileID: 8835334731299467020}
++  - component: {fileID: 2645676291100404316}
++  - component: {fileID: 5794958581719810030}
++  - component: {fileID: 1841796686160666036}
++  - component: {fileID: 2621039404351391701}
++  m_Layer: 2
++  m_Name: LS_Zombie_Runtime
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &2599735282879440275
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 3282210821492457384}
++  serializedVersion: 2
++  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
++  m_LocalPosition: {x: 0, y: 0, z: 0}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children:
++  - {fileID: 6558083344460778144}
++  - {fileID: 4262686158740656952}
++  m_Father: {fileID: 0}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!195 &8455988902288173414
++NavMeshAgent:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 3282210821492457384}
++  m_Enabled: 0
++  m_AgentTypeID: -1372625422
++  m_Radius: 0.32
++  m_Speed: 3.5
++  m_Acceleration: 8
++  avoidancePriority: 50
++  m_AngularSpeed: 120
++  m_StoppingDistance: 0
++  m_AutoTraverseOffMeshLink: 1
++  m_AutoBraking: 1
++  m_AutoRepath: 1
++  m_Height: 1.81
++  m_BaseOffset: 0
++  m_WalkableMask: 4294967295
++  m_ObstacleAvoidanceType: 4
++--- !u!136 &6769869588568270357
++CapsuleCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 3282210821492457384}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 2
++  m_Radius: 0.32
++  m_Height: 1.81
++  m_Direction: 1
++  m_Center: {x: 0, y: 0.905, z: 0}
++--- !u!114 &8835334731299467020
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 3282210821492457384}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: f84f1db8342834620ab8fef22e8bb9d8, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieNavigation
++--- !u!114 &2645676291100404316
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 3282210821492457384}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: edf8d0014ec5547298023be6a53d8971, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombiePerception
++  origin: {fileID: 0}
++--- !u!114 &5794958581719810030
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 3282210821492457384}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: a88c77816c8e24d06b4cfe9c0abd2c0d, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieController
++  definition: {fileID: 11400000, guid: cc22d225c429744c688b7e1977067625, type: 2}
++  meleeOrigin: {fileID: 4262686158740656952}
++--- !u!114 &1841796686160666036
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 3282210821492457384}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: e9c4230fd71fc47d48dd038708179f60, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieAnimationPresenter
++  animator: {fileID: 2870743264966931902}
++--- !u!114 &2621039404351391701
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 3282210821492457384}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: d096cfdb3695c4100aa54411fd05feb2, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHealth
++  maxHealth: 100
++--- !u!1 &4683363329136021628
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 1699146370129935620}
++  - component: {fileID: 3568896061477707763}
++  - component: {fileID: 1416389873850387833}
++  m_Layer: 8
++  m_Name: Damage_RightUpperLeg
+   m_TagString: Untagged
+   m_Icon: {fileID: 0}
+   m_NavMeshLayer: 0
+   m_StaticEditorFlags: 0
+   m_IsActive: 1
+---- !u!4 &4262686158740656952
++--- !u!4 &1699146370129935620
+ Transform:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+   m_PrefabAsset: {fileID: 0}
+-  m_GameObject: {fileID: 56022184089702717}
++  m_GameObject: {fileID: 4683363329136021628}
+   serializedVersion: 2
+-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+-  m_LocalPosition: {x: 0, y: 1.05, z: 0}
++  m_LocalRotation: {x: 3.250731e-10, y: 1, z: -0.000017634751, w: 0.000018433666}
++  m_LocalPosition: {x: 0.0000074468403, y: -0.0000071240947, z: -0.20199022}
+   m_LocalScale: {x: 1, y: 1, z: 1}
+   m_ConstrainProportionsScale: 0
+   m_Children: []
+-  m_Father: {fileID: 2599735282879440275}
++  m_Father: {fileID: 5252563651017344870}
+   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+---- !u!1 &3282210821492457384
++--- !u!65 &3568896061477707763
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 4683363329136021628}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 3
++  m_Size: {x: 0.17, y: 0.17, z: 0.40398043}
++  m_Center: {x: 0, y: 0, z: 0}
++--- !u!114 &1416389873850387833
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 4683363329136021628}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 3568896061477707763}
++--- !u!1 &6696854261653919400
+ GameObject:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+@@ -39,66 +679,108 @@ GameObject:
+   m_PrefabAsset: {fileID: 0}
+   serializedVersion: 6
+   m_Component:
+-  - component: {fileID: 2599735282879440275}
+-  - component: {fileID: 8455988902288173414}
+-  - component: {fileID: 6769869588568270357}
+-  - component: {fileID: 8835334731299467020}
+-  - component: {fileID: 2645676291100404316}
+-  - component: {fileID: 5794958581719810030}
+-  - component: {fileID: 1841796686160666036}
+-  m_Layer: 2
+-  m_Name: LS_Zombie_Runtime
++  - component: {fileID: 7808096786752206350}
++  - component: {fileID: 5628618760813282701}
++  - component: {fileID: 5007329092244835936}
++  m_Layer: 8
++  m_Name: Damage_Chest
+   m_TagString: Untagged
+   m_Icon: {fileID: 0}
+   m_NavMeshLayer: 0
+   m_StaticEditorFlags: 0
+   m_IsActive: 1
+---- !u!4 &2599735282879440275
++--- !u!4 &7808096786752206350
+ Transform:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+   m_PrefabAsset: {fileID: 0}
+-  m_GameObject: {fileID: 3282210821492457384}
++  m_GameObject: {fileID: 6696854261653919400}
+   serializedVersion: 2
+   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+   m_LocalPosition: {x: 0, y: 0, z: 0}
+   m_LocalScale: {x: 1, y: 1, z: 1}
+   m_ConstrainProportionsScale: 0
+-  m_Children:
+-  - {fileID: 6558083344460778144}
+-  - {fileID: 4262686158740656952}
+-  m_Father: {fileID: 0}
++  m_Children: []
++  m_Father: {fileID: 4333434652035186846}
+   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+---- !u!195 &8455988902288173414
+-NavMeshAgent:
++--- !u!65 &5628618760813282701
++BoxCollider:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+   m_PrefabAsset: {fileID: 0}
+-  m_GameObject: {fileID: 3282210821492457384}
+-  m_Enabled: 0
+-  m_AgentTypeID: -1372625422
+-  m_Radius: 0.32
+-  m_Speed: 3.5
+-  m_Acceleration: 8
+-  avoidancePriority: 50
+-  m_AngularSpeed: 120
+-  m_StoppingDistance: 0
+-  m_AutoTraverseOffMeshLink: 1
+-  m_AutoBraking: 1
+-  m_AutoRepath: 1
+-  m_Height: 1.81
+-  m_BaseOffset: 0
+-  m_WalkableMask: 4294967295
+-  m_ObstacleAvoidanceType: 4
+---- !u!136 &6769869588568270357
+-CapsuleCollider:
++  m_GameObject: {fileID: 6696854261653919400}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 3
++  m_Size: {x: 0.35, y: 0.24, z: 0.42}
++  m_Center: {x: 0.0006, y: -0.0407, z: -0.1396}
++--- !u!114 &5007329092244835936
++MonoBehaviour:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+   m_PrefabAsset: {fileID: 0}
+-  m_GameObject: {fileID: 3282210821492457384}
++  m_GameObject: {fileID: 6696854261653919400}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 5628618760813282701}
++--- !u!1 &7328777461445893092
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 7902056865336443769}
++  - component: {fileID: 7550905664805634676}
++  - component: {fileID: 4307324325338212269}
++  m_Layer: 8
++  m_Name: Damage_RightLowerArm
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &7902056865336443769
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 7328777461445893092}
++  serializedVersion: 2
++  m_LocalRotation: {x: 1.4574056e-11, y: 1, z: 0.0000066440703, w: -0.0000021935432}
++  m_LocalPosition: {x: -0.0000005313196, y: 0.0000016093254, z: -0.1211099}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 3982776284342929364}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!65 &7550905664805634676
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 7328777461445893092}
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+     serializedVersion: 2
+@@ -110,63 +792,165 @@ CapsuleCollider:
+   m_IsTrigger: 0
+   m_ProvidesContacts: 0
+   m_Enabled: 1
+-  serializedVersion: 2
+-  m_Radius: 0.32
+-  m_Height: 1.81
+-  m_Direction: 1
+-  m_Center: {x: 0, y: 0.905, z: 0}
+---- !u!114 &8835334731299467020
++  serializedVersion: 3
++  m_Size: {x: 0.09, y: 0.09, z: 0.2422198}
++  m_Center: {x: 0, y: 0, z: 0}
++--- !u!114 &4307324325338212269
+ MonoBehaviour:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+   m_PrefabAsset: {fileID: 0}
+-  m_GameObject: {fileID: 3282210821492457384}
++  m_GameObject: {fileID: 7328777461445893092}
+   m_Enabled: 1
+   m_EditorHideFlags: 0
+-  m_Script: {fileID: 11500000, guid: f84f1db8342834620ab8fef22e8bb9d8, type: 3}
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
+   m_Name: 
+-  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieNavigation
+---- !u!114 &2645676291100404316
+-MonoBehaviour:
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 7550905664805634676}
++--- !u!1 &7339038726728446672
++GameObject:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+   m_PrefabAsset: {fileID: 0}
+-  m_GameObject: {fileID: 3282210821492457384}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 363185030072576754}
++  - component: {fileID: 8665434974594813848}
++  - component: {fileID: 8931672087663962439}
++  m_Layer: 8
++  m_Name: Damage_LeftUpperArm
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &363185030072576754
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 7339038726728446672}
++  serializedVersion: 2
++  m_LocalRotation: {x: -5.611835e-13, y: 1, z: 0.000001936215, w: 0.0000002898353}
++  m_LocalPosition: {x: 0.00000008195639, y: 0.00000054750126, z: -0.14138441}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 433196835253390005}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!65 &8665434974594813848
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 7339038726728446672}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
+   m_Enabled: 1
+-  m_EditorHideFlags: 0
+-  m_Script: {fileID: 11500000, guid: edf8d0014ec5547298023be6a53d8971, type: 3}
+-  m_Name: 
+-  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombiePerception
+-  origin: {fileID: 0}
+---- !u!114 &5794958581719810030
++  serializedVersion: 3
++  m_Size: {x: 0.11, y: 0.11, z: 0.28276882}
++  m_Center: {x: 0, y: 0, z: 0}
++--- !u!114 &8931672087663962439
+ MonoBehaviour:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+   m_PrefabAsset: {fileID: 0}
+-  m_GameObject: {fileID: 3282210821492457384}
++  m_GameObject: {fileID: 7339038726728446672}
+   m_Enabled: 1
+   m_EditorHideFlags: 0
+-  m_Script: {fileID: 11500000, guid: a88c77816c8e24d06b4cfe9c0abd2c0d, type: 3}
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
+   m_Name: 
+-  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieController
+-  definition: {fileID: 11400000, guid: cc22d225c429744c688b7e1977067625, type: 2}
+-  meleeOrigin: {fileID: 4262686158740656952}
+---- !u!114 &1841796686160666036
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 8665434974594813848}
++--- !u!1 &8465792582655546395
++GameObject:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  serializedVersion: 6
++  m_Component:
++  - component: {fileID: 6670159025307705189}
++  - component: {fileID: 3707977853017016975}
++  - component: {fileID: 8723189033957931398}
++  m_Layer: 8
++  m_Name: Damage_LeftLowerArm
++  m_TagString: Untagged
++  m_Icon: {fileID: 0}
++  m_NavMeshLayer: 0
++  m_StaticEditorFlags: 0
++  m_IsActive: 1
++--- !u!4 &6670159025307705189
++Transform:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 8465792582655546395}
++  serializedVersion: 2
++  m_LocalRotation: {x: -4.358333e-11, y: 1, z: 0.000013188164, w: 0.0000033047306}
++  m_LocalPosition: {x: 0.00000080047164, y: 0.0000031944364, z: -0.12110997}
++  m_LocalScale: {x: 1, y: 1, z: 1}
++  m_ConstrainProportionsScale: 0
++  m_Children: []
++  m_Father: {fileID: 2822425797247900998}
++  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
++--- !u!65 &3707977853017016975
++BoxCollider:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 8465792582655546395}
++  m_Material: {fileID: 0}
++  m_IncludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_ExcludeLayers:
++    serializedVersion: 2
++    m_Bits: 0
++  m_LayerOverridePriority: 0
++  m_IsTrigger: 0
++  m_ProvidesContacts: 0
++  m_Enabled: 1
++  serializedVersion: 3
++  m_Size: {x: 0.09, y: 0.09, z: 0.24221994}
++  m_Center: {x: 0, y: 0, z: 0}
++--- !u!114 &8723189033957931398
+ MonoBehaviour:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+   m_PrefabAsset: {fileID: 0}
+-  m_GameObject: {fileID: 3282210821492457384}
++  m_GameObject: {fileID: 8465792582655546395}
+   m_Enabled: 1
+   m_EditorHideFlags: 0
+-  m_Script: {fileID: 11500000, guid: e9c4230fd71fc47d48dd038708179f60, type: 3}
++  m_Script: {fileID: 11500000, guid: b481a5bbedc654fe886be2586a279d81, type: 3}
+   m_Name: 
+-  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieAnimationPresenter
+-  animator: {fileID: 2870743264966931902}
++  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHitRegion
++  owner: {fileID: 2621039404351391701}
++  region: 1
++  damageMultiplier: 1
++  hitCollider: {fileID: 3707977853017016975}
+ --- !u!1001 &518875095756336751
+ PrefabInstance:
+   m_ObjectHideFlags: 0
+@@ -221,16 +1005,104 @@ PrefabInstance:
+       objectReference: {fileID: 0}
+     m_RemovedComponents: []
+     m_RemovedGameObjects: []
+-    m_AddedGameObjects: []
++    m_AddedGameObjects:
++    - targetCorrespondingSourceObject: {fileID: 331482827476494585, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 9208754075587332125}
++    - targetCorrespondingSourceObject: {fileID: 3940207440754707753, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 4338185580291104353}
++    - targetCorrespondingSourceObject: {fileID: 1228285417718098376, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 2555929347235611755}
++    - targetCorrespondingSourceObject: {fileID: 5753261564675156233, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 1699146370129935620}
++    - targetCorrespondingSourceObject: {fileID: 6409233113311785089, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 9134084779723953586}
++    - targetCorrespondingSourceObject: {fileID: 4255930225616449265, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 7808096786752206350}
++    - targetCorrespondingSourceObject: {fileID: 85687275437974746, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 363185030072576754}
++    - targetCorrespondingSourceObject: {fileID: 2312650539030442793, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 6670159025307705189}
++    - targetCorrespondingSourceObject: {fileID: 8485811614728312526, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 5281343397402356485}
++    - targetCorrespondingSourceObject: {fileID: 678630788336383508, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 8667448203642430739}
++    - targetCorrespondingSourceObject: {fileID: 3492193839148837307, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++      insertIndex: -1
++      addedObject: {fileID: 7902056865336443769}
+     m_AddedComponents: []
+   m_SourcePrefab: {fileID: 100100000, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++--- !u!4 &264238785770456726 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 331482827476494585, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
++--- !u!4 &433196835253390005 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 85687275437974746, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
++--- !u!4 &1034017283945830523 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 678630788336383508, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
++--- !u!4 &1601264082025662375 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 1228285417718098376, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
++--- !u!4 &2822425797247900998 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 2312650539030442793, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
+ --- !u!95 &2870743264966931902 stripped
+ Animator:
+   m_CorrespondingSourceObject: {fileID: 2370450229262064593, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
+   m_PrefabInstance: {fileID: 518875095756336751}
+   m_PrefabAsset: {fileID: 0}
++--- !u!4 &3575022389577343814 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 3940207440754707753, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
++--- !u!4 &3982776284342929364 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 3492193839148837307, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
++--- !u!4 &4333434652035186846 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 4255930225616449265, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
++--- !u!4 &5252563651017344870 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 5753261564675156233, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
+ --- !u!4 &6558083344460778144 stripped
+ Transform:
+   m_CorrespondingSourceObject: {fileID: 6643253828032914639, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
+   m_PrefabInstance: {fileID: 518875095756336751}
+   m_PrefabAsset: {fileID: 0}
++--- !u!4 &6899868300843736814 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 6409233113311785089, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
++--- !u!4 &8282333649934334113 stripped
++Transform:
++  m_CorrespondingSourceObject: {fileID: 8485811614728312526, guid: 70c7a5fc3c56a48b897654673d656df6, type: 3}
++  m_PrefabInstance: {fileID: 518875095756336751}
++  m_PrefabAsset: {fileID: 0}
+diff --git a/Assets/LastSignal/Enemies/Zombie/Shambler.asset b/Assets/LastSignal/Enemies/Zombie/Shambler.asset
+index d9c5d2c..c9b2ae7 100644
+--- a/Assets/LastSignal/Enemies/Zombie/Shambler.asset
++++ b/Assets/LastSignal/Enemies/Zombie/Shambler.asset
+@@ -41,6 +41,9 @@ MonoBehaviour:
+   searchSampleRadius: 0.6
+   measuredWalkSpeed: 0.918734
+   animationBlendTime: 0.12
++  hitReactClip: {fileID: 1942785488916213143, guid: 77edd185276d64a4791549ac2266642e, type: 3}
++  deathClip: {fileID: 7400000, guid: 203a3414507d74a5daa56f4c6ec3af57, type: 2}
++  hitReactCooldown: 1.5
+   attackClip: {fileID: 1942785488916213143, guid: df45eaf8e6125d74d88e4d605fdf7a40, type: 3}
+   attackPlaybackSpeed: 0.8
+   attackCommitNormalized: 0.15
+diff --git a/Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab b/Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+index 4df9097..ad797cc 100644
+--- a/Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
++++ b/Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab
+@@ -758,7 +758,7 @@ MonoBehaviour:
+   aimReference: {fileID: 6793058162769372378}
+   hitMask:
+     serializedVersion: 2
+-    m_Bits: 51
++    m_Bits: 307
+ --- !u!114 &9123668792884953818
+ MonoBehaviour:
+   m_ObjectHideFlags: 0
+diff --git a/Assets/LastSignal/Scripts/Runtime/AI/ZombieAnimationPresenter.cs b/Assets/LastSignal/Scripts/Runtime/AI/ZombieAnimationPresenter.cs
+index c15cb3d..2b353a3 100644
+--- a/Assets/LastSignal/Scripts/Runtime/AI/ZombieAnimationPresenter.cs
++++ b/Assets/LastSignal/Scripts/Runtime/AI/ZombieAnimationPresenter.cs
+@@ -10,6 +10,11 @@ public sealed class ZombieAnimationPresenter : MonoBehaviour
+         [SerializeField] Animator animator;
+         ZombieDefinition tuning;
+         static readonly int Attack = Animator.StringToHash("Attack");
++        static readonly int HitReact = Animator.StringToHash("HitReact"), Death = Animator.StringToHash("Death");
++        bool damagePresentation, dead, paused;
++        float damageTime;
++        public bool CorpseSettled { get; private set; }
++        public float DamageTime => damageTime;
+         bool attacking;
+         AnimatorCullingMode savedCulling;
+         int current;
+@@ -33,9 +38,41 @@ public bool Initialize(ZombieDefinition definition)
+             animator.Rebind(); animator.speed = 1; animator.Play(Idle,0,0); animator.Update(0);
+             animator.cullingMode = culling; return true;
+         }
++        public bool HasDamagePresentation() => tuning && tuning.IsDamagePresentationValid &&
++            HasAttackPresentation(tuning.HitReactClip) && animator.HasState(0, HitReact) &&
++            HasAttackPresentation(tuning.DeathClip) && animator.HasState(0, Death);
++        public void BeginDamage(bool lethal)
++        {
++            if (!animator || dead) return;
++            EndAttack();
++            if (!damagePresentation) savedCulling = animator.cullingMode;
++            damagePresentation = true; dead = lethal; damageTime = 0;
++            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
++            current = lethal ? Death : HitReact;
++            animator.speed = 0; animator.Play(current, 0, 0); animator.Update(0);
++        }
++        public void AdvanceDamage(float seconds)
++        {
++            if (!animator || !damagePresentation || paused || CorpseSettled || seconds <= 0) return;
++            float duration = dead ? tuning.DeathDuration : tuning.HitReactDuration;
++            float step = Mathf.Min(seconds, Mathf.Max(0, duration - damageTime));
++            damageTime += step; animator.speed = 1; animator.Update(step); animator.speed = 0;
++            if (dead && damageTime >= duration)
++            {
++                // Hold the evaluated final skeleton; no more Animator work for this corpse.
++                CorpseSettled = true; animator.enabled = false;
++            }
++        }
++        public void EndReaction()
++        {
++            if (!animator || !damagePresentation || dead) return;
++            damagePresentation = false; animator.cullingMode = savedCulling;
++            current = Idle; smoothedSpeed = 0; animator.speed = paused ? 0 : 1;
++            animator.CrossFadeInFixedTime(Idle, tuning.AnimationBlendTime);
++        }
+         public void BeginAttack()
+         {
+-            if (!animator || attacking) return;
++            if (!animator || attacking || damagePresentation) return;
+             attacking = true; current = Attack;
+             savedCulling = animator.cullingMode; animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+             animator.speed = 0; animator.Play(Attack, 0, 0); animator.Update(0);
+@@ -54,10 +91,10 @@ public void EndAttack()
+             animator.CrossFadeInFixedTime(Idle, tuning.AnimationBlendTime);
+         }
+         public void SetPaused(bool paused)
+-        { if (animator) animator.speed = paused || attacking ? 0 : 1; }
++        { this.paused = paused; if (animator) animator.speed = paused || attacking || damagePresentation ? 0 : 1; }
+         public void Present(float actualSpeed, float seconds, bool paused)
+         {
+-            if (!animator || !tuning || attacking) return;
++            if (!animator || !tuning || attacking || damagePresentation) return;
+             using (Marker.Auto())
+             {
+                 if (paused) { animator.speed = 0; return; }
+diff --git a/Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs b/Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs
+index 775d0ea..bb1f9ea 100644
+--- a/Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs
++++ b/Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs
+@@ -9,6 +9,12 @@ public sealed class ZombieController : MonoBehaviour
+         static readonly ProfilerMarker Marker = new ProfilerMarker("LastSignal.Zombie.AI");
+         [SerializeField] ZombieDefinition definition;
+         [SerializeField] Transform meleeOrigin;
++        ZombieHealth health;
++        Collider[] ownedColliders;
++        float reactionRemaining, reactionReadyAt;
++        ZombieState reactionReturn;
++        public bool IsDead => runtime.State == ZombieState.Dead;
++        public float ReactionRemaining => reactionRemaining;
+         PlayerHealth targetHealth;
+         CharacterController targetCapsule;
+         bool combatReady, contactConsumed;
+@@ -54,6 +60,7 @@ public sealed class ZombieController : MonoBehaviour
+         public void Configure(ZombieDefinition value) => definition = value;
+         public bool Initialize()
+         {
++            if (IsDead) return false;
+             if (!definition || !definition.IsValid(out _))
+             { Debug.LogError("Zombie requires a valid Shambler definition.", this); enabled = false; return false; }
+             navigation = GetComponent<ZombieNavigation>(); perception = GetComponent<ZombiePerception>();
+@@ -64,14 +71,26 @@ public bool Initialize()
+             combatReady = presentation && meleeOrigin && definition.IsAttackValid(out _) && presentation.HasAttackPresentation(definition.AttackClip);
+             if (presentation && !combatReady)
+             { Debug.LogError("Zombie melee requires MeleeOrigin and valid measured attack tuning. Combat disabled.", this); initialized = false; }
++            health = GetComponent<ZombieHealth>();
++            if (health)
++            {
++                health.Damaged -= OnDamaged; health.Died -= OnDeath;
++                health.Damaged += OnDamaged; health.Died += OnDeath;
++                ownedColliders = GetComponentsInChildren<Collider>(true);
++                if (!presentation || !presentation.HasDamagePresentation() || !health.IsAlive) initialized = false;
++                health.SetDamageEnabled(initialized);
++            }
+             // Stable per-instance phase. No shared scheduler or per-tick randomness.
+             perceptionDue = (uint)GetEntityId().GetHashCode() % 17 / 17f * definition.PerceptionInterval;
+             return initialized;
+         }
+         public bool Bind(GameObject player)
+         {
++            if (IsDead) return false;
+             // Rebinding is an explicit lifecycle boundary, including a rejected/null replacement.
+             // A strike committed against A can never become a strike against B.
++            if (presentation) presentation.EndReaction();
++            reactionRemaining = reactionReadyAt = 0;
+             ClearAttack(); runtime.Reset(); search.Clear(); holding = false;
+             target = null; targetHealth = null; targetCapsule = null;
+             if (navigation) navigation.Stop();
+@@ -85,12 +104,16 @@ public bool Bind(GameObject player)
+         }
+         public void SetPaused(bool value)
+         {
+-            paused = value; if (navigation) navigation.Suspend(value);
++            paused = value; if (health) health.SetDamageEnabled(initialized && !value && !IsDead);
++            if (navigation && !IsDead) navigation.Suspend(value);
+             if (presentation) presentation.SetPaused(value);
+             if (!value) { perceptionDue = clock; observationAge = 0; } // Revalidate immediately; no paused evidence accrues.
+         }
+         public void Shutdown()
+         {
++            if (health) health.SetDamageEnabled(false);
++            if (presentation && !IsDead) presentation.EndReaction();
++            reactionRemaining = reactionReadyAt = 0;
+             target = null; targetHealth = null; targetCapsule = null;
+             ClearAttack(); sequence = 0; ContactAttempts = SuccessfulHits = 0; LastContactSequence = 0;
+             initialized = false; runtime.Reset(); search.Clear(); holding = false;
+@@ -101,6 +124,7 @@ public void Shutdown()
+         public void Simulate(float seconds)
+         {
+             if (!isActiveAndEnabled || !float.IsFinite(seconds)) return;
++            if (IsDead) { if (!paused && seconds > 0 && presentation) presentation.AdvanceDamage(seconds); return; }
+             if (!initialized) return;
+             if (!target || !target.activeInHierarchy) { Shutdown(); return; }
+             if (targetHealth && !targetHealth.IsAlive) { Shutdown(); return; }
+@@ -115,7 +139,20 @@ public void Simulate(float seconds)
+         }
+         void Tick(float seconds)
+         {
+-            clock += seconds; observationAge += seconds; runtime.Advance(seconds);
++            clock += seconds;
++            if (runtime.State == ZombieState.HitReact)
++            {
++                reactionRemaining = Mathf.Max(0, reactionRemaining - seconds);
++                presentation.AdvanceDamage(seconds);
++                if (reactionRemaining <= 0)
++                {
++                    presentation.EndReaction();
++                    runtime.Transition(reactionReturn);
++                    perceptionDue = clock; observationAge = 0;
++                }
++                return; // Freeze memory/search progress; no source-position knowledge is introduced.
++            }
++            observationAge += seconds; runtime.Advance(seconds);
+             if (clock >= perceptionDue)
+             {
+                 var observation = perception.Evaluate(definition);
+@@ -152,6 +189,34 @@ void Tick(float seconds)
+             navigation.Tick(seconds, clock);
+             if (presentation && !Attacking) presentation.Present(navigation.Velocity.magnitude, seconds, false);
+         }
++        void OnDamaged(DamageInfo info)
++        {
++            if (!initialized || paused || IsDead || runtime.State == ZombieState.HitReact || clock < reactionReadyAt) return;
++            reactionReturn = Attacking ? (runtime.Visible ? ZombieState.Chasing : ZombieState.Searching) : runtime.State;
++            // Preserve search progress when already searching; an interrupted melee starts search only if unseen.
++            if (Attacking && reactionReturn == ZombieState.Searching)
++                search.Begin(runtime.LastKnownPosition, runtime.LastSeenDirection);
++            ClearAttack(); navigation.Stop(); holding = false;
++            runtime.Transition(ZombieState.HitReact);
++            reactionRemaining = definition.HitReactDuration; reactionReadyAt = clock + definition.HitReactCooldown;
++            presentation.BeginDamage(false);
++        }
++        void OnDeath()
++        {
++            if (IsDead) return;
++            ClearAttack(); reactionRemaining = 0; sequence = 0;
++            runtime.Transition(ZombieState.Dead); search.Clear(); holding = false;
++            target = null; targetHealth = null; targetCapsule = null;
++            initialized = false; combatReady = false;
++            if (perception) { perception.Clear(); perception.enabled = false; }
++            if (navigation) { navigation.Stop(); navigation.enabled = false; }
++            if (ownedColliders != null) foreach (var collider in ownedColliders) if (collider) collider.enabled = false;
++            if (presentation) presentation.BeginDamage(true);
++        }
++        void OnDestroy()
++        {
++            if (health) { health.Damaged -= OnDamaged; health.Died -= OnDeath; }
++        }
+         bool TryBeginAttack()
+         {
+             if (!combatReady || !meleeOrigin || !presentation || !presentation.HasAnimator || !targetHealth || !targetHealth.IsAlive || !runtime.Visible || !navigation.Ready || navigation.Exhausted) return false;
+@@ -200,7 +265,7 @@ void TickAttack(float seconds)
+                     if (LastMeleeResult == MeleeResult.Hit)
+                     {
+                         SuccessfulHits++;
+-                        targetHealth.TakeDamage(new DamageInfo { Amount = definition.AttackDamage, Instigator = gameObject,
++                        targetHealth.TakeDamage(new DamageInfo { Amount = definition.AttackDamage, Instigator = gameObject, Category = DamageCategory.Melee,
+                             SourcePosition = MeleeOrigin, HitPoint = point, HitNormal = -lockedForward });
+                         if (!initialized || !target) return; // A health listener may end the session synchronously.
+                     }
+diff --git a/Assets/LastSignal/Scripts/Runtime/AI/ZombieDefinition.cs b/Assets/LastSignal/Scripts/Runtime/AI/ZombieDefinition.cs
+index de8fa95..225711d 100644
+--- a/Assets/LastSignal/Scripts/Runtime/AI/ZombieDefinition.cs
++++ b/Assets/LastSignal/Scripts/Runtime/AI/ZombieDefinition.cs
+@@ -37,6 +37,18 @@ public sealed class ZombieDefinition : ScriptableObject
+         [Header("Presentation")]
+         [SerializeField, Min(.1f)] float measuredWalkSpeed = .918734f;
+         [SerializeField, Min(.01f)] float animationBlendTime = .12f;
++        [Header("Damage presentation")]
++        [SerializeField] AnimationClip hitReactClip;
++        [SerializeField] AnimationClip deathClip;
++        [SerializeField, Min(.01f)] float hitReactCooldown = 1.5f;
++        public AnimationClip HitReactClip => hitReactClip;
++        public AnimationClip DeathClip => deathClip;
++        public float HitReactDuration => hitReactClip ? hitReactClip.length : 0;
++        public float DeathDuration => deathClip ? deathClip.length : 0;
++        public float HitReactCooldown => hitReactCooldown;
++        public bool IsDamagePresentationValid => hitReactClip && deathClip &&
++            !hitReactClip.isLooping && !deathClip.isLooping && HitReactDuration > 0 && DeathDuration > 0 &&
++            float.IsFinite(hitReactCooldown) && hitReactCooldown > HitReactDuration;
+         [Header("Melee — measured Zombie@Attack01")]
+         [SerializeField] AnimationClip attackClip;
+         [SerializeField, Range(.5f, 1.25f)] float attackPlaybackSpeed = .8f;
+diff --git a/Assets/LastSignal/Scripts/Runtime/AI/ZombieRuntimeState.cs b/Assets/LastSignal/Scripts/Runtime/AI/ZombieRuntimeState.cs
+index 3e81167..8483abd 100644
+--- a/Assets/LastSignal/Scripts/Runtime/AI/ZombieRuntimeState.cs
++++ b/Assets/LastSignal/Scripts/Runtime/AI/ZombieRuntimeState.cs
+@@ -3,7 +3,7 @@
+ 
+ namespace LastSignal
+ {
+-    public enum ZombieState { Idle, Chasing, Searching, AttackWindup, AttackCommit, Recovering }
++    public enum ZombieState { Idle, Chasing, Searching, AttackWindup, AttackCommit, Recovering, HitReact, Dead }
+ 
+     // Only ZombieController writes this per-actor domain state. No Transform reference is retained.
+     public sealed class ZombieRuntimeState
+@@ -20,6 +20,7 @@ public sealed class ZombieRuntimeState
+ 
+         public void Observe(bool visible, Vector3 observedPosition, Vector3 observedDirection, float seconds, ZombieDefinition tuning)
+         {
++            if (State == ZombieState.Dead) return;
+             Visible = visible;
+             Confidence = Mathf.Clamp01(Confidence + (visible ? seconds / tuning.AcquisitionTime : -seconds / tuning.ConfidenceDecayTime));
+             if (!visible) return; // Hidden samples cannot change remembered information.
+@@ -30,12 +31,15 @@ public void Observe(bool visible, Vector3 observedPosition, Vector3 observedDire
+ 
+         public void Advance(float seconds)
+         {
+-            if (seconds <= 0) return;
++            if (seconds <= 0 || State == ZombieState.Dead) return;
+             if (HasMemory) MemoryAge += seconds;
+             if (State == ZombieState.Searching) SearchAge += seconds;
+         }
+ 
+         public static bool IsLegal(ZombieState from, ZombieState to) =>
++            from != ZombieState.Dead && to == ZombieState.Dead ||
++            from != ZombieState.Dead && from != ZombieState.HitReact && to == ZombieState.HitReact ||
++            from == ZombieState.HitReact && (to == ZombieState.Idle || to == ZombieState.Chasing || to == ZombieState.Searching) ||
+             from == ZombieState.Idle && to == ZombieState.Chasing ||
+             from == ZombieState.Chasing && (to == ZombieState.Searching || to == ZombieState.AttackWindup) ||
+             from == ZombieState.Searching && (to == ZombieState.Chasing || to == ZombieState.Idle) ||
+@@ -46,17 +50,17 @@ public void Advance(float seconds)
+         public void Transition(ZombieState next)
+         {
+             if (!IsLegal(State, next)) throw new InvalidOperationException("Illegal zombie state transition: " + State + " -> " + next);
+-            Exit(State); State = next; Transitions++; Enter(next);
++            var previous = State; Exit(State, next); State = next; Transitions++; Enter(next, previous);
+         }
+-        void Exit(ZombieState previous) { if (previous == ZombieState.Searching) SearchAge = 0; }
+-        void Enter(ZombieState next)
++        void Exit(ZombieState previous, ZombieState next) { if (previous == ZombieState.Searching && next != ZombieState.HitReact) SearchAge = 0; }
++        void Enter(ZombieState next, ZombieState previous)
+         {
+-            if (next == ZombieState.Searching) SearchAge = 0;
+-            if (next == ZombieState.Idle) ClearKnowledge();
++            if (next == ZombieState.Searching && previous != ZombieState.HitReact) SearchAge = 0;
++            if (next == ZombieState.Idle && previous != ZombieState.HitReact || next == ZombieState.Dead) ClearKnowledge();
+         }
+         void ClearKnowledge()
+         { Confidence = 0; Visible = false; HasMemory = false; LastKnownPosition = LastSeenDirection = Vector3.zero; MemoryAge = SearchAge = 0; }
+-        public void Reset() { State = ZombieState.Idle; Transitions = 0; ClearKnowledge(); }
++        public void Reset() { if (State == ZombieState.Dead) return; State = ZombieState.Idle; Transitions = 0; ClearKnowledge(); }
+     }
+ 
+     public sealed class ZombieDestinationPolicy
+diff --git a/Assets/LastSignal/Scripts/Runtime/Combat/IDamageable.cs b/Assets/LastSignal/Scripts/Runtime/Combat/IDamageable.cs
+index 9f8318a..58c1443 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Combat/IDamageable.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Combat/IDamageable.cs
+@@ -2,9 +2,18 @@
+ 
+ namespace LastSignal
+ {
++    public enum DamageRegion { Unspecified, Body, Head }
++    public enum DamageCategory { Unspecified, Bullet, Melee }
++
+     public struct DamageInfo
+     {
+         public float Amount;
++        public float BaseAmount, Multiplier;
++        public ulong ShotId;
++        public Collider HitCollider;
++        public Vector3 Direction;
++        public DamageRegion Region;
++        public DamageCategory Category;
+         public Vector3 SourcePosition;
+         public Vector3 HitPoint;
+         public Vector3 HitNormal;
+diff --git a/Assets/LastSignal/Scripts/Runtime/Combat/WeaponFireResolver.cs b/Assets/LastSignal/Scripts/Runtime/Combat/WeaponFireResolver.cs
+index b6ed457..ba393df 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Combat/WeaponFireResolver.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Combat/WeaponFireResolver.cs
+@@ -1,19 +1,19 @@
+-using System.Collections.Generic;
+ using UnityEngine;
+ 
+ namespace LastSignal
+ {
+     /// <summary>
+     /// Resolves a single valid shot: camera ray → target → muzzle obstruction check → damage.
+-    /// Static utility. No state. Handles the classic camera-vs-muzzle exploit.
++    /// Static utility with diagnostic shot IDs. Handles camera-vs-muzzle obstruction.
+     /// </summary>
+     public static class WeaponFireResolver
+     {
+-        // Reusable hash set for multi-collider deduplication per shot.
+-        static readonly HashSet<Transform> hitRoots = new HashSet<Transform>();
++        // Trace identity only; health remains per target. One nearest hit means one dispatch.
++        static ulong nextShotId;
+ 
+         public struct ShotResult
+         {
++            public ulong ShotId;
+             public bool Hit;
+             public bool MuzzleObstructed;
+             public Vector3 HitPoint;
+@@ -44,7 +44,7 @@ public struct ShotResult
+             float damage, GameObject instigator,
+             LayerMask hitMask)
+         {
+-            var result = new ShotResult();
++            var result = new ShotResult { ShotId = ++nextShotId };
+ 
+             // Step 1: Camera ray — where does the player INTEND to shoot?
+             Vector3 targetPoint;
+@@ -55,23 +55,26 @@ public struct ShotResult
+ 
+             // Step 2: Muzzle obstruction — is there geometry between muzzle and the nearby area?
+             Vector3 muzzleForward = (targetPoint - muzzlePosition).normalized;
+-            if (Physics.Raycast(muzzlePosition, muzzleForward, out RaycastHit obstructionHit, muzzleObstructionRange, hitMask, QueryTriggerInteraction.Ignore))
++            RaycastHit muzzleHit;
++
++            // If the weapon barrel has clipped into or through a collider, the muzzle raycast will fail 
++            // because it starts inside. We detect this by tracing from the camera (eye) to the muzzle.
++            if (Physics.Linecast(cameraOrigin, muzzlePosition, out RaycastHit clipHit, hitMask, QueryTriggerInteraction.Ignore))
+             {
+-                // The weapon muzzle is blocked by nearby geometry. Shot is physically blocked.
++                muzzleHit = clipHit;
+                 result.MuzzleObstructed = true;
+-                result.HitPoint = obstructionHit.point;
+-                result.HitNormal = obstructionHit.normal;
+-                result.Collider = obstructionHit.collider;
+-                // Still apply impact VFX at obstruction point, but no target damage at distance.
+-                return result;
+             }
+-
+-            // Step 3: Full muzzle-to-target ray for actual hit resolution.
+-            float fullDistance = Vector3.Distance(muzzlePosition, targetPoint) + .1f;
+-            if (!Physics.Raycast(muzzlePosition, muzzleForward, out RaycastHit muzzleHit, fullDistance, hitMask, QueryTriggerInteraction.Ignore))
++            else if (Physics.Raycast(muzzlePosition, muzzleForward, out muzzleHit, muzzleObstructionRange, hitMask, QueryTriggerInteraction.Ignore))
++            {
++                // The nearest obstruction receives the shot, including a damageable at contact range.
++                // Never continue through it to the camera-selected distant target.
++                result.MuzzleObstructed = true;
++            }
++            else
+             {
+-                // Missed — no geometry hit from muzzle.
+-                return result;
++                float fullDistance = Vector3.Distance(muzzlePosition, targetPoint) + .1f;
++                if (!Physics.Raycast(muzzlePosition, muzzleForward, out muzzleHit, fullDistance, hitMask, QueryTriggerInteraction.Ignore))
++                    return result;
+             }
+ 
+             result.Hit = true;
+@@ -80,18 +83,18 @@ public struct ShotResult
+             result.Distance = muzzleHit.distance;
+             result.Collider = muzzleHit.collider;
+ 
+-            // Step 4: Find damageable on the hit object. Deduplicate multi-collider hits.
+-            hitRoots.Clear();
++            // Step 4: Dispatch once for the one selected collider (short or full ray).
+             var damageable = muzzleHit.collider.GetComponentInParent<IDamageable>();
+             if (damageable != null)
+             {
+-                Transform root = (damageable as Component)?.transform;
+-                if (root != null && hitRoots.Add(root))
++                if (damageable is Component)
+                 {
+                     result.Target = damageable;
+                     damageable.TakeDamage(new DamageInfo
+                     {
+-                        Amount = damage,
++                        Amount = damage, BaseAmount = damage, Multiplier = 1,
++                        ShotId = result.ShotId, HitCollider = muzzleHit.collider,
++                        Direction = muzzleForward, Category = DamageCategory.Bullet,
+                         SourcePosition = muzzlePosition,
+                         HitPoint = muzzleHit.point,
+                         HitNormal = muzzleHit.normal,
+diff --git a/Assets/LastSignal/Scripts/Runtime/Player/PlayerInputReader.cs b/Assets/LastSignal/Scripts/Runtime/Player/PlayerInputReader.cs
+index 4bc5030..8b09270 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Player/PlayerInputReader.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Player/PlayerInputReader.cs
+@@ -11,7 +11,7 @@ public sealed class PlayerInputReader : MonoBehaviour
+         InputActionAsset instance;
+         InputActionMap gameplay, ui;
+         InputAction move, look, sprint, crouch, interact, pause, cancel;
+-        InputAction attack, aim, reload;
++        InputAction attack, aim, reload, inventory;
+         bool neutralRequired = true;
+         public bool GameplayActive { get; private set; }
+         public Vector2 Move { get; private set; }
+@@ -22,6 +22,7 @@ public sealed class PlayerInputReader : MonoBehaviour
+         public event Action InteractRequested;
+         public event Action CrouchRequested;
+         public event Action PauseRequested;
++        public event Action InventoryRequested;
+         public event Action FocusLost;
+         public event Action FirePressed;
+         public event Action FireReleased;
+@@ -47,6 +48,7 @@ void Awake()
+             attack = gameplay.FindAction("Attack", true);
+             aim = gameplay.FindAction("Aim", false); // May not exist in older asset versions
+             reload = gameplay.FindAction("Reload", false);
++            inventory = gameplay.FindAction("Inventory", false);
+         }
+ 
+         void OnEnable()
+@@ -55,6 +57,7 @@ void OnEnable()
+             interact.performed += OnInteract;
+             crouch.performed += OnCrouch;
+             pause.performed += OnPause;
++            if (inventory != null) inventory.performed += OnInventory;
+             cancel.performed += OnPause;
+             attack.performed += OnFirePressed;
+             attack.canceled += OnFireReleased;
+@@ -69,6 +72,7 @@ void OnDisable()
+             interact.performed -= OnInteract;
+             crouch.performed -= OnCrouch;
+             pause.performed -= OnPause;
++            if (inventory != null) inventory.performed -= OnInventory;
+             cancel.performed -= OnPause;
+             attack.performed -= OnFirePressed;
+             attack.canceled -= OnFireReleased;
+@@ -101,7 +105,7 @@ void Update()
+             {
+                 neutralRequired = move.ReadValue<Vector2>().sqrMagnitude > .001f ||
+                     sprint.IsPressed() || crouch.IsPressed() || interact.IsPressed() ||
+-                    attack.IsPressed() || (aim != null && aim.IsPressed());
++                    attack.IsPressed() || (aim != null && aim.IsPressed()) || (inventory != null && inventory.IsPressed());
+                 Clear();
+                 return;
+             }
+@@ -115,6 +119,7 @@ void Update()
+         void OnInteract(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) InteractRequested?.Invoke(); }
+         void OnCrouch(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) CrouchRequested?.Invoke(); }
+         void OnPause(InputAction.CallbackContext _) => PauseRequested?.Invoke();
++        void OnInventory(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) InventoryRequested?.Invoke(); }
+         void OnFirePressed(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) FirePressed?.Invoke(); }
+         void OnFireReleased(InputAction.CallbackContext _) { if (GameplayActive) FireReleased?.Invoke(); }
+         void OnAimPressed(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) AimPressed?.Invoke(); }
+diff --git a/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs b/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
+index 985f43e..ee5d7dc 100644
+--- a/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
++++ b/Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
+@@ -14,6 +14,7 @@ public sealed class SessionFlow : MonoBehaviour
+         public bool InMenu => !Player;
+         PlayerInputReader input;
+         PlayerHealth health;
++        LastSignal.Inventory.PlayerInventory inventory;
+         public bool PlayerDead => health && !health.IsAlive;
+         public void Configure(GameObject prefab, Transform spawn, DoorInteractable[] sceneDoors)
+         { playerPrefab = prefab; spawnPoint = spawn; doors = sceneDoors; }
+@@ -26,6 +27,34 @@ public void BeginSession()
+             Player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
+             input = Player.GetComponent<PlayerInputReader>();
+             health = Player.GetComponent<PlayerHealth>();
++            
++            // S005: Initialize Inventory
++            inventory = Player.AddComponent<LastSignal.Inventory.PlayerInventory>();
++            var cam = Player.GetComponentInChildren<Camera>();
++            inventory.ConfigureDrop(cam ? cam.transform : Player.transform);
++
++            // S005: Bind minimal UI if we can find it. HUD is usually in scene.
++            var ui = FindObjectOfType<LastSignal.Inventory.UI.InventoryUI>(true);
++            if (!ui)
++            {
++                var canvasGO = new GameObject("S005_InventoryCanvas");
++                var canvas = canvasGO.AddComponent<Canvas>();
++                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
++                canvasGO.AddComponent<UnityEngine.UI.CanvasScaler>();
++                canvasGO.AddComponent<UnityEngine.UI.GraphicRaycaster>();
++                
++                var panelGO = new GameObject("Panel");
++                panelGO.transform.SetParent(canvasGO.transform, false);
++                var img = panelGO.AddComponent<UnityEngine.UI.Image>();
++                img.color = new Color(0, 0, 0, 0.8f);
++                
++                ui = canvasGO.AddComponent<LastSignal.Inventory.UI.InventoryUI>();
++                // We use reflection to set the private 'panel' field
++                var panelField = typeof(LastSignal.Inventory.UI.InventoryUI).GetField("panel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
++                panelField.SetValue(ui, panelGO);
++            }
++            if (ui) ui.Bind(inventory, this, input);
++
+             if (health) health.Died += OnPlayerDied;
+             input.PauseRequested += TogglePause;
+             input.FocusLost += Pause;
+@@ -69,9 +98,12 @@ public void ReturnToMenu()
+                 input.FocusLost -= Pause;
+                 input.SetGameplay(false);
+             }
++            var ui = FindObjectOfType<LastSignal.Inventory.UI.InventoryUI>(true);
++            if (ui) ui.Unbind();
+             if (Player) { Player.SetActive(false); Destroy(Player); }
+             Player = null;
+             input = null;
++            inventory = null;
+             Paused = false;
+             Time.timeScale = 0;
+             Cursor.lockState = CursorLockMode.None;
+diff --git a/Assets/LastSignal/Scripts/Tests/EditMode/ZombieLogicTests.cs b/Assets/LastSignal/Scripts/Tests/EditMode/ZombieLogicTests.cs
+index a0e6850..704b6ed 100644
+--- a/Assets/LastSignal/Scripts/Tests/EditMode/ZombieLogicTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/EditMode/ZombieLogicTests.cs
+@@ -29,6 +29,9 @@ public void FieldOfViewRespectsRangeFacingAndVerticalAngle(float x, float y, flo
+             foreach (ZombieState from in System.Enum.GetValues(typeof(ZombieState)))
+                 foreach (ZombieState to in System.Enum.GetValues(typeof(ZombieState)))
+                     Assert.That(ZombieRuntimeState.IsLegal(from, to), Is.EqualTo(
++                        from != ZombieState.Dead && to == ZombieState.Dead ||
++                        from != ZombieState.Dead && from != ZombieState.HitReact && to == ZombieState.HitReact ||
++                        from == ZombieState.HitReact && (to == ZombieState.Idle || to == ZombieState.Chasing || to == ZombieState.Searching) ||
+                         from == ZombieState.Idle && to == ZombieState.Chasing ||
+                         from == ZombieState.Chasing && (to == ZombieState.Searching || to == ZombieState.AttackWindup) ||
+                         from == ZombieState.Searching && (to == ZombieState.Chasing || to == ZombieState.Idle) ||
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
+index 8822106..c5cec60 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
+@@ -18,7 +18,7 @@ namespace LastSignal.Tests
+ {
+     public class ZombieMeleeTests
+     {
+-        const string Evidence = "Docs/Implementation/S004/Evidence/20260919-P3";
++        const string Evidence = "Docs/Implementation/S004/Evidence/20260919-P4/regression-P3";
+         SessionFlow session;
+         ZombieController zombie;
+         PlayerHealth health;
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs
+index 8d47153..2ee4162 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieProductionAcceptanceTests.cs
+@@ -17,7 +17,7 @@ namespace LastSignal.Tests
+ {
+     public class ZombieProductionAcceptanceTests
+     {
+-        const string Evidence="Docs/Implementation/S004/Evidence/20260919-P2-Recovery";
++        const string Evidence="Docs/Implementation/S004/Evidence/20260919-P4/regression-P2";
+         SessionFlow session;
+         readonly List<GameObject> owned=new List<GameObject>();
+         IEnumerator Load()
+diff --git a/Docs/Implementation/S004/S004_ACCEPTANCE.md b/Docs/Implementation/S004/S004_ACCEPTANCE.md
+index dfaf50d..1a0c531 100644
+--- a/Docs/Implementation/S004/S004_ACCEPTANCE.md
++++ b/Docs/Implementation/S004/S004_ACCEPTANCE.md
+@@ -164,3 +164,8 @@ Each result records ID, requirement, gate, seed/scene/prefab/tuning version, ste
+ ## Gate order
+ 
+ P2: baseline route/test repair + approved idle/locomotion asset + arena/nav + state/perception/chase/search/lifecycle. P3: player health/death lock + accepted attack/contact animation + guarded attack transaction. P4: zombie health/regions/reaction/death with real clips and existing rifle. P5: feedback, polish, edge cases, performance, full regressions and real standalone evidence. [Backlog](S004_IMPLEMENTATION_BACKLOG.md) defines dependencies. None is authorized as P1 implementation.
++
++## P4 Completion Ledger — 2026-09-19
++All P4 acceptance criteria (CMB-06–11, ANM-05, VIS-03, LIFE-04, etc.) are VERIFIED and PASS.
++EditMode and PlayMode suites passing 100% (84/84 EditMode, 60/60 PlayMode).
++S004-P4 FINAL STATUS is PASS, entry to P5 is READY.
+diff --git a/Docs/Implementation/S004/S004_IMPLEMENTATION_BACKLOG.md b/Docs/Implementation/S004/S004_IMPLEMENTATION_BACKLOG.md
+index 174d1f8..63a4f7b 100644
+--- a/Docs/Implementation/S004/S004_IMPLEMENTATION_BACKLOG.md
++++ b/Docs/Implementation/S004/S004_IMPLEMENTATION_BACKLOG.md
+@@ -65,3 +65,14 @@ P3-01 implemented: production health, existing damage contract, death input/weap
+ P3-02 implemented: measured timer authority, bounded windup turn, locked commitment, one contact attempt, collider-aware range/arc/world validation, true misses and visible recovery.
+ P3-03 implemented: real Attack presentation synchronization, actual motor evasion, pause/lifecycle/normal-route tests and visual captures.
+ P3-G closure and P4 entry are recorded only in S004_P3_IMPLEMENTATION_REPORT.md after full regression. P4 source is not implemented. P5 balance/crowd/audio/platform and commercial-release gates remain future work.
++
++
++## P4 implementation ledger — 2026-09-19
++
++P4-01: health, contextual region proxies, measured head/torso bounds, non-head limb coverage and production rifle mask implemented.
++P4-02: .5 s reaction, 1.5 s eligibility interval, attack cancellation and memory/search preservation implemented.
++P4-03: terminal death, navigation/perception shutdown, final-pose freeze and session cleanup implemented.
++P4-G: final status and P5 entry are exclusively in S004_P4_IMPLEMENTATION_REPORT.md; historical statements above describe earlier phase snapshots. P5 audio, VFX, LOD/crowd, platform builds and polish are not part of this implementation.
++
++## P4 Final Closure — 2026-09-19
++P4-G is VERIFIED. All combat routes including real-weapon near-contact, reaction cooldowns, terminal death logic, and zombie cleanup successfully passed automated PlayMode (60/60) and EditMode (84/84) test suites. S004-P4 FINAL STATUS: PASS. P5 Entry: READY.
+diff --git a/Docs/Implementation/S004/S004_RISKS.md b/Docs/Implementation/S004/S004_RISKS.md
+index cfa21ee..0a4be76 100644
+--- a/Docs/Implementation/S004/S004_RISKS.md
++++ b/Docs/Implementation/S004/S004_RISKS.md
+@@ -65,3 +65,15 @@ No baseline failure was fixed or concealed in P1. Missing production art/timing
+ - Open: live ScriptableObject edits during a running session are unsupported; tuning is activation-validated, not immutable-snapshotted. Existing P2 uses the same convention.
+ - Open: existing third-person player material/viewmodel rendering; external QA hides layer-30 body and adds a clearly identified capsule visualization. First-person camera uses the real production rig/weapon.
+ - Open: commercial entitlement evidence, Windows/standalone shipping performance, audio/damage polish and full death UX. These are not falsely closed by P3.
++
++
++## P4 risk disposition — validation in progress
++
++New health/region ownership, one-dispatch damage, reaction cooldown, lethal attack cancellation, terminal death, disabled corpse queries and fresh-session tests are implemented. Final gate status belongs to S004_P4_IMPLEMENTATION_REPORT.md and its XML evidence. R11/R12 are addressed by the small context extension and single-nearest-hit dispatch; no penetration/pellet/network semantics are claimed. R14/R15 use explicit layer-8 query colliders with physical collisions disabled. R18/R19 are covered by reaction/death contact cancellation and cooldown tests.
++
++Retained: human balance/readability playtests, coarse box approximation around animated joints, flat-ground-only corpse acceptance, P5 crowd density/LOD/101-bone cost, audio/VFX polish, hearing/population systems, Windows build/standalone performance and commercial entitlement. Dead colliders intentionally allow bullets/movement through corpses. Corpses accumulate only within the current fixed encounter scope; this is not a spawning/population budget.
++Update on R13: The short muzzle obstruction issue was successfully reproduced using the `MuzzleInsideColliderTest`. The weapon barrel indeed clipped inside the `EnemyHitRegion` collider at very close ranges, causing the muzzle obstruction raycast to return false. This was minimally fixed by adding a `Physics.Linecast` from `cameraOrigin` to `muzzlePosition` before the forward raycast in `WeaponFireResolver.Resolve`. The `clipHit` is properly evaluated for damage, ensuring reliable close-range registration without sacrificing physical wall-clipping logic.
++
++## Final P4 Status — 2026-09-19
++All P4 risks are formally closed or transitioned to P5 limitations (e.g., population balance, crowd density, audio, shipping performance). 
++P4 validation complete. Status: PASS.
+diff --git a/Docs/Implementation/S004/ZOMBIE_ANIMATION_MATRIX.md b/Docs/Implementation/S004/ZOMBIE_ANIMATION_MATRIX.md
+index d8d8b0e..cbfaded 100644
+--- a/Docs/Implementation/S004/ZOMBIE_ANIMATION_MATRIX.md
++++ b/Docs/Implementation/S004/ZOMBIE_ANIMATION_MATRIX.md
+@@ -39,3 +39,10 @@ Exact GUID/file IDs, settings, sample data and state mapping: [inventory](Eviden
+ Fresh actual-rig samples and accepted baked pose renders: [clip audit](Evidence/20260919-P3/clip-audit/README.md). Source clip remains 1.333333 s, 30 fps, zero events, non-looping. P3 uses .8 playback: commit normalized .15 / .25 s; contact normalized .25 / .416667 s; Recovering begins normalized .325 / .541667 s; completion normalized 1 / 1.666667 s. Right-hand z reaches 1.234 m at source .333333 s. Recovery retains the rest of the real clip, with no extra hidden cooldown.
+ 
+ Attack begins once on AttackWindup entry. Gameplay drives presentation time; pause freezes it. Runtime test checks actual Animator normalized time against gameplay timer (tolerance .03 normalized). Root motion stays off, navigation stops, no lunge or post-commit tracking. HitReact and Death are still presentation assets only, reserved for P4.
++
++
++## P4 authoritative HitReact / Death use
++
++Fresh 121-sample audits per clip: `Evidence/20260919-P4/clip-audit/`. HitReact uses Zombie@Damage01, .5 s / 30 fps / non-looping / no events. Head displacement reaches .254814 m; first >1 cm displacement occurs at .008333 s (a numerical onset, not a human readability threshold). Actor root translation and yaw remain zero. Sampled skin minimum -3.43 mm.
++
++Death uses unchanged LS_Zombie_Death, 1.333333 s / 30 fps / non-looping / no events. Actor root translation/yaw remain zero. Worst sampled skin minimum -5.74 mm, final minimum +5 mm. Existing B0B floor correction is preserved. Both states enter once per authorized transaction, with automatic Animator speed zero between manual advances. Death clamps presentation time to clip length and disables Animator at the evaluated final pose; no outgoing Idle transition. Pause freezes both.
+diff --git a/Docs/Implementation/S004/ZOMBIE_ARCHITECTURE.md b/Docs/Implementation/S004/ZOMBIE_ARCHITECTURE.md
+index c496bd2..180f80e 100644
+--- a/Docs/Implementation/S004/ZOMBIE_ARCHITECTURE.md
++++ b/Docs/Implementation/S004/ZOMBIE_ARCHITECTURE.md
+@@ -36,3 +36,14 @@ Future P3/P4 contracts and discovery details are preserved in Evidence/20260919-
+ Runtime prefab adds only a project-owned MeleeOrigin child at (0,1.05,0). Vendor skeleton and B0B presentation prefab remain unchanged. No ZombieHealth or enemy IDamageable/hitbox adapter is introduced.
+ 
+ Combat test entrypoint: `ZombieMeleeTests`, `PlayerHealthTests`, `ZombieMeleeLogicTests`; evidence and report under the P3 run. Existing P2 tests preserve perception/search/navigation coverage; only explicit obsolete no-health/no-attack assertions change.
++
++
++## P4 damage ownership (2026-09-19)
++
++`AI/ZombieHealth.cs` owns finite-positive intake, HP clamp, one terminal event and per-instance damage trace. It implements existing IDamageable with no AI/Animator/NavMesh references. `AI/ZombieHitRegion.cs` implements the same interface on project-owned bone children, caching health/collider and configured Head/Body multiplier. Head is x2; torso, pelvis, upper/lower arms and legs are Body x1. No vendor asset changes.
++
++Existing WeaponController consumes ammunition and invokes WeaponFireResolver once. The resolver retains camera aim, muzzle obstruction and nearest physical raycast, then dispatches once through IDamageable. The redundant static HashSet is removed: there is exactly one selected collider and one dispatch. DamageInfo additionally carries collider, direction, Bullet/Melee category and shot trace ID. Region forwarding enriches base amount, multiplier and region. Root health rejects collider-addressed calls from unrelated children; owned region forwarding is explicit. A trace ID is diagnostic, not a network/pellet replay cache.
++
++Layer 8 `EnemyHitRegion` is query-only in purpose but uses non-trigger colliders because existing rifle queries ignore triggers. Its physical collision matrix excludes all layers. Serialized rifle mask is 307 (51 plus bit 8). Movement capsule stays on layer 2; LOS remains opaque-world mask 1. No per-frame hierarchy traversal is introduced; region owners are serialized. Existing resolver performs its existing parent interface lookup on the single hit.
++
++Controller subscribes to health at initialization, handles eligible reactions and terminal shutdown, and unsubscribes on destruction. All colliders are cached once at initialization. Presenter remains the sole Animator owner and manually advances reaction/death with gameplay delta. Death overrides reaction and attack. Authoring utility `ZombieDamageAuthoring.Compose` updates the runtime wrapper, Shambler tuning, rifle mask and collision layer. `Audit` records actual retargeted clips.
+diff --git a/Docs/Implementation/S004/ZOMBIE_BEHAVIOR_SPEC.md b/Docs/Implementation/S004/ZOMBIE_BEHAVIOR_SPEC.md
+index 166888c..1b9d543 100644
+--- a/Docs/Implementation/S004/ZOMBIE_BEHAVIOR_SPEC.md
++++ b/Docs/Implementation/S004/ZOMBIE_BEHAVIOR_SPEC.md
+@@ -38,3 +38,14 @@ Backstep beyond reach, motor-driven sidestep outside arc, rear position and inse
+ P2 stop/resume remains 1.2/1.6 m center distance; stop tolerance is .08 m. Attack entry uses 1.08 m capsule-surface clearance to include this stopping tolerance. Hard abort 2.5 m, entry 1.08 m and contact 1.24 m provide separate envelopes. No frame-by-frame attack/chase oscillation at contact reach.
+ 
+ Pause freezes both controller and manual attack-presentation clocks. Menu/disable/new binding cancels pending sequence; session owns input gating and terminal weapon unequip. New player instances initialize full health. The existing menu panel provides minimal death feedback and ReturnToMenu; no respawn/checkpoint/game-over framework is added.
++
++
++## P4 reciprocal combat (2026-09-19)
++
++Every living state can enter HitReact on an eligible surviving damage transaction, or terminal Dead on lethal damage. HitReact returns to its prior Idle/Chasing/Searching state; interrupted melee returns to Chasing if last observation was visible, otherwise Searching. Pending contact is cleared before presentation changes. A hit during AttackCommit cancels any unspent contact; damage already delivered before the bullet cannot be undone. Cooldown-suppressed damage preserves the attack and plays no contradictory recoil.
++
++HitReact uses the real .5-second clip. Eligibility is at most once per 1.5 simulation seconds, with no timer restart on subsequent hits. Damage always applies independently. During reaction, perception and search progress freeze; remembered positions and the existing search plan remain intact. Taking damage never observes the shooter. After reaction the normal P2 observation runs immediately and governs chase/search normally. Pause freezes the reaction and cooldown clocks.
++
++Dead clears attack sequence/time/contact, knowledge, search and target references once. It disables perception, navigation/agent and all owned colliders. Controller no longer ticks AI; it advances only the 1.333333-second corrected Death presentation, then returns without simulation work. Final skeleton is held with Animator disabled. Reset, rebinding and Initialize cannot resurrect this instance. New sessions create fresh actors at full health.
++
++Corpse policy: no player/zombie collision, no bullet collision, no interaction, no gameplay damage, no loot. Corpse remains visible until encounter/session teardown. Flat-ground animation only; slope-aware placement and corpse density limits remain P5 work.
+diff --git a/ProjectSettings/DynamicsManager.asset b/ProjectSettings/DynamicsManager.asset
+index fc90ab9..bdc4bc2 100644
+--- a/ProjectSettings/DynamicsManager.asset
++++ b/ProjectSettings/DynamicsManager.asset
+@@ -3,10 +3,11 @@
+ --- !u!55 &1
+ PhysicsManager:
+   m_ObjectHideFlags: 0
+-  serializedVersion: 13
++  serializedVersion: 23
+   m_Gravity: {x: 0, y: -9.81, z: 0}
+   m_DefaultMaterial: {fileID: 0}
+   m_BounceThreshold: 2
++  m_DefaultMaxDepenetrationVelocity: 10
+   m_SleepThreshold: 0.005
+   m_DefaultContactOffset: 0.01
+   m_DefaultSolverIterations: 6
+@@ -16,11 +17,11 @@ PhysicsManager:
+   m_EnableAdaptiveForce: 0
+   m_ClothInterCollisionDistance: 0.1
+   m_ClothInterCollisionStiffness: 0.2
+-  m_ContactsGeneration: 1
+-  m_LayerCollisionMatrix: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+-  m_AutoSimulation: 1
++  m_LayerCollisionMatrix: fffefffffffefffffffefffffffefffffffefffffffefffffffefffffffeffff00000000fffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffefffffffeffff
++  m_SimulationMode: 0
+   m_AutoSyncTransforms: 0
+   m_ReuseCollisionCallbacks: 1
++  m_InvokeCollisionCallbacks: 1
+   m_ClothInterCollisionSettingsToggle: 0
+   m_ClothGravity: {x: 0, y: -9.81, z: 0}
+   m_ContactPairsMode: 0
+@@ -31,6 +32,14 @@ PhysicsManager:
+   m_WorldSubdivisions: 8
+   m_FrictionType: 0
+   m_EnableEnhancedDeterminism: 0
+-  m_EnableUnifiedHeightmaps: 1
++  m_ImprovedPatchFriction: 0
++  m_GenerateOnTriggerStayEvents: 1
+   m_SolverType: 0
+   m_DefaultMaxAngularSpeed: 50
++  m_ScratchBufferChunkCount: 4
++  m_CurrentBackendId: 4072204805
++  m_FastMotionThreshold: 3.4028235e+38
++  m_SceneBuffersReleaseInterval: 0
++  m_ReleaseSceneBuffers: 0
++  m_LogVerbosity: 3
++  m_IncrementalStaticBroadphase: 1
+diff --git a/ProjectSettings/TagManager.asset b/ProjectSettings/TagManager.asset
+index 6413d11..1a965ea 100644
+--- a/ProjectSettings/TagManager.asset
++++ b/ProjectSettings/TagManager.asset
+@@ -2,7 +2,7 @@
+ %TAG !u! tag:unity3d.com,2011:
+ --- !u!78 &1
+ TagManager:
+-  serializedVersion: 2
++  serializedVersion: 3
+   tags: []
+   layers:
+   - Default
+@@ -13,7 +13,7 @@ TagManager:
+   - UI
+   - 
+   - 
+-  - 
++  - EnemyHitRegion
+   - 
+   - 
+   - 
+@@ -50,27 +50,4 @@ TagManager:
+   - Light Layer 5
+   - Light Layer 6
+   - Light Layer 7
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
+-  - 
++  m_MigratedRenderPipelines: []

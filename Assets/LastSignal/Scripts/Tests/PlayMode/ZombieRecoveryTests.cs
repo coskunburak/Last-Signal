@@ -104,7 +104,7 @@ namespace LastSignal.Tests
             animator.cullingMode=AnimatorCullingMode.AlwaysAnimate;animator.Update(0);
             Assert.That(Vector3.Distance(initial,hand.position),Is.LessThan(.001f),"First rendered pose must already be evaluated Idle, not bind pose");
         }
-        [TearDown]public void Cleanup(){if(probe)Object.DestroyImmediate(probe);if(session)session.ReturnToMenu();Time.timeScale=1;}
+        [UnityTearDown]public IEnumerator Cleanup(){if(probe)Object.DestroyImmediate(probe);if(session)session.ReturnToMenu();Time.timeScale=1;yield return null;}
     }
 }
 #endif

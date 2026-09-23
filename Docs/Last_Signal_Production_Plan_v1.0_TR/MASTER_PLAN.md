@@ -12,6 +12,10 @@ implementation_status: NOT_VERIFIED
 
 Bu planın ilk ürünü **single-player** oyundur. S001–S048 / D001–D480 geliştirme, yayın ve stabilizasyonu kapsar. S049–S060 / D481–D600 yalnız ayrı co-op GO kararıyla uygulanır. Kartlar uygulama veya test başarısı değildir. Çalışma adı Project Last Signal kesin ticari isim değildir.
 
+## Uygulama kimliği uzlaştırması — 2026-09-22
+
+Canonical **S008/D071–D080** dünya zamanı, hava ve kontrollü uykudur. Tarihsel `Docs/Implementation/S008` ise sığınak/hazırlık/sefer/dönüş uygulamasıdır; canonical S010 ile kısmen örtüşür ve yeniden numaralandırılmaz. Güncel gap çalışması ve gerçek kanıt durumu: [P02-GAP uzlaştırması](../Implementation/P02-GAP/P02_GAP_RECONCILIATION.md), [kabul](../Implementation/P02-GAP/P02_GAP_ACCEPTANCE.md). Canonical S007 iki-cell/CellReady açığı ayrıca korunur; bu not sprint tablosundaki plan kimliklerini veya G2 kapısını tamamlanmış ilan etmez.
+
 ## Dönemlerin ilişkisi
 
 ```mermaid

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-18 08:13:11Z" end-time="2026-09-18 08:13:15Z" duration="3.9697742">
+  <test-suite type="TestSuite" id="1031" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-09-18 08:13:11Z" end-time="2026-09-18 08:13:15Z" duration="3.969774" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1025" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-09-18 08:13:11Z" end-time="2026-09-18 08:13:15Z" duration="3.951795" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="54067" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1026" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-09-18 08:13:11Z" end-time="2026-09-18 08:13:15Z" duration="3.950976" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1027" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-09-18 08:13:11Z" end-time="2026-09-18 08:13:15Z" duration="3.950692" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1001" name="CombatAcceptanceTests" fullname="LastSignal.Tests.CombatAcceptanceTests" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-09-18 08:13:11Z" end-time="2026-09-18 08:13:15Z" duration="3.949481" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1002" name="Fire_ConsumesAmmoAndDamagesTarget" fullname="LastSignal.Tests.CombatAcceptanceTests.Fire_ConsumesAmmoAndDamagesTarget" methodname="Fire_ConsumesAmmoAndDamagesTarget" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="785117875" result="Failed" start-time="2026-09-18 08:13:11Z" end-time="2026-09-18 08:13:15Z" duration="3.932929" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Ammo should decrease
+  Expected: 29
+  But was:  30
+
+TearDown : Unhandled log message: '[Exception] IndexOutOfRangeException: Index was outside the bounds of the array.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[UnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)
+UnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)
+UnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputActionMap map) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:975)
+UnityEngine.InputSystem.InputActionState.EnableAllActions (UnityEngine.InputSystem.InputActionMap map) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:935)
+UnityEngine.InputSystem.InputActionMap.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionMap.cs:548)
+LastSignal.PlayerInputReader.SetGameplay (System.Boolean active) (at Assets/LastSignal/Runtime/Player/PlayerInputReader.cs:91)
+LastSignal.SessionFlow.ReturnToMenu () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:46)
+LastSignal.SessionFlow.OnDestroy () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:58)
+UnityEngine.Object:DestroyImmediate(Object)
+LastSignal.Tests.CombatAcceptanceTests:TearDown() (at Assets/LastSignal/Tests/PlayMode/CombatAcceptanceTests.cs:81)
+System.Reflection.MethodBase:Invoke(Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object)
+UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[B0A_ORDER UnitySetUp begin devices=3
+S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=3 active=True mouse=
+B0A_ORDER Setup before base devices=3
+B0A_ORDER Setup done devices=2
+IndexOutOfRangeException: Index was outside the bounds of the array.
+UnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)
+UnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)
+UnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputActionMap map) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:975)
+UnityEngine.InputSystem.InputActionState.EnableAllActions (UnityEngine.InputSystem.InputActionMap map) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:935)
+UnityEngine.InputSystem.InputActionMap.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionMap.cs:548)
+LastSignal.PlayerInputReader.SetGameplay (System.Boolean active) (at Assets/LastSignal/Runtime/Player/PlayerInputReader.cs:91)
+LastSignal.SessionFlow.ReturnToMenu () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:46)
+LastSignal.SessionFlow.OnDestroy () (at Assets/LastSignal/Runtime/Session/SessionFlow.cs:58)
+UnityEngine.Object:DestroyImmediate(Object)
+LastSignal.Tests.CombatAcceptanceTests:TearDown() (at Assets/LastSignal/Tests/PlayMode/CombatAcceptanceTests.cs:81)
+System.Reflection.MethodBase:Invoke(Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object)
+UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
