@@ -10,7 +10,7 @@ using UnityEngine.AI;
 
 namespace LastSignal.Persistence
 {
-    /// <summary>Single-cell composition boundary. Explicit API; no autosave, hotkeys or idle scanning.</summary>
+    /// <summary>Session composition boundary with optional cell snapshots. Explicit API; no autosave, hotkeys or idle scanning.</summary>
     [DisallowMultipleComponent, RequireComponent(typeof(SessionFlow), typeof(LootPopulationService), typeof(ShelterLoop))]
     public sealed class SaveSession : MonoBehaviour
     {
@@ -67,6 +67,8 @@ namespace LastSignal.Persistence
         {
             snapshot = null;
             var clock = GetComponent<LastSignal.WorldTime.WorldClock>();
+            var cells = GetComponent<LastSignal.WorldCells.WorldCellManager>();
+            if (cells && !cells.Stable) return Busy();
             if (busy || OwnershipTransaction.Active || Flow.Restoring || (clock && (clock.Sleeping || (clock.Simulation != null && clock.Simulation.Advancing)))) return Busy();
             if (Flow.InMenu || Flow.PlayerDead) return Invalid("A living, ready session is required to save.");
             var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -129,7 +131,7 @@ namespace LastSignal.Persistence
             var look=player.GetComponent<FirstPersonLook>();
             snapshot = new SaveGame {
                 worldTime=clock ? clock.Capture() : null,
-                header=new SaveHeader { schemaVersion=clock ? SaveValidation.SchemaVersion : 1,contentVersion=contentVersion,worldId=worldId,seed=loot.Seed,generation=1,
+                header=new SaveHeader { schemaVersion=cells ? 3 : clock ? SaveValidation.SchemaVersion : 1,contentVersion=contentVersion,worldId=worldId,seed=loot.Seed,generation=1,
                     buildId=string.IsNullOrEmpty(Application.buildGUID)?"editor-"+Application.unityVersion:Application.buildGUID,timestampUtc=DateTimeOffset.UtcNow.ToString("O") },
                 player=new PlayerSnapshot { id="player.local",transform=Pose(player.transform),health=player.GetComponent<PlayerHealth>().CurrentHealth,
                     pitch=look.Pitch,crouching=player.GetComponent<PlayerStance>().IsCrouching },
@@ -138,6 +140,11 @@ namespace LastSignal.Persistence
                 world=new WorldSnapshot {doors=doors.ToArray(),opportunities=opportunities.ToArray(),items=items.ToArray(),enemies=new[] {
                     new EnemySnapshot {id=encounter.GetComponent<PersistentEntityId>().Id,health=actor.GetComponent<ZombieHealth>().CurrentHealth,transform=Pose(actor.transform)} }}
             };
+            if (cells)
+            {
+                try { snapshot.cells = cells.Capture(); }
+                catch (InvalidOperationException e) { snapshot = null; return new SaveResult(SaveError.Busy,e.Message); }
+            }
             result = Codec().Encode(snapshot,out _); CaptureMilliseconds=watch.Elapsed.TotalMilliseconds;
             if (!result.Success) snapshot=null;
             return result;
@@ -203,6 +210,14 @@ namespace LastSignal.Persistence
             yield return null;
             if (!this || !Flow || Flow.Generation!=generation || !Flow.Restoring || !Flow.Player)
             { LastResult=new SaveResult(SaveError.StaleSession,"Load session was replaced; no hydration applied."); busy=false; yield break; }
+            var cells = GetComponent<LastSignal.WorldCells.WorldCellManager>();
+            if (cells)
+            {
+                GetComponent<LastSignal.WorldTime.WorldClock>().Restore(candidate.worldTime);
+                yield return cells.Restore(candidate.cells, candidate.worldTime.seconds);
+                if (Flow.Generation != generation || !Flow.Restoring) { LastResult = new SaveResult(SaveError.StaleSession,"Cell restore session replaced."); yield break; }
+                if (cells.Failure != null || !cells.Stable) { LastResult = Invalid(cells.Failure ?? "Cell restore incomplete."); FailHydration(originalDoors); yield break; }
+            }
             watch.Restart();
             try
             {
@@ -229,7 +244,9 @@ namespace LastSignal.Persistence
         }
         SaveResult ValidateTopology(SaveGame state)
         {
-            if(state.header.schemaVersion == 2 && !GetComponent<LastSignal.WorldTime.WorldClock>()) return Invalid("This scene cannot restore world-time schema 2.");
+            var cells = GetComponent<LastSignal.WorldCells.WorldCellManager>();
+            if ((cells && (state.header.schemaVersion != 3 || !cells.ValidateTopology(state.cells))) || (!cells && state.header.schemaVersion == 3)) return Invalid("Incompatible cell topology/schema.");
+            if(state.header.schemaVersion >= 2 && !GetComponent<LastSignal.WorldTime.WorldClock>()) return Invalid("This scene cannot restore world-time schema 2.");
             if(state.player.id!="player.local" || state.inventory.id!="player.inventory" || state.shelter.storage.id!="shelter.storage") return Invalid("Unexpected canonical owner identity.");
             var expected=new HashSet<string>(StringComparer.Ordinal);
             foreach(var door in SceneComponents<DoorInteractable>()) expected.Add(door.GetComponent<PersistentEntityId>().Id);
@@ -283,7 +300,7 @@ namespace LastSignal.Persistence
         {
             var found=new List<T>();
             foreach(var root in gameObject.scene.GetRootGameObjects())
-                if(root.activeInHierarchy) found.AddRange(root.GetComponentsInChildren<T>(false));
+                if(root.activeInHierarchy && !root.GetComponent<LastSignal.WorldCells.WorldCellContent>()) found.AddRange(root.GetComponentsInChildren<T>(false));
             return found;
         }
         static WorldItemSnapshot ItemState(WorldItem item) => new WorldItemSnapshot {id=item.PersistentId,definitionId=item.Definition.Id.Value,

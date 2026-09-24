@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-24 10:56:43Z" end-time="2026-09-24 10:56:45Z" duration="2.1537818">
+  <test-suite type="TestSuite" id="1144" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="116" result="Passed" start-time="2026-09-24 10:56:43Z" end-time="2026-09-24 10:56:45Z" duration="2.153782" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1137" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="116" result="Passed" start-time="2026-09-24 10:56:43Z" end-time="2026-09-24 10:56:45Z" duration="2.148600" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="78357" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1138" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="116" result="Passed" start-time="2026-09-24 10:56:43Z" end-time="2026-09-24 10:56:45Z" duration="2.147730" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1139" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="116" result="Passed" start-time="2026-09-24 10:56:43Z" end-time="2026-09-24 10:56:45Z" duration="2.146967" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1066" name="WorldCellIntegrationTests" fullname="LastSignal.Tests.WorldCellIntegrationTests" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-24 10:56:43Z" end-time="2026-09-24 10:56:45Z" duration="2.145191" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1069" name="CancelLoadAndSessionRestartCannotPublishOldContent" fullname="LastSignal.Tests.WorldCellIntegrationTests.CancelLoadAndSessionRestartCannotPublishOldContent" methodname="CancelLoadAndSessionRestartCannotPublishOldContent" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" seed="1825666828" result="Passed" start-time="2026-09-24 10:56:43Z" end-time="2026-09-24 10:56:44Z" duration="0.927921" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1067" name="FullTwoCellRouteAndTwelveCycleSoak" fullname="LastSignal.Tests.WorldCellIntegrationTests.FullTwoCellRouteAndTwelveCycleSoak" methodname="FullTwoCellRouteAndTwelveCycleSoak" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" seed="1168860462" result="Passed" start-time="2026-09-24 10:56:44Z" end-time="2026-09-24 10:56:45Z" duration="0.439949" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+S006 loot seed=12345 resolved=1 generated=1
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1068" name="LoadingGateAndRestoreStagesRejectEntryAndSave" fullname="LastSignal.Tests.WorldCellIntegrationTests.LoadingGateAndRestoreStagesRejectEntryAndSave" methodname="LoadingGateAndRestoreStagesRejectEntryAndSave" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" seed="1691644592" result="Passed" start-time="2026-09-24 10:56:45Z" end-time="2026-09-24 10:56:45Z" duration="0.420694" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+]]></output>
+            </test-case>
+            <test-case id="1070" name="MissingCollisionFailsClosed" fullname="LastSignal.Tests.WorldCellIntegrationTests.MissingCollisionFailsClosed" methodname="MissingCollisionFailsClosed" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" seed="2000046954" result="Passed" start-time="2026-09-24 10:56:45Z" end-time="2026-09-24 10:56:45Z" duration="0.347325" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot 'cell-1-loot': Missing flat support at authored height (2 cm tolerance).
+S006 loot seed=12345 resolved=1 generated=0
+Cell load failed safely: Cell collision/navigation prerequisites failed.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

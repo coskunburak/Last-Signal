@@ -27,6 +27,7 @@ namespace LastSignal.Loot
         internal bool TryGetConsumed(string id, out bool consumed) => consumedLoot.TryGetValue(id,out consumed);
         void RecordQuantity(string id,int quantity) { consumedLoot[id] = quantity <= 0; }
         GameObject runtimeRoot;
+        Transform contentScope;
         bool populated;
         public int Seed { get; private set; }
         public bool Populated => populated;
@@ -37,16 +38,17 @@ namespace LastSignal.Loot
         static readonly ProfilerMarker SpawnMarker = new ProfilerMarker("LastSignal.Loot.Instantiate");
         const int WorldMask = ~((1 << 2) | (1 << 8));
 
-        public void Begin(GameObject player, int? seed = null)
+        public void Begin(GameObject player, int? seed = null, Transform scope = null)
         {
             if (populated) return;
+            contentScope = scope;
             using (PopulateMarker.Auto())
             {
                 populated = true;
                 Seed = seed ?? (overrideSeed ? explicitSeed : BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0));
                 results.Clear(); preexisting.Clear(); consumedLoot.Clear(); GeneratedCount = 0; SpawnMilliseconds = 0;
                 var points = new List<LootSpawnPoint>();
-                foreach (var root in gameObject.scene.GetRootGameObjects())
+                foreach (var root in OwnedRoots())
                 {
                     points.AddRange(root.GetComponentsInChildren<LootSpawnPoint>(false));
                     foreach (var item in root.GetComponentsInChildren<WorldItem>(true)) preexisting.Add(item);
@@ -56,6 +58,7 @@ namespace LastSignal.Loot
                 foreach (var p in points) { string id=p.StableId ?? ""; counts.TryGetValue(id,out int n); counts[id]=n+1; }
                 runtimeRoot = new GameObject("Session Loot");
                 SceneManager.MoveGameObjectToScene(runtimeRoot, gameObject.scene);
+                if (contentScope) runtimeRoot.transform.SetParent(contentScope, true);
                 Physics.SyncTransforms();
                 foreach (var point in points)
                 {
@@ -125,17 +128,19 @@ namespace LastSignal.Loot
             if (!populated) return;
             // One teardown scan owns newly created world items (including S005 drops), excluding authored entry objects.
             if (gameObject.scene.IsValid() && gameObject.scene.isLoaded)
-                foreach (var root in gameObject.scene.GetRootGameObjects())
+                foreach (var root in OwnedRoots())
                     foreach (var item in root.GetComponentsInChildren<WorldItem>(true))
                         if (item && !preexisting.Contains(item)) { item.gameObject.SetActive(false); Destroy(item.gameObject); }
             if (runtimeRoot) { runtimeRoot.SetActive(false); Destroy(runtimeRoot); }
             runtimeRoot=null; preexisting.Clear(); results.Clear(); consumedLoot.Clear(); GeneratedCount=0; populated=false;
         }
-        internal void Restore(LastSignal.Persistence.SaveGame save, LastSignal.Inventory.Data.ItemCatalog catalog)
+        internal void Restore(LastSignal.Persistence.SaveGame save, LastSignal.Inventory.Data.ItemCatalog catalog, Transform scope = null)
         {
             if (populated) throw new InvalidOperationException("Restore must precede loot population.");
+            contentScope = scope;
             runtimeRoot = new GameObject("Session Loot"); runtimeRoot.SetActive(false);
             SceneManager.MoveGameObjectToScene(runtimeRoot, gameObject.scene);
+                if (contentScope) runtimeRoot.transform.SetParent(contentScope, true);
             Seed = save.header.seed; results.Clear(); preexisting.Clear(); consumedLoot.Clear(); GeneratedCount = 0;
             var byId = new Dictionary<string, LastSignal.Persistence.WorldItemSnapshot>(StringComparer.Ordinal);
             foreach (var item in save.world.items)
@@ -169,6 +174,12 @@ namespace LastSignal.Loot
                 if(item.origin==LastSignal.Persistence.WorldItemOrigin.Loot) worldItem.BindPersistence(RecordQuantity);
             }
             runtimeRoot.SetActive(true);
+        }
+        IEnumerable<GameObject> OwnedRoots()
+        {
+            if (contentScope) { yield return contentScope.gameObject; yield break; }
+            foreach (var root in gameObject.scene.GetRootGameObjects())
+                if (!root.GetComponent<LastSignal.WorldCells.WorldCellContent>()) yield return root;
         }
         void OnDestroy() => End();
     }

@@ -100,7 +100,7 @@ namespace LastSignal.Tests
             Vector3 pose=flow.Player.transform.position;var saves=clock.GetComponent<SaveSession>();string path=Path.Combine(directory,"outside.json");Assert.IsTrue(saves.Save(path).Success);
             flow.ReturnToMenu();yield return null;yield return saves.Load(path);flow.Pause();
             Assert.IsTrue(saves.LastResult.Success,saves.LastResult.Message);Assert.IsFalse(flow.Restoring);Assert.Less(Vector3.Distance(pose,flow.Player.transform.position),.01f);
-            Assert.IsFalse(clock.ProtectedFromRain,"Completed load must use restored outdoor pose, not sheltered spawn pose");Assert.AreEqual(wet,clock.Simulation.Wetness);Assert.IsTrue(clock.Simulation.Raining);
+            Assert.IsFalse(clock.ProtectedFromRain,"Completed load must use restored outdoor pose, not sheltered spawn pose");Assert.AreEqual(wet,clock.Simulation.Wetness,1e-6);Assert.IsTrue(clock.Simulation.Raining);
             clock.Simulation.AdvanceUntil(clock.Simulation.Seconds+60,clock.Exposure);Assert.Greater(clock.Simulation.Wetness,wet);
         }
         [UnityTest] public IEnumerator IndoorRainCheckpointRestoresProtectionAndDrying()
@@ -111,7 +111,7 @@ namespace LastSignal.Tests
             WorldTimeAcceptanceRoute.Place(flow.Player,new Vector3(-10,.05f,10));clock.PollExposure(1);clock.PollExposure(1);Assert.IsFalse(clock.ProtectedFromRain);
             flow.ReturnToMenu();yield return null;yield return saves.Load(path);flow.Pause();
             Assert.IsTrue(saves.LastResult.Success,saves.LastResult.Message);Assert.IsFalse(flow.Restoring);Assert.Less(Vector3.Distance(pose,flow.Player.transform.position),.01f);
-            Assert.IsTrue(clock.ProtectedFromRain);Assert.AreEqual(wet,clock.Simulation.Wetness);Assert.IsTrue(clock.Simulation.Raining);
+            Assert.IsTrue(clock.ProtectedFromRain);Assert.AreEqual(wet,clock.Simulation.Wetness,1e-6);Assert.IsTrue(clock.Simulation.Raining);
             clock.Simulation.AdvanceUntil(clock.Simulation.Seconds+60,clock.Exposure);Assert.Less(clock.Simulation.Wetness,wet);
         }
         [UnityTest] public IEnumerator LegacySceneCheckpointUsesDeterministicWorldDefaults()

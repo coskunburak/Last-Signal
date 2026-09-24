@@ -32,8 +32,8 @@ namespace LastSignal.Persistence
         {
             if (save == null || save.header == null) return Invalid("Missing header.");
             var h = save.header;
-            if (h.schemaVersion != 1 && h.schemaVersion != SchemaVersion) return Fail(SaveError.UnsupportedSchema, "Unsupported save schema.");
-            if (h.schemaVersion == 2 && (save.worldTime == null || !save.worldTime.Valid)) return Invalid("Invalid or missing world-time state.");
+            if (h.schemaVersion != 1 && h.schemaVersion != SchemaVersion && h.schemaVersion != 3) return Fail(SaveError.UnsupportedSchema, "Unsupported save schema.");
+            if (h.schemaVersion >= 2 && (save.worldTime == null || !save.worldTime.Valid)) return Invalid("Invalid or missing world-time state.");
             if (h.schemaVersion == 1 && save.worldTime != null) return Invalid("Schema 1 cannot contain world-time state.");
             if (h.worldId != worldId) return Fail(SaveError.WrongWorld, "Save belongs to another world.");
             if (h.contentVersion != contentVersion) return Fail(SaveError.IncompatibleContent, "Content version requires an explicit migration.");
@@ -41,6 +41,7 @@ namespace LastSignal.Persistence
                 DateTimeStyles.None, out var timestamp) || timestamp.Offset != TimeSpan.Zero) return Invalid("Invalid generation/build/timestamp.");
             if (save.player == null || save.inventory == null || save.weapon == null || save.shelter == null || save.world == null)
                 return Invalid("Missing required section.");
+            if (h.schemaVersion < 3 && save.cells != null) return Invalid("Legacy schema cannot contain cells.");
             var ids = new HashSet<string>(StringComparer.Ordinal);
             var p = save.player;
             if (!AddId(ids, p.id)) return Identity();
@@ -91,6 +92,34 @@ namespace LastSignal.Persistence
                 if (enemy == null || !AddId(ids, enemy.id)) return Identity();
                 if (!Pose(enemy.transform) || !Finite(enemy.health) || enemy.health < 0 || enemy.health > maximumEnemyHealth)
                     return Invalid("Invalid enemy state.");
+            }
+            if (h.schemaVersion == 3)
+            {
+                if (save.cells == null || save.cells.cells == null || save.cells.cells.Length < 1 || save.cells.cells.Length > 16) return Invalid("Missing/excessive cells.");
+                var cellIds = new HashSet<string>(StringComparer.Ordinal);
+                bool destination = save.cells.playerCell == "resident";
+                int count = w.items.Length + w.doors.Length + w.enemies.Length + w.opportunities.Length;
+                foreach (var cell in save.cells.cells)
+                {
+                    if (cell == null || !Id(cell.id) || !cellIds.Add(cell.id) || !LastSignal.WorldTime.WorldTimeSettings.ValidTime(cell.lastProcessed) || cell.lastProcessed > save.worldTime.seconds) return Invalid("Invalid cell identity/time.");
+                    if (!cell.visited) continue;
+                    var nested = new SaveGame { header = new SaveHeader { schemaVersion=2, worldId=h.worldId,contentVersion=h.contentVersion,generation=h.generation,buildId=h.buildId,timestampUtc=h.timestampUtc },
+                        worldTime=save.worldTime,player=save.player,inventory=save.inventory,weapon=save.weapon,shelter=save.shelter,world=cell.world };
+                    var valid = Validate(nested); if (!valid.Success) return valid;
+                    foreach (var item in cell.world.items)
+                    {
+                        if (!ids.Add(item.id)) return Identity();
+                        if (LastSignal.WorldCells.CellCoordinate.FromWorld(new UnityEngine.Vector3(item.transform.x,item.transform.y,item.transform.z)).Id != cell.id) return Invalid("Item has wrong canonical cell owner.");
+                    }
+                    foreach (var door in cell.world.doors) if (!ids.Add(door.id)) return Identity();
+                    foreach (var enemy in cell.world.enemies) if (!ids.Add(enemy.id)) return Identity();
+                    foreach (var point in cell.world.opportunities) if (!ids.Add(point.id)) return Identity();
+                    count += cell.world.items.Length + cell.world.doors.Length + cell.world.enemies.Length + cell.world.opportunities.Length;
+                    if (count > MaxEntities) return Invalid("Excessive cell entities.");
+                    if (cell.id == save.cells.playerCell) destination = true;
+                }
+                if (!destination) return Invalid("Player destination is not a visited cell.");
+                if (save.cells.playerCell != "resident" && LastSignal.WorldCells.CellCoordinate.FromWorld(new UnityEngine.Vector3(p.transform.x,p.transform.y,p.transform.z)).Id != save.cells.playerCell) return Invalid("Player cell ownership mismatch.");
             }
             return SaveResult.Ok;
         }

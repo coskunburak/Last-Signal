@@ -74,6 +74,8 @@ namespace LastSignal
             if (shelter) shelter.Begin(this);
             var worldClock = GetComponent<WorldTime.WorldClock>();
             if (worldClock) worldClock.Begin();
+            var cells = GetComponent<WorldCells.WorldCellManager>();
+            if (cells) cells.Begin(restoring);
             SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }
@@ -105,6 +107,8 @@ namespace LastSignal
         public void ReturnToMenu()
         {
             Generation++; Restoring = false;
+            var cells = GetComponent<WorldCells.WorldCellManager>();
+            if (cells) cells.End();
             var worldClock = GetComponent<WorldTime.WorldClock>();
             if (worldClock) worldClock.End();
             if (shelter) shelter.End();

@@ -84,6 +84,7 @@ namespace LastSignal.WorldTime
             else pendingElapsed += elapsed;
             if (pendingElapsed >= exposureDebounce) protectedFromRain = pendingProtection;
         }
+        public void RefreshExposure() { protectedFromRain = pendingProtection = QueryRoof(); pendingElapsed = pollElapsed = 0; }
         public bool QueryRoof()
         {
             if (!Flow.Player) return false;

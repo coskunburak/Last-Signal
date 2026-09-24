@@ -51,6 +51,8 @@ namespace LastSignal.Inventory
                 var worldItem = go.GetComponent<WorldItem>();
                 if (!worldItem) worldItem = go.AddComponent<WorldItem>();
                 worldItem.Configure(def, amount);
+                var cells = FindAnyObjectByType<LastSignal.WorldCells.WorldCellManager>();
+                if (cells) cells.AdoptDrop(worldItem);
                 if (Container.BeginWorldRemove(slotIndex, amount))
                 {
                     Container.CompleteWorldMutation();

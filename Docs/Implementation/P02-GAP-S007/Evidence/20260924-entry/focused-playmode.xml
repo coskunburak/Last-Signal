@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-24 10:07:27Z" end-time="2026-09-24 10:07:29Z" duration="1.7166903">
+  <test-suite type="TestSuite" id="1144" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="116" result="Failed" site="Child" start-time="2026-09-24 10:07:27Z" end-time="2026-09-24 10:07:29Z" duration="1.716690" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1137" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="116" result="Failed" site="Child" start-time="2026-09-24 10:07:27Z" end-time="2026-09-24 10:07:29Z" duration="1.710870" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="56650" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1138" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="116" result="Failed" site="Child" start-time="2026-09-24 10:07:27Z" end-time="2026-09-24 10:07:29Z" duration="1.709739" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1139" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="116" result="Failed" site="Child" start-time="2026-09-24 10:07:27Z" end-time="2026-09-24 10:07:29Z" duration="1.708872" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1066" name="WorldCellIntegrationTests" fullname="LastSignal.Tests.WorldCellIntegrationTests" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-09-24 10:07:27Z" end-time="2026-09-24 10:07:29Z" duration="1.704616" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1069" name="CancelLoadAndSessionRestartCannotPublishOldContent" fullname="LastSignal.Tests.WorldCellIntegrationTests.CancelLoadAndSessionRestartCannotPublishOldContent" methodname="CancelLoadAndSessionRestartCannotPublishOldContent" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" seed="154114197" result="Passed" start-time="2026-09-24 10:07:27Z" end-time="2026-09-24 10:07:28Z" duration="0.881797" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1067" name="FullTwoCellRouteAndTwelveCycleSoak" fullname="LastSignal.Tests.WorldCellIntegrationTests.FullTwoCellRouteAndTwelveCycleSoak" methodname="FullTwoCellRouteAndTwelveCycleSoak" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" seed="281666770" result="Failed" start-time="2026-09-24 10:07:28Z" end-time="2026-09-24 10:07:28Z" duration="0.279391" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Error] Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[LastSignal.ZombieNavigation:Initialize (LastSignal.ZombieDefinition) (at Assets/LastSignal/Scripts/Runtime/AI/ZombieNavigation.cs:37)
+LastSignal.ZombieController:Initialize () (at Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs:68)
+LastSignal.ZombieEncounter:Begin (UnityEngine.GameObject) (at Assets/LastSignal/Scripts/Runtime/Session/ZombieEncounter.cs:17)
+LastSignal.WorldCells.WorldCellContent:Hydrate (LastSignal.WorldCells.CellSnapshot,LastSignal.Inventory.Data.ItemCatalog,UnityEngine.GameObject,int) (at Assets/LastSignal/Scripts/Runtime/WorldCells/WorldCellContent.cs:55)
+LastSignal.WorldCells.WorldCellManager/<Load>d__30:MoveNext () (at Assets/LastSignal/Scripts/Runtime/WorldCells/WorldCellManager.cs:83)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=0
+Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.
+Cell load failed safely: Cell enemy initialization failed.
+]]></output>
+            </test-case>
+            <test-case id="1068" name="LoadingGateAndRestoreStagesRejectEntryAndSave" fullname="LastSignal.Tests.WorldCellIntegrationTests.LoadingGateAndRestoreStagesRejectEntryAndSave" methodname="LoadingGateAndRestoreStagesRejectEntryAndSave" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" seed="2146243587" result="Failed" start-time="2026-09-24 10:07:28Z" end-time="2026-09-24 10:07:28Z" duration="0.269718" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Error] Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[LastSignal.ZombieNavigation:Initialize (LastSignal.ZombieDefinition) (at Assets/LastSignal/Scripts/Runtime/AI/ZombieNavigation.cs:37)
+LastSignal.ZombieController:Initialize () (at Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs:68)
+LastSignal.ZombieEncounter:Begin (UnityEngine.GameObject) (at Assets/LastSignal/Scripts/Runtime/Session/ZombieEncounter.cs:17)
+LastSignal.WorldCells.WorldCellContent:Hydrate (LastSignal.WorldCells.CellSnapshot,LastSignal.Inventory.Data.ItemCatalog,UnityEngine.GameObject,int) (at Assets/LastSignal/Scripts/Runtime/WorldCells/WorldCellContent.cs:55)
+LastSignal.WorldCells.WorldCellManager/<Load>d__30:MoveNext () (at Assets/LastSignal/Scripts/Runtime/WorldCells/WorldCellManager.cs:83)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=0
+Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.
+Cell load failed safely: Cell enemy initialization failed.
+]]></output>
+            </test-case>
+            <test-case id="1070" name="MissingCollisionFailsClosed" fullname="LastSignal.Tests.WorldCellIntegrationTests.MissingCollisionFailsClosed" methodname="MissingCollisionFailsClosed" classname="LastSignal.Tests.WorldCellIntegrationTests" runstate="Runnable" seed="135174874" result="Failed" start-time="2026-09-24 10:07:28Z" end-time="2026-09-24 10:07:29Z" duration="0.266625" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Error] Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[LastSignal.ZombieNavigation:Initialize (LastSignal.ZombieDefinition) (at Assets/LastSignal/Scripts/Runtime/AI/ZombieNavigation.cs:37)
+LastSignal.ZombieController:Initialize () (at Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs:68)
+LastSignal.ZombieEncounter:Begin (UnityEngine.GameObject) (at Assets/LastSignal/Scripts/Runtime/Session/ZombieEncounter.cs:17)
+LastSignal.WorldCells.WorldCellContent:Hydrate (LastSignal.WorldCells.CellSnapshot,LastSignal.Inventory.Data.ItemCatalog,UnityEngine.GameObject,int) (at Assets/LastSignal/Scripts/Runtime/WorldCells/WorldCellContent.cs:55)
+LastSignal.WorldCells.WorldCellManager/<Load>d__30:MoveNext () (at Assets/LastSignal/Scripts/Runtime/WorldCells/WorldCellManager.cs:83)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=0
+Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.
+Cell load failed safely: Cell enemy initialization failed.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

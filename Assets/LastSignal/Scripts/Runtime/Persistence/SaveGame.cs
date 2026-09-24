@@ -7,6 +7,7 @@ namespace LastSignal.Persistence
     [Serializable] public sealed class SaveGame
     {
         public LastSignal.WorldTime.WorldTimeSnapshot worldTime;
+        public LastSignal.WorldCells.CellWorldSnapshot cells;
         public SaveHeader header;
         public PlayerSnapshot player;
         public ContainerSnapshot inventory;
