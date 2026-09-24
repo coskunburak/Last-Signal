@@ -1,4 +1,4 @@
-# P02-GAP acceptance — closure in progress
+# P02-GAP acceptance — FINAL STATUS: PASS
 
 Execution label: P02-GAP / Canonical S008 Completion. Historical implementation S008 remains the shelter loop. No human playtest is claimed.
 
