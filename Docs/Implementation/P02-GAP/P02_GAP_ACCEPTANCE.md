@@ -2,19 +2,17 @@
 
 Execution label: P02-GAP / Canonical S008 Completion. Historical implementation S008 remains the shelter loop. No human playtest is claimed.
 
-Evidence root: `Evidence/20260922-entry/`.
+Evidence root: `Evidence/20260924-final-closure/`.
 
 | Gate | Actual result so far |
 |---|---|
-| Entry EditMode | 204/204, zero failed/skipped/inconclusive |
-| Entry shelter/persistence PlayMode | 15/15, zero failed/skipped/inconclusive |
-| Focused domain | 23/23 after documented legacy-JSON correction |
-| Focused scene integration | 10/10 after documented fixture corrections |
-| Full EditMode | 227/227, zero failed/skipped/inconclusive |
-| Full PlayMode | Running; not yet PASS |
-| Fresh macOS Development build | NOT_RUN |
-| Standalone | NOT_RUN |
-| Player.log and visual review | NOT_RUN |
+| Focused domain (EditMode) | 27/27, zero failed/skipped/inconclusive |
+| Focused scene integration (PlayMode) | 13/13, zero failed/skipped/inconclusive |
+| Full EditMode | 247/247, zero failed/skipped/inconclusive |
+| Full PlayMode | 116/116, zero failed/skipped/inconclusive |
+| Fresh macOS Development build | PASS |
+| Standalone | PASS |
+| Player.log and visual review | PASS |
 
 ## Comparison tolerances
 

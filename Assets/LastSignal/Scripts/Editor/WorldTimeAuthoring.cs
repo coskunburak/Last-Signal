@@ -12,7 +12,7 @@ namespace LastSignal.Editor
     public static class WorldTimeAuthoring
     {
         public const string ScenePath="Assets/LastSignal/Scenes/WorldTimeAcceptance.unity";
-        public const string Evidence="Docs/Implementation/P02-GAP/Evidence/20260922-entry";
+        public const string Evidence="Docs/Implementation/P02-GAP/Evidence/20260924-final-closure";
         public static void Create()
         {
             if(EditorApplication.isPlaying)throw new InvalidOperationException("Stop PlayMode first.");
