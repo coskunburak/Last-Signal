@@ -163,6 +163,7 @@ namespace LastSignal.WorldTime
         {
             if (Sleeping) throw new InvalidOperationException("Cannot hydrate during sleep.");
             var restored = new WorldSimulation(snapshot); restored.Register(this); Simulation = restored;
+            GetComponent<LastSignal.AI.WorldPopulationManager>()?.BindClock();
             protectedFromRain = pendingProtection = QueryRoof(); pendingElapsed = pollElapsed = 0;
             if (presentation) presentation.Refresh();
         }

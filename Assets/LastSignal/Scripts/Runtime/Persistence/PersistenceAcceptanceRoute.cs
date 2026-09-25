@@ -55,7 +55,7 @@ namespace LastSignal.Persistence
             Check(door.IsOpen&&!door.Busy,"Door opened normally");
             // Ensure orientation reflects authoritative look, not the fixture's temporary aiming rotation.
             player.GetComponent<FirstPersonLook>().ApplyRecoil(0,0); flow.Pause();
-            Check(saves.Capture(out var before).Success,"Capture real game state");
+            Check(saves.Capture(out var before).Success,"Capture real game state: " + saves.LastResult.Error);
             var total=Totals(before); Check(saves.Save(path).Success,"Save actual route");
             var savedPosition=player.transform.position;
             for(int cycle=0;cycle<3;cycle++)

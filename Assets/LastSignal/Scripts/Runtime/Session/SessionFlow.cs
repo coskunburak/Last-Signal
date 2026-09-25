@@ -23,14 +23,6 @@ namespace LastSignal
         public bool PlayerDead => health && !health.IsAlive;
         public void Configure(GameObject prefab, Transform spawn, DoorInteractable[] sceneDoors)
         { playerPrefab = prefab; spawnPoint = spawn; doors = sceneDoors; }
-        void Awake()
-        {
-            if (!GetComponent<LastSignal.AI.WorldPopulationManager>())
-            {
-                var pop = gameObject.AddComponent<LastSignal.AI.WorldPopulationManager>();
-                pop.GetType().GetField("zombiePrefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(pop, UnityEngine.Resources.Load<LastSignal.ZombieController>("LS_Zombie_Runtime"));
-            }
-        }
         void Start() => BeginSession();
         public void BeginSession() => BeginSession(false);
         internal void BeginRestoreSession() => BeginSession(true);
@@ -84,6 +76,9 @@ namespace LastSignal
             if (worldClock) worldClock.Begin();
             var cells = GetComponent<WorldCells.WorldCellManager>();
             if (cells) cells.Begin(restoring);
+            var population = GetComponent<LastSignal.AI.WorldPopulationManager>();
+            if (population) population.BeginSession();
+            Player.GetComponent<PlayerCombatController>()?.BindPopulation(population, Generation);
             SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }

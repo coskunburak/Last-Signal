@@ -117,8 +117,15 @@ namespace LastSignal.Persistence
         public int logical;
         public int dead;
     }
+    [Serializable] public sealed class PopulationActorSnapshot
+    {
+        public string id, cellId;
+        public float health;
+    }
     [Serializable] public sealed class PopulationSnapshot
     {
+        public long lastNoiseSequence;
+        public PopulationActorSnapshot[] actors;
         public CellPressureSnapshot[] pressures;
         public PopulationLedgerSnapshot[] ledgers;
         public MigrationGroupSnapshot[] migrations;

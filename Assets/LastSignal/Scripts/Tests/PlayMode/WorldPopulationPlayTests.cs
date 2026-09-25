@@ -1,101 +1,84 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.IO;
-using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
-using UnityEngine.SceneManagement;
+using System.Text;
 using LastSignal.AI;
 using LastSignal.Persistence;
 using LastSignal.WorldTime;
 using LastSignal.WorldCells;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
+using UnityEngine.SceneManagement;
 
 namespace LastSignal.Tests
 {
     public class WorldPopulationPlayTests
     {
-        SessionFlow flow;
-        WorldPopulationManager pop;
-        WorldCellManager cells;
-        SaveSession save;
-        WorldClock clock;
-        
-        [UnitySetUp]
-        public IEnumerator SetUp()
+        SessionFlow flow; WorldPopulationManager pop; WorldCellManager cells; WorldClock clock;
+        string directory;
+        const string Evidence = "Docs/Implementation/P02-GAP-S009/Evidence/20260925-independent/";
+        [UnitySetUp] public IEnumerator Setup()
         {
-#if UNITY_EDITOR
-            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldTimeAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
-#else
-            yield return SceneManager.LoadSceneAsync("WorldTimeAcceptance", LoadSceneMode.Single);
-#endif
-            flow = UnityEngine.Object.FindAnyObjectByType<SessionFlow>();
-            pop = UnityEngine.Object.FindAnyObjectByType<WorldPopulationManager>();
-            cells = UnityEngine.Object.FindAnyObjectByType<WorldCellManager>();
-            save = UnityEngine.Object.FindAnyObjectByType<SaveSession>();
-            clock = UnityEngine.Object.FindAnyObjectByType<WorldClock>();
-            
-            yield return new WaitForSeconds(1f); // let cells load
-        }
-        
-        [UnityTest]
-        public IEnumerator Noise_IncreasesPressure_And_Migrates()
-        {
-            if (!pop) Assert.Ignore("WorldPopulationManager not in scene.");
-            
-            string currentCell = cells.CurrentCell;
-            var initialPressure = pop.GetPressure(currentCell).Pressure;
-            
-            pop.ReportNoise(System.Guid.NewGuid().ToString(), currentCell, 5f);
-            
-            yield return new WaitForSeconds(0.5f);
-            
-            var afterPressure = pop.GetPressure(currentCell).Pressure;
-            Assert.That(afterPressure, Is.GreaterThan(initialPressure));
-        }
-
-        [UnityTest]
-        public IEnumerator SaveLoad_DoesNotDuplicateNoise()
-        {
-            if (!pop || !save) Assert.Ignore("Missing dependencies.");
-            
-            string currentCell = cells.CurrentCell;
-            pop.ReportNoise("receipt-save-test", currentCell, 1f);
-            float p1 = pop.GetPressure(currentCell).Pressure;
-            
-            string path = Path.Combine(Application.persistentDataPath, "test_save.json");
-            save.Save(path);
+            directory = Path.Combine(Path.GetTempPath(), "LastSignal-S009-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(directory);
+            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
-            
-            flow.ReturnToMenu();
-            yield return null;
-            // Since we can't easily access SaveSession's Restore (it takes SaveGame?), we will just capture and restore PopulationSnapshot directly for unit test.
-            
-            var snap = pop.GetSaveSnapshot();
-            pop.ClearSession();
-            pop.SyncFromSave(snap);
-            
-            var pop2 = pop;
-            pop2.ReportNoise("receipt-save-test", currentCell, 1f);
-            
-            float p2 = pop2.GetPressure(currentCell).Pressure;
-            Assert.That(p2, Is.EqualTo(p1));
+            flow = UnityEngine.Object.FindAnyObjectByType<SessionFlow>(); Assert.IsNotNull(flow);
+            pop = flow.GetComponent<WorldPopulationManager>(); cells = flow.GetComponent<WorldCellManager>(); clock = flow.GetComponent<WorldClock>();
+            Assert.IsNotNull(pop); flow.Resume();
         }
-        
-        [UnityTest]
-        public IEnumerator SleepAdvancesTravelAndDecaysPressure()
+        [UnityTearDown] public IEnumerator Cleanup()
+        { if (flow) flow.ReturnToMenu(); Time.timeScale = 1; yield return null; if (Directory.Exists(directory)) Directory.Delete(directory, true); }
+        [UnityTest] public IEnumerator ProductionRifleTravelDeathSaveLoadRoute()
         {
-            if (!pop || !clock || clock.Simulation == null) Assert.Ignore("Missing dependencies.");
-            string currentCell = cells.CurrentCell;
-            pop.ReportNoise("receipt-sleep", currentCell, 1f);
-            float initialPressure = pop.GetPressure(currentCell).Pressure;
-            
-            // Advance time
-            double target = clock.Simulation.Seconds + 60 * 60 * 8;
-            clock.Simulation.AdvanceUntil(target, clock.Exposure, clock.ProtectedFromRain ? 1f : 0f, null);
+            var report = new StringBuilder();
+            try { yield return WorldPopulationAcceptanceRoute.Run(clock, Path.Combine(directory, "route.json"), s => report.AppendLine(s)); }
+            finally { File.WriteAllText(Evidence + "playmode-route.txt", report.ToString()); }
+        }
+        [UnityTest] public IEnumerator ReceiptCompactionBoundsIsolationAndReplayAcrossSnapshot()
+        {
+            pop.MaterializationEnabled = false;
+            for (int i = 1; i <= 100; i++) pop.ReportNoise("noise:" + i, "cell:1:0", 100);
+            Assert.AreEqual(1, pop.GetPressure("cell:1:0").Pressure); Assert.AreEqual(0, pop.GetPressure("cell:2:0").Pressure);
+            Assert.AreEqual(10, pop.GetPressure("cell:1:0").Receipts.Count); Assert.AreEqual(30, pop.TotalAccounted);
+            var snap = pop.GetSaveSnapshot(); pop.SyncFromSave(snap);
+            clock.Simulation.AdvanceUntil(clock.Simulation.Seconds + 1000, clock.Exposure);
+            pop.ReportNoise("noise:1", "cell:1:0", 100); Assert.AreEqual(0, pop.GetPressure("cell:1:0").Pressure);
+            pop.ReportNoise("noise:101", "cell:999:0", 1); Assert.AreEqual(100, pop.LastNoiseSequence);
+            pop.ReportNoise("noise:101", "cell:1:0", -10); Assert.AreEqual(100, pop.LastNoiseSequence);
             yield return null;
-            
-            float afterPressure = pop.GetPressure(currentCell).Pressure;
-            Assert.That(afterPressure, Is.LessThan(initialPressure));
+        }
+        [UnityTest] public IEnumerator MalformedRestoreDoesNotMutateLiveAuthority()
+        {
+            var snap = pop.GetSaveSnapshot(); snap.ledgers[0].logical = -1;
+            Assert.Throws<InvalidOperationException>(() => pop.SyncFromSave(snap)); Assert.AreEqual(30, pop.TotalAccounted);
+            yield return null;
+        }
+        [UnityTest] public IEnumerator StaleShotAndCellContinuationCannotMutateRestart()
+        {
+            long old = flow.Generation; cells.Request("cell:1:0"); yield return null;
+            flow.ReturnToMenu(); flow.BeginSession(); pop.ReportShot(old);
+            yield return null; yield return null;
+            Assert.AreEqual(0, pop.LastNoiseSequence); Assert.AreEqual(0, pop.PhysicalCount); Assert.AreEqual(30, pop.TotalAccounted);
+            Assert.AreEqual(CellState.Unloaded, cells.State("cell:1:0"));
+        }
+        [UnityTest] public IEnumerator NoActorBeforeReadyAndExplicitLogicalOnlyPolicy()
+        {
+            Assert.IsFalse(pop.TryMaterialize());
+            yield return WorldCellAcceptanceRoute.Ready(cells, "cell:1:0"); Assert.IsTrue(cells.TryEnter("cell:1:0"));
+            pop.MaterializationEnabled = false; Assert.IsFalse(pop.TryMaterialize()); Assert.AreEqual(0, pop.PhysicalCount);
+        }
+        [UnityTest] public IEnumerator WorldTimeProcessesArrivalAtBoundaryWithoutFrame()
+        {
+            pop.MaterializationEnabled = false;
+            pop.ReportNoise("noise:1", "cell:1:0", 5); var trip = pop.Migrations[0];
+            Assert.AreEqual(12, pop.GetLedger("cell:2:0").Logical); Assert.AreEqual(15, pop.GetLedger("cell:1:0").Logical);
+            clock.Simulation.AdvanceUntil(trip.ArrivalTime - .01, clock.Exposure); Assert.AreEqual(1, pop.MigrationCount);
+            clock.Simulation.AdvanceUntil(trip.ArrivalTime, clock.Exposure); Assert.AreEqual(0, pop.MigrationCount);
+            Assert.AreEqual(18, pop.GetLedger("cell:1:0").Logical); Assert.AreEqual(30, pop.TotalAccounted);
+            yield return null;
         }
     }
 }
+#endif

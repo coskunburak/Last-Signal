@@ -48,7 +48,7 @@ namespace LastSignal.Editor
                 PrefabUtility.SaveAsPrefabAsset(root, ZombieRuntimeAuthoring.PrefabPath);
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
-            const string weapon = "Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab";
+            const string weapon = "Assets/Resources/Weapon_AssaultRifle.prefab";
             var gun = PrefabUtility.LoadPrefabContents(weapon);
             try
             {

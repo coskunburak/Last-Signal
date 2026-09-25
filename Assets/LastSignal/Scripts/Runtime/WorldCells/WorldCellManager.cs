@@ -27,6 +27,10 @@ namespace LastSignal.WorldCells
         WorldClock clock;
         bool active;
         public event Action<string> CellReady;
+        public event Action<string> CellLeaving;
+        public event Action<string> CellEntered;
+        public IEnumerable<string> DefinedCellIds => cells.Keys;
+        public bool ContainsCell(string id) => id != null && cells.ContainsKey(id);
         public string CurrentCell { get; private set; } = "resident";
         public string Failure { get; private set; }
         public int ReadyListenerCount => CellReady?.GetInvocationList().Length ?? 0;
@@ -116,6 +120,7 @@ namespace LastSignal.WorldCells
             try
             {
                 OwnershipTransaction.Enter();
+                CellLeaving?.Invoke(id);
                 var snapshot = Capture(cell);
                 cell.Life.Move(cell.Token, CellState.Unloading);
                 cell.Delta = snapshot;
@@ -172,6 +177,7 @@ namespace LastSignal.WorldCells
             if (!Place(destination)) return false;
             var old = CurrentCell; CurrentCell = id;
             if (old != "resident" && old != id) Unload(old);
+            CellEntered?.Invoke(CurrentCell);
             clock.RefreshExposure(); return true;
         }
         public bool ReturnToResident(Vector3 position)
@@ -179,6 +185,7 @@ namespace LastSignal.WorldCells
             if (!active || flow.Restoring || flow.Paused || flow.PlayerDead || clock.Sleeping || !Place(position)) return false;
             var old = CurrentCell; CurrentCell = "resident";
             if (old != "resident") Unload(old);
+            CellEntered?.Invoke(CurrentCell);
             clock.RefreshExposure(); return true;
         }
         bool Place(Vector3 position)

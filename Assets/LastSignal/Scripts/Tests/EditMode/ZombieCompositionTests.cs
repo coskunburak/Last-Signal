@@ -9,7 +9,7 @@ namespace LastSignal.Tests
     {
         [Test] public void RuntimeWrapperHasOneAuthorityAndNoMissingComponents()
         {
-            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab");
+            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
             Assert.That(prefab,Is.Not.Null);
             Assert.That(prefab.GetComponentsInChildren<ZombieController>().Length,Is.EqualTo(1));
             Assert.That(prefab.GetComponent<ZombiePerception>(),Is.Not.Null);

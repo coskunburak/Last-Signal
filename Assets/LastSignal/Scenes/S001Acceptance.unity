@@ -4265,9 +4265,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1889125476}
   - component: {fileID: 1889125475}
-  - component: {fileID: 1889125479}
-  - component: {fileID: 1889125478}
-  - component: {fileID: 1889125477}
   m_Layer: 0
   m_Name: Session
   m_TagString: Untagged
@@ -4308,69 +4305,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1889125477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1889125474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e6fc3d26d32f43e0b247ac8462d3510, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.AI.WorldPopulationManager
-  DecayRatePerSecond: 0.001
-  MaxPressure: 1
-  NoiseIntensityMultiplier: 0.2
-  TravelSecondsPerCell: 120
-  MaxReceipts: 10
-  zombiePrefab: {fileID: 5794958581719810030, guid: 7e78ee50c1a054c279d584ebee556b1d, type: 3}
---- !u!114 &1889125478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1889125474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eb1656a7d75548c9b3ea6abf702745e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.WorldCells.WorldCellManager
-  definitions: []
-  catalog: {fileID: 0}
---- !u!114 &1889125479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1889125474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 301c515cbad644ff58069fb4398d0b5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.WorldTime.WorldClock
-  settings:
-    worldSecondsPerRealSecond: 60
-    startingSeconds: 28800
-    weatherSeed: 7183
-    rainIntensity: 1
-    minimumWeatherSeconds: 2700
-    maximumWeatherSeconds: 7200
-    transitionSeconds: 120
-    wetnessPerSecond: 0.0005555555555555556
-    dryingPerSecond: 0.0002777777777777778
-    restHealthPerHour: 8
-    maximumSleepSeconds: 28800
-  presentation: {fileID: 0}
-  threatRadius: 20
-  threatLayers:
-    serializedVersion: 2
-    m_Bits: 256
-  exposureDebounce: 0.25
-  rainProtection: 0
 --- !u!1 &2024454232
 GameObject:
   m_ObjectHideFlags: 0

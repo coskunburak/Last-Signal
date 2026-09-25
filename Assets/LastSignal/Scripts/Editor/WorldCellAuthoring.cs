@@ -67,7 +67,7 @@ namespace LastSignal.Editor
             var door=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Door.prefab"),root.transform);
             door.transform.position=center+new Vector3(2,0,1);Identity(door,"cell-"+x+"-door");
             var encounter=new GameObject("Cell encounter");encounter.transform.SetParent(root.transform);encounter.transform.position=center+new Vector3(4,0,4);
-            content.encounter=encounter.AddComponent<ZombieEncounter>();content.encounter.Configure(AssetDatabase.LoadAssetAtPath<ZombieController>("Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab"),encounter.transform);Identity(encounter,"cell-"+x+"-enemy");
+            content.encounter=encounter.AddComponent<ZombieEncounter>();content.encounter.Configure(AssetDatabase.LoadAssetAtPath<ZombieController>("Assets/Resources/LS_Zombie_Runtime.prefab"),encounter.transform);Identity(encounter,"cell-"+x+"-enemy");
             var gate=Box("Next cell terminal",center+new Vector3(-4,1,-6),new Vector3(1,2,.3f),root.transform);
             gate.AddComponent<CellPortal>().destination=x==1?"cell:2:0":"cell:1:0";
             var home=Box("Shelter terminal",center+new Vector3(-6,1,-4),new Vector3(.3f,2,1),root.transform);

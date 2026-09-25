@@ -6,11 +6,7 @@ public static class BuildUtility
 {
     public static void BuildP5Mac()
     {
-        var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
-        if (scenes.Length == 0)
-        {
-            scenes = new string[] { "Assets/LastSignal/Scenes/CombatAcceptance.unity" };
-        }
+        var scenes = new string[] { "Assets/LastSignal/Scenes/WorldTimeAcceptance.unity" };
         
         BuildPlayerOptions options = new BuildPlayerOptions
         {

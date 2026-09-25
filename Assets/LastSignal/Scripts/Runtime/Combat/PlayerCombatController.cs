@@ -75,14 +75,13 @@ namespace LastSignal
             WeaponChanged?.Invoke();
         }
 
+        LastSignal.AI.WorldPopulationManager population;
+        long populationGeneration;
+        public void BindPopulation(LastSignal.AI.WorldPopulationManager manager, long generation)
+        { population = manager; populationGeneration = generation; }
         void OnWeaponShotFired(WeaponFireResolver.ShotResult obj)
         {
-            var pop = Object.FindAnyObjectByType<LastSignal.AI.WorldPopulationManager>();
-            if (pop)
-            {
-                string cellId = LastSignal.WorldCells.CellCoordinate.FromWorld(transform.position).Id;
-                pop.ReportNoise(System.Guid.NewGuid().ToString(), cellId, 1.0f);
-            }
+            if (population) population.ReportShot(populationGeneration);
         }
 
         public void UnequipWeapon()

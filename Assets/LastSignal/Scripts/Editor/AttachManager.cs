@@ -24,7 +24,7 @@ public class AttachManager
                     }
                     var pop = go.GetComponent<LastSignal.AI.WorldPopulationManager>();
                     // assign prefab? We need to find zombie prefab
-                    var zombiePrefab = AssetDatabase.LoadAssetAtPath<LastSignal.ZombieController>("Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab");
+                    var zombiePrefab = AssetDatabase.LoadAssetAtPath<LastSignal.ZombieController>("Assets/Resources/LS_Zombie_Runtime.prefab");
                     if (zombiePrefab != null)
                     {
                         var so = new SerializedObject(pop);

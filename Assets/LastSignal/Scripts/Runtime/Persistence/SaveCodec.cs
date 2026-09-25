@@ -37,6 +37,9 @@ namespace LastSignal.Persistence
                 // Unity JsonUtility materializes null serializable objects. Schema 1 has no time section.
                 if (candidate != null && candidate.header != null && candidate.header.schemaVersion == 1) candidate.worldTime = null;
                 if (candidate != null && candidate.header != null && candidate.header.schemaVersion < 3) candidate.cells = null;
+                if (candidate?.header != null && candidate.header.schemaVersion < 4 && candidate.population != null &&
+                    candidate.population.pressures == null && candidate.population.ledgers == null && candidate.population.migrations == null)
+                    candidate.population = null;
                 var result = validation.Validate(candidate); if (!result.Success) return result;
                 state = candidate;
                 return SaveResult.Ok;
