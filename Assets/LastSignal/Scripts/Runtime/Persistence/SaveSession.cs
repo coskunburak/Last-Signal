@@ -145,6 +145,10 @@ namespace LastSignal.Persistence
                 try { snapshot.cells = cells.Capture(); }
                 catch (InvalidOperationException e) { snapshot = null; return new SaveResult(SaveError.Busy,e.Message); }
             }
+            
+            var pop = GetComponent<LastSignal.AI.WorldPopulationManager>();
+            if (pop) snapshot.population = pop.GetSaveSnapshot();
+            
             result = Codec().Encode(snapshot,out _); CaptureMilliseconds=watch.Elapsed.TotalMilliseconds;
             if (!result.Success) snapshot=null;
             return result;
@@ -276,6 +280,8 @@ namespace LastSignal.Persistence
             foreach(var door in SceneComponents<DoorInteractable>()) doors.Add(door.GetComponent<PersistentEntityId>().Id,door);
             foreach(var door in state.world.doors) doors[door.id].RestoreOpen(door.open);
             GetComponent<LootPopulationService>().Restore(state,catalog);
+            var pop = GetComponent<LastSignal.AI.WorldPopulationManager>();
+            if (pop) pop.SyncFromSave(state.population);
             var capsule=player.GetComponent<CharacterController>(); capsule.enabled=false;
             ApplyPose(player.transform,state.player.transform); capsule.enabled=true;
             if(!player.GetComponent<PlayerStance>().TrySetCrouching(state.player.crouching)) throw new InvalidOperationException("Saved stance is obstructed.");

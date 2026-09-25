@@ -23,6 +23,14 @@ namespace LastSignal
         public bool PlayerDead => health && !health.IsAlive;
         public void Configure(GameObject prefab, Transform spawn, DoorInteractable[] sceneDoors)
         { playerPrefab = prefab; spawnPoint = spawn; doors = sceneDoors; }
+        void Awake()
+        {
+            if (!GetComponent<LastSignal.AI.WorldPopulationManager>())
+            {
+                var pop = gameObject.AddComponent<LastSignal.AI.WorldPopulationManager>();
+                pop.GetType().GetField("zombiePrefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(pop, UnityEngine.Resources.Load<LastSignal.ZombieController>("LS_Zombie_Runtime"));
+            }
+        }
         void Start() => BeginSession();
         public void BeginSession() => BeginSession(false);
         internal void BeginRestoreSession() => BeginSession(true);
@@ -111,6 +119,8 @@ namespace LastSignal
             if (cells) cells.End();
             var worldClock = GetComponent<WorldTime.WorldClock>();
             if (worldClock) worldClock.End();
+            var pop = GetComponent<LastSignal.AI.WorldPopulationManager>();
+            if (pop) pop.ClearSession();
             if (shelter) shelter.End();
             if (loot) loot.End();
             if (health) health.Died -= OnPlayerDied;

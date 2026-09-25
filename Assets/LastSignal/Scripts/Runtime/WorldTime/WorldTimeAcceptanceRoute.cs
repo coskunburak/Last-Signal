@@ -31,7 +31,7 @@ namespace LastSignal.WorldTime
             Check(!encounter.Actor.GetComponent<ZombieHealth>().IsAlive,"Existing threat cleared before rest");
             Place(flow.Player,new Vector3(-14.8f,.05f,10));yield return null;
             var hp=flow.Player.GetComponent<PlayerHealth>();hp.TakeDamage(new DamageInfo{Amount=20});
-            Check(saves.Save(path).Success,"Save before sleep");double before=clock.Simulation.Seconds;
+            Check(saves.Save(path).Success,"Save before sleep failed: " + saves.LastResult.Error);double before=clock.Simulation.Seconds;
             Check(clock.RequestSleep(bed,10800).Accepted,"Bed sleep accepted: "+clock.LastRejection);
             int guard=0;while(clock.Sleeping&&guard++<200)yield return null;Check(!clock.Sleeping,"Sleep completes bounded frames");
             Check(clock.LastSleep.Reason==AdvanceReason.Completed&&Math.Abs(clock.LastSleep.ElapsedSeconds-10800)<.001,"Sleep elapsed exactly 3h");

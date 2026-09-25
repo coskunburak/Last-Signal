@@ -70,13 +70,25 @@ namespace LastSignal
             var recoil = activeWeapon.GetComponent<WeaponRecoilController>();
             if (recoil) recoil.Configure(activeWeapon, look);
             activeWeapon.Initialize(cam ? cam.transform : transform, gameObject);
+            activeWeapon.ShotFired += OnWeaponShotFired;
             activeWeapon.RequestEquip();
             WeaponChanged?.Invoke();
+        }
+
+        void OnWeaponShotFired(WeaponFireResolver.ShotResult obj)
+        {
+            var pop = Object.FindAnyObjectByType<LastSignal.AI.WorldPopulationManager>();
+            if (pop)
+            {
+                string cellId = LastSignal.WorldCells.CellCoordinate.FromWorld(transform.position).Id;
+                pop.ReportNoise(System.Guid.NewGuid().ToString(), cellId, 1.0f);
+            }
         }
 
         public void UnequipWeapon()
         {
             if (!activeWeapon) return;
+            activeWeapon.ShotFired -= OnWeaponShotFired;
             activeWeapon.RequestUnequip();
             activeWeapon.gameObject.SetActive(false);
             Destroy(activeWeapon.gameObject);

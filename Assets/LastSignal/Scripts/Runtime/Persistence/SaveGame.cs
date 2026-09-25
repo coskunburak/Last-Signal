@@ -14,6 +14,7 @@ namespace LastSignal.Persistence
         public WeaponSnapshot weapon;
         public ShelterSnapshot shelter;
         public WorldSnapshot world;
+        public PopulationSnapshot population;
     }
     [Serializable] public sealed class SaveHeader
     {
@@ -89,6 +90,38 @@ namespace LastSignal.Persistence
         public LootOpportunitySnapshot[] opportunities;
         public WorldItemSnapshot[] items;
         public EnemySnapshot[] enemies;
+    }
+    [Serializable] public sealed class NoiseReceiptSnapshot
+    {
+        public string id;
+    }
+    [Serializable] public sealed class CellPressureSnapshot
+    {
+        public string cellId;
+        public float pressure;
+        public double lastUpdateTime;
+        public NoiseReceiptSnapshot[] receipts;
+    }
+    [Serializable] public sealed class MigrationGroupSnapshot
+    {
+        public string groupId;
+        public string sourceCellId;
+        public string targetCellId;
+        public double departureTime;
+        public double arrivalTime;
+        public int size;
+    }
+    [Serializable] public sealed class PopulationLedgerSnapshot
+    {
+        public string cellId;
+        public int logical;
+        public int dead;
+    }
+    [Serializable] public sealed class PopulationSnapshot
+    {
+        public CellPressureSnapshot[] pressures;
+        public PopulationLedgerSnapshot[] ledgers;
+        public MigrationGroupSnapshot[] migrations;
     }
     public enum SaveError
     {
