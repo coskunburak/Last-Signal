@@ -96,7 +96,7 @@ namespace LastSignal.Tests
         }
         [Test]public void OffscreenInitializationEvaluatesIdleBeforeFirstVisibleFrame()
         {
-            probe=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab"));
+            probe=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab"));
             var animator=probe.GetComponentInChildren<Animator>();animator.cullingMode=AnimatorCullingMode.CullCompletely;
             Assert.That(probe.GetComponent<ZombieAnimationPresenter>().Initialize(AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Enemies/Zombie/Shambler.asset")),Is.True);
             var hand=animator.GetBoneTransform(HumanBodyBones.RightHand);var initial=hand.position;

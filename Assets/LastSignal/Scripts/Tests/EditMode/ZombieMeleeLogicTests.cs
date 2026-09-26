@@ -18,7 +18,7 @@ namespace LastSignal.Tests
             Assert.That(definition.AttackContactTime, Is.EqualTo(1f / 3 / .8f).Within(.001f));
             var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab");
             Assert.That(player.GetComponents<PlayerHealth>().Length, Is.EqualTo(1));
-            var zombie = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab");
+            var zombie = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
             Assert.That(zombie.transform.Find("MeleeOrigin"), Is.Not.Null);
             foreach (var c in player.GetComponentsInChildren<Component>(true)) Assert.That(c, Is.Not.Null);
         }

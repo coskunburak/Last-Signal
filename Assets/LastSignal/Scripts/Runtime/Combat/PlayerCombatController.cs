@@ -70,13 +70,24 @@ namespace LastSignal
             var recoil = activeWeapon.GetComponent<WeaponRecoilController>();
             if (recoil) recoil.Configure(activeWeapon, look);
             activeWeapon.Initialize(cam ? cam.transform : transform, gameObject);
+            activeWeapon.ShotFired += OnWeaponShotFired;
             activeWeapon.RequestEquip();
             WeaponChanged?.Invoke();
+        }
+
+        LastSignal.AI.WorldPopulationManager population;
+        long populationGeneration;
+        public void BindPopulation(LastSignal.AI.WorldPopulationManager manager, long generation)
+        { population = manager; populationGeneration = generation; }
+        void OnWeaponShotFired(WeaponFireResolver.ShotResult obj)
+        {
+            if (population) population.ReportShot(populationGeneration);
         }
 
         public void UnequipWeapon()
         {
             if (!activeWeapon) return;
+            activeWeapon.ShotFired -= OnWeaponShotFired;
             activeWeapon.RequestUnequip();
             activeWeapon.gameObject.SetActive(false);
             Destroy(activeWeapon.gameObject);

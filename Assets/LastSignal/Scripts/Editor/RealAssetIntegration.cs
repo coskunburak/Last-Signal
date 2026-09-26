@@ -12,7 +12,7 @@ namespace LastSignal.Editor
     {
         public const string Val = "Assets/LastSignal/VAL.fbx";
         public const string Rifle = "Assets/LastSignal/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx";
-        public const string Prefab = "Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab";
+        public const string Prefab = "Assets/Resources/Weapon_AssaultRifle.prefab";
         public const string Evidence = "Docs/Implementation/Combat/Evidence/20260917-RealAssets";
         const string Controller = "Assets/LastSignal/Animations/VAL_MRPoly.controller";
 

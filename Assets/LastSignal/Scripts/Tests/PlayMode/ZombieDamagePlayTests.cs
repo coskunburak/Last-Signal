@@ -198,7 +198,7 @@ namespace LastSignal.Tests
             var box=(BoxCollider)r.HitCollider; duplicate.center=box.center; duplicate.size=box.size*.9f;
             // One actual collider remains nearest. The extra collider must not cause a second dispatch.
             Resolve(DamageRegion.Body); Assert.That(health.DamageTransactions,Is.EqualTo(1)); Object.DestroyImmediate(duplicate);
-            var other=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab"),new Vector3(-6,0,0),Quaternion.identity); owned.Add(other);
+            var other=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab"),new Vector3(-6,0,0),Quaternion.identity); owned.Add(other);
             var otherHealth=other.GetComponent<ZombieHealth>(); Resolve(DamageRegion.Head,1000);
             Assert.That(otherHealth.CurrentHealth,Is.EqualTo(otherHealth.MaxHealth)); Assert.That(otherHealth.DamageTransactions,Is.Zero);
         }
@@ -271,7 +271,7 @@ namespace LastSignal.Tests
         [UnityTest] public IEnumerator ProfileLiveAndMixedPopulationAndWarmedDamage()
         {
             yield return Load(); Place(new Vector3(-8,0,12));
-            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab");
+            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
             var report=new StringBuilder("Editor smoke. Mean marker totals; overlapping nested CPU markers. Direct GC covers synchronous owned paths only.\n");
             foreach(int liveCount in new[]{1,10})
             {

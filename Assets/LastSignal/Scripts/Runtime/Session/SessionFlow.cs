@@ -76,6 +76,9 @@ namespace LastSignal
             if (worldClock) worldClock.Begin();
             var cells = GetComponent<WorldCells.WorldCellManager>();
             if (cells) cells.Begin(restoring);
+            var population = GetComponent<LastSignal.AI.WorldPopulationManager>();
+            if (population) population.BeginSession();
+            Player.GetComponent<PlayerCombatController>()?.BindPopulation(population, Generation);
             SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }
@@ -111,6 +114,8 @@ namespace LastSignal
             if (cells) cells.End();
             var worldClock = GetComponent<WorldTime.WorldClock>();
             if (worldClock) worldClock.End();
+            var pop = GetComponent<LastSignal.AI.WorldPopulationManager>();
+            if (pop) pop.ClearSession();
             if (shelter) shelter.End();
             if (loot) loot.End();
             if (health) health.Died -= OnPlayerDied;

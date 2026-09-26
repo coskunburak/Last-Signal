@@ -32,7 +32,7 @@ namespace LastSignal.Persistence
         {
             if (save == null || save.header == null) return Invalid("Missing header.");
             var h = save.header;
-            if (h.schemaVersion != 1 && h.schemaVersion != SchemaVersion && h.schemaVersion != 3) return Fail(SaveError.UnsupportedSchema, "Unsupported save schema.");
+            if (h.schemaVersion != 1 && h.schemaVersion != SchemaVersion && h.schemaVersion != 3 && h.schemaVersion != 4) return Fail(SaveError.UnsupportedSchema, "Unsupported save schema.");
             if (h.schemaVersion >= 2 && (save.worldTime == null || !save.worldTime.Valid)) return Invalid("Invalid or missing world-time state.");
             if (h.schemaVersion == 1 && save.worldTime != null) return Invalid("Schema 1 cannot contain world-time state.");
             if (h.worldId != worldId) return Fail(SaveError.WrongWorld, "Save belongs to another world.");
@@ -42,6 +42,7 @@ namespace LastSignal.Persistence
             if (save.player == null || save.inventory == null || save.weapon == null || save.shelter == null || save.world == null)
                 return Invalid("Missing required section.");
             if (h.schemaVersion < 3 && save.cells != null) return Invalid("Legacy schema cannot contain cells.");
+            if (h.schemaVersion < 4 && save.population != null) return Invalid("Unversioned population data is unsupported; use a pre-S009 checkpoint.");
             var ids = new HashSet<string>(StringComparer.Ordinal);
             var p = save.player;
             if (!AddId(ids, p.id)) return Identity();
@@ -93,7 +94,7 @@ namespace LastSignal.Persistence
                 if (!Pose(enemy.transform) || !Finite(enemy.health) || enemy.health < 0 || enemy.health > maximumEnemyHealth)
                     return Invalid("Invalid enemy state.");
             }
-            if (h.schemaVersion == 3)
+            if (h.schemaVersion >= 3)
             {
                 if (save.cells == null || save.cells.cells == null || save.cells.cells.Length < 1 || save.cells.cells.Length > 16) return Invalid("Missing/excessive cells.");
                 var cellIds = new HashSet<string>(StringComparer.Ordinal);
@@ -118,10 +119,49 @@ namespace LastSignal.Persistence
                     if (count > MaxEntities) return Invalid("Excessive cell entities.");
                     if (cell.id == save.cells.playerCell) destination = true;
                 }
+                if (h.schemaVersion == 4 && !ValidPopulation(save.population, cellIds, save.worldTime.seconds)) return Invalid("Invalid population state.");
                 if (!destination) return Invalid("Player destination is not a visited cell.");
                 if (save.cells.playerCell != "resident" && LastSignal.WorldCells.CellCoordinate.FromWorld(new UnityEngine.Vector3(p.transform.x,p.transform.y,p.transform.z)).Id != save.cells.playerCell) return Invalid("Player cell ownership mismatch.");
             }
             return SaveResult.Ok;
+        }
+        public static bool ValidPopulation(PopulationSnapshot pop, HashSet<string> cells, double now)
+        {
+            if (pop == null || pop.pressures == null || pop.ledgers == null || pop.migrations == null || pop.actors == null ||
+                pop.lastNoiseSequence < 0 || pop.pressures.Length != cells.Count || pop.ledgers.Length != cells.Count ||
+                pop.migrations.Length > MaxEntities || pop.actors.Length > MaxEntities) return false;
+            var ids = new HashSet<string>(StringComparer.Ordinal);
+            var receipts = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var p in pop.pressures)
+            {
+                if (p == null || !cells.Contains(p.cellId ?? "") || !ids.Add(p.cellId) || !Finite(p.pressure) || p.pressure < 0 || p.pressure > 1 ||
+                    !LastSignal.WorldTime.WorldTimeSettings.ValidTime(p.lastUpdateTime) || p.lastUpdateTime > now || p.receipts == null || p.receipts.Length > 64) return false;
+                foreach (var r in p.receipts)
+                    if (r == null || !Id(r.id) || !r.id.StartsWith("noise:", StringComparison.Ordinal) ||
+                        !long.TryParse(r.id.Substring(6), out var sequence) || sequence < 1 || sequence > pop.lastNoiseSequence || !receipts.Add(r.id)) return false;
+            }
+            ids.Clear(); long total = 0;
+            var available = new Dictionary<string, int>(StringComparer.Ordinal);
+            foreach (var l in pop.ledgers)
+            {
+                if (l == null || !cells.Contains(l.cellId ?? "") || !ids.Add(l.cellId) || l.logical < 0 || l.dead < 0) return false;
+                total += (long)l.logical + l.dead; available.Add(l.cellId, l.logical);
+            }
+            ids.Clear();
+            foreach (var m in pop.migrations)
+            {
+                if (m == null || !AddId(ids, m.groupId) || !cells.Contains(m.sourceCellId ?? "") || !cells.Contains(m.targetCellId ?? "") ||
+                    m.sourceCellId == m.targetCellId || m.size <= 0 || !LastSignal.WorldTime.WorldTimeSettings.ValidTime(m.departureTime) ||
+                    !LastSignal.WorldTime.WorldTimeSettings.ValidTime(m.arrivalTime) || m.departureTime > now || m.arrivalTime <= m.departureTime) return false;
+                total += m.size;
+            }
+            if (total > MaxEntities) return false;
+            foreach (var a in pop.actors)
+            {
+                if (a == null || !AddId(ids, a.id) || !available.TryGetValue(a.cellId ?? "", out int count) || count <= 0 || !Finite(a.health) || a.health <= 0 || a.health > 100) return false;
+                available[a.cellId] = count - 1;
+            }
+            return true;
         }
         SaveResult Container(ContainerSnapshot c, HashSet<string> ids)
         {

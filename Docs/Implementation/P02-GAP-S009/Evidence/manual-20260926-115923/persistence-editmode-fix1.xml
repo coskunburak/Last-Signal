@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="67" result="Passed" total="67" passed="67" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.2692221">
+  <test-suite type="TestSuite" id="1000" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="264" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.269222" total="67" passed="67" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1310" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="264" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.260495" total="67" passed="67" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="18595" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1311" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="264" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.254454" total="67" passed="67" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1312" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="264" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.249148" total="67" passed="67" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1077" name="SaveFoundationTests" fullname="LastSignal.Tests.SaveFoundationTests" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" testcasecount="40" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.198387" total="40" passed="40" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1110" name="ChecksumRejectsWellFormedPayloadCorruption" fullname="LastSignal.Tests.SaveFoundationTests.ChecksumRejectsWellFormedPayloadCorruption" methodname="ChecksumRejectsWellFormedPayloadCorruption" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1091896487" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.013781" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1109" name="CorruptedCurrentDoesNotOverwriteCurrentOrGoodBackup" fullname="LastSignal.Tests.SaveFoundationTests.CorruptedCurrentDoesNotOverwriteCurrentOrGoodBackup" methodname="CorruptedCurrentDoesNotOverwriteCurrentOrGoodBackup" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1633143679" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.005749" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1078" name="DiskRoundtripPreservesSchemaSlotsDoorLootRemainderDropPlayerAndExistingOwners" fullname="LastSignal.Tests.SaveFoundationTests.DiskRoundtripPreservesSchemaSlotsDoorLootRemainderDropPlayerAndExistingOwners" methodname="DiskRoundtripPreservesSchemaSlotsDoorLootRemainderDropPlayerAndExistingOwners" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="36284113" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003524" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1118" name="FailedCandidatePreservesCurrentAndBackupByteForByte" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.063317" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1114" name="FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;beforeWrite&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;beforeWrite&quot;)" methodname="FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1270496875" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.011093" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1115" name="FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;partialWrite&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;partialWrite&quot;)" methodname="FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="912322545" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.009778" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1116" name="FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;corruptCandidate&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;corruptCandidate&quot;)" methodname="FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1570595633" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.009547" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1117" name="FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;beforePublish&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;beforePublish&quot;)" methodname="FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="403010416" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.030608" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1100" name="InvalidCandidatesNeverReplacePreviousSave" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.075982" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1081" name="InvalidCandidatesNeverReplacePreviousSave(&quot;missingSection&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;missingSection&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1575014795" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.004382" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1082" name="InvalidCandidatesNeverReplacePreviousSave(&quot;unknownItem&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;unknownItem&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1124950110" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.004257" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1083" name="InvalidCandidatesNeverReplacePreviousSave(&quot;schema&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;schema&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1838147163" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003912" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1084" name="InvalidCandidatesNeverReplacePreviousSave(&quot;world&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;world&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1244541364" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003665" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1085" name="InvalidCandidatesNeverReplacePreviousSave(&quot;content&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;content&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="802984597" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003735" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1086" name="InvalidCandidatesNeverReplacePreviousSave(&quot;duplicate&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;duplicate&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1636735823" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003847" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1087" name="InvalidCandidatesNeverReplacePreviousSave(&quot;orphan&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;orphan&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="161994719" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003651" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1088" name="InvalidCandidatesNeverReplacePreviousSave(&quot;unknownOutcome&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;unknownOutcome&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="391388641" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003653" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1089" name="InvalidCandidatesNeverReplacePreviousSave(&quot;tombstoneQuantity&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;tombstoneQuantity&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="359382177" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003854" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1090" name="InvalidCandidatesNeverReplacePreviousSave(&quot;invalidPose&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;invalidPose&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="54852217" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003812" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1091" name="InvalidCandidatesNeverReplacePreviousSave(&quot;negativeStack&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;negativeStack&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1813281480" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003724" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1092" name="InvalidCandidatesNeverReplacePreviousSave(&quot;capacity&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;capacity&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1388189820" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003826" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1093" name="InvalidCandidatesNeverReplacePreviousSave(&quot;invalidHealth&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;invalidHealth&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="701675146" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003876" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1094" name="InvalidCandidatesNeverReplacePreviousSave(&quot;invalidMagazine&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;invalidMagazine&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="804939001" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003793" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1095" name="InvalidCandidatesNeverReplacePreviousSave(&quot;missingSlots&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;missingSlots&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1202267365" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003866" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1096" name="InvalidCandidatesNeverReplacePreviousSave(&quot;unknownOrigin&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;unknownOrigin&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="587314947" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003792" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1097" name="InvalidCandidatesNeverReplacePreviousSave(&quot;generatedMissingTombstone&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;generatedMissingTombstone&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="811904601" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003768" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1098" name="InvalidCandidatesNeverReplacePreviousSave(&quot;sharedLootEntity&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;sharedLootEntity&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="749901264" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003790" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1099" name="InvalidCandidatesNeverReplacePreviousSave(&quot;timestamp&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;timestamp&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1655188305" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003709" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1112" name="InvalidUtf8FailsGracefully" fullname="LastSignal.Tests.SaveFoundationTests.InvalidUtf8FailsGracefully" methodname="InvalidUtf8FailsGracefully" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="791303787" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.001209" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1106" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.003653" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1101" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1713489030" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000634" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1102" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;{&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;{&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="74804149" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000540" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1103" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;null&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;null&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1113950023" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000494" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1104" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;[]&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;[]&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="847248646" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000524" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1105" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;{}&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;{}&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1380925925" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000459" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1107" name="MissingSaveNeverCreatesAnEmptyCheckpoint" fullname="LastSignal.Tests.SaveFoundationTests.MissingSaveNeverCreatesAnEmptyCheckpoint" methodname="MissingSaveNeverCreatesAnEmptyCheckpoint" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="368503518" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000126" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1113" name="NonIncreasingGenerationAndStaleSessionCannotPublish" fullname="LastSignal.Tests.SaveFoundationTests.NonIncreasingGenerationAndStaleSessionCannotPublish" methodname="NonIncreasingGenerationAndStaleSessionCannotPublish" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1209222393" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.002200" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1111" name="OversizeFileRejectedBeforeParsing" fullname="LastSignal.Tests.SaveFoundationTests.OversizeFileRejectedBeforeParsing" methodname="OversizeFileRejectedBeforeParsing" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1976982273" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000838" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1080" name="RepeatedReadReturnsDetachedSameSemanticDataAndNeverAppends" fullname="LastSignal.Tests.SaveFoundationTests.RepeatedReadReturnsDetachedSameSemanticDataAndNeverAppends" methodname="RepeatedReadReturnsDetachedSameSemanticDataAndNeverAppends" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="135467680" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.009471" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1119" name="SessionChangedAfterWriteDiscardsCandidateAndRejectsReentry" fullname="LastSignal.Tests.SaveFoundationTests.SessionChangedAfterWriteDiscardsCandidateAndRejectsReentry" methodname="SessionChangedAfterWriteDiscardsCandidateAndRejectsReentry" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1979387684" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.002395" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1120" name="SmallWorldCodecAndPhysicalIoMeasurement" fullname="LastSignal.Tests.SaveFoundationTests.SmallWorldCodecAndPhysicalIoMeasurement" methodname="SmallWorldCodecAndPhysicalIoMeasurement" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="24407142" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.001767" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[FIXTURE_ONLY items=3 slots=6 bytes=5791 encodeMs=0.1283 validatedWriteMs=0.7784 validatedReadMs=0.1630 combinedAllocatedBytes=0. Capture/hydrate NOT_RUN; no release-scale claim.
+]]></output>
+            </test-case>
+            <test-case id="1108" name="SuccessfulReplacementKeepsExactlyPreviousGenerationAsExplicitBackup" fullname="LastSignal.Tests.SaveFoundationTests.SuccessfulReplacementKeepsExactlyPreviousGenerationAsExplicitBackup" methodname="SuccessfulReplacementKeepsExactlyPreviousGenerationAsExplicitBackup" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1210693104" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.004222" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1079" name="WorldStackMayExceedContainerMaxStackWithoutLoss" fullname="LastSignal.Tests.SaveFoundationTests.WorldStackMayExceedContainerMaxStackWithoutLoss" methodname="WorldStackMayExceedContainerMaxStackWithoutLoss" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="462767599" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.001276" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1211" name="WorldTimeTests" fullname="LastSignal.Tests.WorldTimeTests" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" testcasecount="27" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.013825" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1230" name="AdvancementRejectsReentryAndDuplicateRegistration" fullname="LastSignal.Tests.WorldTimeTests.AdvancementRejectsReentryAndDuplicateRegistration" methodname="AdvancementRejectsReentryAndDuplicateRegistration" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1016560923" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.002675" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1222" name="DedicatedWeatherSeedSurvivesRestoreAndGlobalRandomChanges" fullname="LastSignal.Tests.WorldTimeTests.DedicatedWeatherSeedSurvivesRestoreAndGlobalRandomChanges" methodname="DedicatedWeatherSeedSurvivesRestoreAndGlobalRandomChanges" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1385193437" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000739" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1232" name="ElapsedSnapshotLoadAndRepeatedActivationNeverDoubleTick" fullname="LastSignal.Tests.WorldTimeTests.ElapsedSnapshotLoadAndRepeatedActivationNeverDoubleTick" methodname="ElapsedSnapshotLoadAndRepeatedActivationNeverDoubleTick" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1595315714" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000281" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1240" name="FatalNinetyMinuteBoundaryDoesNotAdvanceEightHours" fullname="LastSignal.Tests.WorldTimeTests.FatalNinetyMinuteBoundaryDoesNotAdvanceEightHours" methodname="FatalNinetyMinuteBoundaryDoesNotAdvanceEightHours" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="326612360" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000108" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1215" name="FrameRateIndependentClockWeatherWetnessAndRecovery" fullname="LastSignal.Tests.WorldTimeTests.FrameRateIndependentClockWeatherWetnessAndRecovery" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.001511" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1212" name="FrameRateIndependentClockWeatherWetnessAndRecovery(30)" fullname="LastSignal.Tests.WorldTimeTests.FrameRateIndependentClockWeatherWetnessAndRecovery(30)" methodname="FrameRateIndependentClockWeatherWetnessAndRecovery" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="490503734" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000415" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1213" name="FrameRateIndependentClockWeatherWetnessAndRecovery(60)" fullname="LastSignal.Tests.WorldTimeTests.FrameRateIndependentClockWeatherWetnessAndRecovery(60)" methodname="FrameRateIndependentClockWeatherWetnessAndRecovery" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="105884366" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000170" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1214" name="FrameRateIndependentClockWeatherWetnessAndRecovery(120)" fullname="LastSignal.Tests.WorldTimeTests.FrameRateIndependentClockWeatherWetnessAndRecovery(120)" methodname="FrameRateIndependentClockWeatherWetnessAndRecovery" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="393905212" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000295" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1229" name="FuelFixtureDepletesThenOtherSystemsContinueWithoutPoweredTime" fullname="LastSignal.Tests.WorldTimeTests.FuelFixtureDepletesThenOtherSystemsContinueWithoutPoweredTime" methodname="FuelFixtureDepletesThenOtherSystemsContinueWithoutPoweredTime" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="306779919" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000076" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1234" name="InvalidAuthoringRejected" fullname="LastSignal.Tests.WorldTimeTests.InvalidAuthoringRejected" methodname="InvalidAuthoringRejected" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1130088011" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000236" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1220" name="InvalidDeltaIsRejectedWithoutMutation" fullname="LastSignal.Tests.WorldTimeTests.InvalidDeltaIsRejectedWithoutMutation" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000917" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1217" name="InvalidDeltaIsRejectedWithoutMutation(-1)" fullname="LastSignal.Tests.WorldTimeTests.InvalidDeltaIsRejectedWithoutMutation(-1)" methodname="InvalidDeltaIsRejectedWithoutMutation" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="193049763" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000256" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1218" name="InvalidDeltaIsRejectedWithoutMutation(double.NaN)" fullname="LastSignal.Tests.WorldTimeTests.InvalidDeltaIsRejectedWithoutMutation(double.NaN)" methodname="InvalidDeltaIsRejectedWithoutMutation" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1972556380" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000035" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1219" name="InvalidDeltaIsRejectedWithoutMutation(double.PositiveInfinity)" fullname="LastSignal.Tests.WorldTimeTests.InvalidDeltaIsRejectedWithoutMutation(double.PositiveInfinity)" methodname="InvalidDeltaIsRejectedWithoutMutation" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="45855900" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000032" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1241" name="LegacyDefaultsAreDeterministicAndV1FixtureIsPreserved" fullname="LastSignal.Tests.WorldTimeTests.LegacyDefaultsAreDeterministicAndV1FixtureIsPreserved" methodname="LegacyDefaultsAreDeterministicAndV1FixtureIsPreserved" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1721876393" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000521" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1221" name="MidnightMultipleDaysAndLargeTimestampPreserveMinutes" fullname="LastSignal.Tests.WorldTimeTests.MidnightMultipleDaysAndLargeTimestampPreserveMinutes" methodname="MidnightMultipleDaysAndLargeTimestampPreserveMinutes" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="303962973" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000289" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1231" name="NonProgressingBoundaryFailsExplicitly" fullname="LastSignal.Tests.WorldTimeTests.NonProgressingBoundaryFailsExplicitly" methodname="NonProgressingBoundaryFailsExplicitly" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="302152210" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000122" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1242" name="PerformanceClockAndBulkMeasured" fullname="LastSignal.Tests.WorldTimeTests.PerformanceClockAndBulkMeasured" methodname="PerformanceClockAndBulkMeasured" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="433122254" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000865" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1224" name="RainAt45MinutesDuringThreeHourIndoorRestStaysDry" fullname="LastSignal.Tests.WorldTimeTests.RainAt45MinutesDuringThreeHourIndoorRestStaysDry" methodname="RainAt45MinutesDuringThreeHourIndoorRestStaysDry" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1278038888" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000078" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1216" name="RealDeltaConversionPauseAndIrregularUpdates" fullname="LastSignal.Tests.WorldTimeTests.RealDeltaConversionPauseAndIrregularUpdates" methodname="RealDeltaConversionPauseAndIrregularUpdates" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="2110415911" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000069" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1239" name="SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted" fullname="LastSignal.Tests.WorldTimeTests.SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000771" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1236" name="SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted(double.NaN)" fullname="LastSignal.Tests.WorldTimeTests.SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted(double.NaN)" methodname="SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="2033387443" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000085" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1237" name="SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted(-1)" fullname="LastSignal.Tests.WorldTimeTests.SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted(-1)" methodname="SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1855380560" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000025" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1238" name="SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted(2)" fullname="LastSignal.Tests.WorldTimeTests.SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted(2)" methodname="SchemaTwoInvalidWetnessIsRejectedRatherThanDefaulted" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="414925737" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000033" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1235" name="SchemaTwoRoundtripPreservesWeatherTimeAndRejectsMissingSection" fullname="LastSignal.Tests.WorldTimeTests.SchemaTwoRoundtripPreservesWeatherTimeAndRejectsMissingSection" methodname="SchemaTwoRoundtripPreservesWeatherTimeAndRejectsMissingSection" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1777073224" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000404" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1233" name="SnapshotIsDetachedAndInvalidValuesRejected" fullname="LastSignal.Tests.WorldTimeTests.SnapshotIsDetachedAndInvalidValuesRejected" methodname="SnapshotIsDetachedAndInvalidValuesRejected" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="12293933" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000182" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1228" name="StopsAtExactBoundaryAndDoesNotApplyRemainingHours" fullname="LastSignal.Tests.WorldTimeTests.StopsAtExactBoundaryAndDoesNotApplyRemainingHours" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000871" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1225" name="StopsAtExactBoundaryAndDoesNotApplyRemainingHours(Dead)" fullname="LastSignal.Tests.WorldTimeTests.StopsAtExactBoundaryAndDoesNotApplyRemainingHours(Dead)" methodname="StopsAtExactBoundaryAndDoesNotApplyRemainingHours" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="2086089847" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000177" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1226" name="StopsAtExactBoundaryAndDoesNotApplyRemainingHours(ThreatNearby)" fullname="LastSignal.Tests.WorldTimeTests.StopsAtExactBoundaryAndDoesNotApplyRemainingHours(ThreatNearby)" methodname="StopsAtExactBoundaryAndDoesNotApplyRemainingHours" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="807498216" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000039" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1227" name="StopsAtExactBoundaryAndDoesNotApplyRemainingHours(Cancelled)" fullname="LastSignal.Tests.WorldTimeTests.StopsAtExactBoundaryAndDoesNotApplyRemainingHours(Cancelled)" methodname="StopsAtExactBoundaryAndDoesNotApplyRemainingHours" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1058055919" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000040" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1223" name="WetnessBoundsProtectionAndIndoorDrying" fullname="LastSignal.Tests.WorldTimeTests.WetnessBoundsProtectionAndIndoorDrying" methodname="WetnessBoundsProtectionAndIndoorDrying" classname="LastSignal.Tests.WorldTimeTests" runstate="Runnable" seed="1107525855" result="Passed" start-time="2026-09-26 09:05:10Z" end-time="2026-09-26 09:05:10Z" duration="0.000122" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -12,7 +12,7 @@ namespace LastSignal.Tests
         [Test]
         public void ProductionPrefabUsesSourceMeshesAndOneAnimatedMagazine()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
             var meshes = prefab.GetComponentsInChildren<MeshFilter>();
             Assert.That(meshes.Count(m => m.sharedMesh.name == "Magazine.001"), Is.EqualTo(1));
             foreach (var mesh in meshes) Assert.That(AssetDatabase.GetAssetPath(mesh.sharedMesh), Is.EqualTo(Rifle));
@@ -26,7 +26,7 @@ namespace LastSignal.Tests
         [Test]
         public void ProductionAnimatorReferencesEveryRequiredRealClip()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
             var clips = prefab.GetComponentInChildren<Animator>().runtimeAnimatorController.animationClips;
             foreach (string action in new[] { "idle", "draw", "shoot", "reload", "reload_full", "hide" })
             {

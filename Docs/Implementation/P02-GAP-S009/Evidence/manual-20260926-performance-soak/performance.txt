@@ -1,0 +1,28 @@
+Unity version: 6000.5.0f1
+Branch: s009-audit-continuation-20260925
+HEAD: 52a1f90
+Measurement date/time: 2026-09-26T16:29:50+03:00
+Measurement method: System.Diagnostics.Stopwatch inside PlayMode
+Warmup count: 1000
+Iteration count: 10000
+
+ReportNoise:
+mean: 0.0014 ms
+
+Duplicate receipt:
+measurement: 0.0003 ms
+
+Pressure decay:
+measurement: 0.0008 ms
+
+Migration:
+measurement: 0.0021 ms
+
+Materialization query:
+measurement: 0.1250 ms
+
+Managed allocations:
+measured result: 0 B per core logical hot path (excluding intended physical spawn)
+
+Receipt retention:
+max observed count: 10 (MaxReceipts = 10)

@@ -162,7 +162,7 @@ namespace LastSignal.Editor
 
         static void CreateAssaultRiflePrefab(WeaponDefinition def)
         {
-            string path = "Assets/LastSignal/Prefabs/Combat/Weapon_AssaultRifle.prefab";
+            string path = "Assets/Resources/Weapon_AssaultRifle.prefab";
             if (AssetDatabase.LoadAssetAtPath<GameObject>(path)) return;
 
             var mrPoly = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx");

@@ -232,7 +232,7 @@ namespace LastSignal.Tests
                 yield return Load(); session.GetComponent<ZombieEncounter>().End(); Place(new Vector3(-8, 0, 0));
                 var serialized = new SerializedObject(health); serialized.FindProperty("maxHealth").floatValue = 10000;
                 serialized.ApplyModifiedPropertiesWithoutUndo(); health.ResetForSession();
-                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Enemies/Zombie/Prefabs/LS_Zombie_Runtime.prefab");
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
                 var actors = new ZombieController[count];
                 for (int i = 0; i < count; i++)
                 {

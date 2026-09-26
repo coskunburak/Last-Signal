@@ -131,7 +131,7 @@ namespace LastSignal.Persistence
             var look=player.GetComponent<FirstPersonLook>();
             snapshot = new SaveGame {
                 worldTime=clock ? clock.Capture() : null,
-                header=new SaveHeader { schemaVersion=cells ? 3 : clock ? SaveValidation.SchemaVersion : 1,contentVersion=contentVersion,worldId=worldId,seed=loot.Seed,generation=1,
+                header=new SaveHeader { schemaVersion=cells ? (GetComponent<LastSignal.AI.WorldPopulationManager>() ? 4 : 3) : clock ? SaveValidation.SchemaVersion : 1,contentVersion=contentVersion,worldId=worldId,seed=loot.Seed,generation=1,
                     buildId=string.IsNullOrEmpty(Application.buildGUID)?"editor-"+Application.unityVersion:Application.buildGUID,timestampUtc=DateTimeOffset.UtcNow.ToString("O") },
                 player=new PlayerSnapshot { id="player.local",transform=Pose(player.transform),health=player.GetComponent<PlayerHealth>().CurrentHealth,
                     pitch=look.Pitch,crouching=player.GetComponent<PlayerStance>().IsCrouching },
@@ -145,6 +145,10 @@ namespace LastSignal.Persistence
                 try { snapshot.cells = cells.Capture(); }
                 catch (InvalidOperationException e) { snapshot = null; return new SaveResult(SaveError.Busy,e.Message); }
             }
+            
+            var pop = GetComponent<LastSignal.AI.WorldPopulationManager>();
+            if (pop && cells) snapshot.population = pop.GetSaveSnapshot();
+            
             result = Codec().Encode(snapshot,out _); CaptureMilliseconds=watch.Elapsed.TotalMilliseconds;
             if (!result.Success) snapshot=null;
             return result;
@@ -245,7 +249,7 @@ namespace LastSignal.Persistence
         SaveResult ValidateTopology(SaveGame state)
         {
             var cells = GetComponent<LastSignal.WorldCells.WorldCellManager>();
-            if ((cells && (state.header.schemaVersion != 3 || !cells.ValidateTopology(state.cells))) || (!cells && state.header.schemaVersion == 3)) return Invalid("Incompatible cell topology/schema.");
+            if ((cells && (state.header.schemaVersion < 3 || !cells.ValidateTopology(state.cells))) || (!cells && state.header.schemaVersion >= 3)) return Invalid("Incompatible cell topology/schema.");
             if(state.header.schemaVersion >= 2 && !GetComponent<LastSignal.WorldTime.WorldClock>()) return Invalid("This scene cannot restore world-time schema 2.");
             if(state.player.id!="player.local" || state.inventory.id!="player.inventory" || state.shelter.storage.id!="shelter.storage") return Invalid("Unexpected canonical owner identity.");
             var expected=new HashSet<string>(StringComparer.Ordinal);
@@ -276,6 +280,8 @@ namespace LastSignal.Persistence
             foreach(var door in SceneComponents<DoorInteractable>()) doors.Add(door.GetComponent<PersistentEntityId>().Id,door);
             foreach(var door in state.world.doors) doors[door.id].RestoreOpen(door.open);
             GetComponent<LootPopulationService>().Restore(state,catalog);
+            var pop = GetComponent<LastSignal.AI.WorldPopulationManager>();
+            if (pop) pop.SyncFromSave(state.population);
             var capsule=player.GetComponent<CharacterController>(); capsule.enabled=false;
             ApplyPose(player.transform,state.player.transform); capsule.enabled=true;
             if(!player.GetComponent<PlayerStance>().TrySetCrouching(state.player.crouching)) throw new InvalidOperationException("Saved stance is obstructed.");

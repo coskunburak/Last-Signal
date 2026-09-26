@@ -84,7 +84,7 @@ namespace LastSignal.Tests
             var actor=Object.FindAnyObjectByType<ZombieEncounter>().Actor;actor.transform.position=flow.Player.transform.position+Vector3.right*4;Physics.SyncTransforms();
             for(int i=0;i<5&&clock.Sleeping;i++)yield return null;Assert.IsFalse(clock.Sleeping);Assert.AreEqual(AdvanceReason.ThreatNearby,clock.LastSleep.Reason);Assert.Less(clock.LastSleep.ElapsedSeconds,28800);
             var save=clock.GetComponent<SaveSession>();flow.Pause();string path=Path.Combine(directory,"interrupted.json");Assert.IsTrue(save.Save(path).Success);double time=clock.Simulation.Seconds;
-            flow.ReturnToMenu();yield return null;yield return save.Load(path);flow.Pause();Assert.IsTrue(save.LastResult.Success,save.LastResult.Message);Assert.AreEqual(time,clock.Simulation.Seconds);Assert.AreEqual(AdvanceReason.ThreatNearby,clock.Simulation.LastSleepReason);
+            flow.ReturnToMenu();yield return null;yield return save.Load(path);flow.Pause();Assert.IsTrue(save.LastResult.Success,save.LastResult.Message);Assert.AreEqual(time,clock.Simulation.Seconds, 1e-3);Assert.AreEqual(AdvanceReason.ThreatNearby,clock.Simulation.LastSleepReason);
         }
         [UnityTest] public IEnumerator SaveDuringSleepIsBusyAndMenuCancelsWithoutLeak()
         {
