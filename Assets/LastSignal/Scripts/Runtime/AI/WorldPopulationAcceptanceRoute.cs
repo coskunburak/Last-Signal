@@ -114,21 +114,36 @@ namespace LastSignal.AI
             // Kabul atışlarını giriş duvarına yönlendir.
             flow.Player.transform.rotation = Quaternion.Euler(0, 225, 0);
 
+            float loudInitialPressure = pop.GetPressure(A).Pressure;
+            int initialAmmo = state.CurrentMagazine + state.ReserveAmmo;
+            long initialSequence = pop.LastNoiseSequence;
+            log?.Invoke($"LOUD INITIAL: pressure={loudInitialPressure:F6}, threshold=0.3");
+
             float fireDeadline = Time.realtimeSinceStartup + 5f;
             try
             {
                 while (pop.LastNoiseSequence < 2 &&
                     Time.realtimeSinceStartup < fireDeadline)
                 {
+                    long seqBefore = pop.LastNoiseSequence;
                     weapon.OnFirePressed();
                     yield return null;
                     weapon.OnFireReleased();
+                    
+                    if (pop.LastNoiseSequence > seqBefore)
+                    {
+                        log?.Invoke($"SHOT FIRED: sequence={pop.LastNoiseSequence}, contribution={pop.NoiseIntensityMultiplier:F6}, new pressure={pop.GetPressure(A).Pressure:F6}");
+                    }
                 }
             }
             finally
             {
                 weapon.OnFireReleased();
             }
+
+            int shotsFired = (int)(pop.LastNoiseSequence - initialSequence);
+            int ammoConsumed = initialAmmo - (state.CurrentMagazine + state.ReserveAmmo);
+            log?.Invoke($"LOUD FIRING COMPLETE: shotsFired={shotsFired}, ammoConsumed={ammoConsumed}");
 
             if (pop.LastNoiseSequence < 2 || pop.MigrationCount <= 0)
             {
@@ -248,6 +263,8 @@ namespace LastSignal.AI
             Check(
                 pop.PhysicalCount > 0,
                 "Visibility-safe materialization occurred");
+
+            log?.Invoke($"MATERIALIZATION: result=SUCCESS, physicalCount={pop.PhysicalCount}, risk={(pop.GetLedger(A).Physical > 0 ? "ThreatNearby" : "None")}");
 
             Check(
                 pop.TotalAccounted == 30,
