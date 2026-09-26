@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Passed" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-26 09:39:28Z" end-time="2026-09-26 09:39:32Z" duration="3.3906555">
+  <test-suite type="TestSuite" id="1151" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-09-26 09:39:28Z" end-time="2026-09-26 09:39:32Z" duration="3.390656" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1144" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-09-26 09:39:28Z" end-time="2026-09-26 09:39:32Z" duration="3.385422" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="55123" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1145" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-09-26 09:39:28Z" end-time="2026-09-26 09:39:32Z" duration="3.384382" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1146" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-09-26 09:39:28Z" end-time="2026-09-26 09:39:32Z" duration="3.383558" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1071" name="WorldPopulationPlayTests" fullname="LastSignal.Tests.WorldPopulationPlayTests" classname="LastSignal.Tests.WorldPopulationPlayTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-26 09:39:28Z" end-time="2026-09-26 09:39:32Z" duration="3.381650" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1074" name="MalformedRestoreDoesNotMutateLiveAuthority" fullname="LastSignal.Tests.WorldPopulationPlayTests.MalformedRestoreDoesNotMutateLiveAuthority" methodname="MalformedRestoreDoesNotMutateLiveAuthority" classname="LastSignal.Tests.WorldPopulationPlayTests" runstate="Runnable" seed="2133620" result="Passed" start-time="2026-09-26 09:39:28Z" end-time="2026-09-26 09:39:29Z" duration="1.071508" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1076" name="NoActorBeforeReadyAndExplicitLogicalOnlyPolicy" fullname="LastSignal.Tests.WorldPopulationPlayTests.NoActorBeforeReadyAndExplicitLogicalOnlyPolicy" methodname="NoActorBeforeReadyAndExplicitLogicalOnlyPolicy" classname="LastSignal.Tests.WorldPopulationPlayTests" runstate="Runnable" seed="1280787725" result="Passed" start-time="2026-09-26 09:39:29Z" end-time="2026-09-26 09:39:30Z" duration="0.343174" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+]]></output>
+            </test-case>
+            <test-case id="1072" name="ProductionRifleTravelDeathSaveLoadRoute" fullname="LastSignal.Tests.WorldPopulationPlayTests.ProductionRifleTravelDeathSaveLoadRoute" methodname="ProductionRifleTravelDeathSaveLoadRoute" classname="LastSignal.Tests.WorldPopulationPlayTests" runstate="Runnable" seed="1747380392" result="Passed" start-time="2026-09-26 09:39:30Z" end-time="2026-09-26 09:39:31Z" duration="0.977854" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+S006 loot seed=12345 resolved=1 generated=1
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1073" name="ReceiptCompactionBoundsIsolationAndReplayAcrossSnapshot" fullname="LastSignal.Tests.WorldPopulationPlayTests.ReceiptCompactionBoundsIsolationAndReplayAcrossSnapshot" methodname="ReceiptCompactionBoundsIsolationAndReplayAcrossSnapshot" classname="LastSignal.Tests.WorldPopulationPlayTests" runstate="Runnable" seed="106252132" result="Passed" start-time="2026-09-26 09:39:31Z" end-time="2026-09-26 09:39:31Z" duration="0.327576" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1075" name="StaleShotAndCellContinuationCannotMutateRestart" fullname="LastSignal.Tests.WorldPopulationPlayTests.StaleShotAndCellContinuationCannotMutateRestart" methodname="StaleShotAndCellContinuationCannotMutateRestart" classname="LastSignal.Tests.WorldPopulationPlayTests" runstate="Runnable" seed="1426156954" result="Passed" start-time="2026-09-26 09:39:31Z" end-time="2026-09-26 09:39:31Z" duration="0.330556" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1077" name="WorldTimeProcessesArrivalAtBoundaryWithoutFrame" fullname="LastSignal.Tests.WorldPopulationPlayTests.WorldTimeProcessesArrivalAtBoundaryWithoutFrame" methodname="WorldTimeProcessesArrivalAtBoundaryWithoutFrame" classname="LastSignal.Tests.WorldPopulationPlayTests" runstate="Runnable" seed="543758582" result="Passed" start-time="2026-09-26 09:39:31Z" end-time="2026-09-26 09:39:32Z" duration="0.322028" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

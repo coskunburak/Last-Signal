@@ -37,9 +37,30 @@ namespace LastSignal.Persistence
                 // Unity JsonUtility materializes null serializable objects. Schema 1 has no time section.
                 if (candidate != null && candidate.header != null && candidate.header.schemaVersion == 1) candidate.worldTime = null;
                 if (candidate != null && candidate.header != null && candidate.header.schemaVersion < 3) candidate.cells = null;
-                if (candidate?.header != null && candidate.header.schemaVersion < 4 && candidate.population != null &&
-                    candidate.population.pressures == null && candidate.population.ledgers == null && candidate.population.migrations == null)
-                    candidate.population = null;
+                if (candidate?.header != null &&
+                    candidate.header.schemaVersion < 4 &&
+                    candidate.population != null)
+                {
+                    var population = candidate.population;
+
+                    // Eski şemalarda population yoktur. Unity'nin oluşturduğu
+                    // tamamen boş nesneyi yok kabul et; gerçek veriyi silme.
+                    bool emptyPopulation =
+                        population.lastNoiseSequence == 0 &&
+                        (population.pressures == null ||
+                        population.pressures.Length == 0) &&
+                        (population.ledgers == null ||
+                        population.ledgers.Length == 0) &&
+                        (population.migrations == null ||
+                        population.migrations.Length == 0) &&
+                        (population.actors == null ||
+                        population.actors.Length == 0);
+
+                    if (emptyPopulation)
+                    {
+                        candidate.population = null;
+                    }
+                }
                 var result = validation.Validate(candidate); if (!result.Success) return result;
                 state = candidate;
                 return SaveResult.Ok;
