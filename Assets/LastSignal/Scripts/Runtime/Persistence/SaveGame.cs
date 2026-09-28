@@ -62,6 +62,7 @@ namespace LastSignal.Persistence
     }
     [Serializable] public sealed class ShelterSnapshot
     {
+        public LastSignal.Shelter.ShelterProductionSnapshot production;
         public ContainerSnapshot storage;
         public bool onExpedition;
         public int expeditionIndex;

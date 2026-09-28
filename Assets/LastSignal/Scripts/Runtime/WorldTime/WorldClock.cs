@@ -115,6 +115,8 @@ namespace LastSignal.WorldTime
             if (!point || !point.isActiveAndEnabled || point.Clock != this || point.gameObject.scene != gameObject.scene ||
                 (Flow.Player.transform.position - point.transform.position).sqrMagnitude > point.UseRange * point.UseRange) return SleepRejection.NotAtBed;
             if (Flow.Paused || !shelter || shelter.State != ExpeditionState.Shelter || !QueryRoof()) return SleepRejection.UnsafeState;
+            var site = GetComponent<ShelterSite>();
+            if (site && (site.Production == null || !site.Production.Installed(ShelterModule.Bed))) return SleepRejection.UnsafeState;
             if (ThreatNearby()) return SleepRejection.ThreatNearby;
             return SleepRejection.None;
         }
@@ -164,6 +166,7 @@ namespace LastSignal.WorldTime
             if (Sleeping) throw new InvalidOperationException("Cannot hydrate during sleep.");
             var restored = new WorldSimulation(snapshot); restored.Register(this); Simulation = restored;
             GetComponent<LastSignal.AI.WorldPopulationManager>()?.BindClock();
+            GetComponent<ShelterSite>()?.BindClock();
             protectedFromRain = pendingProtection = QueryRoof(); pendingElapsed = pollElapsed = 0;
             if (presentation) presentation.Refresh();
         }

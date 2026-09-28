@@ -11,7 +11,7 @@ namespace LastSignal
         public Noise.GameplayNoiseTuning NoiseTuning => noiseTuning;
         public double NoiseSimulationTime => NoiseTime();
         double NoiseTime() { var clock = GetComponent<WorldTime.WorldClock>(); return clock && clock.Simulation != null ? clock.Simulation.Seconds : Time.timeAsDouble; }
-        bool NoiseAllowed() { var clock = GetComponent<WorldTime.WorldClock>(); return isActiveAndEnabled && Player && !Paused && !Restoring && !PlayerDead && Time.timeScale > 0 && (!clock || !clock.Sleeping); }
+        bool NoiseAllowed() { var clock = GetComponent<WorldTime.WorldClock>(); return isActiveAndEnabled && Player && !Paused && !Restoring && !PlayerDead && Time.timeScale > 0; }
         [SerializeField] Transform spawnPoint;
         [SerializeField] DoorInteractable[] doors;
         [SerializeField] ZombieEncounter zombieEncounter;
@@ -91,6 +91,7 @@ namespace LastSignal
             if (population) population.BeginSession();
             Player.GetComponent<PlayerCombatController>()?.BindNoise(Noise, noiseTuning, 1);
             Player.GetComponent<FirstPersonMotor>()?.BindNoise(Noise, noiseTuning, 1);
+            GetComponent<Shelter.ShelterSite>()?.Begin();
             SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }
@@ -124,6 +125,7 @@ namespace LastSignal
         {
             Generation++; Restoring = false;
             Noise?.End(); Noise = null;
+            GetComponent<Shelter.ShelterSite>()?.End();
             var cells = GetComponent<WorldCells.WorldCellManager>();
             if (cells) cells.End();
             var worldClock = GetComponent<WorldTime.WorldClock>();

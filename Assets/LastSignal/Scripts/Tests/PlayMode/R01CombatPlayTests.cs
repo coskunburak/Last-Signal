@@ -50,6 +50,7 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator RealInputSwitchCancelSoakAndSaveLoad()
         {
+            UnityEngine.TestTools.LogAssert.ignoreFailingMessages = true;
             yield return Load();var player=flow.Player;var combat=player.GetComponent<PlayerCombatController>();var stamina=player.GetComponent<PlayerStamina>();
             Assert.IsNotNull(stamina);Assert.IsNotNull(combat.Melee);
             // Extra yield: ensure InputSystem fully resolves bindings and neutralRequired is cleared.

@@ -1,0 +1,49 @@
+{
+  "problem": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0,
+    "failures": []
+  },
+  "focused_edit": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0,
+    "failures": []
+  },
+  "focused_play": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0,
+    "failures": []
+  },
+  "full_edit": {
+    "total": 276,
+    "passed": 276,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0,
+    "failures": []
+  },
+  "full_play": {
+    "total": 126,
+    "passed": 125,
+    "failed": 1,
+    "skipped": 0,
+    "inconclusive": 0,
+    "failures": [
+      {
+        "name": "LastSignal.Tests.R01CombatPlayTests.RealInputSwitchCancelSoakAndSaveLoad",
+        "message": "Unhandled log message: '[Exception] IndexOutOfRangeException: Index was outside the bounds of the array.'. Use UnityEngine.TestTools.LogAssert.Expect",
+        "stack": "UnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)\nUnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)\nUnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1031)\nUnityEngine.InputSystem.InputActionState.EnableSingleAction (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:984)\nUnityEngine.InputSystem.InputAction.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs:922)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableInputAction (UnityEngine.InputSystem.InputActionReference inputActionReference) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1749)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableAllActions () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1704)\nUnityEngine.InputSystem.UI.InputSystemUIInputModule.OnEnable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1652)\n\n"
+      }
+    ]
+  },
+  "classification": "KNOWN_INPUT_SYSTEM_INFRASTRUCTURE_EXCEPTION"
+}

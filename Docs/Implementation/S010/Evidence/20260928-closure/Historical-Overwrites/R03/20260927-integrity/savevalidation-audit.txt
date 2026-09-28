@@ -1,0 +1,4 @@
+Original invariant: cell.lastProcessed > save.worldTime.seconds
+Observed numeric drift: Precision rounding during JsonUtility serialization/deserialization on Double types created micro-inconsistencies.
+Final policy: Restored the validation but relaxed it to cellLastProcessed <= worldTime + acceptedTolerance.
+Tolerance: 0.01 seconds.

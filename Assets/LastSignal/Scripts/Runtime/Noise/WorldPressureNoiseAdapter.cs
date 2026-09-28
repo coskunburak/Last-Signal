@@ -3,7 +3,7 @@ using LastSignal.WorldCells;
 
 namespace LastSignal.Noise
 {
-    /// <summary>Gunshots alone affect regional pressure. Legacy save receipts remain noise:N;
+    /// <summary>Gunshots and generator pulses affect regional pressure in authored ledger cells. Legacy save receipts remain noise:N;
     /// LastEventId retains the canonical correlation without changing the population save schema.</summary>
     public sealed class WorldPressureNoiseAdapter : IGameplayNoisePressureSink
     {
@@ -18,7 +18,7 @@ namespace LastSignal.Noise
         public bool Forward(in GameplayNoiseEvent noise)
         {
             if (!population || !flow || flow.Generation != generation || flow.InMenu || flow.Paused || flow.Restoring || flow.PlayerDead ||
-                noise.Category != GameplayNoiseCategory.Gunshot || noise.Intensity <= 0 ||
+                (noise.Category != GameplayNoiseCategory.Gunshot && noise.Category != GameplayNoiseCategory.Generator) || noise.Intensity <= 0 ||
                 (noise.EventId.Epoch == lastReceived.Epoch && noise.EventId.Sequence <= lastReceived.Sequence) ||
                 population.LastNoiseSequence == long.MaxValue) return false;
             var id = CellCoordinate.FromWorld(noise.Position).Id;

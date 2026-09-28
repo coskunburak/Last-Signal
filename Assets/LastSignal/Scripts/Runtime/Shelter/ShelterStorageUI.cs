@@ -65,7 +65,7 @@ namespace LastSignal.Shelter
             if(combat)combat.WeaponChanged-=BindWeapon;if(weapon)weapon.AmmoChanged-=Refresh;
             loop=null;inventory=null;storage=null;combat=null;weapon=null;
         }
-        public void Show() { if(!loop)return;carriedSelection=storedSelection=-1;feedback.text="Select an item, then transfer one or its stack.";panel.SetActive(true);Refresh(); }
+        public void Show() { if(!loop)return;SizeSlots(ref carriedSlots,inventory.Capacity,true);SizeSlots(ref storedSlots,storage.Capacity,false);carriedSelection=storedSelection=-1;feedback.text="Select an item, then transfer one or its stack.";panel.SetActive(true);Refresh(); }
         public void Hide() { if(panel)panel.SetActive(false);carriedSelection=storedSelection=-1; }
         public void Select(bool carried,int slot)
         {

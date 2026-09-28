@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-28 12:41:01Z" end-time="2026-09-28 12:41:03Z" duration="1.7555952">
+  <test-suite type="TestSuite" id="1196" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="159" result="Failed" site="Child" start-time="2026-09-28 12:41:01Z" end-time="2026-09-28 12:41:03Z" duration="1.755595" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1189" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="159" result="Failed" site="Child" start-time="2026-09-28 12:41:01Z" end-time="2026-09-28 12:41:03Z" duration="1.749185" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87399" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1190" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="159" result="Failed" site="Child" start-time="2026-09-28 12:41:01Z" end-time="2026-09-28 12:41:03Z" duration="1.746757" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1191" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="159" result="Failed" site="Child" start-time="2026-09-28 12:41:01Z" end-time="2026-09-28 12:41:03Z" duration="1.745873" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1098" name="S010IntegrationTests" fullname="LastSignal.Tests.S010IntegrationTests" classname="LastSignal.Tests.S010IntegrationTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-09-28 12:41:01Z" end-time="2026-09-28 12:41:03Z" duration="1.741377" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1099" name="ClaimRejectsLiveThreatDuplicateInvalidAndRemoteWithoutDeletingActors" fullname="LastSignal.Tests.S010IntegrationTests.ClaimRejectsLiveThreatDuplicateInvalidAndRemoteWithoutDeletingActors" methodname="ClaimRejectsLiveThreatDuplicateInvalidAndRemoteWithoutDeletingActors" classname="LastSignal.Tests.S010IntegrationTests" runstate="Runnable" seed="1587507206" result="Passed" start-time="2026-09-28 12:41:01Z" end-time="2026-09-28 12:41:02Z" duration="1.021483" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=15
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1100" name="InvalidSocketAndRemoteStorageConsumeNothing" fullname="LastSignal.Tests.S010IntegrationTests.InvalidSocketAndRemoteStorageConsumeNothing" methodname="InvalidSocketAndRemoteStorageConsumeNothing" classname="LastSignal.Tests.S010IntegrationTests" runstate="Runnable" seed="538824356" result="Passed" start-time="2026-09-28 12:41:02Z" end-time="2026-09-28 12:41:03Z" duration="0.343950" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=15
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1101" name="ProductionSaveLoadFuelNoiseOutputAndNewSession" fullname="LastSignal.Tests.S010IntegrationTests.ProductionSaveLoadFuelNoiseOutputAndNewSession" methodname="ProductionSaveLoadFuelNoiseOutputAndNewSession" classname="LastSignal.Tests.S010IntegrationTests" runstate="Runnable" seed="1915985037" result="Failed" start-time="2026-09-28 12:41:03Z" end-time="2026-09-28 12:41:03Z" duration="0.367908" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Hydration failed safely: InvalidOperationException: Saved stance is obstructed.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.S010IntegrationTests+<ProductionSaveLoadFuelNoiseOutputAndNewSession>d__11.MoveNext () [0x0032a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/S010IntegrationTests.cs:84
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=15
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

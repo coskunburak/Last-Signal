@@ -139,7 +139,7 @@ namespace LastSignal.Persistence
                 player=new PlayerSnapshot { id="player.local",transform=Pose(player.transform),health=player.GetComponent<PlayerHealth>().CurrentHealth,
                     pitch=look.Pitch,crouching=player.GetComponent<PlayerStance>().IsCrouching },
                 inventory=carried,weapon=new WeaponSnapshot {definitionId=WeaponId,magazine=weapon.RuntimeState.CurrentMagazine},
-                shelter=new ShelterSnapshot {storage=stash,onExpedition=shelter.State==ExpeditionState.Expedition,expeditionIndex=shelter.ExpeditionIndex},
+                shelter=new ShelterSnapshot {production=GetComponent<ShelterSite>()?.Production?.Capture(),storage=stash,onExpedition=shelter.State==ExpeditionState.Expedition,expeditionIndex=shelter.ExpeditionIndex},
                 world=new WorldSnapshot {doors=doors.ToArray(),opportunities=opportunities.ToArray(),items=items.ToArray(),enemies=new[] {
                     new EnemySnapshot {id=encounter.GetComponent<PersistentEntityId>().Id,health=actor.GetComponent<ZombieHealth>().CurrentHealth,transform=Pose(actor.transform)} }}
             };
@@ -234,6 +234,7 @@ namespace LastSignal.Persistence
                 // Finalize transform-dependent state only after all hydration and physics synchronization.
                 var clock=GetComponent<LastSignal.WorldTime.WorldClock>();
                 if(clock) clock.Restore(candidate.worldTime ?? LastSignal.WorldTime.WorldTimeSnapshot.LegacyDefault());
+                GetComponent<ShelterSite>()?.Restore(candidate.shelter.production);
                 Flow.CompleteRestore(); LastResult=SaveResult.Ok;
             }
             catch (Exception e)
@@ -255,6 +256,8 @@ namespace LastSignal.Persistence
             if ((cells && (state.header.schemaVersion < 3 || !cells.ValidateTopology(state.cells))) || (!cells && state.header.schemaVersion >= 3)) return Invalid("Incompatible cell topology/schema.");
             if(state.header.schemaVersion >= 2 && !GetComponent<LastSignal.WorldTime.WorldClock>()) return Invalid("This scene cannot restore world-time schema 2.");
             if(state.player.id!="player.local" || state.inventory.id!="player.inventory" || state.shelter.storage.id!="shelter.storage") return Invalid("Unexpected canonical owner identity.");
+            var site = GetComponent<ShelterSite>();
+            if ((state.shelter.production != null && !site) || (site && !site.CanRestore(state.shelter.production, state.worldTime.seconds))) return Invalid("Incompatible shelter production definitions.");
             var expected=new HashSet<string>(StringComparer.Ordinal);
             foreach(var door in SceneComponents<DoorInteractable>()) expected.Add(door.GetComponent<PersistentEntityId>().Id);
             if(expected.Count!=state.world.doors.Length) return Invalid("Door topology changed.");

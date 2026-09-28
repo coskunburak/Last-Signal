@@ -51,6 +51,9 @@ namespace LastSignal.Tests
             yield return WorldCellAcceptanceRoute.Ready(cells, "cell:1:0");
             cells.TryEnter("cell:1:0");
             yield return null;
+            
+            var ph = player.GetComponent<PlayerHealth>();
+            if (ph != null) ph.enabled = false;
 
             // Spawn 30 zombies manually in a circle
             var zombies = new List<ZombieController>();
@@ -61,12 +64,17 @@ namespace LastSignal.Tests
                 // Raycast down to find ground
                 if (Physics.Raycast(pos + Vector3.up * 10, Vector3.down, out var hit, 20f))
                 {
-                    var go = GameObject.Instantiate(Resources.Load<GameObject>("LS_Zombie_Runtime"), hit.point, Quaternion.identity);
-                    var zc = go.GetComponent<ZombieController>();
-                    zc.Initialize();
-                    zc.Bind(player);
-                    zombies.Add(zc);
+                    pos = hit.point;
                 }
+                if (UnityEngine.AI.NavMesh.SamplePosition(pos, out var navHit, 30f, UnityEngine.AI.NavMesh.AllAreas))
+                {
+                    pos = navHit.position;
+                }
+                var go = GameObject.Instantiate(Resources.Load<GameObject>("LS_Zombie_Runtime"), pos, Quaternion.identity);
+                var zc = go.GetComponent<ZombieController>();
+                zc.Initialize();
+                zc.Bind(player);
+                zombies.Add(zc);
             }
             
             yield return new WaitForSeconds(1f); // let them settle

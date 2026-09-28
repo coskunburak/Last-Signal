@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LastSignal.Noise
 {
-    public enum GameplayNoiseCategory { Footstep, SprintFootstep, MeleeImpact, Gunshot }
+    public enum GameplayNoiseCategory { Footstep, SprintFootstep, MeleeImpact, Gunshot, Generator }
 
     public readonly struct GameplayNoiseId : IEquatable<GameplayNoiseId>
     {
