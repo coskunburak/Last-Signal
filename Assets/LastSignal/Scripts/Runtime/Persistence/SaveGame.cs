@@ -10,11 +10,21 @@ namespace LastSignal.Persistence
         public LastSignal.WorldCells.CellWorldSnapshot cells;
         public SaveHeader header;
         public PlayerSnapshot player;
+        public CombatEquipmentSnapshot combat;
         public ContainerSnapshot inventory;
         public WeaponSnapshot weapon;
         public ShelterSnapshot shelter;
         public WorldSnapshot world;
         public PopulationSnapshot population;
+    }
+    // Optional additive extension: absent in old saves means firearm + full stamina.
+    [Serializable] public sealed class CombatEquipmentSnapshot
+    {
+        public int version;
+        public int selectedSlot;
+        public string meleeDefinitionId;
+        public float stamina, regenDelay;
+        public bool exhausted;
     }
     [Serializable] public sealed class SaveHeader
     {

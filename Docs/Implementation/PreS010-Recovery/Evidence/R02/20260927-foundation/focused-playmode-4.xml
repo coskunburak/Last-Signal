@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-27 09:39:02Z" end-time="2026-09-27 09:39:03Z" duration="1.6801558">
+  <test-suite type="TestSuite" id="1160" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="128" result="Failed" site="Child" start-time="2026-09-27 09:39:02Z" end-time="2026-09-27 09:39:03Z" duration="1.680156" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1153" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="128" result="Failed" site="Child" start-time="2026-09-27 09:39:02Z" end-time="2026-09-27 09:39:03Z" duration="1.672425" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="7712" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1154" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="128" result="Failed" site="Child" start-time="2026-09-27 09:39:02Z" end-time="2026-09-27 09:39:03Z" duration="1.671291" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1155" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="128" result="Failed" site="Child" start-time="2026-09-27 09:39:02Z" end-time="2026-09-27 09:39:03Z" duration="1.670458" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1059" name="R02NoisePlayTests" fullname="LastSignal.Tests.R02NoisePlayTests" classname="LastSignal.Tests.R02NoisePlayTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-27 09:39:02Z" end-time="2026-09-27 09:39:03Z" duration="1.668133" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1061" name="ProbeDisableDestroyAndMoveCleanIndex" fullname="LastSignal.Tests.R02NoisePlayTests.ProbeDisableDestroyAndMoveCleanIndex" methodname="ProbeDisableDestroyAndMoveCleanIndex" classname="LastSignal.Tests.R02NoisePlayTests" runstate="Runnable" seed="401629372" result="Passed" start-time="2026-09-27 09:39:02Z" end-time="2026-09-27 09:39:02Z" duration="0.014875" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1060" name="ProductionProducersPressureLifecycleAndSaveLoad" fullname="LastSignal.Tests.R02NoisePlayTests.ProductionProducersPressureLifecycleAndSaveLoad" methodname="ProductionProducersPressureLifecycleAndSaveLoad" classname="LastSignal.Tests.R02NoisePlayTests" runstate="Runnable" seed="1252161315" result="Failed" label="Error" start-time="2026-09-27 09:39:02Z" end-time="2026-09-27 09:39:03Z" duration="1.644025" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.InvalidOperationException : R02: mute changed semantics]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Noise.R02NoiseAcceptanceRoute.Check (System.Boolean condition, System.String message) [0x00014] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Noise/R02NoiseAcceptanceRoute.cs:15 
+  at LastSignal.Noise.R02NoiseAcceptanceRoute+<Run>d__2.MoveNext () [0x00bb6] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Noise/R02NoiseAcceptanceRoute.cs:99 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+S006 loot seed=12345 resolved=1 generated=1
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

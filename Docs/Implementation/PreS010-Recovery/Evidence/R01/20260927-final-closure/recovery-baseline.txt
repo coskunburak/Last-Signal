@@ -1,0 +1,166 @@
+=== R01 FINAL CLOSURE RECOVERY ===
+Sun Sep 27 12:02:57 +03 2026
+
+BRANCH=s009-audit-continuation-20260925
+HEAD=01a050f530fc1f86516eef2ebbf77fe1fd6696aa
+UNITY=6000.5.0f1
+INPUT_SYSTEM=1.19.0
+
+=== GIT STATUS ===
+ M Assets/Game/Items/Definitions/ItemCatalog.asset
+ M Assets/InputSystem_Actions.inputactions
+ M Assets/LastSignal/Prefabs/Player.prefab
+ M Assets/LastSignal/Scripts/Runtime/Combat/PlayerCombatController.cs
+ M Assets/LastSignal/Scripts/Runtime/Persistence/SaveCodec.cs
+ M Assets/LastSignal/Scripts/Runtime/Persistence/SaveGame.cs
+ M Assets/LastSignal/Scripts/Runtime/Persistence/SaveSession.cs
+ M Assets/LastSignal/Scripts/Runtime/Persistence/SaveValidation.cs
+ M Assets/LastSignal/Scripts/Runtime/Player/FirstPersonMotor.cs
+ M Assets/LastSignal/Scripts/Runtime/Player/PlayerInputReader.cs
+ M Assets/LastSignal/Scripts/Runtime/Session/AcceptanceHud.cs
+ M Docs/Implementation/P02-GAP-S007/Evidence/20260924-entry/playmode-route.txt
+ M Docs/Implementation/P02-GAP-S009/Evidence/20260925-independent/playmode-route.txt
+ M Docs/Implementation/P02-GAP-S009/Evidence/manual-20260926-115923/full-playmode-timing-fix1.xml
+ M Docs/Implementation/P02-GAP-S009/Evidence/manual-20260926-performance-soak/performance.txt
+ M Docs/Implementation/P02-GAP-S009/Evidence/manual-20260926-performance-soak/soak.txt
+ M Docs/Implementation/P02-GAP/Evidence/20260922-entry/domain-performance.txt
+ M Docs/Implementation/P02-GAP/Evidence/20260922-entry/runtime-performance.txt
+ M Docs/Implementation/P02-GAP/Evidence/20260922-entry/two-expedition-world-time.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/performance.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/performance.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/restart-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/trace.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/rifle-trace.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/new-session-alive-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/trace.tsv
+ M Docs/Implementation/S008/Evidence/20260920-212200-entry/10-expedition-soak.txt
+ M Docs/Implementation/S008/Evidence/20260920-212200-entry/performance.txt
+ M Docs/Implementation/S008/Evidence/20260920-212200-entry/two-expedition-acceptance.txt
+?? Assets/Game/Items/Definitions/Crowbar.asset
+?? Assets/Game/Items/Definitions/Crowbar.asset.meta
+?? "Assets/LastSignal/Assets/First Person ARPG Starter Pack.meta"
+?? "Assets/LastSignal/Assets/First Person ARPG Starter Pack/"
+?? "Assets/LastSignal/Assets/ZOMB\304\260E ATTACK ANIMATION.meta"
+?? "Assets/LastSignal/Assets/ZOMB\304\260E ATTACK ANIMATION/"
+?? Assets/LastSignal/Assets/Zombie_Survival_AssetPack_LowPoly.meta
+?? Assets/LastSignal/Assets/Zombie_Survival_AssetPack_LowPoly/
+?? Assets/LastSignal/Assets/crowbar-game-ready-low-poly.meta
+?? Assets/LastSignal/Assets/crowbar-game-ready-low-poly/
+?? Assets/LastSignal/Assets/first-person-arms.meta
+?? Assets/LastSignal/Assets/first-person-arms/
+?? Assets/LastSignal/Combat.meta
+?? Assets/LastSignal/Combat/
+?? Assets/LastSignal/Scripts/Editor/R01AssetInspection.cs
+?? Assets/LastSignal/Scripts/Editor/R01AssetInspection.cs.meta
+?? Assets/LastSignal/Scripts/Editor/R01Authoring.cs
+?? Assets/LastSignal/Scripts/Editor/R01Authoring.cs.meta
+?? Assets/LastSignal/Scripts/Editor/R01Preview.cs
+?? Assets/LastSignal/Scripts/Editor/R01Preview.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeAttackResolver.cs
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeAttackResolver.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeAttackState.cs
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeAttackState.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeWeaponController.cs
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeWeaponController.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeWeaponDefinition.cs
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeWeaponDefinition.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeWeaponPresenter.cs
+?? Assets/LastSignal/Scripts/Runtime/Combat/MeleeWeaponPresenter.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Player/PlayerStamina.cs
+?? Assets/LastSignal/Scripts/Runtime/Player/PlayerStamina.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/R01FoundationTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/R01FoundationTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/R01PersistenceTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/R01PersistenceTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs.meta
+?? Docs/Implementation/P02-GAP-S009/Evidence/manual-20260926-115923/d089-results.xml
+?? Docs/Implementation/P02-GAP-S009/Evidence/manual-20260926-final-build/route-save.json.bak
+?? Docs/Implementation/PreS010-Recovery/
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/performance-20260926-100345.txt
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/performance-20260926-225644.txt
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/performance-20260927-085539.txt
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20260926-100252/
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20260926-225551/
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20260927-085446/
+?? scratch/

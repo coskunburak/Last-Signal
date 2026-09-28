@@ -61,6 +61,7 @@ namespace LastSignal.Persistence
                         candidate.population = null;
                     }
                 }
+                if (candidate != null && candidate.combat != null && candidate.combat.version == 0) candidate.combat = null;
                 var result = validation.Validate(candidate); if (!result.Success) return result;
                 state = candidate;
                 return SaveResult.Ok;

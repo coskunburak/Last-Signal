@@ -2,9 +2,16 @@ using UnityEngine;
 
 namespace LastSignal
 {
+    [DisallowMultipleComponent]
     public sealed class SessionFlow : MonoBehaviour
     {
         [SerializeField] GameObject playerPrefab;
+        [SerializeField] Noise.GameplayNoiseTuning noiseTuning = new Noise.GameplayNoiseTuning();
+        public Noise.GameplayNoiseSystem Noise { get; private set; }
+        public Noise.GameplayNoiseTuning NoiseTuning => noiseTuning;
+        public double NoiseSimulationTime => NoiseTime();
+        double NoiseTime() { var clock = GetComponent<WorldTime.WorldClock>(); return clock && clock.Simulation != null ? clock.Simulation.Seconds : Time.timeAsDouble; }
+        bool NoiseAllowed() { var clock = GetComponent<WorldTime.WorldClock>(); return isActiveAndEnabled && Player && !Paused && !Restoring && !PlayerDead && Time.timeScale > 0 && (!clock || !clock.Sleeping); }
         [SerializeField] Transform spawnPoint;
         [SerializeField] DoorInteractable[] doors;
         [SerializeField] ZombieEncounter zombieEncounter;
@@ -31,6 +38,7 @@ namespace LastSignal
         {
             if (Player) return;
             Generation++; Restoring = restoring;
+            if (noiseTuning == null || !noiseTuning.Valid) throw new System.InvalidOperationException("Invalid gameplay noise tuning on SessionFlow.");
             if (!playerPrefab || !spawnPoint) { Debug.LogError("Session requires player prefab and spawn point.", this); return; }
             foreach (var door in doors) if (door) door.ResetDoor();
             Player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
@@ -67,6 +75,10 @@ namespace LastSignal
             if (health) health.Died += OnPlayerDied;
             input.PauseRequested += TogglePause;
             input.FocusLost += Pause;
+            var population = GetComponent<LastSignal.AI.WorldPopulationManager>();
+            Noise?.End();
+            Noise = new Noise.GameplayNoiseSystem(NoiseTime, NoiseAllowed, population ? new Noise.WorldPressureNoiseAdapter(population, this) : null, Debug.LogException);
+            Player.AddComponent<Noise.GameplayNoiseContext>().Bind(this);
             if (zombieEncounter) zombieEncounter.Begin(Player);
             loot = GetComponent<LastSignal.Loot.LootPopulationService>();
             if (loot && !restoring) loot.Begin(Player);
@@ -76,9 +88,9 @@ namespace LastSignal
             if (worldClock) worldClock.Begin();
             var cells = GetComponent<WorldCells.WorldCellManager>();
             if (cells) cells.Begin(restoring);
-            var population = GetComponent<LastSignal.AI.WorldPopulationManager>();
             if (population) population.BeginSession();
-            Player.GetComponent<PlayerCombatController>()?.BindPopulation(population, Generation);
+            Player.GetComponent<PlayerCombatController>()?.BindNoise(Noise, noiseTuning, 1);
+            Player.GetComponent<FirstPersonMotor>()?.BindNoise(Noise, noiseTuning, 1);
             SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }
@@ -88,6 +100,7 @@ namespace LastSignal
         void SetPaused(bool value)
         {
             Paused = value;
+            if (value && Player) Player.GetComponent<FirstPersonMotor>()?.ResetNoiseCadence();
             if (zombieEncounter) zombieEncounter.SetPaused(value);
             Time.timeScale = value ? 0 : 1;
             if (input) input.SetGameplay(!value && !PlayerDead);
@@ -110,6 +123,7 @@ namespace LastSignal
         public void ReturnToMenu()
         {
             Generation++; Restoring = false;
+            Noise?.End(); Noise = null;
             var cells = GetComponent<WorldCells.WorldCellManager>();
             if (cells) cells.End();
             var worldClock = GetComponent<WorldTime.WorldClock>();
@@ -138,6 +152,7 @@ namespace LastSignal
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
+        void OnDisable() { Noise?.End(); }
         void OnDestroy()
         {
             ReturnToMenu();

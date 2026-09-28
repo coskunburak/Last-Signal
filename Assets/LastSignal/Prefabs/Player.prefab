@@ -334,6 +334,7 @@ GameObject:
   - component: {fileID: 4646052390767188979}
   - component: {fileID: 5567324271373270402}
   - component: {fileID: 7244106600074376475}
+  - component: {fileID: 5256790614612172001}
   m_Layer: 2
   m_Name: Player
   m_TagString: Untagged
@@ -489,6 +490,7 @@ MonoBehaviour:
   look: {fileID: 8492070216041348762}
   weaponParent: {fileID: 8492493606300100580}
   startingWeapon: {fileID: 3501217768431337136, guid: c5fcaa96926e74f95910d7a84445ff14, type: 3}
+  startingMelee: {fileID: 115205150761027965, guid: c2d25d4e67e6f4d3588be17f8d52e8a5, type: 3}
 --- !u!114 &7244106600074376475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -502,6 +504,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.PlayerHealth
   maxHealth: 100
+--- !u!114 &5256790614612172001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2211443619515615061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90fe4f70fc9c4c988141303f1ff7a36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.PlayerStamina
 --- !u!1 &2254217843179743422
 GameObject:
   m_ObjectHideFlags: 0

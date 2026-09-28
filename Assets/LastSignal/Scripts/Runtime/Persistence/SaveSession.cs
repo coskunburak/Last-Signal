@@ -38,7 +38,9 @@ namespace LastSignal.Persistence
             if (!catalog || !rifle || !rifle.HasValidAmmunitionConfiguration || string.IsNullOrWhiteSpace(worldId)) return Invalid("Save world/catalog/rifle not configured.");
             var definitions = new HashSet<string>(StringComparer.Ordinal);
             foreach (var item in catalog.EditorItems)
-                if (!item || !item.Id.IsValid || !definitions.Add(item.Id.Value) || !item.WorldPrefab || !item.WorldPrefab.GetComponent<WorldItem>() || item.MaxStack < 1)
+                if (!item || !item.Id.IsValid || !definitions.Add(item.Id.Value) || item.MaxStack < 1 ||
+                    (!item.WorldPrefab && item.Category != LastSignal.Inventory.Data.ItemCategory.Tool) ||
+                    (item.WorldPrefab && !item.WorldPrefab.GetComponent<WorldItem>()))
                     return Invalid("Invalid or duplicate catalog identity/prefab.");
             var ids = new HashSet<string>(StringComparer.Ordinal);
             foreach (var door in SceneComponents<DoorInteractable>())
@@ -76,7 +78,7 @@ namespace LastSignal.Persistence
             var player = Flow.Player; var inv = player.GetComponent<PlayerInventory>(); var shelter = GetComponent<ShelterLoop>();
             result = InventorySnapshots.Capture(inv,"player.inventory",out var carried); if (!result.Success) return result;
             result = InventorySnapshots.Capture(shelter.Storage,"shelter.storage",out var stash); if (!result.Success) return result;
-            var weapon = player.GetComponent<PlayerCombatController>().ActiveWeapon;
+            var weapon = player.GetComponent<PlayerCombatController>().Firearm;
             if (!weapon || weapon.Definition != rifle || weapon.RuntimeState == null) return Busy();
             var doors = new List<DoorSnapshot>();
             foreach (var door in SceneComponents<DoorInteractable>())
@@ -130,6 +132,7 @@ namespace LastSignal.Persistence
             if (!actor) return Invalid("Missing persistent encounter actor.");
             var look=player.GetComponent<FirstPersonLook>();
             snapshot = new SaveGame {
+                combat=CaptureCombat(player),
                 worldTime=clock ? clock.Capture() : null,
                 header=new SaveHeader { schemaVersion=cells ? (GetComponent<LastSignal.AI.WorldPopulationManager>() ? 4 : 3) : clock ? SaveValidation.SchemaVersion : 1,contentVersion=contentVersion,worldId=worldId,seed=loot.Seed,generation=1,
                     buildId=string.IsNullOrEmpty(Application.buildGUID)?"editor-"+Application.unityVersion:Application.buildGUID,timestampUtc=DateTimeOffset.UtcNow.ToString("O") },
@@ -287,14 +290,27 @@ namespace LastSignal.Persistence
             if(!player.GetComponent<PlayerStance>().TrySetCrouching(state.player.crouching)) throw new InvalidOperationException("Saved stance is obstructed.");
             player.GetComponent<FirstPersonLook>().RestorePitch(state.player.pitch);
             player.GetComponent<PlayerHealth>().RestoreHealth(state.player.health);
-            var weapon=player.GetComponent<PlayerCombatController>().ActiveWeapon;
+            var weapon=player.GetComponent<PlayerCombatController>().Firearm;
             if(!weapon || weapon.Definition!=rifle) throw new InvalidOperationException("Missing production rifle.");
             weapon.Initialize(player.GetComponent<FirstPersonLook>().View.transform,player,state.weapon.magazine); weapon.RequestEquip();
+            var stamina=player.GetComponent<PlayerStamina>();
+            if (stamina) { if(state.combat==null) stamina.ResetSession(); else stamina.Restore(state.combat.stamina,state.combat.exhausted,state.combat.regenDelay); }
+            var combat=player.GetComponent<PlayerCombatController>();
+            if (!combat.SelectSlot(state.combat==null ? PlayerCombatController.CombatSlot.Firearm : (PlayerCombatController.CombatSlot)state.combat.selectedSlot))
+                throw new InvalidOperationException("Missing saved combat slot.");
+            if(combat.Melee) combat.Melee.Cancel();
             shelter.RestoreExpedition(state.shelter.onExpedition,state.shelter.expeditionIndex);
             var actor=SceneComponents<ZombieEncounter>()[0].Actor; var enemy=state.world.enemies[0];
             var agent=actor.GetComponent<NavMeshAgent>(); var position=Position(enemy.transform);
             if(!NavMesh.SamplePosition(position,out var hit,.5f,NavMesh.AllAreas) || !agent.Warp(hit.position)) throw new InvalidOperationException("Saved enemy is outside navigation.");
             actor.transform.rotation=Rotation(enemy.transform); actor.GetComponent<ZombieHealth>().RestoreHealth(enemy.health);
+        }
+        static CombatEquipmentSnapshot CaptureCombat(GameObject player)
+        {
+            var stamina=player.GetComponent<PlayerStamina>();var combat=player.GetComponent<PlayerCombatController>();
+            if(!stamina) return null;
+            return new CombatEquipmentSnapshot { version=1,selectedSlot=(int)combat.SelectedSlot,meleeDefinitionId=MeleeWeaponDefinition.CrowbarId,
+                stamina=stamina.CurrentStamina,regenDelay=stamina.RegenDelayRemaining,exhausted=stamina.Exhausted };
         }
         bool PlayerLocationClear()
         {

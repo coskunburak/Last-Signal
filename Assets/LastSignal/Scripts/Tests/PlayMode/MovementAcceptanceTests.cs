@@ -90,6 +90,35 @@ namespace LastSignal.Tests
             float start = player.transform.position.x; Walk(Vector2.up, 1, sprint: true);
             Assert.That(player.transform.position.x - start, Is.EqualTo(1.6f).Within(.05f));
         }
+        [UnityTest]
+        public IEnumerator ValViewmodelUsesSprintClipOnlyWhileActuallySprinting()
+        {
+            yield return null; // PlayerCombatController creates the rifle in Start.
+            var rifle = player.GetComponent<PlayerCombatController>().Firearm;
+            Assert.That(rifle, Is.Not.Null);
+            float deadline = Time.realtimeSinceStartup + 5f;
+            while (rifle.RuntimeState.State != WeaponState.Ready && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(rifle.RuntimeState.State, Is.EqualTo(WeaponState.Ready));
+            var animator = rifle.GetComponentInChildren<Animator>(true);
+            Assert.That(animator, Is.Not.Null);
+            deadline = Time.realtimeSinceStartup + 5f;
+            while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Ready") && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Ready"), Is.True,
+                "Rifle equip animation must finish before testing the Ready-to-Sprint transition.");
+
+            motor.Simulate(Vector2.up, true, 1f / 60f);
+            Assert.That(motor.IsSprinting, Is.True);
+            yield return new WaitForSeconds(.2f);
+            Assert.That(animator.GetBool("Sprinting"), Is.True);
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Sprint"), Is.True);
+
+            motor.Simulate(Vector2.zero, false, 1f / 60f);
+            Assert.That(motor.IsSprinting, Is.False);
+            yield return new WaitForSeconds(.2f);
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Ready"), Is.True);
+        }
         [Test]
         public void PitchClampsInBothDirections()
         {
