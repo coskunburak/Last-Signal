@@ -9,6 +9,8 @@ namespace LastSignal
         int pointIndex;
         float pauseRemaining;
         bool inspecting;
+        public Vector3 Anchor => center;
+        public Vector3 Direction => forward;
         public Vector3 Destination => destination;
         public int PointIndex => pointIndex;
         public bool Inspecting => inspecting;

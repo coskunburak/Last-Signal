@@ -270,6 +270,7 @@ namespace LastSignal.Tests
         {
             yield return Load(); yield return Until(() => zombie.Runtime.State == ZombieState.AttackCommit);
             var replacement = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab"), session.Player.transform.position, session.Player.transform.rotation);
+            replacement.AddComponent<Noise.GameplayNoiseContext>().Bind(session);
             owned.Add(replacement); var nextHealth = replacement.GetComponent<PlayerHealth>();
             Assert.That(zombie.Bind(replacement), Is.True);
             Assert.That(zombie.Runtime.State, Is.EqualTo(ZombieState.Idle)); Assert.That(zombie.AttackTime, Is.Zero);

@@ -96,11 +96,6 @@ namespace LastSignal.AI
             simulation?.Unregister(this); simulation = active ? clock.Simulation : null; simulation?.Register(this);
         }
         bool Current => active && flow && flow.Generation == generation && clock.Simulation != null;
-        public void ReportShot(long sessionGeneration)
-        {
-            if (!Current || sessionGeneration != generation || flow.Paused || flow.Restoring || flow.PlayerDead || lastNoiseSequence == long.MaxValue) return;
-            ReportNoise("noise:" + (lastNoiseSequence + 1), cells.CurrentCell, 1);
-        }
         // Single-player synchronous receipt stream. The persisted high-water mark rejects old
         // events even after the bounded diagnostic receipt window is compacted.
         public void ReportNoise(string receiptId, string cellId, float intensity)

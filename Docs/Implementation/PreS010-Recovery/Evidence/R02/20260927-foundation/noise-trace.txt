@@ -1,0 +1,20 @@
+Standing: 0 events
+Walk start: position=(76.00, 0.02, 12.00) grounded=True allowed=True input=True
+Walk end: position=(76.00, 0.02, 18.40) grounded=True allowed=True count=4
+58:4	source=1	action=0	Footstep	(76.00, 0.02, 18.40)	radius=6	intensity=0.2	time=28801.8239	candidates=1	delivered=0	cells=4	pressure=False
+58:8	source=1	action=0	SprintFootstep	(76.00, 0.02, 11.98)	radius=12	intensity=0.4	time=28801.8239	candidates=1	delivered=1	cells=6	pressure=False
+58:9	source=1	action=3	MeleeImpact	(76.00, 1.65, 11.93)	radius=10	intensity=0.35	time=28802.0632	candidates=1	delivered=1	cells=4	pressure=False
+58:10	source=1	action=53	Gunshot	(76.07, 1.53, 11.83)	radius=96	intensity=1	time=28832.0864	candidates=3	delivered=3	cells=169	pressure=True
+58:11	source=1	action=54	Gunshot	(76.07, 1.54, 11.81)	radius=96	intensity=1	time=28838.1042	candidates=3	delivered=3	cells=169	pressure=True
+Producer rejection gates: empty/holstered/reloading/inactive slot/pause/exhaustion/cancel/miss PASS
+58:12	source=1	action=0	Gunshot	(128.00, 0.00, 1.00)	radius=96	intensity=1	time=28874.2169	candidates=2	delivered=2	cells=169	pressure=True
+59:1	source=1	action=0	Gunshot	(128.00, 0.00, 1.00)	radius=96	intensity=1	time=28874.3675	candidates=1	delivered=1	cells=169	pressure=True
+Save/load: transient events absent, pressure retained once, new epoch and new gunshot PASS
+Soak cycle=1: epoch=60, listeners=2, events=3, oldListeners=0
+Soak cycle=2: epoch=61, listeners=2, events=3, oldListeners=0
+Soak cycle=3: epoch=62, listeners=2, events=3, oldListeners=0
+Soak cycle=4: epoch=63, listeners=2, events=3, oldListeners=0
+Soak cycle=5: epoch=64, listeners=2, events=3, oldListeners=0
+Soak cycle=6: epoch=65, listeners=2, events=3, oldListeners=0
+Death/menu: no movement or combat noise; listeners cleared PASS
+R02 ROUTE PASS

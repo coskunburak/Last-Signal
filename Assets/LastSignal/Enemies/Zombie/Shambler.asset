@@ -21,6 +21,15 @@ MonoBehaviour:
   occlusionMask:
     serializedVersion: 2
     m_Bits: 1
+  hearingThreshold: 0.12
+  hearingMemoryDuration: 15
+  investigateDuration: 12
+  investigateArrivalDistance: 0.6
+  occludedTransmission: 0.4
+  footstepSensitivity: 1
+  sprintSensitivity: 1.1
+  meleeSensitivity: 1.2
+  gunshotSensitivity: 1.5
   lossGrace: 0.45
   searchDuration: 12
   speed: 0.92
@@ -34,7 +43,7 @@ MonoBehaviour:
   recoveryAttempts: 2
   stuckTimeout: 2
   stuckProgress: 0.12
-  spawnSampleRadius: 2.0
+  spawnSampleRadius: 2
   searchRadius: 2
   searchArrivalDistance: 0.35
   inspectionPause: 1

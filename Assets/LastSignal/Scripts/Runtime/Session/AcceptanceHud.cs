@@ -13,6 +13,9 @@ namespace LastSignal
         [SerializeField] Text ammoDisplay;
         int displayedMagazine = -1, displayedReserve = -1;
         float displayedHealth = -1, displayedMaxHealth = -1;
+        PlayerStamina stamina;
+        int shownStamina=-1;
+        Text staminaDisplay;
         GameObject observedPlayer;
         InteractionController interaction;
         PlayerStance stance;
@@ -51,9 +54,25 @@ namespace LastSignal
                 interaction = observedPlayer ? observedPlayer.GetComponent<InteractionController>() : null;
                 stance = observedPlayer ? observedPlayer.GetComponent<PlayerStance>() : null;
                 health = observedPlayer ? observedPlayer.GetComponent<PlayerHealth>() : null;
+                stamina = observedPlayer ? observedPlayer.GetComponent<PlayerStamina>() : null;
+                shownStamina=-1;
                 BindAmmoPlayer();
             }
+            if (!staminaDisplay && ammoDisplay)
+            {
+                staminaDisplay=Instantiate(ammoDisplay,ammoDisplay.transform.parent);
+                staminaDisplay.name="StaminaDisplay";
+                staminaDisplay.rectTransform.anchoredPosition += new Vector2(0,32);
+                staminaDisplay.text="";
+            }
             bool menu = session.InMenu, paused = session.Paused;
+            if(staminaDisplay)
+            {
+                staminaDisplay.enabled=stamina && !menu && !paused && !session.PlayerDead;
+                int value=stamina?Mathf.CeilToInt(stamina.CurrentStamina):-1;
+                if(value!=shownStamina) { shownStamina=value; staminaDisplay.text="STAMINA  " + value + " / 100"; }
+                staminaDisplay.color=stamina && stamina.Exhausted?new Color(1,.5f,.3f):Color.white;
+            }
             panel.SetActive(menu || (paused && !session.PreparationOpen) || session.PlayerDead);
             panelTitle.text = menu ? "LAST SIGNAL" : session.PlayerDead ? "ÖLDÜN" : "DURAKLATILDI";
             startButton.gameObject.SetActive(menu);
@@ -62,7 +81,7 @@ namespace LastSignal
             crosshair.enabled = !menu && !paused && !session.PlayerDead;
             prompt.text = menu || paused || session.PlayerDead || !interaction ? "" : interaction.Prompt;
             status.text = stance && stance.StandBlocked ? "Baş üstünde engel var. Açık alanda C ile tekrar dene." :
-                "WASD  Hareket    MOUSE  Bakış    SHIFT  Koş    C  Çömel    E  Kullan    R  Şarjör    SAĞ FARE  Nişan    SOL FARE  Ateş    ESC  Menü";
+                "WASD  Hareket    MOUSE  Bakış    SHIFT  Koş    C  Çömel    E  Kullan    R  Şarjör    SAĞ FARE  Nişan    SOL FARE  Saldırı    1  Tüfek    3  Levye    ESC  Menü";
 
             if (ammoDisplay) ammoDisplay.enabled = ammoWeapon && !menu && !paused && !session.PlayerDead;
         }

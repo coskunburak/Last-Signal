@@ -14,16 +14,29 @@ namespace LastSignal
         [SerializeField] Transform weaponParent; // Child of camera, holds weapon viewmodel
         [SerializeField] WeaponController startingWeapon;
 
+        public enum CombatSlot { Firearm, Melee }
+        [SerializeField] MeleeWeaponController startingMelee;
+        MeleeWeaponController melee;
+        public CombatSlot SelectedSlot { get; private set; }
+        public MeleeWeaponController Melee => melee;
+        public WeaponController Firearm => activeWeapon;
         WeaponController activeWeapon;
         bool aimInputHeld;
 
-        public WeaponController ActiveWeapon => activeWeapon;
+        public WeaponController ActiveWeapon => SelectedSlot == CombatSlot.Firearm ? activeWeapon : null;
         public event System.Action WeaponChanged;
 
         void Start()
         {
             if (!activeWeapon && startingWeapon)
                 EquipWeapon(Instantiate(startingWeapon, weaponParent));
+            if (startingMelee)
+            {
+                melee = Instantiate(startingMelee, weaponParent);
+                melee.Initialize(gameObject, look ? look.View.transform : transform);
+                if (noise != null) melee.BindNoise(noise, noiseTuning, noiseSource);
+                melee.gameObject.SetActive(false);
+            }
         }
 
         public void Configure(PlayerInputReader reader, FirstPersonLook fpLook, Transform wpnParent)
@@ -41,6 +54,8 @@ namespace LastSignal
             input.AimPressed += OnAimPressed;
             input.AimReleased += OnAimReleased;
             input.ReloadRequested += OnReload;
+            input.MeleeSlotRequested += SelectMelee;
+            input.FirearmSlotRequested += SelectFirearm;
         }
 
         void OnDisable()
@@ -51,6 +66,9 @@ namespace LastSignal
             input.AimPressed -= OnAimPressed;
             input.AimReleased -= OnAimReleased;
             input.ReloadRequested -= OnReload;
+            input.MeleeSlotRequested -= SelectMelee;
+            input.FirearmSlotRequested -= SelectFirearm;
+            CancelGameplayActions(false);
             aimInputHeld = false;
         }
 
@@ -75,13 +93,17 @@ namespace LastSignal
             WeaponChanged?.Invoke();
         }
 
-        LastSignal.AI.WorldPopulationManager population;
-        long populationGeneration;
-        public void BindPopulation(LastSignal.AI.WorldPopulationManager manager, long generation)
-        { population = manager; populationGeneration = generation; }
-        void OnWeaponShotFired(WeaponFireResolver.ShotResult obj)
+        Noise.GameplayNoiseSystem noise;
+        Noise.GameplayNoiseTuning noiseTuning;
+        ulong noiseSource, lastShot;
+        public void BindNoise(Noise.GameplayNoiseSystem authority, Noise.GameplayNoiseTuning tuning, ulong source)
+        { noise = authority; noiseTuning = tuning; noiseSource = source; lastShot = 0; if (melee) melee.BindNoise(authority, tuning, source); }
+        void OnWeaponShotFired(WeaponFireResolver.ShotResult shot)
         {
-            if (population) population.ReportShot(populationGeneration);
+            if (noise == null || shot.ShotId <= lastShot || !activeWeapon) return;
+            lastShot = shot.ShotId;
+            noise.TryEmit(new Noise.GameplayNoiseRequest(noiseSource, shot.SourcePosition,
+                Noise.GameplayNoiseCategory.Gunshot, noiseTuning.Gunshot, shot.ShotId), out _);
         }
 
         public void UnequipWeapon()
@@ -100,6 +122,7 @@ namespace LastSignal
         public void CancelGameplayActions(bool terminal)
         {
             aimInputHeld = false;
+            if (melee) { melee.Cancel(); if (terminal) melee.gameObject.SetActive(false); }
             if (!activeWeapon) return;
             activeWeapon.OnFireReleased();
             if (terminal) UnequipWeapon();
@@ -107,7 +130,8 @@ namespace LastSignal
 
         void Update()
         {
-            if (!activeWeapon || activeWeapon.RuntimeState == null) return;
+            if (!input || !input.GameplayActive) { if (melee) melee.Cancel(); }
+            if (SelectedSlot != CombatSlot.Firearm || !activeWeapon || activeWeapon.RuntimeState == null) return;
             // Update aim amount (smooth interpolation).
             var state = activeWeapon.RuntimeState;
             float adsSpeed = activeWeapon.Definition.AdsTransitionSeconds;
@@ -120,10 +144,27 @@ namespace LastSignal
             if (look) look.SetSensitivityMultiplier(Mathf.Lerp(1, activeWeapon.Definition.AdsSensitivityMultiplier, state.AimAmount));
         }
 
-        void OnFirePressed() { if (activeWeapon) activeWeapon.OnFirePressed(); }
+        void SelectMelee() => SelectSlot(CombatSlot.Melee);
+        void SelectFirearm() => SelectSlot(CombatSlot.Firearm);
+        public bool SelectSlot(CombatSlot slot)
+        {
+            if (slot != CombatSlot.Firearm && slot != CombatSlot.Melee) return false;
+            if (slot == CombatSlot.Melee && !melee) return false;
+            if (slot == SelectedSlot) return true;
+            aimInputHeld = false;
+            if (melee) { melee.Cancel(); melee.gameObject.SetActive(false); }
+            if (activeWeapon) { activeWeapon.OnFireReleased(); activeWeapon.gameObject.SetActive(false); }
+            SelectedSlot = slot;
+            if (slot == CombatSlot.Melee) melee.gameObject.SetActive(true);
+            else if (activeWeapon) { activeWeapon.gameObject.SetActive(true); activeWeapon.RequestEquip(); }
+            if (look) { look.SetFOVOverride(-1); look.SetSensitivityMultiplier(1); }
+            WeaponChanged?.Invoke();
+            return true;
+        }
+        void OnFirePressed() { if (SelectedSlot == CombatSlot.Melee) { if (melee) melee.TryAttack(); } else if (activeWeapon) activeWeapon.OnFirePressed(); }
         void OnFireReleased() { if (activeWeapon) activeWeapon.OnFireReleased(); }
-        void OnAimPressed() => aimInputHeld = true;
+        void OnAimPressed() => aimInputHeld = SelectedSlot == CombatSlot.Firearm;
         void OnAimReleased() => aimInputHeld = false;
-        void OnReload() { if (activeWeapon) activeWeapon.OnReloadRequested(); }
+        void OnReload() { if (SelectedSlot == CombatSlot.Firearm && activeWeapon) activeWeapon.OnReloadRequested(); }
     }
 }

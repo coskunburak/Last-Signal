@@ -58,7 +58,7 @@ namespace LastSignal.Tests
         [UnityTest] public IEnumerator StaleShotAndCellContinuationCannotMutateRestart()
         {
             long old = flow.Generation; cells.Request("cell:1:0"); yield return null;
-            flow.ReturnToMenu(); flow.BeginSession(); pop.ReportShot(old);
+            flow.ReturnToMenu(); flow.BeginSession(); pop.ReportNoise("noise:1", "cell:1:0", 1);
             yield return null; yield return null;
             Assert.AreEqual(0, pop.LastNoiseSequence); Assert.AreEqual(0, pop.PhysicalCount); Assert.AreEqual(30, pop.TotalAccounted);
             Assert.AreEqual(CellState.Unloaded, cells.State("cell:1:0"));

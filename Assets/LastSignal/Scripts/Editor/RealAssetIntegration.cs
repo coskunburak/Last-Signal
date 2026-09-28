@@ -10,7 +10,7 @@ namespace LastSignal.Editor
     /// <summary>Reproducible, project-owned adapter. Never changes the source meshes or animation curves.</summary>
     public static class RealAssetIntegration
     {
-        public const string Val = "Assets/LastSignal/VAL.fbx";
+        public const string Val = "Assets/LastSignal/Assets/VAL.fbx";
         public const string Rifle = "Assets/LastSignal/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx";
         public const string Prefab = "Assets/Resources/Weapon_AssaultRifle.prefab";
         public const string Evidence = "Docs/Implementation/Combat/Evidence/20260917-RealAssets";
@@ -60,7 +60,7 @@ namespace LastSignal.Editor
         static AnimatorController MakeController()
         {
             var ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(Controller);
-            if (ctrl) return ctrl;
+            if (ctrl) { EnsureSprintState(ctrl); return ctrl; }
             ctrl = AnimatorController.CreateAnimatorControllerAtPath(Controller);
             ctrl.AddParameter("WeaponState", AnimatorControllerParameterType.Int);
             ctrl.AddParameter("AimAmount", AnimatorControllerParameterType.Float);
@@ -74,7 +74,44 @@ namespace LastSignal.Editor
                 enter.duration = pair.Item1 == "Fire" ? 0 : .035f; enter.hasFixedDuration = true; enter.canTransitionToSelf = pair.Item1 == "Fire";
                 var exit = state.AddTransition(idle); exit.hasExitTime = true; exit.exitTime = 1; exit.duration = .035f; exit.hasFixedDuration = true;
             }
+            EnsureSprintState(ctrl);
             return ctrl;
+        }
+
+        [MenuItem("Last Signal/S002/Enable VAL sprint")]
+        public static void EnableValSprint()
+        {
+            var ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(Controller);
+            if (!ctrl) throw new InvalidOperationException("VAL rifle controller is missing.");
+            EnsureSprintState(ctrl);
+            AssetDatabase.SaveAssets();
+        }
+
+        static void EnsureSprintState(AnimatorController ctrl)
+        {
+            const string parameter = "Sprinting";
+            if (!ctrl.parameters.Any(p => p.name == parameter))
+                ctrl.AddParameter(parameter, AnimatorControllerParameterType.Bool);
+            var states = ctrl.layers[0].stateMachine;
+            var ready = states.states.First(s => s.state.name == "Ready").state;
+            var sprint = states.states.FirstOrDefault(s => s.state.name == "Sprint").state;
+            if (!sprint) sprint = states.AddState("Sprint");
+            sprint.motion = Clip("sprint");
+            if (!ready.transitions.Any(t => t.destinationState == sprint))
+            {
+                var enter = ready.AddTransition(sprint);
+                enter.hasExitTime = false;
+                enter.duration = .1f;
+                enter.AddCondition(AnimatorConditionMode.If, 0, parameter);
+            }
+            if (!sprint.transitions.Any(t => t.destinationState == ready))
+            {
+                var exit = sprint.AddTransition(ready);
+                exit.hasExitTime = false;
+                exit.duration = .1f;
+                exit.AddCondition(AnimatorConditionMode.IfNot, 0, parameter);
+            }
+            EditorUtility.SetDirty(ctrl);
         }
 
         [MenuItem("Last Signal/S002/Build Real Asset Adapter")]

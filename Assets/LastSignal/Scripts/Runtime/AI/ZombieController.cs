@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LastSignal
 {
-    [RequireComponent(typeof(ZombieNavigation), typeof(ZombiePerception))]
+    [RequireComponent(typeof(ZombieNavigation), typeof(ZombiePerception), typeof(ZombieNoiseListener))]
     public sealed class ZombieController : MonoBehaviour
     {
         static readonly ProfilerMarker Marker = new ProfilerMarker("LastSignal.Zombie.AI");
@@ -13,6 +13,7 @@ namespace LastSignal
         Collider[] ownedColliders;
         float reactionRemaining, reactionReadyAt;
         ZombieState reactionReturn;
+        bool reactionWasInvestigating;
         public bool IsDead => runtime.State == ZombieState.Dead;
         public float ReactionRemaining => reactionRemaining;
         PlayerHealth targetHealth;
@@ -40,6 +41,48 @@ namespace LastSignal
         ZombieAnimationPresenter presentation;
         readonly ZombieRuntimeState runtime = new ZombieRuntimeState();
         readonly ZombieSearch search = new ZombieSearch();
+        readonly ZombieAuditoryMemory auditory = new ZombieAuditoryMemory();
+        ZombieNoiseListener noiseListener;
+        Vector3 investigateDestination, investigateDirection;
+        float investigateAge;
+        bool auditorySearch;
+        static readonly ProfilerMarker InvestigateMarker = new ProfilerMarker("LastSignal.Zombie.Investigate");
+        public ZombieAuditoryMemory Auditory => auditory;
+        public Vector3 InvestigateDestination => investigateDestination;
+        public float InvestigateAge => investigateAge;
+        public bool SearchFromHearing => auditorySearch;
+        public bool CanHear => isActiveAndEnabled && initialized && !IsDead && target && target.activeInHierarchy && (!targetHealth || targetHealth.IsAlive);
+        public bool ReceiveAuditoryStimulus(in ZombieAuditoryStimulus stimulus)
+        {
+            if (!CanHear || paused || !auditory.Receive(stimulus, definition.HearingMemoryDuration)) return false;
+            // Do not reset the investigation clock for repeated nearby footsteps, or for retargeting.
+            if (runtime.State == ZombieState.Investigating)
+            {
+                if ((stimulus.Event.Position - investigateDestination).sqrMagnitude >= definition.RepathDistance * definition.RepathDistance)
+                { investigateDestination = stimulus.Event.Position; investigateDirection = stimulus.ApproachDirection; }
+            }
+            else if (!(runtime.Visible && runtime.Confidence >= 1) &&
+                (runtime.State == ZombieState.Idle || runtime.State == ZombieState.Searching)) ChangeState(ZombieState.Investigating);
+            return true;
+        }
+        void ClearAuditory()
+        { auditory.Clear(); investigateAge = 0; investigateDestination = investigateDirection = Vector3.zero; auditorySearch = false; }
+        ZombieState AfterCombat() => runtime.Visible ? ZombieState.Chasing : auditory.HasStimulus ? ZombieState.Investigating : ZombieState.Searching;
+        void Investigate(float seconds)
+        {
+            using (InvestigateMarker.Auto())
+            {
+                if (runtime.Visible && runtime.Confidence >= 1) { ChangeState(ZombieState.Chasing); return; }
+                investigateAge += seconds;
+                navigation.MoveTo(investigateDestination, clock, definition.InvestigateArrivalDistance);
+                if (!auditory.HasStimulus || investigateAge >= definition.InvestigateDuration || navigation.Exhausted ||
+                    (transform.position - investigateDestination).sqrMagnitude <= definition.InvestigateArrivalDistance * definition.InvestigateArrivalDistance ||
+                    navigation.Arrived && navigation.PathStatus == UnityEngine.AI.NavMeshPathStatus.PathComplete)
+                {
+                    auditorySearch = true; auditory.Consume(); ChangeState(ZombieState.Searching);
+                }
+            }
+        }
         GameObject target;
         float clock, perceptionDue, observationAge, failureCooldown;
         bool initialized, paused, holding, searchLostSight;
@@ -64,6 +107,9 @@ namespace LastSignal
             if (!definition || !definition.IsValid(out _))
             { Debug.LogError("Zombie requires a valid Shambler definition.", this); enabled = false; return false; }
             navigation = GetComponent<ZombieNavigation>(); perception = GetComponent<ZombiePerception>();
+            noiseListener = GetComponent<ZombieNoiseListener>();
+            if (GetComponents<ZombieNoiseListener>().Length != 1)
+            { Debug.LogError("Zombie requires exactly one auditory listener.", this); enabled = false; return false; }
             Shutdown(); paused = false;
             initialized = navigation.Initialize(definition);
             presentation = GetComponent<ZombieAnimationPresenter>();
@@ -91,6 +137,7 @@ namespace LastSignal
             // A strike committed against A can never become a strike against B.
             if (presentation) presentation.EndReaction();
             reactionRemaining = reactionReadyAt = 0;
+            noiseListener?.Release(); ClearAuditory();
             ClearAttack(); runtime.Reset(); search.Clear(); holding = false;
             target = null; targetHealth = null; targetCapsule = null;
             if (navigation) navigation.Stop();
@@ -100,6 +147,9 @@ namespace LastSignal
             targetHealth = player.GetComponent<PlayerHealth>(); targetCapsule = player.GetComponent<CharacterController>();
             if (combatReady && !targetHealth)
                 Debug.LogWarning("Zombie target has no PlayerHealth; melee is disabled for this binding.", this);
+            var noiseContext = player.GetComponent<Noise.GameplayNoiseContext>();
+            if (!noiseContext) { Debug.LogError("Zombie hearing requires explicit GameplayNoiseContext on the bound player.", this); Shutdown(); return false; }
+            if (!noiseListener || !noiseListener.Bind(noiseContext)) { Shutdown(); return false; }
             return true;
         }
         public void SetPaused(bool value)
@@ -111,6 +161,7 @@ namespace LastSignal
         }
         public void Shutdown()
         {
+            noiseListener?.Release(); ClearAuditory();
             if (health) health.SetDamageEnabled(false);
             if (presentation && !IsDead) presentation.EndReaction();
             reactionRemaining = reactionReadyAt = 0;
@@ -140,6 +191,7 @@ namespace LastSignal
         void Tick(float seconds)
         {
             clock += seconds;
+            auditory.Advance(seconds, definition.HearingMemoryDuration);
             if (runtime.State == ZombieState.HitReact)
             {
                 reactionRemaining = Mathf.Max(0, reactionRemaining - seconds);
@@ -147,10 +199,20 @@ namespace LastSignal
                 if (reactionRemaining <= 0)
                 {
                     presentation.EndReaction();
+                    // A sound accepted during the reaction is usable once its commitment ends.
+                    if (auditory.HasStimulus && !(runtime.Visible && runtime.Confidence >= 1) &&
+                        (reactionReturn == ZombieState.Idle || reactionReturn == ZombieState.Searching))
+                        reactionReturn = ZombieState.Investigating;
                     runtime.Transition(reactionReturn);
+                    if (reactionReturn == ZombieState.Investigating)
+                    {
+                        if (!reactionWasInvestigating) EnterState(ZombieState.Investigating);
+                        else if (auditory.HasStimulus)
+                        { investigateDestination = auditory.Stimulus.Event.Position; investigateDirection = auditory.Stimulus.ApproachDirection; }
+                    }
                     perceptionDue = clock; observationAge = 0;
                 }
-                return; // Freeze memory/search progress; no source-position knowledge is introduced.
+                return; // Freeze visual memory/search progress; no source-position knowledge is introduced.
             }
             observationAge += seconds; runtime.Advance(seconds);
             if (clock >= perceptionDue)
@@ -168,9 +230,10 @@ namespace LastSignal
                     if (runtime.Visible && runtime.Confidence >= 1 && clock >= failureCooldown) ChangeState(ZombieState.Chasing);
                     else if (!runtime.Visible && runtime.Confidence <= 0) runtime.Reset();
                     break;
+                case ZombieState.Investigating: Investigate(seconds); break;
                 case ZombieState.Chasing:
                     if (navigation.Exhausted || runtime.MemoryAge >= definition.LossGrace)
-                        ChangeState(ZombieState.Searching);
+                        ChangeState(auditory.HasStimulus && !runtime.Visible ? ZombieState.Investigating : ZombieState.Searching);
                     else if (!TryBeginAttack()) Chase(seconds);
                     break;
                 case ZombieState.Searching:
@@ -192,7 +255,8 @@ namespace LastSignal
         void OnDamaged(DamageInfo info)
         {
             if (!initialized || paused || IsDead || runtime.State == ZombieState.HitReact || clock < reactionReadyAt) return;
-            reactionReturn = Attacking ? (runtime.Visible ? ZombieState.Chasing : ZombieState.Searching) : runtime.State;
+            reactionWasInvestigating = runtime.State == ZombieState.Investigating;
+            reactionReturn = Attacking ? AfterCombat() : runtime.State;
             // Preserve search progress when already searching; an interrupted melee starts search only if unseen.
             if (Attacking && reactionReturn == ZombieState.Searching)
                 search.Begin(runtime.LastKnownPosition, runtime.LastSeenDirection);
@@ -204,6 +268,7 @@ namespace LastSignal
         void OnDeath()
         {
             if (IsDead) return;
+            noiseListener?.Release(); ClearAuditory();
             ClearAttack(); reactionRemaining = 0; sequence = 0;
             runtime.Transition(ZombieState.Dead); search.Clear(); holding = false;
             target = null; targetHealth = null; targetCapsule = null;
@@ -239,7 +304,7 @@ namespace LastSignal
                     if (Vector3.Distance(MeleeOrigin, targetCapsule.ClosestPoint(MeleeOrigin)) > definition.AttackAbortRange)
                     {
                         ClearAttack(); LastMeleeResult = MeleeResult.Aborted;
-                        ChangeState(runtime.Visible ? ZombieState.Chasing : ZombieState.Searching); return;
+                        ChangeState(AfterCombat()); return;
                     }
                     // Never track a hidden live transform, and never rotate past the commitment boundary.
                     float turnSeconds = Mathf.Min(seconds, Mathf.Max(0, definition.AttackCommitTime - attackTime));
@@ -275,7 +340,7 @@ namespace LastSignal
                 if (runtime.State == ZombieState.Recovering && attackTime >= definition.AttackDuration)
                 {
                     ClearAttack();
-                    ChangeState(runtime.Visible && !navigation.Exhausted ? ZombieState.Chasing : ZombieState.Searching);
+                    ChangeState(runtime.Visible && !navigation.Exhausted ? ZombieState.Chasing : auditory.HasStimulus && !runtime.Visible ? ZombieState.Investigating : ZombieState.Searching);
                 }
             }
         }
@@ -296,6 +361,7 @@ namespace LastSignal
         }
         void ChangeState(ZombieState next)
         {
+            if (next != ZombieState.Searching) auditorySearch = false;
             ExitState(runtime.State); runtime.Transition(next); EnterState(next);
         }
         void ExitState(ZombieState previous)
@@ -304,9 +370,12 @@ namespace LastSignal
         {
             switch (next)
             {
-                case ZombieState.Idle: navigation.ResetPolicy(); break;
+                case ZombieState.Idle: auditory.Consume(); navigation.ResetPolicy(); break;
+                case ZombieState.Investigating:
+                    investigateAge = 0; investigateDestination = auditory.Stimulus.Event.Position;
+                    investigateDirection = auditory.Stimulus.ApproachDirection; navigation.ResetPolicy(); break;
                 case ZombieState.Chasing: navigation.ResetPolicy(); break;
-                case ZombieState.Searching: searchLostSight = !runtime.Visible; search.Begin(runtime.LastKnownPosition, runtime.LastSeenDirection); break;
+                case ZombieState.Searching: searchLostSight = !runtime.Visible; search.Begin(auditorySearch ? investigateDestination : runtime.LastKnownPosition, auditorySearch ? investigateDirection : runtime.LastSeenDirection); break;
             }
         }
         void OnDisable() => Shutdown();
@@ -317,6 +386,8 @@ namespace LastSignal
             UnityEditor.Handles.Label(transform.position + Vector3.up * 2.1f,
                 runtime.State + " visible=" + runtime.Visible + " confidence=" + runtime.Confidence.ToString("F2") +
                 "\nAttack=" + sequence + " t=" + attackTime.ToString("F3") + " contact=" + (definition ? definition.AttackContactTime : 0).ToString("F3") + " d=" + LastContactDistance.ToString("F2") + " angle=" + LastContactAngle.ToString("F1") + " result=" + LastMeleeResult + " HP=" + (targetHealth ? targetHealth.CurrentHealth : 0) + "\nPath=" + (navigation ? navigation.PathStatus.ToString() : "None") + " target=" + (target ? target.name : "None"));
+            if (auditory.HasStimulus) { Gizmos.color = Color.yellow; Gizmos.DrawWireSphere(auditory.Stimulus.Event.Position, .3f);
+                UnityEditor.Handles.Label(auditory.Stimulus.Event.Position, "Heard " + auditory.Stimulus.Event.EventId + " " + auditory.Stimulus.Event.Category + " strength=" + auditory.Stimulus.Strength + " age=" + auditory.Age); }
             if (runtime.HasMemory) { Gizmos.color = Color.cyan; Gizmos.DrawWireSphere(runtime.LastKnownPosition,.2f); Gizmos.DrawLine(transform.position,runtime.LastKnownPosition); }
             if (runtime.State == ZombieState.Searching) { Gizmos.color = Color.magenta; Gizmos.DrawWireSphere(search.Destination,.3f); }
             if (navigation) { Gizmos.color = Color.blue; Gizmos.DrawWireSphere(navigation.Destination,.15f); }

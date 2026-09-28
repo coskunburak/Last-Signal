@@ -14,6 +14,7 @@ namespace LastSignal
         public struct ShotResult
         {
             public ulong ShotId;
+            public Vector3 SourcePosition;
             public bool Hit;
             public bool MuzzleObstructed;
             public Vector3 HitPoint;
@@ -44,7 +45,7 @@ namespace LastSignal
             float damage, GameObject instigator,
             LayerMask hitMask)
         {
-            var result = new ShotResult { ShotId = ++nextShotId };
+            var result = new ShotResult { ShotId = ++nextShotId, SourcePosition = muzzlePosition };
 
             // Step 1: Camera ray — where does the player INTEND to shoot?
             Vector3 targetPoint;

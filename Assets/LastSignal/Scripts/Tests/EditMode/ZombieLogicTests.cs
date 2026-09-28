@@ -29,6 +29,9 @@ namespace LastSignal.Tests
             foreach (ZombieState from in System.Enum.GetValues(typeof(ZombieState)))
                 foreach (ZombieState to in System.Enum.GetValues(typeof(ZombieState)))
                     Assert.That(ZombieRuntimeState.IsLegal(from, to), Is.EqualTo(
+                        // R03 adds the explicitly approved auditory edges; all prior edges remain checked.
+                        to == ZombieState.Investigating && (from == ZombieState.Idle || from == ZombieState.Searching || from == ZombieState.Chasing || from == ZombieState.HitReact || from == ZombieState.AttackWindup || from == ZombieState.Recovering) ||
+                        from == ZombieState.Investigating && (to == ZombieState.Chasing || to == ZombieState.Searching) ||
                         from != ZombieState.Dead && to == ZombieState.Dead ||
                         from != ZombieState.Dead && from != ZombieState.HitReact && to == ZombieState.HitReact ||
                         from == ZombieState.HitReact && (to == ZombieState.Idle || to == ZombieState.Chasing || to == ZombieState.Searching) ||

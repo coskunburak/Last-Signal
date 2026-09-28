@@ -13,6 +13,32 @@ namespace LastSignal
         [SerializeField, Min(.05f)] float acquisitionTime = .35f;
         [SerializeField, Min(.05f)] float confidenceDecayTime = .5f;
         [SerializeField, Tooltip("Opaque world only; exclude player, enemies and presentation.")] LayerMask occlusionMask = 1;
+        [Header("Hearing — initial production tuning")]
+        [SerializeField] float hearingThreshold = .12f;
+        [SerializeField] float hearingMemoryDuration = 15;
+        [SerializeField] float investigateDuration = 12;
+        [SerializeField] float investigateArrivalDistance = .6f;
+        [SerializeField] float occludedTransmission = .4f;
+        [SerializeField] float footstepSensitivity = 1;
+        [SerializeField] float sprintSensitivity = 1.1f;
+        [SerializeField] float meleeSensitivity = 1.2f;
+        [SerializeField] float gunshotSensitivity = 1.5f;
+        public float HearingThreshold => hearingThreshold;
+        public float HearingMemoryDuration => hearingMemoryDuration;
+        public float InvestigateDuration => investigateDuration;
+        public float InvestigateArrivalDistance => investigateArrivalDistance;
+        public float OccludedTransmission => occludedTransmission;
+        public float HearingSensitivity(Noise.GameplayNoiseCategory category) => category switch {
+            Noise.GameplayNoiseCategory.Footstep => footstepSensitivity,
+            Noise.GameplayNoiseCategory.SprintFootstep => sprintSensitivity,
+            Noise.GameplayNoiseCategory.MeleeImpact => meleeSensitivity,
+            Noise.GameplayNoiseCategory.Gunshot => gunshotSensitivity,
+            _ => 0 };
+        public bool IsHearingValid => Positive(hearingThreshold) && Positive(hearingMemoryDuration) &&
+            Positive(investigateDuration) && Positive(investigateArrivalDistance) &&
+            float.IsFinite(occludedTransmission) && occludedTransmission > 0 && occludedTransmission <= 1 &&
+            Positive(footstepSensitivity) && Positive(sprintSensitivity) && Positive(meleeSensitivity) && Positive(gunshotSensitivity);
+        static bool Positive(float value) => float.IsFinite(value) && value > 0;
         [Header("Memory")]
         [SerializeField, Min(0)] float lossGrace = .45f;
         [SerializeField, Min(1)] float searchDuration = 12;
@@ -119,6 +145,7 @@ namespace LastSignal
 
         public bool IsValid(out string reason)
         {
+            if (!IsHearingValid) { reason = "Invalid hearing threshold, duration, arrival, sensitivity or transmission."; return false; }
             // Validation runs once at activation, never in the hot path.
             float[] positive = { sightDistance, horizontalFov, verticalHalfAngle, perceptionInterval,
                 acquisitionTime, confidenceDecayTime, searchDuration, speed, acceleration, turnSpeed,

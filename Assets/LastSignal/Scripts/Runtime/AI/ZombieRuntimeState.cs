@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LastSignal
 {
-    public enum ZombieState { Idle, Chasing, Searching, AttackWindup, AttackCommit, Recovering, HitReact, Dead }
+    public enum ZombieState { Idle, Chasing, Searching, AttackWindup, AttackCommit, Recovering, HitReact, Dead, Investigating }
 
     // Only ZombieController writes this per-actor domain state. No Transform reference is retained.
     public sealed class ZombieRuntimeState
@@ -37,6 +37,8 @@ namespace LastSignal
         }
 
         public static bool IsLegal(ZombieState from, ZombieState to) =>
+            (from == ZombieState.Idle || from == ZombieState.Searching || from == ZombieState.Chasing || from == ZombieState.HitReact || from == ZombieState.Recovering || from == ZombieState.AttackWindup) && to == ZombieState.Investigating ||
+            from == ZombieState.Investigating && (to == ZombieState.Chasing || to == ZombieState.Searching) ||
             from != ZombieState.Dead && to == ZombieState.Dead ||
             from != ZombieState.Dead && from != ZombieState.HitReact && to == ZombieState.HitReact ||
             from == ZombieState.HitReact && (to == ZombieState.Idle || to == ZombieState.Chasing || to == ZombieState.Searching) ||

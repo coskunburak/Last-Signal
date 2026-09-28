@@ -11,6 +11,7 @@ namespace LastSignal
     {
         [SerializeField] WeaponController weapon;
         [SerializeField] Animator animator;
+        FirstPersonMotor motor;
 
         // Animator parameter hashes (set once).
         static readonly int HashState = Animator.StringToHash("WeaponState");
@@ -20,6 +21,7 @@ namespace LastSignal
         static readonly int HashAimAmount = Animator.StringToHash("AimAmount");
         static readonly int HashEquip = Animator.StringToHash("Equip");
         static readonly int HashUnequip = Animator.StringToHash("Unequip");
+        static readonly int HashSprinting = Animator.StringToHash("Sprinting");
 
         WeaponState lastState = WeaponState.Holstered;
 
@@ -38,6 +40,7 @@ namespace LastSignal
 
         void OnDisable()
         {
+            if (animator) animator.SetBool(HashSprinting, false);
             if (!weapon) return;
             weapon.ShotFired -= OnShotFired;
             weapon.StateTransitioned -= OnStateTransitioned;
@@ -50,6 +53,8 @@ namespace LastSignal
 
             animator.SetInteger(HashState, (int)state.State);
             animator.SetFloat(HashAimAmount, state.AimAmount);
+            if (!motor) motor = GetComponentInParent<FirstPersonMotor>();
+            animator.SetBool(HashSprinting, motor && motor.IsSprinting && state.State == WeaponState.Ready);
         }
 
         void OnShotFired(WeaponFireResolver.ShotResult result)

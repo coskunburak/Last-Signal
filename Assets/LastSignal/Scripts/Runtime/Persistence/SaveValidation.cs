@@ -43,6 +43,12 @@ namespace LastSignal.Persistence
                 return Invalid("Missing required section.");
             if (h.schemaVersion < 3 && save.cells != null) return Invalid("Legacy schema cannot contain cells.");
             if (h.schemaVersion < 4 && save.population != null) return Invalid("Unversioned population data is unsupported; use a pre-S009 checkpoint.");
+            var combat = save.combat;
+            if (combat != null && (combat.version != 1 || (combat.selectedSlot != 0 && combat.selectedSlot != 1) ||
+                combat.meleeDefinitionId != MeleeWeaponDefinition.CrowbarId || !Finite(combat.stamina) || combat.stamina < 0 || combat.stamina > PlayerStamina.Maximum ||
+                !Finite(combat.regenDelay) || combat.regenDelay < 0 || combat.regenDelay > PlayerStamina.RegenDelay ||
+                (combat.stamina == 0 && !combat.exhausted) || (combat.stamina >= PlayerStamina.ResumeThreshold && combat.exhausted)))
+                return Invalid("Invalid combat equipment extension.");
             var ids = new HashSet<string>(StringComparer.Ordinal);
             var p = save.player;
             if (!AddId(ids, p.id)) return Identity();
@@ -102,7 +108,7 @@ namespace LastSignal.Persistence
                 int count = w.items.Length + w.doors.Length + w.enemies.Length + w.opportunities.Length;
                 foreach (var cell in save.cells.cells)
                 {
-                    if (cell == null || !Id(cell.id) || !cellIds.Add(cell.id) || !LastSignal.WorldTime.WorldTimeSettings.ValidTime(cell.lastProcessed) || cell.lastProcessed > save.worldTime.seconds) return Invalid("Invalid cell identity/time.");
+                    if (cell == null || !Id(cell.id) || !cellIds.Add(cell.id) || !LastSignal.WorldTime.WorldTimeSettings.ValidTime(cell.lastProcessed) || cell.lastProcessed > save.worldTime.seconds + 0.01) return Invalid("Invalid cell identity/time.");
                     if (!cell.visited) continue;
                     var nested = new SaveGame { header = new SaveHeader { schemaVersion=2, worldId=h.worldId,contentVersion=h.contentVersion,generation=h.generation,buildId=h.buildId,timestampUtc=h.timestampUtc },
                         worldTime=save.worldTime,player=save.player,inventory=save.inventory,weapon=save.weapon,shelter=save.shelter,world=cell.world };

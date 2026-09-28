@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-26 16:58:03Z" end-time="2026-09-26 16:58:05Z" duration="2.1801848">
+  <test-suite type="TestSuite" id="1157" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="126" result="Failed" site="Child" start-time="2026-09-26 16:58:03Z" end-time="2026-09-26 16:58:05Z" duration="2.180185" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1150" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="126" result="Failed" site="Child" start-time="2026-09-26 16:58:03Z" end-time="2026-09-26 16:58:05Z" duration="2.172768" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="66403" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1151" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="126" result="Failed" site="Child" start-time="2026-09-26 16:58:03Z" end-time="2026-09-26 16:58:05Z" duration="2.171511" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1152" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="126" result="Failed" site="Child" start-time="2026-09-26 16:58:03Z" end-time="2026-09-26 16:58:05Z" duration="2.170548" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1055" name="R01CombatPlayTests" fullname="LastSignal.Tests.R01CombatPlayTests" classname="LastSignal.Tests.R01CombatPlayTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-09-26 16:58:03Z" end-time="2026-09-26 16:58:05Z" duration="2.167316" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1056" name="PhysicsDeduplicatesAndRejectsWallsRangeRearDeadAndEmbeddedOrigin" fullname="LastSignal.Tests.R01CombatPlayTests.PhysicsDeduplicatesAndRejectsWallsRangeRearDeadAndEmbeddedOrigin" methodname="PhysicsDeduplicatesAndRejectsWallsRangeRearDeadAndEmbeddedOrigin" classname="LastSignal.Tests.R01CombatPlayTests" runstate="Runnable" seed="401622319" result="Passed" start-time="2026-09-26 16:58:03Z" end-time="2026-09-26 16:58:03Z" duration="0.040866" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1058" name="ProductionPrefabHasBoundedPresentationAndValidReferences" fullname="LastSignal.Tests.R01CombatPlayTests.ProductionPrefabHasBoundedPresentationAndValidReferences" methodname="ProductionPrefabHasBoundedPresentationAndValidReferences" classname="LastSignal.Tests.R01CombatPlayTests" runstate="Runnable" seed="442014842" result="Passed" start-time="2026-09-26 16:58:03Z" end-time="2026-09-26 16:58:03Z" duration="0.020132" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1057" name="RealInputSwitchCancelSoakAndSaveLoad" fullname="LastSignal.Tests.R01CombatPlayTests.RealInputSwitchCancelSoakAndSaveLoad" methodname="RealInputSwitchCancelSoakAndSaveLoad" classname="LastSignal.Tests.R01CombatPlayTests" runstate="Runnable" seed="1149137599" result="Failed" start-time="2026-09-26 16:58:03Z" end-time="2026-09-26 16:58:05Z" duration="2.096377" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Invalid or duplicate catalog identity/prefab.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.R01CombatPlayTests+<RealInputSwitchCancelSoakAndSaveLoad>d__9.MoveNext () [0x004e0] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs:74
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=14
+S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
