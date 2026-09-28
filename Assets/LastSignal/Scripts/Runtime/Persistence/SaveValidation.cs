@@ -56,6 +56,9 @@ namespace LastSignal.Persistence
                 return Invalid("Invalid player state. Schema v1 accepts living-player checkpoints only.");
             var result = Container(save.inventory, ids); if (!result.Success) return result;
             result = Container(save.shelter.storage, ids); if (!result.Success) return result;
+            var production = save.shelter.production;
+            if (production != null && (save.worldTime == null || !Shelter.ShelterProduction.ValidSnapshot(production, save.worldTime.seconds) ||
+                (production.job != null && (!stackLimits.ContainsKey(production.job.inputId) || !stackLimits.ContainsKey(production.job.outputId))))) return Invalid("Invalid shelter production extension.");
             if (save.shelter.expeditionIndex < 0) return Invalid("Invalid expedition index.");
             if (save.weapon.definitionId != weaponId) return Fail(SaveError.UnknownDefinition, "Unknown weapon definition.");
             if (save.weapon.magazine < 0 || save.weapon.magazine > magazineCapacity) return Invalid("Invalid magazine quantity.");

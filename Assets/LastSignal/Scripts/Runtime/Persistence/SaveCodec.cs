@@ -62,6 +62,21 @@ namespace LastSignal.Persistence
                     }
                 }
                 if (candidate != null && candidate.combat != null && candidate.combat.version == 0) candidate.combat = null;
+                var production = candidate?.shelter?.production;
+                if (production != null)
+                {
+                    // JsonUtility emits/materializes zero-filled objects for null optional
+                    // serializable classes. Normalize ONLY the exact empty representation.
+                    var job = production.job;
+                    bool emptyJob = job == null || (string.IsNullOrEmpty(job.id) && string.IsNullOrEmpty(job.recipeId) &&
+                        string.IsNullOrEmpty(job.inputId) && string.IsNullOrEmpty(job.outputId) && job.revision == 0 &&
+                        job.inputQuantity == 0 && job.outputQuantity == 0 && job.progress == 0 && job.duration == 0 && (int)job.status == 0);
+                    if (emptyJob) production.job = null;
+                    if (production.version == 0 && string.IsNullOrEmpty(production.shelterId) && !production.claimed && !production.bed &&
+                        !production.storage && !production.workbench && !production.upgraded && !production.generatorEnabled &&
+                        production.fuelSeconds == 0 && production.lastProcessed == 0 && production.sequence == 0 && emptyJob)
+                        candidate.shelter.production = null;
+                }
                 var result = validation.Validate(candidate); if (!result.Success) return result;
                 state = candidate;
                 return SaveResult.Ok;

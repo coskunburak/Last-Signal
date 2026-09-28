@@ -72,6 +72,8 @@ namespace LastSignal.Shelter
         {
             if (!Alive || session.Paused || transitioning || !point || point.Loop != this) return false;
             if ((session.Player.transform.position - point.transform.position).sqrMagnitude > point.UseRange * point.UseRange) return false;
+            var site = GetComponent<ShelterSite>();
+            if (point == storagePoint && site && (site.Production == null || !site.Production.Installed(ShelterModule.Storage))) return false;
             return point == storagePoint ? preparationUI && preparationUI.isActiveAndEnabled && State == ExpeditionState.Shelter : point == exitPoint ? State == ExpeditionState.Shelter : point == returnPoint && State == ExpeditionState.Expedition;
         }
         public bool TryUse(ShelterPoint point)
@@ -123,7 +125,12 @@ namespace LastSignal.Shelter
         }
         public TransferResult Transfer(bool deposit, ItemDefinition item, int quantity)
         {
-            if (!Alive || !Preparing || !preparationUI.IsOpen) return new TransferResult(quantity,0,TransferReason.Unavailable);
+            var cells = GetComponent<LastSignal.WorldCells.WorldCellManager>();
+            var site = GetComponent<ShelterSite>();
+            if (!Alive || !Preparing || !preparationUI.IsOpen || !storagePoint ||
+                (session.Player.transform.position - storagePoint.transform.position).sqrMagnitude > storagePoint.UseRange * storagePoint.UseRange ||
+                (cells && (!cells.Stable || cells.CurrentCell != "resident")) ||
+                (site && (site.Production == null || !site.Production.Installed(ShelterModule.Storage)))) return new TransferResult(quantity,0,TransferReason.Unavailable);
             return deposit ? ItemTransferService.Deposit(inventory,Storage,item,quantity) : ItemTransferService.Withdraw(Storage,inventory,item,quantity);
         }
         void OnDeath() { State = ExpeditionState.Dead; preparationUI.Hide(); Changed?.Invoke(); }

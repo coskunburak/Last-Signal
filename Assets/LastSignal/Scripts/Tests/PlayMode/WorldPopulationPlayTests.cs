@@ -57,8 +57,14 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator StaleShotAndCellContinuationCannotMutateRestart()
         {
-            long old = flow.Generation; cells.Request("cell:1:0"); yield return null;
-            flow.ReturnToMenu(); flow.BeginSession(); pop.ReportNoise("noise:1", "cell:1:0", 1);
+            var oldNoise = flow.Noise;
+            var request = new LastSignal.Noise.GameplayNoiseRequest(1, new Vector3(70, 0, 5),
+                LastSignal.Noise.GameplayNoiseCategory.Gunshot, flow.NoiseTuning.Gunshot);
+            var stale = new LastSignal.Noise.GameplayNoiseEvent(new LastSignal.Noise.GameplayNoiseId(oldNoise.Epoch, 1), request, clock.Simulation.Seconds);
+            cells.Request("cell:1:0"); yield return null;
+            flow.ReturnToMenu(); flow.BeginSession();
+            Assert.IsFalse(oldNoise.TryEmit(request, out _), "Ended session cannot emit.");
+            Assert.IsFalse(flow.Noise.TryReceive(stale), "Previous session epoch cannot mutate the new population.");
             yield return null; yield return null;
             Assert.AreEqual(0, pop.LastNoiseSequence); Assert.AreEqual(0, pop.PhysicalCount); Assert.AreEqual(30, pop.TotalAccounted);
             Assert.AreEqual(CellState.Unloaded, cells.State("cell:1:0"));

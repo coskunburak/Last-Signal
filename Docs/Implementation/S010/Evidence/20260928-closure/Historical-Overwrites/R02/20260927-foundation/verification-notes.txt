@@ -1,0 +1,11 @@
+R02 verification process notes
+- Baseline is recorded before R02 source edits; R01/unrelated dirty changes were retained.
+- No callable Unity MCP tools were exposed in the active session. Unity 6000.5.0f1 CLI Editor integration is used for real compilation/tests/build.
+- Initial compile-domain process stalled in Unity GarbageCollectSharedAssets semaphore wait during startup. It was sampled and terminated; it is not counted as a successful compile gate. Subsequent runs use -job-worker-count 2 -asset-garbage-collectors 1.
+- Focused EditMode initial run: 20/20 passed.
+- Focused PlayMode attempts 1 and 2: listener lifecycle passed, real acceptance walking assertion failed. Diagnostic trace showed grounded/active player moving only 1.52 m into the authored cell wall, less than the 1.6 m stride. The route was corrected to face the open aisle. No producer rule was relaxed.
+- No LogAssert.ignoreFailingMessages, InputTestFixture infrastructure or InputSystemUIInputModule changes were made.
+- Focused PlayMode attempt 3 failed the QA damage-count assertion because the fixture used bare ZombieHealth colliders. Existing ZombieHealth explicitly requires ZombieHitRegion. The fixture now uses five correctly configured body regions; no damage rule changed.
+- Attempt 4 failed an overstrict comparison of consecutive gunshot positions: viewmodel recoil legitimately moves the muzzle. Firearm ShotResult now snapshots SourcePosition at commit, and the real route checks each noise origin against that committed muzzle. A separate fixed-request EditMode test compares every semantic field at audio volume 1 and 0.
+- Focused PlayMode attempt 5 passed 2/2, including all producers, pressure, save/load and six session cycles. Final run additionally checks death and terminal menu gates.
+- Attempt 6 exposed a fixture timing assumption: WeaponState.Ready can coexist with an active fire cooldown. ReadyWeapon now waits for both the state and FireCooldownRemaining, without changing runtime weapon logic. The final focused route passes.

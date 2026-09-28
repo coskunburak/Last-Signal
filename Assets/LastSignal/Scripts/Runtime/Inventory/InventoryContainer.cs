@@ -301,6 +301,22 @@ namespace LastSignal.Inventory
             finally { IsBusy = destination.IsBusy = false; }
             return new TransferResult(requested, moved, moved == requested ? TransferReason.Complete : TransferReason.Partial);
         }
+        // Stage on a detached copy, then commit inventory and its associated domain receipt
+        // before publishing. Reentrant observers cannot spend or save intermediate ownership.
+        internal bool Exchange(ItemDefinition remove, int removeCount, ItemDefinition add, int addCount, Action commit)
+        {
+            if (IsBusy || Persistence.OwnershipTransaction.Active || removeCount < 0 || addCount < 0 ||
+                (removeCount > 0 && (!remove || !remove.Id.IsValid)) ||
+                (addCount > 0 && (!add || !add.Id.IsValid))) return false;
+            var staged = new InventoryContainer(capacity);
+            staged.slots = (InventorySlot[])slots.Clone();
+            if (removeCount > 0 && !staged.TryRemove(remove, removeCount)) return false;
+            if (addCount > 0 && staged.TryAdd(add, addCount) != addCount) return false;
+            IsBusy = true; Persistence.OwnershipTransaction.Enter();
+            try { slots = staged.slots; commit(); PublishTransfer(); }
+            finally { Persistence.OwnershipTransaction.Exit(); IsBusy = false; }
+            return true;
+        }
         void PublishTransfer()
         {
             if (InventoryChanged == null) return;

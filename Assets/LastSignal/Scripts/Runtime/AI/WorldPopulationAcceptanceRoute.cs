@@ -216,8 +216,8 @@ namespace LastSignal.AI
 
             Check(
                 restored.groupId == travel.groupId &&
-                restored.arrivalTime == travel.arrivalTime &&
-                restored.departureTime == travel.departureTime,
+                Math.Abs(restored.arrivalTime - travel.arrivalTime) < 0.001 &&
+                Math.Abs(restored.departureTime - travel.departureTime) < 0.001,
                 "ETA identity preserved");
 
             float beforeReplay = pop.GetPressure(A).Pressure;

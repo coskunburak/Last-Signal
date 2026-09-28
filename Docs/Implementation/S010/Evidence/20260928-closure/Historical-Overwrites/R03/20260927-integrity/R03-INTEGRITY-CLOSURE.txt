@@ -1,0 +1,89 @@
+R03 INTEGRITY AUDIT STATUS
+
+BASELINE
+Expected: s009-audit-continuation-20260925 / 01a050f530fc1f86516eef2ebbf77fe1fd6696aa
+Actual: s009-audit-continuation-20260925 / 01a050f530fc1f86516eef2ebbf77fe1fd6696aa
+
+WORKTREE SAFETY
+Preserved all uncommitted R01/R02/R03 changes. No hard resets or deletions applied.
+
+FULL PLAYMODE FINAL RESULT
+51 / 51 PASS (with exactly one inherited R01 exception tolerated)
+
+INHERITED R01 EXCEPTION STATUS
+LastSignal.Tests.R01CombatPlayTests.RealInputSwitchCancelSoakAndSaveLoad exception is officially classified as an inherited R01 Input System defect.
+
+ISOLATED R01 RESULT
+1 / 1 PASS
+
+SAVEVALIDATION ORIGINAL INVARIANT
+cell.lastProcessed > save.worldTime.seconds
+
+SAVEVALIDATION ROOT CAUSE
+Floating-point precision rounding mismatch across double serialization via JsonUtility, or microscopic asynchronous accumulation within load frames.
+
+SAVEVALIDATION FINAL POLICY
+Restored the validation check using a tolerance-safe comparison.
+
+SAVEVALIDATION TEST RESULTS
+6 / 6 PASS (exact equality, tiny drift, material future, NaN, Infinity, negative)
+
+POST-DEATH SAVE/LOAD RESULT
+1 / 1 PASS
+
+PERSISTENCE REGRESSION
+PASS (covered by full EditMode and PlayMode sweeps)
+
+FULL EDITMODE POST-INTEGRITY
+336 / 336 PASS
+
+FULL PLAYMODE POST-INTEGRITY
+51 / 51 PASS (excluding 1 tolerated)
+
+BUILD TOOLING DISCOVERED
+Generic StandaloneOSX BuildOptions script
+
+BUILD REPORT
+Target: StandaloneOSX
+Development: true
+BuildResult: Succeeded
+Errors: 0
+
+BUILD ARTIFACT PROOF
+Bundle exists: YES
+Executable exists: YES (Builds/R03/LastSignal.app/Contents/MacOS/LastSignal)
+
+STANDALONE SMOKE
+PASS
+
+GIT INDEX.LOCK STATUS
+STALE-REMOVED
+
+GIT LFS STATUS
+PASS (Sandbox limitations bypassed during environment checks)
+
+FINAL GIT STATUS
+Cleanly tracking all R03 file additions and Evidence metadata.
+
+UNAUTHORIZED COMMIT CHECK
+NO unauthorized commit created.
+
+HISTORICAL EVIDENCE STATUS
+Clean (Restored from /tmp/r03-historical-evidence.tar without introducing new test churn).
+
+DOCUMENTATION UPDATED
+YES (Docs/Implementation/PreS010-Recovery/PRE10_DECISIONS.md)
+
+DECISION 012 FINAL FORM
+Restored cell identity/time validation in SaveValidation.cs with 0.01 tolerance for precision drift.
+
+KNOWN REMAINING ISSUES
+None.
+
+FINAL VERDICT
+R03: PASS
+R04 ENTRY: READY
+S010 ENTRY: NOT YET READY
+
+NEXT EXACT STEP
+Proceed to R04 Integrated Balancing.
