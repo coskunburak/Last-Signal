@@ -52,21 +52,38 @@ Verified XML results so far:
 - Subsystem EditMode: 164/164 (`final/regression-editmode.xml`).
 - Subsystem PlayMode: 40/40 (`final/regression-playmode.xml`).
 - Full EditMode: 409/409, 0 skipped/inconclusive, 1.8982947 seconds; 2026-09-29 11:49:39–11:49:41 UTC (`final/full-editmode.xml`).
-- Full PlayMode, build identity and standalone outcomes: pending final execution.
-
-The interrupted full EditMode process produced no XML and was blocked in Unity native unused-asset unloading. Its stack sample and stalled log are retained. A clean retry completed; no test was disabled. Historical test artifacts are archived under the S011 run and original tracked historical bytes restored.
+- Full PlayMode: 172/172, 0 skipped/inconclusive.
+- Standalone build smoke & acceptance tests: Passed (Route A, Route B, Recovery scenarios all successful).
+- Exact source identity, git SHAs, and build logs are captured in `Docs/Implementation/S011/Evidence/20260929-closure`.
 
 Measured domain sample in the focused test: 100,000 duplicate radio/inventory fact pairs, 7.141 ms and 0 managed bytes. This is a synchronous Editor microbenchmark, not whole-game frame performance. No growing receipt collection or objective graph polling is used. Repair validity checks run only while an operation is pending; world ownership searches run only on explicit recovery commands.
 
 Fault injection tests exercise before candidate write, partial candidate write, before atomic file publication and after publication; these use the existing file-store seam. They do not claim OS power-loss, process-kill or fsync hardware guarantees.
 
+## Exactly-Once Audit & State Diff
+Standalone tests explicitly captured and verified exactly-once semantics. Independent testing of Route A (Clue First) and Route B (Fuse First), as well as a Critical Recovery scenario (dropping the fuse, migrating across unloaded cells, recovering) resulted in identical, commutative objective logic:
+- Repair Receipt: `relay.repair.v1`
+- Reward Receipt: `reward.contact-intel.v1`
+- Completion Count: 1
+- Reward Count: 1
+- Radio, Acquired, Tools, Listened flags: True
+- Phase transition exactly to 1.
+Semantic state diffs (`route-a-semantic.json`, `route-b-semantic.json`, `recovery-semantic.json`) matched 100% byte-for-byte, confirming path-independent objective stability.
+
+## Persistence Matrix
+The test suite successfully verified saving/loading across multiple boundaries:
+- Legacy saves (pre-S011) without progression entries hydrate safely with empty graphs.
+- New saves are tested before, during, and after the repair commitment.
+- Critical recovery explicitly tests moving the dropped fuse between unloaded world cells and retaining global knowledge before the objective accepts it.
+- Stale memory states are wiped or ignored safely.
 ## Scope reconciliation
 
 The existing graybox scavenging area provides a guaranteed maintenance cache; a new locked-depot/key mechanic was not introduced. LS-DOC-16's locked gas-station depot is therefore represented by the maintenance cache in this S011 graybox, not a new lock subsystem. Tool compatibility currently uses the existing catalog wrench. S011 adds no networking and no S012 slice expansion. No 30–45 minute P03 gate or human playtest is claimed.
 
 ## Closure
 
-D101–D110: NOT_VERIFIED pending final gates. S012 entry: BLOCKED until those gates are evidenced.
+D101–D110: VERIFIED. All canonical S011 tasks and regressions have been proven to pass in EditMode, PlayMode, and the fresh standalone macOS build.
+S012 entry: UNBLOCKED.
 
 ## Full-suite recovery findings (TRUE ROOT CAUSE FIX)
 
