@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Failed(Child)" total="6" passed="3" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-29 09:12:51Z" end-time="2026-09-29 09:13:07Z" duration="16.1788361">
+  <test-suite type="TestSuite" id="1204" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="166" result="Failed" site="Child" start-time="2026-09-29 09:12:51Z" end-time="2026-09-29 09:13:07Z" duration="16.178836" total="6" passed="3" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1197" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="166" result="Failed" site="Child" start-time="2026-09-29 09:12:51Z" end-time="2026-09-29 09:13:07Z" duration="16.171952" total="6" passed="3" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="21652" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1198" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="166" result="Failed" site="Child" start-time="2026-09-29 09:12:51Z" end-time="2026-09-29 09:13:07Z" duration="16.170563" total="6" passed="3" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1199" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="166" result="Failed" site="Child" start-time="2026-09-29 09:12:51Z" end-time="2026-09-29 09:13:07Z" duration="16.169655" total="6" passed="3" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1103" name="S011IntegrationTests" fullname="LastSignal.Tests.S011IntegrationTests" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-09-29 09:12:51Z" end-time="2026-09-29 09:13:07Z" duration="16.166624" total="6" passed="3" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1104" name="ClueFirstProductionRoute" fullname="LastSignal.Tests.S011IntegrationTests.ClueFirstProductionRoute" methodname="ClueFirstProductionRoute" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="2088970458" result="Failed" label="Error" start-time="2026-09-29 09:12:51Z" end-time="2026-09-29 09:12:57Z" duration="5.999117" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.InvalidOperationException : Repair and one intel reward / Out of range. Approach the relay. Repair cancelled; no materials consumed. player=(13.50, -92.11, -10.00) pending=0]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Objectives.RelayAcceptance+<Run>d__19.MoveNext () [0x0088b] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Objectives/RelayAcceptance.cs:135 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1109" name="DeathReturnsToCheckpointWithoutInventingRecoveryBag" fullname="LastSignal.Tests.S011IntegrationTests.DeathReturnsToCheckpointWithoutInventingRecoveryBag" methodname="DeathReturnsToCheckpointWithoutInventingRecoveryBag" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="1209516086" result="Passed" start-time="2026-09-29 09:12:57Z" end-time="2026-09-29 09:12:59Z" duration="2.168518" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1106" name="DroppedFuseRecoveryProductionRoute" fullname="LastSignal.Tests.S011IntegrationTests.DroppedFuseRecoveryProductionRoute" methodname="DroppedFuseRecoveryProductionRoute" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="1158063743" result="Failed" label="Error" start-time="2026-09-29 09:12:59Z" end-time="2026-09-29 09:13:01Z" duration="1.876329" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.InvalidOperationException : Production pickup: quest.relay-fuse target=(-13.00, 0.10, 10.00) player=(-11.70, 0.05, 10.00) resolve=]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Objectives.RelayAcceptance.Pick (LastSignal.Inventory.Data.ItemDefinition definition) [0x00146] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Objectives/RelayAcceptance.cs:75 
+  at LastSignal.Objectives.RelayAcceptance+<Run>d__19.MoveNext () [0x003a7] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Objectives/RelayAcceptance.cs:115 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1105" name="FuseFirstProductionRoute" fullname="LastSignal.Tests.S011IntegrationTests.FuseFirstProductionRoute" methodname="FuseFirstProductionRoute" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="552820746" result="Failed" label="Error" start-time="2026-09-29 09:13:01Z" end-time="2026-09-29 09:13:06Z" duration="5.088086" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.InvalidOperationException : Repair and one intel reward / Out of range. Approach the relay. Repair cancelled; no materials consumed. player=(13.50, -91.60, -10.00) pending=0]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Objectives.RelayAcceptance+<Run>d__19.MoveNext () [0x0088b] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Objectives/RelayAcceptance.cs:135 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1107" name="SessionReplacementDoesNotRetainAcquisitionOrCallbacks" fullname="LastSignal.Tests.S011IntegrationTests.SessionReplacementDoesNotRetainAcquisitionOrCallbacks" methodname="SessionReplacementDoesNotRetainAcquisitionOrCallbacks" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="1811925840" result="Passed" start-time="2026-09-29 09:13:06Z" end-time="2026-09-29 09:13:07Z" duration="0.650694" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1108" name="ThreatRejectionDoesNotMutateEnemy" fullname="LastSignal.Tests.S011IntegrationTests.ThreatRejectionDoesNotMutateEnemy" methodname="ThreatRejectionDoesNotMutateEnemy" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="191421531" result="Passed" start-time="2026-09-29 09:13:07Z" end-time="2026-09-29 09:13:07Z" duration="0.367395" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
