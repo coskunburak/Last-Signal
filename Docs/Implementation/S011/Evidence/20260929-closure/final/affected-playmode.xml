@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="17" result="Failed(Child)" total="17" passed="12" failed="5" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-29 12:01:09Z" end-time="2026-09-29 12:01:51Z" duration="42.4054523">
+  <test-suite type="TestSuite" id="1210" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="172" result="Failed" site="Child" start-time="2026-09-29 12:01:09Z" end-time="2026-09-29 12:01:51Z" duration="42.405452" total="17" passed="12" failed="5" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1203" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="172" result="Failed" site="Child" start-time="2026-09-29 12:01:09Z" end-time="2026-09-29 12:01:51Z" duration="42.400014" total="17" passed="12" failed="5" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="82499" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1204" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="172" result="Failed" site="Child" start-time="2026-09-29 12:01:09Z" end-time="2026-09-29 12:01:51Z" duration="42.399531" total="17" passed="12" failed="5" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1205" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="172" result="Failed" site="Child" start-time="2026-09-29 12:01:09Z" end-time="2026-09-29 12:01:51Z" duration="42.399131" total="17" passed="12" failed="5" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1010" name="CombatAcceptanceTests" fullname="LastSignal.Tests.CombatAcceptanceTests" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-09-29 12:01:09Z" end-time="2026-09-29 12:01:16Z" duration="6.796787" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1014" name="ADS_ReducesFOVAndSensitivity" fullname="LastSignal.Tests.CombatAcceptanceTests.ADS_ReducesFOVAndSensitivity" methodname="ADS_ReducesFOVAndSensitivity" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="579817651" result="Failed" start-time="2026-09-29 12:01:09Z" end-time="2026-09-29 12:01:11Z" duration="2.070990" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  FOV should decrease during ADS
+  Expected: less than 75.0f
+  But was:  75.0f
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.CombatAcceptanceTests+<ADS_ReducesFOVAndSensitivity>d__12.MoveNext () [0x00135] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs:153
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=2 active=True mouse=Mouse:/Mouse
+B0A_ORDER ADS devices=2 active=True mouse=Mouse:/Mouse
+]]></output>
+            </test-case>
+            <test-case id="1013" name="AutoFire_FiresContinuouslyWhileHeld" fullname="LastSignal.Tests.CombatAcceptanceTests.AutoFire_FiresContinuouslyWhileHeld" methodname="AutoFire_FiresContinuouslyWhileHeld" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="1715702392" result="Failed" start-time="2026-09-29 12:01:11Z" end-time="2026-09-29 12:01:12Z" duration="1.574581" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Should have fired multiple shots
+  Expected: greater than 2
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.CombatAcceptanceTests+<AutoFire_FiresContinuouslyWhileHeld>d__11.MoveNext () [0x00101] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs:138
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=2 active=True mouse=Mouse:/Mouse
+]]></output>
+            </test-case>
+            <test-case id="1011" name="Fire_ConsumesAmmoAndDamagesTarget" fullname="LastSignal.Tests.CombatAcceptanceTests.Fire_ConsumesAmmoAndDamagesTarget" methodname="Fire_ConsumesAmmoAndDamagesTarget" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="882809868" result="Failed" start-time="2026-09-29 12:01:12Z" end-time="2026-09-29 12:01:14Z" duration="1.147542" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Ammo should decrease
+  Expected: 29
+  But was:  30
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.CombatAcceptanceTests+<Fire_ConsumesAmmoAndDamagesTarget>d__9.MoveNext () [0x000f7] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs:93
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=2 active=True mouse=Mouse:/Mouse
+]]></output>
+            </test-case>
+            <test-case id="1012" name="Reload_TransfersAmmoAfterDuration" fullname="LastSignal.Tests.CombatAcceptanceTests.Reload_TransfersAmmoAfterDuration" methodname="Reload_TransfersAmmoAfterDuration" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="835913176" result="Failed" start-time="2026-09-29 12:01:14Z" end-time="2026-09-29 12:01:16Z" duration="1.993726" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 25
+  But was:  27
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.CombatAcceptanceTests+<Reload_TransfersAmmoAfterDuration>d__10.MoveNext () [0x00143] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs:110
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=2 active=True mouse=Mouse:/Mouse
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1094" name="RuntimeSmokeTests" fullname="LastSignal.Tests.RuntimeSmokeTests" classname="LastSignal.Tests.RuntimeSmokeTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-09-29 12:01:16Z" end-time="2026-09-29 12:01:17Z" duration="1.135465" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1095" name="SmokeTest_ThreeSessionCycles" fullname="LastSignal.Tests.RuntimeSmokeTests.SmokeTest_ThreeSessionCycles" methodname="SmokeTest_ThreeSessionCycles" classname="LastSignal.Tests.RuntimeSmokeTests" runstate="Runnable" seed="173944375" result="Failed" start-time="2026-09-29 12:01:16Z" end-time="2026-09-29 12:01:17Z" duration="1.134101" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Fire should consume one round
+  Expected: 29
+  But was:  30
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.RuntimeSmokeTests+<SmokeTest_ThreeSessionCycles>d__3.MoveNext () [0x00228] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/RuntimeSmokeTests.cs:61
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S001 session started: one player, local input.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1103" name="S011IntegrationTests" fullname="LastSignal.Tests.S011IntegrationTests" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-09-29 12:01:17Z" end-time="2026-09-29 12:01:51Z" duration="34.458418" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1109" name="CancellationBoundariesAndNewThreatRetainFuse" fullname="LastSignal.Tests.S011IntegrationTests.CancellationBoundariesAndNewThreatRetainFuse" methodname="CancellationBoundariesAndNewThreatRetainFuse" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="1016062440" result="Passed" start-time="2026-09-29 12:01:17Z" end-time="2026-09-29 12:01:22Z" duration="4.841020" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1104" name="ClueFirstProductionRoute" fullname="LastSignal.Tests.S011IntegrationTests.ClueFirstProductionRoute" methodname="ClueFirstProductionRoute" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="660332795" result="Passed" start-time="2026-09-29 12:01:22Z" end-time="2026-09-29 12:01:27Z" duration="5.286359" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1115" name="DeathReturnsToCheckpointWithoutInventingRecoveryBag" fullname="LastSignal.Tests.S011IntegrationTests.DeathReturnsToCheckpointWithoutInventingRecoveryBag" methodname="DeathReturnsToCheckpointWithoutInventingRecoveryBag" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="520279084" result="Passed" start-time="2026-09-29 12:01:27Z" end-time="2026-09-29 12:01:29Z" duration="2.017340" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1106" name="DroppedFuseRecoveryProductionRoute" fullname="LastSignal.Tests.S011IntegrationTests.DroppedFuseRecoveryProductionRoute" methodname="DroppedFuseRecoveryProductionRoute" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="549876024" result="Passed" start-time="2026-09-29 12:01:29Z" end-time="2026-09-29 12:01:34Z" duration="5.128408" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1105" name="FuseFirstProductionRoute" fullname="LastSignal.Tests.S011IntegrationTests.FuseFirstProductionRoute" methodname="FuseFirstProductionRoute" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="806812144" result="Passed" start-time="2026-09-29 12:01:34Z" end-time="2026-09-29 12:01:39Z" duration="5.193876" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1110" name="InaccessibleDropRecallPreservesIdentityAndQuantity" fullname="LastSignal.Tests.S011IntegrationTests.InaccessibleDropRecallPreservesIdentityAndQuantity" methodname="InaccessibleDropRecallPreservesIdentityAndQuantity" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="1520235937" result="Passed" start-time="2026-09-29 12:01:39Z" end-time="2026-09-29 12:01:41Z" duration="1.948235" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1114" name="RealS010CheckpointMigratesWithoutChangingOriginalFile" fullname="LastSignal.Tests.S011IntegrationTests.RealS010CheckpointMigratesWithoutChangingOriginalFile" methodname="RealS010CheckpointMigratesWithoutChangingOriginalFile" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="579730199" result="Passed" start-time="2026-09-29 12:01:41Z" end-time="2026-09-29 12:01:42Z" duration="0.436326" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1107" name="SessionReplacementDoesNotRetainAcquisitionOrCallbacks" fullname="LastSignal.Tests.S011IntegrationTests.SessionReplacementDoesNotRetainAcquisitionOrCallbacks" methodname="SessionReplacementDoesNotRetainAcquisitionOrCallbacks" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="446054069" result="Passed" start-time="2026-09-29 12:01:42Z" end-time="2026-09-29 12:01:42Z" duration="0.382317" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1112" name="StaleCellHydrationCannotRollBackContact" fullname="LastSignal.Tests.S011IntegrationTests.StaleCellHydrationCannotRollBackContact" methodname="StaleCellHydrationCannotRollBackContact" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="720794894" result="Passed" start-time="2026-09-29 12:01:42Z" end-time="2026-09-29 12:01:47Z" duration="5.097645" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1111" name="StorageOwnerPreventsRecoveryDuplication" fullname="LastSignal.Tests.S011IntegrationTests.StorageOwnerPreventsRecoveryDuplication" methodname="StorageOwnerPreventsRecoveryDuplication" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="532410067" result="Passed" start-time="2026-09-29 12:01:47Z" end-time="2026-09-29 12:01:49Z" duration="1.884301" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1108" name="ThreatRejectionDoesNotMutateEnemy" fullname="LastSignal.Tests.S011IntegrationTests.ThreatRejectionDoesNotMutateEnemy" methodname="ThreatRejectionDoesNotMutateEnemy" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="1339684303" result="Passed" start-time="2026-09-29 12:01:49Z" end-time="2026-09-29 12:01:49Z" duration="0.366746" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1113" name="UnloadedCellFuseRecallPreservesOneOwner" fullname="LastSignal.Tests.S011IntegrationTests.UnloadedCellFuseRecallPreservesOneOwner" methodname="UnloadedCellFuseRecallPreservesOneOwner" classname="LastSignal.Tests.S011IntegrationTests" runstate="Runnable" seed="520012514" result="Passed" start-time="2026-09-29 12:01:49Z" end-time="2026-09-29 12:01:51Z" duration="1.872010" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

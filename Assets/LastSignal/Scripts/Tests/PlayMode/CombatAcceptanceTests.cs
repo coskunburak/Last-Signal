@@ -40,7 +40,22 @@ namespace LastSignal.Tests
 
             var session = Object.FindAnyObjectByType<SessionFlow>();
             session.BeginSession();
-            session.Resume(); var pi = Object.FindAnyObjectByType<PlayerInputReader>(); var am = typeof(PlayerInputReader).GetMethod("Awake", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance); if(am!=null)am.Invoke(pi, null); pi.SetGameplay(true);
+            session.Resume(); 
+            var myPi = Object.FindAnyObjectByType<PlayerInputReader>();
+            if (myPi) {
+                var myF = typeof(PlayerInputReader).GetField("instance", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var myA = (UnityEngine.InputSystem.InputActionAsset)myF.GetValue(myPi);
+                if (myA != null) {
+                    myA.Disable();
+                    var devs = new System.Collections.Generic.List<UnityEngine.InputSystem.InputDevice>();
+                    if (mouse != null) devs.Add(mouse);
+                    if (keyboard != null) devs.Add(keyboard);
+                    myA.devices = new UnityEngine.InputSystem.Utilities.ReadOnlyArray<UnityEngine.InputSystem.InputDevice>(devs.ToArray());
+                    myA.Enable();
+                }
+                myPi.SetGameplay(true);
+            }
+
             yield return null;
 
             var player = session.Player;

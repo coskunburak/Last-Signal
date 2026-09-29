@@ -33,13 +33,22 @@ namespace LastSignal.Tests
                 session.Resume();
                 yield return null;
                 
-                var playerInput = Object.FindAnyObjectByType<PlayerInputReader>();
-                if (playerInput)
-                {
-                    var awakeMethod = typeof(PlayerInputReader).GetMethod("Awake", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    if (awakeMethod != null) awakeMethod.Invoke(playerInput, null);
-                    playerInput.SetGameplay(true);
+                
+                var myPi = Object.FindAnyObjectByType<PlayerInputReader>();
+                if (myPi) {
+                    var myF = typeof(PlayerInputReader).GetField("instance", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    var myA = (UnityEngine.InputSystem.InputActionAsset)myF.GetValue(myPi);
+                    if (myA != null) {
+                        myA.Disable();
+                        var devs = new System.Collections.Generic.List<UnityEngine.InputSystem.InputDevice>();
+                        if (mouse != null) devs.Add(mouse);
+                        if (keyboard != null) devs.Add(keyboard);
+                        myA.devices = new UnityEngine.InputSystem.Utilities.ReadOnlyArray<UnityEngine.InputSystem.InputDevice>(devs.ToArray());
+                        myA.Enable();
+                    }
+                    myPi.SetGameplay(true);
                 }
+
 
                 // 1. One Player, One Camera
                 var players = Object.FindObjectsByType<PlayerStance>(FindObjectsSortMode.None);

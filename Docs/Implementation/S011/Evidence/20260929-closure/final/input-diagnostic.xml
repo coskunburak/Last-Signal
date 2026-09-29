@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-29 12:03:29Z" end-time="2026-09-29 12:03:30Z" duration="1.4241888">
+  <test-suite type="TestSuite" id="1210" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="172" result="Failed" site="Child" start-time="2026-09-29 12:03:29Z" end-time="2026-09-29 12:03:30Z" duration="1.424189" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1203" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="172" result="Failed" site="Child" start-time="2026-09-29 12:03:29Z" end-time="2026-09-29 12:03:30Z" duration="1.417598" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="89964" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1204" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="172" result="Failed" site="Child" start-time="2026-09-29 12:03:29Z" end-time="2026-09-29 12:03:30Z" duration="1.416959" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1205" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="172" result="Failed" site="Child" start-time="2026-09-29 12:03:29Z" end-time="2026-09-29 12:03:30Z" duration="1.416558" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1010" name="CombatAcceptanceTests" fullname="LastSignal.Tests.CombatAcceptanceTests" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-09-29 12:03:29Z" end-time="2026-09-29 12:03:30Z" duration="1.413701" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1011" name="Fire_ConsumesAmmoAndDamagesTarget" fullname="LastSignal.Tests.CombatAcceptanceTests.Fire_ConsumesAmmoAndDamagesTarget" methodname="Fire_ConsumesAmmoAndDamagesTarget" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="2142048852" result="Failed" start-time="2026-09-29 12:03:29Z" end-time="2026-09-29 12:03:30Z" duration="1.405773" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Ammo should decrease
+  Expected: 29
+  But was:  30
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.CombatAcceptanceTests+<Fire_ConsumesAmmoAndDamagesTarget>d__10.MoveNext () [0x00118] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs:101
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=2 active=True mouse=Mouse:/Mouse
+S011 INPUT DIAG before active=True neutral=False enabled=True pressed=False mouse=False controls=2 mode=ProcessEventsInDynamicUpdate paused=False
+S011 INPUT DIAG pressed active=True neutral=False enabled=True pressed=False mouse=False controls=2 mode=ProcessEventsInDynamicUpdate paused=False
+S011 INPUT DIAG frame active=True neutral=False enabled=True pressed=False mouse=False controls=2 mode=ProcessEventsInDynamicUpdate paused=False
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,8 @@
+{
+  "stalledProcess": 35717,
+  "result": "NOT_RUN: no XML produced",
+  "sample": "stalled-editor-sample.txt",
+  "log": "full-editmode-stalled.log",
+  "diagnosis": "Main thread blocked in GarbageCollectSharedAssets / semaphore wait during new-scene asset unload, before test execution. Process terminated after >2h. Retry required.",
+  "toolingFix": "Omit empty -testFilter; use nonempty argument array compatible with macOS Bash set -u."
+}
