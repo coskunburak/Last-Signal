@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-01 19:05:27Z" end-time="2026-10-01 19:05:29Z" duration="1.6556322">
+  <test-suite type="TestSuite" id="1226" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="186" result="Failed" site="Child" start-time="2026-10-01 19:05:27Z" end-time="2026-10-01 19:05:29Z" duration="1.655632" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1219" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="186" result="Failed" site="Child" start-time="2026-10-01 19:05:27Z" end-time="2026-10-01 19:05:29Z" duration="1.647816" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="38420" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1220" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="186" result="Failed" site="Child" start-time="2026-10-01 19:05:27Z" end-time="2026-10-01 19:05:29Z" duration="1.645856" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1221" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="186" result="Failed" site="Child" start-time="2026-10-01 19:05:27Z" end-time="2026-10-01 19:05:29Z" duration="1.644268" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1165" name="ZombieDamagePlayTests" fullname="LastSignal.Tests.ZombieDamagePlayTests" classname="LastSignal.Tests.ZombieDamagePlayTests" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-10-01 19:05:27Z" end-time="2026-10-01 19:05:28Z" duration="1.316040" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1167" name="NonlethalRifleHitKeepsChaseMovementAndWalkRunPresentationAlive" fullname="LastSignal.Tests.ZombieDamagePlayTests.NonlethalRifleHitKeepsChaseMovementAndWalkRunPresentationAlive" methodname="NonlethalRifleHitKeepsChaseMovementAndWalkRunPresentationAlive" classname="LastSignal.Tests.ZombieDamagePlayTests" runstate="Runnable" seed="1909983977" result="Failed" start-time="2026-10-01 19:05:27Z" end-time="2026-10-01 19:05:28Z" duration="1.308836" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A gunshot must not freeze a chasing zombie.
+  Expected: greater than 0.0799999982f
+  But was:  0.0685425252f
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.ZombieDamagePlayTests+<NonlethalRifleHitKeepsChaseMovementAndWalkRunPresentationAlive>d__12.MoveNext () [0x001cf] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieDamagePlayTests.cs:114
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S001 session started: one player, local input.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1207" name="ZombieRecoveryTests" fullname="LastSignal.Tests.ZombieRecoveryTests" classname="LastSignal.Tests.ZombieRecoveryTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-01 19:05:28Z" end-time="2026-10-01 19:05:29Z" duration="0.322436" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1210" name="PresenterUsesVelocityAndRestoresSpeedAfterPause" fullname="LastSignal.Tests.ZombieRecoveryTests.PresenterUsesVelocityAndRestoresSpeedAfterPause" methodname="PresenterUsesVelocityAndRestoresSpeedAfterPause" classname="LastSignal.Tests.ZombieRecoveryTests" runstate="Runnable" seed="297909030" result="Passed" start-time="2026-10-01 19:05:28Z" end-time="2026-10-01 19:05:29Z" duration="0.321259" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

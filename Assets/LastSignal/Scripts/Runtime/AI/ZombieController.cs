@@ -10,8 +10,11 @@ namespace LastSignal
         [SerializeField] ZombieDefinition definition;
         [SerializeField] Transform meleeOrigin;
         ZombieHealth health;
+        ZombieDismemberment dismemberment;
         Collider[] ownedColliders;
         float reactionRemaining, reactionReadyAt;
+        ZombieImpactSeverity reactionPriority;
+        public ZombieImpactReaction LastImpact { get; private set; }
         ZombieState reactionReturn;
         bool reactionWasInvestigating;
         public bool IsDead => runtime.State == ZombieState.Dead;
@@ -19,6 +22,7 @@ namespace LastSignal
         PlayerHealth targetHealth;
         CharacterController targetCapsule;
         bool combatReady, contactConsumed;
+        bool alternateAttack;
         float attackTime;
         ulong sequence;
         Vector3 lockedForward;
@@ -114,10 +118,13 @@ namespace LastSignal
             initialized = navigation.Initialize(definition);
             presentation = GetComponent<ZombieAnimationPresenter>();
             if (presentation && !presentation.Initialize(definition)) initialized = false;
-            combatReady = presentation && meleeOrigin && definition.IsAttackValid(out _) && presentation.HasAttackPresentation(definition.AttackClip);
+            combatReady = presentation && meleeOrigin && definition.IsAttackValid(out _) &&
+                presentation.HasAttackPresentation(definition.AttackClip) &&
+                presentation.HasAttackPresentation(definition.AlternateAttackClip);
             if (presentation && !combatReady)
             { Debug.LogError("Zombie melee requires MeleeOrigin and valid measured attack tuning. Combat disabled.", this); initialized = false; }
             health = GetComponent<ZombieHealth>();
+            dismemberment = GetComponent<ZombieDismemberment>();
             if (health)
             {
                 health.Damaged -= OnDamaged; health.Died -= OnDeath;
@@ -136,7 +143,8 @@ namespace LastSignal
             // Rebinding is an explicit lifecycle boundary, including a rejected/null replacement.
             // A strike committed against A can never become a strike against B.
             if (presentation) presentation.EndReaction();
-            reactionRemaining = reactionReadyAt = 0;
+            reactionRemaining = reactionReadyAt = 0; reactionPriority = ZombieImpactSeverity.Light;
+            LastImpact = ZombieImpactReaction.Legacy;
             noiseListener?.Release(); ClearAuditory();
             ClearAttack(); runtime.Reset(); search.Clear(); holding = false;
             target = null; targetHealth = null; targetCapsule = null;
@@ -164,7 +172,8 @@ namespace LastSignal
             noiseListener?.Release(); ClearAuditory();
             if (health) health.SetDamageEnabled(false);
             if (presentation && !IsDead) presentation.EndReaction();
-            reactionRemaining = reactionReadyAt = 0;
+            reactionRemaining = reactionReadyAt = 0; reactionPriority = ZombieImpactSeverity.Light;
+            LastImpact = ZombieImpactReaction.Legacy;
             target = null; targetHealth = null; targetCapsule = null;
             ClearAttack(); sequence = 0; ContactAttempts = SuccessfulHits = 0; LastContactSequence = 0;
             initialized = false; runtime.Reset(); search.Clear(); holding = false;
@@ -194,11 +203,19 @@ namespace LastSignal
             auditory.Advance(seconds, definition.HearingMemoryDuration);
             if (runtime.State == ZombieState.HitReact)
             {
+                // Preserve the existing destination and movement during a nonlethal hit.
+                if (reactionReturn == ZombieState.Chasing) Chase(seconds);
+                else if (reactionReturn == ZombieState.Investigating)
+                    navigation.MoveTo(investigateDestination, clock, definition.InvestigateArrivalDistance);
+                navigation.SetRunning(reactionReturn == ZombieState.Chasing);
+                navigation.Tick(seconds, clock);
+                presentation.Present(navigation.Velocity.magnitude, navigation.Running, seconds, false);
                 reactionRemaining = Mathf.Max(0, reactionRemaining - seconds);
                 presentation.AdvanceDamage(seconds);
                 if (reactionRemaining <= 0)
                 {
                     presentation.EndReaction();
+                    reactionPriority = ZombieImpactSeverity.Light;
                     // A sound accepted during the reaction is usable once its commitment ends.
                     if (auditory.HasStimulus && !(runtime.Visible && runtime.Confidence >= 1) &&
                         (reactionReturn == ZombieState.Idle || reactionReturn == ZombieState.Searching))
@@ -212,7 +229,7 @@ namespace LastSignal
                     }
                     perceptionDue = clock; observationAge = 0;
                 }
-                return; // Freeze visual memory/search progress; no source-position knowledge is introduced.
+                return; // Perception and attack decisions resume after the brief reaction.
             }
             observationAge += seconds; runtime.Advance(seconds);
             if (clock >= perceptionDue)
@@ -249,25 +266,47 @@ namespace LastSignal
                     TickAttack(seconds);
                     break;
             }
+            navigation.SetRunning(runtime.State == ZombieState.Chasing);
             navigation.Tick(seconds, clock);
-            if (presentation && !Attacking) presentation.Present(navigation.Velocity.magnitude, seconds, false);
+            if (presentation && !Attacking)
+                presentation.Present(navigation.Velocity.magnitude, navigation.Running, seconds, false);
         }
         void OnDamaged(DamageInfo info)
         {
-            if (!initialized || paused || IsDead || runtime.State == ZombieState.HitReact || clock < reactionReadyAt) return;
+            if (!initialized || paused || IsDead) return;
+            bool severed = dismemberment && dismemberment.IsSevered(info.BodyPart);
+            var impact = ZombieImpactReaction.Select(info, transform.rotation, health.MaxHealth, severed,
+                definition.HeavyImpactHealthFraction, definition.MinimumHeavyImpact);
+            LastImpact = impact;
+            bool reacting = runtime.State == ZombieState.HitReact;
+            if (reacting && impact.Severity <= reactionPriority ||
+                !reacting && clock < reactionReadyAt && impact.Severity == ZombieImpactSeverity.Light) return;
+            if (reacting)
+            {
+                reactionPriority = impact.Severity;
+                reactionRemaining = definition.HitReactDuration;
+                reactionReadyAt = clock + definition.HitReactCooldown;
+                presentation.BeginDamage(false, impact);
+                return;
+            }
             reactionWasInvestigating = runtime.State == ZombieState.Investigating;
             reactionReturn = Attacking ? AfterCombat() : runtime.State;
             // Preserve search progress when already searching; an interrupted melee starts search only if unseen.
             if (Attacking && reactionReturn == ZombieState.Searching)
                 search.Begin(runtime.LastKnownPosition, runtime.LastSeenDirection);
-            ClearAttack(); navigation.Stop(); holding = false;
+            ClearAttack();
             runtime.Transition(ZombieState.HitReact);
             reactionRemaining = definition.HitReactDuration; reactionReadyAt = clock + definition.HitReactCooldown;
-            presentation.BeginDamage(false);
+            reactionPriority = impact.Severity;
+            presentation.BeginDamage(false, impact);
         }
         void OnDeath()
         {
             if (IsDead) return;
+            if (health && health.LastDamage.Amount > 0)
+                LastImpact = ZombieImpactReaction.Select(health.LastDamage, transform.rotation,
+                    health.MaxHealth, dismemberment && dismemberment.IsSevered(health.LastDamage.BodyPart),
+                    definition.HeavyImpactHealthFraction, definition.MinimumHeavyImpact);
             noiseListener?.Release(); ClearAuditory();
             ClearAttack(); reactionRemaining = 0; sequence = 0;
             runtime.Transition(ZombieState.Dead); search.Clear(); holding = false;
@@ -276,7 +315,7 @@ namespace LastSignal
             if (perception) { perception.Clear(); perception.enabled = false; }
             if (navigation) { navigation.Stop(); navigation.enabled = false; }
             if (ownedColliders != null) foreach (var collider in ownedColliders) if (collider) collider.enabled = false;
-            if (presentation) presentation.BeginDamage(true);
+            if (presentation) presentation.BeginDamage(true, LastImpact);
         }
         void OnDestroy()
         {
@@ -284,19 +323,28 @@ namespace LastSignal
         }
         bool TryBeginAttack()
         {
-            if (!combatReady || !meleeOrigin || !presentation || !presentation.HasAnimator || !targetHealth || !targetHealth.IsAlive || !runtime.Visible || !navigation.Ready || navigation.Exhausted) return false;
+            if (!combatReady || (dismemberment && !dismemberment.CanUseRightArmAttack) ||
+                !meleeOrigin || !presentation || !presentation.HasAnimator || !targetHealth || !targetHealth.IsAlive ||
+                !runtime.Visible || !navigation.Ready || navigation.Exhausted) return false;
             if (ZombieMeleeValidator.Validate(MeleeOrigin, transform.forward, targetCapsule, targetHealth,
                 definition.AttackEnterRange, definition.AttackHalfAngle, definition.OcclusionMask, out _, out _, out _) != MeleeResult.Hit) return false;
-            sequence++; attackTime = 0; contactConsumed = false; lockedForward = Vector3.zero;
+            sequence++; alternateAttack = (sequence & 1) == 0;
+            attackTime = 0; contactConsumed = false; lockedForward = Vector3.zero;
             LastMeleeResult = MeleeResult.None;
             ChangeState(ZombieState.AttackWindup);
-            presentation.BeginAttack();
+            presentation.BeginAttack(alternateAttack);
             return true;
         }
         void TickAttack(float seconds)
         {
             using (AttackMarker.Auto())
             {
+                if (runtime.State != ZombieState.Recovering && dismemberment && !dismemberment.CanUseRightArmAttack)
+                {
+                    ClearAttack(); LastMeleeResult = MeleeResult.Aborted;
+                    ChangeState(runtime.State == ZombieState.AttackCommit ? ZombieState.Recovering : AfterCombat());
+                    return;
+                }
                 if (!meleeOrigin || !presentation || !presentation.HasAnimator || !targetHealth || !targetHealth.IsAlive || !targetCapsule || !targetCapsule.enabled || !navigation.Ready)
                 { Shutdown(); return; }
                 if (runtime.State == ZombieState.AttackWindup)
@@ -307,7 +355,7 @@ namespace LastSignal
                         ChangeState(AfterCombat()); return;
                     }
                     // Never track a hidden live transform, and never rotate past the commitment boundary.
-                    float turnSeconds = Mathf.Min(seconds, Mathf.Max(0, definition.AttackCommitTime - attackTime));
+                    float turnSeconds = Mathf.Min(seconds, Mathf.Max(0, definition.AttackCommitTimeFor(alternateAttack) - attackTime));
                     if (runtime.Visible)
                     {
                         var direction = runtime.LastKnownPosition - transform.position; direction.y = 0;
@@ -317,9 +365,9 @@ namespace LastSignal
                 }
                 attackTime += seconds;
                 presentation.AdvanceAttack(seconds);
-                if (runtime.State == ZombieState.AttackWindup && attackTime >= definition.AttackCommitTime)
+                if (runtime.State == ZombieState.AttackWindup && attackTime >= definition.AttackCommitTimeFor(alternateAttack))
                 { lockedForward = transform.forward; ChangeState(ZombieState.AttackCommit); }
-                if (runtime.State == ZombieState.AttackCommit && !contactConsumed && attackTime >= definition.AttackContactTime)
+                if (runtime.State == ZombieState.AttackCommit && !contactConsumed && attackTime >= definition.AttackContactTimeFor(alternateAttack))
                 {
                     contactConsumed = true; // Spend before callbacks; every outcome, including a miss, consumes the sequence.
                     ContactAttempts++; LastContactSequence = sequence;
@@ -335,9 +383,9 @@ namespace LastSignal
                         if (!initialized || !target) return; // A health listener may end the session synchronously.
                     }
                 }
-                if (runtime.State == ZombieState.AttackCommit && attackTime >= definition.AttackRecoveryTime)
+                if (runtime.State == ZombieState.AttackCommit && attackTime >= definition.AttackRecoveryTimeFor(alternateAttack))
                     ChangeState(ZombieState.Recovering);
-                if (runtime.State == ZombieState.Recovering && attackTime >= definition.AttackDuration)
+                if (runtime.State == ZombieState.Recovering && attackTime >= definition.AttackDurationFor(alternateAttack))
                 {
                     ClearAttack();
                     ChangeState(runtime.Visible && !navigation.Exhausted ? ZombieState.Chasing : auditory.HasStimulus && !runtime.Visible ? ZombieState.Investigating : ZombieState.Searching);

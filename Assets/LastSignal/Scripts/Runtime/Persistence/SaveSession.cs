@@ -36,6 +36,8 @@ namespace LastSignal.Persistence
         public SaveResult ValidateAuthoring()
         {
             if (!catalog || !rifle || !rifle.HasValidAmmunitionConfiguration || string.IsNullOrWhiteSpace(worldId)) return Invalid("Save world/catalog/rifle not configured.");
+            var mission = GetComponent<LastSignal.Objectives.RelayMission>();
+            if (mission && !mission.Validate()) return Invalid("Invalid relay authoring.");
             var definitions = new HashSet<string>(StringComparer.Ordinal);
             foreach (var item in catalog.EditorItems)
                 if (!item || !item.Id.IsValid || !definitions.Add(item.Id.Value) || item.MaxStack < 1 ||
@@ -133,15 +135,17 @@ namespace LastSignal.Persistence
             var look=player.GetComponent<FirstPersonLook>();
             snapshot = new SaveGame {
                 combat=CaptureCombat(player),
+                progression=GetComponent<LastSignal.Objectives.RelayMission>()?.Progress?.Capture(),
                 worldTime=clock ? clock.Capture() : null,
-                header=new SaveHeader { schemaVersion=cells ? (GetComponent<LastSignal.AI.WorldPopulationManager>() ? 4 : 3) : clock ? SaveValidation.SchemaVersion : 1,contentVersion=contentVersion,worldId=worldId,seed=loot.Seed,generation=1,
+                header=new SaveHeader { progressionVersion=GetComponent<LastSignal.Objectives.RelayMission>() ? 1 : 0, schemaVersion=cells ? (GetComponent<LastSignal.AI.WorldPopulationManager>() ? 4 : 3) : clock ? SaveValidation.SchemaVersion : 1,contentVersion=contentVersion,worldId=worldId,seed=loot.Seed,generation=1,
                     buildId=string.IsNullOrEmpty(Application.buildGUID)?"editor-"+Application.unityVersion:Application.buildGUID,timestampUtc=DateTimeOffset.UtcNow.ToString("O") },
                 player=new PlayerSnapshot { id="player.local",transform=Pose(player.transform),health=player.GetComponent<PlayerHealth>().CurrentHealth,
                     pitch=look.Pitch,crouching=player.GetComponent<PlayerStance>().IsCrouching },
                 inventory=carried,weapon=new WeaponSnapshot {definitionId=WeaponId,magazine=weapon.RuntimeState.CurrentMagazine},
                 shelter=new ShelterSnapshot {production=GetComponent<ShelterSite>()?.Production?.Capture(),storage=stash,onExpedition=shelter.State==ExpeditionState.Expedition,expeditionIndex=shelter.ExpeditionIndex},
                 world=new WorldSnapshot {doors=doors.ToArray(),opportunities=opportunities.ToArray(),items=items.ToArray(),enemies=new[] {
-                    new EnemySnapshot {id=encounter.GetComponent<PersistentEntityId>().Id,health=actor.GetComponent<ZombieHealth>().CurrentHealth,transform=Pose(actor.transform)} }}
+                    new EnemySnapshot {id=encounter.GetComponent<PersistentEntityId>().Id,health=actor.GetComponent<ZombieHealth>().CurrentHealth,
+                        transform=Pose(actor.transform),anatomy=actor.GetComponent<ZombieDismemberment>()?.CaptureState()} }}
             };
             if (cells)
             {
@@ -205,6 +209,9 @@ namespace LastSignal.Persistence
             catch (Exception e) { read=Invalid("Load path failed: "+e.GetType().Name); }
             ReadMilliseconds=watch.Elapsed.TotalMilliseconds;
             if (!read.Success) { LastResult=read; busy=false; yield break; }
+            var mission = GetComponent<LastSignal.Objectives.RelayMission>();
+            if (mission && !mission.MigrateLegacy(candidate)) { LastResult=Invalid("Relay legacy migration failed."); busy=false; yield break; }
+            if ((!mission && candidate.progression != null) || !Codec().Encode(candidate,out _).Success) { LastResult=Invalid("Incompatible or invalid migrated progression."); busy=false; yield break; }
             var topology=ValidateTopology(candidate);
             if (!topology.Success) { LastResult=topology; busy=false; yield break; }
             var originalDoors=new Dictionary<DoorInteractable,bool>();
@@ -235,6 +242,7 @@ namespace LastSignal.Persistence
                 var clock=GetComponent<LastSignal.WorldTime.WorldClock>();
                 if(clock) clock.Restore(candidate.worldTime ?? LastSignal.WorldTime.WorldTimeSnapshot.LegacyDefault());
                 GetComponent<ShelterSite>()?.Restore(candidate.shelter.production);
+                GetComponent<LastSignal.Objectives.RelayMission>()?.Restore(candidate.progression);
                 Flow.CompleteRestore(); LastResult=SaveResult.Ok;
             }
             catch (Exception e)
@@ -306,7 +314,9 @@ namespace LastSignal.Persistence
             var actor=SceneComponents<ZombieEncounter>()[0].Actor; var enemy=state.world.enemies[0];
             var agent=actor.GetComponent<NavMeshAgent>(); var position=Position(enemy.transform);
             if(!NavMesh.SamplePosition(position,out var hit,.5f,NavMesh.AllAreas) || !agent.Warp(hit.position)) throw new InvalidOperationException("Saved enemy is outside navigation.");
-            actor.transform.rotation=Rotation(enemy.transform); actor.GetComponent<ZombieHealth>().RestoreHealth(enemy.health);
+            actor.transform.rotation=Rotation(enemy.transform);
+            actor.GetComponent<ZombieDismemberment>()?.RestoreState(enemy.anatomy);
+            actor.GetComponent<ZombieHealth>().RestoreHealth(enemy.health);
         }
         static CombatEquipmentSnapshot CaptureCombat(GameObject player)
         {

@@ -16,6 +16,7 @@ namespace LastSignal
         float progressAge, retryAt;
         int failures, stuckFailures;
         bool initialized, requested;
+        bool running;
         public bool Ready => initialized && agent && agent.enabled && agent.isOnNavMesh;
         public bool Exhausted { get; private set; }
         public bool Stuck { get; private set; }
@@ -23,6 +24,8 @@ namespace LastSignal
         public int PathRequests { get; private set; }
         public Vector3 Destination { get; private set; }
         public Vector3 Velocity => Ready ? agent.velocity : Vector3.zero;
+        public bool Running => running;
+        public void SetRunning(bool value) => running = value;
         public bool Arrived => Ready && requested && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + .08f;
         public int AgentType => agent ? agent.agentTypeID : 0;
 
@@ -30,7 +33,7 @@ namespace LastSignal
         {
             tuning = definition; path = new NavMeshPath(); agent = GetComponent<NavMeshAgent>();
             agent.updateRotation = false; agent.updateUpAxis = false; agent.autoRepath = false;
-            agent.speed = tuning.Speed; agent.acceleration = tuning.Acceleration;
+            running = false; agent.speed = tuning.Speed; agent.acceleration = tuning.Acceleration;
             agent.angularSpeed = tuning.TurnSpeed;
             var filter = new NavMeshQueryFilter { agentTypeID = agent.agentTypeID, areaMask = agent.areaMask };
             if (!NavMesh.SamplePosition(transform.position, out var hit, tuning.SpawnSampleRadius, filter))
@@ -89,7 +92,7 @@ namespace LastSignal
                 Vector3 direction = agent.steeringTarget - transform.position; direction.y = 0;
                 Face(direction, seconds);
                 float alignment = direction.sqrMagnitude > .001f ? Vector3.Dot(transform.forward, direction.normalized) : 1;
-                agent.speed = tuning.Speed * Mathf.Clamp01(alignment);
+                agent.speed = (running ? tuning.RunSpeed : tuning.Speed) * Mathf.Clamp01(alignment);
                 if (alignment < .5f) { progressAge = 0; progressOrigin = transform.position; return; }
                 progressAge += seconds;
                 if (progressAge < tuning.StuckTimeout) return;

@@ -62,6 +62,7 @@ namespace LastSignal.WorldCells
                     var saved = state.world.enemies[0]; var actor = encounter.Actor;
                     if (!actor.GetComponent<NavMeshAgent>().Warp(Position(saved.transform))) throw new InvalidOperationException("Invalid enemy navigation pose.");
                     actor.transform.rotation = new Quaternion(saved.transform.qx, saved.transform.qy, saved.transform.qz, saved.transform.qw);
+                    actor.GetComponent<ZombieDismemberment>()?.RestoreState(saved.anatomy);
                     actor.GetComponent<ZombieHealth>().RestoreHealth(saved.health);
                 }
             }
@@ -112,7 +113,8 @@ namespace LastSignal.WorldCells
             {
                 if (!encounter.Actor) throw new InvalidOperationException("Missing cell enemy.");
                 enemies.Add(new EnemySnapshot { id = encounter.GetComponent<PersistentEntityId>().Id,
-                    health = encounter.Actor.GetComponent<ZombieHealth>().CurrentHealth, transform = SaveSession.Pose(encounter.Actor.transform) });
+                    health = encounter.Actor.GetComponent<ZombieHealth>().CurrentHealth, transform = SaveSession.Pose(encounter.Actor.transform),
+                    anatomy = encounter.Actor.GetComponent<ZombieDismemberment>()?.CaptureState() });
             }
             return new WorldSnapshot { doors = doors.ToArray(), opportunities = opportunities.ToArray(), items = items.ToArray(), enemies = enemies.ToArray() };
         }

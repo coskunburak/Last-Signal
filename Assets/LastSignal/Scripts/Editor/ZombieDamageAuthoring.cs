@@ -22,8 +22,10 @@ namespace LastSignal.Editor
             for (int i = 0; i < 32; i++) Physics.IgnoreLayerCollision(HitLayer, i, true);
             var tuning = AssetDatabase.LoadAssetAtPath<ZombieDefinition>(ZombieAcceptanceAuthoring.DefinitionPath);
             var data = new SerializedObject(tuning);
-            data.FindProperty("hitReactClip").objectReferenceValue = ZombieAssetIntegration.Clip("Zombie@Damage01");
-            data.FindProperty("deathClip").objectReferenceValue = ZombieAssetIntegration.Clip("LS_Zombie_Death");
+            if (!data.FindProperty("hitReactClip").objectReferenceValue)
+                data.FindProperty("hitReactClip").objectReferenceValue = ZombieAssetIntegration.Clip("Zombie@Damage01");
+            if (!data.FindProperty("deathClip").objectReferenceValue)
+                data.FindProperty("deathClip").objectReferenceValue = ZombieAssetIntegration.Clip("LS_Zombie_Death");
             data.ApplyModifiedPropertiesWithoutUndo(); EditorUtility.SetDirty(tuning);
             var root = PrefabUtility.LoadPrefabContents(ZombieRuntimeAuthoring.PrefabPath);
             try
@@ -32,11 +34,11 @@ namespace LastSignal.Editor
                 var animator = root.GetComponentInChildren<Animator>();
                 // Project-owned children, attached to bones without editing vendor source or source presentation prefab.
                 AddRegion(animator.GetBoneTransform(HumanBodyBones.Head), "Damage_Head", health, DamageRegion.Head,
-                    new Vector3(.00046f, -.02430f, -.06782f), new Vector3(.20f, .27f, .24f), 2);
+                    new Vector3(.00046f, -.02430f, -.06782f), new Vector3(.20f, .27f, .24f), 2, ZombieBodyPart.Head);
                 AddRegion(animator.GetBoneTransform(HumanBodyBones.Chest), "Damage_Chest", health, DamageRegion.Body,
-                    new Vector3(.0006f, -.0407f, -.1396f), new Vector3(.35f, .24f, .42f), 1);
+                    new Vector3(.0006f, -.0407f, -.1396f), new Vector3(.35f, .24f, .42f), 1, ZombieBodyPart.Torso);
                 AddRegion(animator.GetBoneTransform(HumanBodyBones.Hips), "Damage_Pelvis", health, DamageRegion.Body,
-                    new Vector3(.001f, .0096f, .0191f), new Vector3(.33f, .27f, .19f), 1);
+                    new Vector3(.001f, .0096f, .0191f), new Vector3(.33f, .27f, .19f), 1, ZombieBodyPart.Torso);
                 AddSegment(animator, HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, .11f, health);
                 AddSegment(animator, HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, .11f, health);
                 AddSegment(animator, HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, .09f, health);
@@ -64,11 +66,19 @@ namespace LastSignal.Editor
             var bone = animator.GetBoneTransform(start); var tip = animator.GetBoneTransform(end);
             Vector3 local = bone.InverseTransformPoint(tip.position);
             string name = "Damage_" + start;
-            AddRegion(bone, name, health, DamageRegion.Body, Vector3.zero, new Vector3(width, width, local.magnitude), 1);
+            ZombieBodyPart part = start switch
+            {
+                HumanBodyBones.LeftUpperArm or HumanBodyBones.LeftLowerArm => ZombieBodyPart.LeftArm,
+                HumanBodyBones.RightUpperArm or HumanBodyBones.RightLowerArm => ZombieBodyPart.RightArm,
+                HumanBodyBones.LeftUpperLeg or HumanBodyBones.LeftLowerLeg => ZombieBodyPart.LeftLeg,
+                HumanBodyBones.RightUpperLeg or HumanBodyBones.RightLowerLeg => ZombieBodyPart.RightLeg,
+                _ => ZombieBodyPart.Unspecified
+            };
+            AddRegion(bone, name, health, DamageRegion.Body, Vector3.zero, new Vector3(width, width, local.magnitude), 1, part);
             var region = bone.Find(name); region.localPosition = local * .5f;
             region.localRotation = Quaternion.LookRotation(local.normalized);
         }
-        static void AddRegion(Transform bone, string name, ZombieHealth owner, DamageRegion type, Vector3 center, Vector3 size, float multiplier)
+        static void AddRegion(Transform bone, string name, ZombieHealth owner, DamageRegion type, Vector3 center, Vector3 size, float multiplier, ZombieBodyPart part)
         {
             if (!bone) throw new InvalidOperationException("Missing Humanoid bone");
             var child = bone.Find(name); if (!child) { child = new GameObject(name).transform; child.SetParent(bone, false); }
@@ -76,7 +86,7 @@ namespace LastSignal.Editor
             var collider = child.GetComponent<BoxCollider>(); if (!collider) collider = child.gameObject.AddComponent<BoxCollider>();
             collider.isTrigger = false; collider.center = center; collider.size = size;
             var region = child.GetComponent<ZombieHitRegion>(); if (!region) region = child.gameObject.AddComponent<ZombieHitRegion>();
-            region.Configure(owner, type, multiplier, collider);
+            region.Configure(owner, type, multiplier, collider, part);
         }
         public static void Audit()
         {

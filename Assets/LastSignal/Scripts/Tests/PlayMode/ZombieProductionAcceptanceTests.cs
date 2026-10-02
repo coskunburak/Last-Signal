@@ -58,8 +58,9 @@ namespace LastSignal.Tests
             Place(z.transform.position+z.transform.forward*3);yield return Until(z,ZombieState.Chasing);
             Place(new Vector3(100,0,100));yield return Until(z,ZombieState.Searching);
             Place(z.transform.position+z.transform.forward*3);yield return Until(z,ZombieState.Chasing);Capture(dir,"J-reacquisition",z);
-            // Known open walkable lane; the forward reveal point can lie inside the low crate.
-            Place(new Vector3(-8,0,4));
+            // Reuse the just-confirmed visible approach ray; a fixed point can be hidden by the crate after search.
+            var approach=z.Runtime.LastKnownPosition-z.transform.position;approach.y=0;
+            Place(z.transform.position+approach.normalized*1.25f);
             float stopDeadline=Time.realtimeSinceStartup+7;while(!z.Attacking&&Time.realtimeSinceStartup<stopDeadline)yield return null;
             Assert.That(z.Attacking,Is.True);var stopped=z.transform.position;
             yield return new WaitForSeconds(.5f);Assert.That(Vector3.Distance(stopped,z.transform.position),Is.LessThan(.08f));Capture(dir,"stable-stop-melee",z);

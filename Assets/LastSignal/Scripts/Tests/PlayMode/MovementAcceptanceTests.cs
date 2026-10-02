@@ -126,10 +126,12 @@ namespace LastSignal.Tests
             look.ApplyLook(new Vector2(0, 100000)); Assert.That(look.Pitch, Is.EqualTo(-85));
             look.ApplyLook(new Vector2(0, -100000)); Assert.That(look.Pitch, Is.EqualTo(85));
         }
-        [Test]
-        public void CeilingRejectsStandThenAllowsNewRequestWithoutFootDrift()
+        [UnityTest]
+        public IEnumerator CeilingRejectsStandThenAllowsNewRequestWithoutFootDrift()
         {
             Assert.That(stance.TrySetCrouching(true), Is.True);
+            yield return new WaitForSeconds(.2f);
+            Assert.That(player.GetComponent<CharacterController>().height, Is.EqualTo(1.2f).Within(.001f));
             var roof = Box("Roof", new Vector3(0, 1.45f, 0), new Vector3(3, .3f, 3)); Physics.SyncTransforms();
             Vector3 foot = player.transform.position;
             for (int i = 0; i < 20; i++)
@@ -140,8 +142,9 @@ namespace LastSignal.Tests
             Assert.That(player.transform.position, Is.EqualTo(foot));
             Object.DestroyImmediate(roof); Physics.SyncTransforms();
             Assert.That(stance.TrySetCrouching(false), Is.True);
-            Assert.That(player.GetComponent<CharacterController>().height, Is.EqualTo(1.8f));
-            Assert.That(player.GetComponent<FirstPersonLook>().View.transform.localPosition.y, Is.EqualTo(1.62f).Within(.001));
+            yield return new WaitForSeconds(.2f);
+            Assert.That(player.GetComponent<CharacterController>().height, Is.EqualTo(1.8f).Within(.001f));
+            Assert.That(player.GetComponent<FirstPersonLook>().View.transform.localPosition.y, Is.EqualTo(1.62f).Within(.001f));
         }
         [Test]
         public void StepsThresholdWallAndDropUseRealCollision()
@@ -208,7 +211,8 @@ namespace LastSignal.Tests
             Assert.That(player.transform.eulerAngles.y, Is.EqualTo(12).Within(.1f));
             Press(keyboard.cKey); yield return null;
             Assert.That(stance.IsCrouching, Is.True);
-            Assert.That(player.GetComponent<CharacterController>().height, Is.EqualTo(1.2f));
+            yield return new WaitForSeconds(.2f);
+            Assert.That(player.GetComponent<CharacterController>().height, Is.EqualTo(1.2f).Within(.001f));
             Release(keyboard.cKey); yield return null;
             Press(keyboard.cKey); yield return null;
             Assert.That(stance.IsCrouching, Is.False);
@@ -270,7 +274,9 @@ namespace LastSignal.Tests
             Assert.That(player.transform.position.z, Is.GreaterThan(8), "authored narrow passage");
             Place(new Vector3(10, .04f, 2)); Walk(Vector2.up, .5f);
             Assert.That(player.transform.position.z, Is.LessThan(3), "standing tunnel entry blocked");
-            stance.TrySetCrouching(true); Walk(Vector2.up, 1);
+            stance.TrySetCrouching(true);
+            yield return new WaitForSeconds(.2f);
+            Walk(Vector2.up, 1);
             Assert.That(player.transform.position.z, Is.GreaterThan(3.5f));
             Assert.That(stance.TrySetCrouching(false), Is.False, "authored low ceiling");
             Walk(Vector2.up, 3); Assert.That(stance.TrySetCrouching(false), Is.True);

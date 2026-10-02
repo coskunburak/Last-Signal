@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="80" result="Failed(Child)" total="80" passed="49" failed="31" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.1853391">
+  <test-suite type="TestSuite" id="1000" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="418" result="Failed" site="Child" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.185339" total="80" passed="49" failed="31" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1490" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="418" result="Failed" site="Child" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.174302" total="80" passed="49" failed="31" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="76317" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1491" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="418" result="Failed" site="Child" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.170740" total="80" passed="49" failed="31" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1492" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="418" result="Failed" site="Child" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.165758" total="80" passed="49" failed="31" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1240" name="SaveFoundationTests" fullname="LastSignal.Tests.SaveFoundationTests" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" testcasecount="41" result="Failed" site="Child" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.073667" total="41" passed="10" failed="31" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1274" name="ChecksumRejectsWellFormedPayloadCorruption" fullname="LastSignal.Tests.SaveFoundationTests.ChecksumRejectsWellFormedPayloadCorruption" methodname="ChecksumRejectsWellFormedPayloadCorruption" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="347663385" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.021561" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1273" name="CorruptedCurrentDoesNotOverwriteCurrentOrGoodBackup" fullname="LastSignal.Tests.SaveFoundationTests.CorruptedCurrentDoesNotOverwriteCurrentOrGoodBackup" methodname="CorruptedCurrentDoesNotOverwriteCurrentOrGoodBackup" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1449525551" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.003134" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.CorruptedCurrentDoesNotOverwriteCurrentOrGoodBackup () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:155
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1241" name="DiskRoundtripPreservesSchemaSlotsDoorLootRemainderDropPlayerAndExistingOwners" fullname="LastSignal.Tests.SaveFoundationTests.DiskRoundtripPreservesSchemaSlotsDoorLootRemainderDropPlayerAndExistingOwners" methodname="DiskRoundtripPreservesSchemaSlotsDoorLootRemainderDropPlayerAndExistingOwners" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="100801238" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000900" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.DiskRoundtripPreservesSchemaSlotsDoorLootRemainderDropPlayerAndExistingOwners () [0x00008] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:50
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1282" name="FailedCandidatePreservesCurrentAndBackupByteForByte" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.003364" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1278" name="FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;beforeWrite&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;beforeWrite&quot;)" methodname="FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="168731703" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000810" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte (System.String fault) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:213
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1279" name="FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;partialWrite&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;partialWrite&quot;)" methodname="FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="2027266656" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000404" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte (System.String fault) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:213
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1280" name="FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;corruptCandidate&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;corruptCandidate&quot;)" methodname="FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1341374184" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000371" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte (System.String fault) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:213
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1281" name="FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;beforePublish&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte(&quot;beforePublish&quot;)" methodname="FailedCandidatePreservesCurrentAndBackupByteForByte" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1012362180" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000405" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.FailedCandidatePreservesCurrentAndBackupByteForByte (System.String fault) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:213
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1264" name="InvalidCandidatesNeverReplacePreviousSave" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" testcasecount="19" result="Failed" site="Child" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.009565" total="19" passed="0" failed="19" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1245" name="InvalidCandidatesNeverReplacePreviousSave(&quot;missingSection&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;missingSection&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="647821138" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000924" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1246" name="InvalidCandidatesNeverReplacePreviousSave(&quot;unknownItem&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;unknownItem&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="2054593533" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000773" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1247" name="InvalidCandidatesNeverReplacePreviousSave(&quot;schema&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;schema&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="66841615" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000406" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1248" name="InvalidCandidatesNeverReplacePreviousSave(&quot;world&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;world&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="424389943" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000365" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1249" name="InvalidCandidatesNeverReplacePreviousSave(&quot;content&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;content&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="2022585474" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000537" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1250" name="InvalidCandidatesNeverReplacePreviousSave(&quot;duplicate&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;duplicate&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1967946412" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000454" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1251" name="InvalidCandidatesNeverReplacePreviousSave(&quot;orphan&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;orphan&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="517976308" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000367" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1252" name="InvalidCandidatesNeverReplacePreviousSave(&quot;unknownOutcome&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;unknownOutcome&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="373940643" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000358" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1253" name="InvalidCandidatesNeverReplacePreviousSave(&quot;tombstoneQuantity&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;tombstoneQuantity&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1307980312" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000356" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1254" name="InvalidCandidatesNeverReplacePreviousSave(&quot;invalidPose&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;invalidPose&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1830626955" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000368" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1255" name="InvalidCandidatesNeverReplacePreviousSave(&quot;negativeStack&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;negativeStack&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="336345339" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000488" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1256" name="InvalidCandidatesNeverReplacePreviousSave(&quot;capacity&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;capacity&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="102905310" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000353" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1257" name="InvalidCandidatesNeverReplacePreviousSave(&quot;invalidHealth&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;invalidHealth&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1267855848" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000355" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1258" name="InvalidCandidatesNeverReplacePreviousSave(&quot;invalidMagazine&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;invalidMagazine&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1895263925" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000352" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1259" name="InvalidCandidatesNeverReplacePreviousSave(&quot;missingSlots&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;missingSlots&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1700552069" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000351" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1260" name="InvalidCandidatesNeverReplacePreviousSave(&quot;unknownOrigin&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;unknownOrigin&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="965863033" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000355" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1261" name="InvalidCandidatesNeverReplacePreviousSave(&quot;generatedMissingTombstone&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;generatedMissingTombstone&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1515221993" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000354" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1262" name="InvalidCandidatesNeverReplacePreviousSave(&quot;sharedLootEntity&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;sharedLootEntity&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="240140270" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000349" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1263" name="InvalidCandidatesNeverReplacePreviousSave(&quot;timestamp&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave(&quot;timestamp&quot;)" methodname="InvalidCandidatesNeverReplacePreviousSave" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="991716341" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000349" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.InvalidCandidatesNeverReplacePreviousSave (System.String invalid) [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:105
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1276" name="InvalidUtf8FailsGracefully" fullname="LastSignal.Tests.SaveFoundationTests.InvalidUtf8FailsGracefully" methodname="InvalidUtf8FailsGracefully" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="492342057" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.001620" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1270" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.004276" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1265" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1995929393" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.001545" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1266" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;{&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;{&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="180150028" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000757" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1267" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;null&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;null&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="125331248" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000486" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1268" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;[]&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;[]&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="614074981" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000457" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1269" name="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;{}&quot;)" fullname="LastSignal.Tests.SaveFoundationTests.MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState(&quot;{}&quot;)" methodname="MalformedOrMissingEnvelopeReturnsTypedFailureAndNoState" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="100498587" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000423" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1271" name="MissingSaveNeverCreatesAnEmptyCheckpoint" fullname="LastSignal.Tests.SaveFoundationTests.MissingSaveNeverCreatesAnEmptyCheckpoint" methodname="MissingSaveNeverCreatesAnEmptyCheckpoint" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="547069625" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000153" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1277" name="NonIncreasingGenerationAndStaleSessionCannotPublish" fullname="LastSignal.Tests.SaveFoundationTests.NonIncreasingGenerationAndStaleSessionCannotPublish" methodname="NonIncreasingGenerationAndStaleSessionCannotPublish" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="293303652" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000636" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.NonIncreasingGenerationAndStaleSessionCannotPublish () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:181
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1242" name="OptionalZombieAnatomyRoundtripsAndLegacyAbsenceRemainsValid" fullname="LastSignal.Tests.SaveFoundationTests.OptionalZombieAnatomyRoundtripsAndLegacyAbsenceRemainsValid" methodname="OptionalZombieAnatomyRoundtripsAndLegacyAbsenceRemainsValid" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="901149876" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.002620" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1275" name="OversizeFileRejectedBeforeParsing" fullname="LastSignal.Tests.SaveFoundationTests.OversizeFileRejectedBeforeParsing" methodname="OversizeFileRejectedBeforeParsing" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="125860752" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000619" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1244" name="RepeatedReadReturnsDetachedSameSemanticDataAndNeverAppends" fullname="LastSignal.Tests.SaveFoundationTests.RepeatedReadReturnsDetachedSameSemanticDataAndNeverAppends" methodname="RepeatedReadReturnsDetachedSameSemanticDataAndNeverAppends" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="2007712114" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000639" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.RepeatedReadReturnsDetachedSameSemanticDataAndNeverAppends () [0x00000] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:89
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1283" name="SessionChangedAfterWriteDiscardsCandidateAndRejectsReentry" fullname="LastSignal.Tests.SaveFoundationTests.SessionChangedAfterWriteDiscardsCandidateAndRejectsReentry" methodname="SessionChangedAfterWriteDiscardsCandidateAndRejectsReentry" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1440308152" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000496" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.SessionChangedAfterWriteDiscardsCandidateAndRejectsReentry () [0x00006] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:223
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1284" name="SmallWorldCodecAndPhysicalIoMeasurement" fullname="LastSignal.Tests.SaveFoundationTests.SmallWorldCodecAndPhysicalIoMeasurement" methodname="SmallWorldCodecAndPhysicalIoMeasurement" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1096919340" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000653" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.SmallWorldCodecAndPhysicalIoMeasurement () [0x00045] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:238
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1272" name="SuccessfulReplacementKeepsExactlyPreviousGenerationAsExplicitBackup" fullname="LastSignal.Tests.SaveFoundationTests.SuccessfulReplacementKeepsExactlyPreviousGenerationAsExplicitBackup" methodname="SuccessfulReplacementKeepsExactlyPreviousGenerationAsExplicitBackup" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="1044763087" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000451" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.SuccessfulReplacementKeepsExactlyPreviousGenerationAsExplicitBackup () [0x00004] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:148
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1243" name="WorldStackMayExceedContainerMaxStackWithoutLoss" fullname="LastSignal.Tests.SaveFoundationTests.WorldStackMayExceedContainerMaxStackWithoutLoss" methodname="WorldStackMayExceedContainerMaxStackWithoutLoss" classname="LastSignal.Tests.SaveFoundationTests" runstate="Runnable" seed="378086246" result="Failed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000404" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.SaveFoundationTests.WorldStackMayExceedContainerMaxStackWithoutLoss () [0x0001c] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/SaveFoundationTests.cs:84
+]]></stack-trace>
+              </failure>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1363" name="WorldPopulationManagerTests" fullname="LastSignal.Tests.WorldPopulationManagerTests" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.005159" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1366" name="BackwardTimestampCannotUndoDecay" fullname="LastSignal.Tests.WorldPopulationManagerTests.BackwardTimestampCannotUndoDecay" methodname="BackwardTimestampCannotUndoDecay" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="1015436765" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000443" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1381" name="DuplicateAndDeadDormantIdentityRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.DuplicateAndDeadDormantIdentityRejected" methodname="DuplicateAndDeadDormantIdentityRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="842265455" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000824" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1373" name="DuplicateLedgerRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.DuplicateLedgerRejected" methodname="DuplicateLedgerRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="818273131" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000061" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1375" name="DuplicateMigrationRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.DuplicateMigrationRejected" methodname="DuplicateMigrationRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="853481971" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000057" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1379" name="ExcessiveReceiptsRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.ExcessiveReceiptsRejected" methodname="ExcessiveReceiptsRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="716402680" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000053" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1377" name="FutureDecayTimestampRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.FutureDecayTimestampRejected" methodname="FutureDecayTimestampRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="177430622" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000044" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1376" name="InstantTravelRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.InstantTravelRejected" methodname="InstantTravelRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="1897428411" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000046" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1382" name="InvalidAnatomyIsRejectedAndLegacyAbsenceIsAccepted" fullname="LastSignal.Tests.WorldPopulationManagerTests.InvalidAnatomyIsRejectedAndLegacyAbsenceIsAccepted" methodname="InvalidAnatomyIsRejectedAndLegacyAbsenceIsAccepted" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="194015647" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000108" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1372" name="InvalidPressureRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.InvalidPressureRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000844" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1368" name="InvalidPressureRejected(-1.0f)" fullname="LastSignal.Tests.WorldPopulationManagerTests.InvalidPressureRejected(-1.0f)" methodname="InvalidPressureRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="896078556" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000094" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1369" name="InvalidPressureRejected(1.01f)" fullname="LastSignal.Tests.WorldPopulationManagerTests.InvalidPressureRejected(1.01f)" methodname="InvalidPressureRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="1536876275" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000029" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1370" name="InvalidPressureRejected(float.NaN)" fullname="LastSignal.Tests.WorldPopulationManagerTests.InvalidPressureRejected(float.NaN)" methodname="InvalidPressureRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="1905720814" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000031" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1371" name="InvalidPressureRejected(float.PositiveInfinity)" fullname="LastSignal.Tests.WorldPopulationManagerTests.InvalidPressureRejected(float.PositiveInfinity)" methodname="InvalidPressureRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="48530278" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000026" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1365" name="LargeElapsedClampsAtZeroWithoutOverflow" fullname="LastSignal.Tests.WorldPopulationManagerTests.LargeElapsedClampsAtZeroWithoutOverflow" methodname="LargeElapsedClampsAtZeroWithoutOverflow" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="1349546192" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000079" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1367" name="MidTravelSnapshotIsValid" fullname="LastSignal.Tests.WorldPopulationManagerTests.MidTravelSnapshotIsValid" methodname="MidTravelSnapshotIsValid" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="61698169" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000042" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1378" name="NegativeLedgerRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.NegativeLedgerRejected" methodname="NegativeLedgerRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="650200031" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000046" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1364" name="NormalAndBulkDecayAgree" fullname="LastSignal.Tests.WorldPopulationManagerTests.NormalAndBulkDecayAgree" methodname="NormalAndBulkDecayAgree" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="1089009749" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000150" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1380" name="ReceiptAboveWatermarkRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.ReceiptAboveWatermarkRejected" methodname="ReceiptAboveWatermarkRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="707073283" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000039" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1374" name="UnknownDestinationRejected" fullname="LastSignal.Tests.WorldPopulationManagerTests.UnknownDestinationRejected" methodname="UnknownDestinationRejected" classname="LastSignal.Tests.WorldPopulationManagerTests" runstate="Runnable" seed="2064340210" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000042" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1423" name="ZombieDamageTests" fullname="LastSignal.Tests.ZombieDamageTests" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.063832" total="21" passed="21" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1433" name="AnatomicalIdentityDoesNotChangeDamageAuthority" fullname="LastSignal.Tests.ZombieDamageTests.AnatomicalIdentityDoesNotChangeDamageAuthority" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.003631" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1429" name="AnatomicalIdentityDoesNotChangeDamageAuthority(Head,Head)" fullname="LastSignal.Tests.ZombieDamageTests.AnatomicalIdentityDoesNotChangeDamageAuthority(Head,Head)" methodname="AnatomicalIdentityDoesNotChangeDamageAuthority" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="1648155061" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.002479" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1430" name="AnatomicalIdentityDoesNotChangeDamageAuthority(LeftArm,Body)" fullname="LastSignal.Tests.ZombieDamageTests.AnatomicalIdentityDoesNotChangeDamageAuthority(LeftArm,Body)" methodname="AnatomicalIdentityDoesNotChangeDamageAuthority" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="730747230" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000156" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1431" name="AnatomicalIdentityDoesNotChangeDamageAuthority(RightArm,Body)" fullname="LastSignal.Tests.ZombieDamageTests.AnatomicalIdentityDoesNotChangeDamageAuthority(RightArm,Body)" methodname="AnatomicalIdentityDoesNotChangeDamageAuthority" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="1982154729" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000141" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1432" name="AnatomicalIdentityDoesNotChangeDamageAuthority(Torso,Body)" fullname="LastSignal.Tests.ZombieDamageTests.AnatomicalIdentityDoesNotChangeDamageAuthority(Torso,Body)" methodname="AnatomicalIdentityDoesNotChangeDamageAuthority" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="944666999" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000143" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1436" name="AnatomyRoundtripPreservesPartialDamageAndSeveredCollider" fullname="LastSignal.Tests.ZombieDamageTests.AnatomyRoundtripPreservesPartialDamageAndSeveredCollider" methodname="AnatomyRoundtripPreservesPartialDamageAndSeveredCollider" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="602454289" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.001268" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1434" name="ArmSeverThresholdIsIndependentAndIdempotent" fullname="LastSignal.Tests.ZombieDamageTests.ArmSeverThresholdIsIndependentAndIdempotent" methodname="ArmSeverThresholdIsIndependentAndIdempotent" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="2125565296" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000327" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1445" name="DeadIsTerminalEvenAfterResetAndObservation" fullname="LastSignal.Tests.ZombieDamageTests.DeadIsTerminalEvenAfterResetAndObservation" methodname="DeadIsTerminalEvenAfterResetAndObservation" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="1407230807" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000920" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1442" name="DeathExactlyOnceIncludingReentrantHit" fullname="LastSignal.Tests.ZombieDamageTests.DeathExactlyOnceIncludingReentrantHit" methodname="DeathExactlyOnceIncludingReentrantHit" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="2087553048" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000301" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1444" name="DisabledIntakeAndOverflowMultiplierReject" fullname="LastSignal.Tests.ZombieDamageTests.DisabledIntakeAndOverflowMultiplierReject" methodname="DisabledIntakeAndOverflowMultiplierReject" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="929729452" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000173" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1435" name="FatalHeadSeverUsesCanonicalHealthDeathOnce" fullname="LastSignal.Tests.ZombieDamageTests.FatalHeadSeverUsesCanonicalHealthDeathOnce" methodname="FatalHeadSeverUsesCanonicalHealthDeathOnce" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="2071969544" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000319" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1441" name="InvalidDamageRejected" fullname="LastSignal.Tests.ZombieDamageTests.InvalidDamageRejected" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.001365" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1437" name="InvalidDamageRejected(0)" fullname="LastSignal.Tests.ZombieDamageTests.InvalidDamageRejected(0)" methodname="InvalidDamageRejected" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="362861408" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000189" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1438" name="InvalidDamageRejected(-1)" fullname="LastSignal.Tests.ZombieDamageTests.InvalidDamageRejected(-1)" methodname="InvalidDamageRejected" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="1414943520" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000101" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1439" name="InvalidDamageRejected(float.NaN)" fullname="LastSignal.Tests.ZombieDamageTests.InvalidDamageRejected(float.NaN)" methodname="InvalidDamageRejected" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="1282087660" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000098" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1440" name="InvalidDamageRejected(float.PositiveInfinity)" fullname="LastSignal.Tests.ZombieDamageTests.InvalidDamageRejected(float.PositiveInfinity)" methodname="InvalidDamageRejected" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="1849579538" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000098" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1447" name="ProductionPrefabRegionsMasksAndAnimationReferencesAreValid" fullname="LastSignal.Tests.ZombieDamageTests.ProductionPrefabRegionsMasksAndAnimationReferencesAreValid" methodname="ProductionPrefabRegionsMasksAndAnimationReferencesAreValid" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="567989311" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.050147" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1428" name="RegionMathAndSingleTransaction" fullname="LastSignal.Tests.ZombieDamageTests.RegionMathAndSingleTransaction" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.002267" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1425" name="RegionMathAndSingleTransaction(30,1,70)" fullname="LastSignal.Tests.ZombieDamageTests.RegionMathAndSingleTransaction(30,1,70)" methodname="RegionMathAndSingleTransaction" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="2015075226" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000885" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1426" name="RegionMathAndSingleTransaction(30,2,40)" fullname="LastSignal.Tests.ZombieDamageTests.RegionMathAndSingleTransaction(30,2,40)" methodname="RegionMathAndSingleTransaction" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="21167342" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000133" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1427" name="RegionMathAndSingleTransaction(1000,2,0)" fullname="LastSignal.Tests.ZombieDamageTests.RegionMathAndSingleTransaction(1000,2,0)" methodname="RegionMathAndSingleTransaction" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="745076435" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000115" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1446" name="SearchKnowledgeAndBudgetSurviveReaction" fullname="LastSignal.Tests.ZombieDamageTests.SearchKnowledgeAndBudgetSurviveReaction" methodname="SearchKnowledgeAndBudgetSurviveReaction" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="407145645" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000163" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1424" name="StartsFullAndIndependent" fullname="LastSignal.Tests.ZombieDamageTests.StartsFullAndIndependent" methodname="StartsFullAndIndependent" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="1074002820" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000158" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1443" name="WrongColliderAndMissingOwnerFailSafely" fullname="LastSignal.Tests.ZombieDamageTests.WrongColliderAndMissingOwnerFailSafely" methodname="WrongColliderAndMissingOwnerFailSafely" classname="LastSignal.Tests.ZombieDamageTests" runstate="Runnable" seed="214064629" result="Passed" start-time="2026-09-30 21:43:41Z" end-time="2026-09-30 21:43:41Z" duration="0.000174" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

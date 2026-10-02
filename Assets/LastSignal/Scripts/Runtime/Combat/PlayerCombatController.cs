@@ -22,6 +22,9 @@ namespace LastSignal
         public WeaponController Firearm => activeWeapon;
         WeaponController activeWeapon;
         bool aimInputHeld;
+        FirstPersonMotor motor;
+
+        void Awake() => motor = GetComponent<FirstPersonMotor>();
 
         public WeaponController ActiveWeapon => SelectedSlot == CombatSlot.Firearm ? activeWeapon : null;
         public event System.Action WeaponChanged;
@@ -34,6 +37,9 @@ namespace LastSignal
             {
                 melee = Instantiate(startingMelee, weaponParent);
                 melee.Initialize(gameObject, look ? look.View.transform : transform);
+                var meleeStance = melee.GetComponent<MeleeStanceViewPresenter>();
+                if (meleeStance)
+                    meleeStance.Configure(GetComponent<PlayerStance>(), motor);
                 if (noise != null) melee.BindNoise(noise, noiseTuning, noiseSource);
                 melee.gameObject.SetActive(false);
             }
@@ -84,7 +90,8 @@ namespace LastSignal
             var cam = look ? look.View : Camera.main;
             if (weaponParent) activeWeapon.transform.SetParent(weaponParent, false);
             var view = activeWeapon.GetComponent<WeaponViewPresenter>();
-            if (view) view.Configure(activeWeapon, input, activeWeapon.transform.Find("ViewmodelRoot"));
+            if (view) view.Configure(activeWeapon, input,
+                activeWeapon.transform.Find("ViewmodelRoot"), GetComponent<PlayerStance>(), motor);
             var recoil = activeWeapon.GetComponent<WeaponRecoilController>();
             if (recoil) recoil.Configure(activeWeapon, look);
             activeWeapon.Initialize(cam ? cam.transform : transform, gameObject);
@@ -135,7 +142,8 @@ namespace LastSignal
             // Update aim amount (smooth interpolation).
             var state = activeWeapon.RuntimeState;
             float adsSpeed = activeWeapon.Definition.AdsTransitionSeconds;
-            float targetAim = aimInputHeld && input.GameplayActive ? 1f : 0f;
+            float targetAim = aimInputHeld && input.GameplayActive &&
+                !(motor && motor.IsSliding) ? 1f : 0f;
             if (adsSpeed > 0)
                 state.AimAmount = Mathf.MoveTowards(state.AimAmount, targetAim, Time.deltaTime / adsSpeed);
             else

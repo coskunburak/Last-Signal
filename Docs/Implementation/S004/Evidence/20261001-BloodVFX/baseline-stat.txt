@@ -1,0 +1,738 @@
+ Assets/Game/Items/Definitions/ItemCatalog.asset    |     1 +
+ Assets/InputSystem_Actions.inputactions            |    16 +-
+ Assets/LastSignal/Assets/SZombie.meta              |     8 -
+ .../LastSignal/Assets/SZombie/Blend_SZombie.blend  |     3 -
+ .../Assets/SZombie/Blend_SZombie.blend.meta        |   114 -
+ .../Assets/SZombie/SZombie_Variant_1.meta          |     8 -
+ .../SZombie/SZombie_Variant_1/Cascadeur.meta       |     8 -
+ .../Cascadeur/SK_SZombie_Variant_1.fbx             |     3 -
+ .../Cascadeur/SK_SZombie_Variant_1.fbx.meta        |   114 -
+ .../SZombie_Variant_1/SK_SZombie_Variant_1.fbx     |     3 -
+ .../SK_SZombie_Variant_1.fbx.meta                  |   114 -
+ .../SZombie_Variant_1/SM_SZombie_Variant_1.fbx     |     3 -
+ .../SM_SZombie_Variant_1.fbx.meta                  |   114 -
+ .../Assets/SZombie/SZombie_Variant_1/Textures.meta |     8 -
+ .../Textures/T_SZombie_Variant_1_A_Albedo.png      |     3 -
+ .../Textures/T_SZombie_Variant_1_A_Albedo.png.meta |   143 -
+ .../Textures/T_SZombie_Variant_1_B_Albedo.png      |     3 -
+ .../Textures/T_SZombie_Variant_1_B_Albedo.png.meta |   143 -
+ .../T_SZombie_Variant_1_DirectX_Normal.png         |     3 -
+ .../T_SZombie_Variant_1_DirectX_Normal.png.meta    |   143 -
+ .../Textures/T_SZombie_Variant_1_Metallic.png      |     3 -
+ .../Textures/T_SZombie_Variant_1_Metallic.png.meta |   143 -
+ .../Textures/T_SZombie_Variant_1_Oclussion.png     |     3 -
+ .../T_SZombie_Variant_1_Oclussion.png.meta         |   143 -
+ .../Textures/T_SZombie_Variant_1_OpenGL_Normal.png |     3 -
+ .../T_SZombie_Variant_1_OpenGL_Normal.png.meta     |   143 -
+ .../Textures/T_SZombie_Variant_1_Roughness.png     |     3 -
+ .../T_SZombie_Variant_1_Roughness.png.meta         |   143 -
+ .../Textures/T_SZombie_Variant_1_Smoothness.png    |     3 -
+ .../T_SZombie_Variant_1_Smoothness.png.meta        |   143 -
+ .../Textures/T_SZombie_Variant_1_Unity_Mask.png    |     3 -
+ .../T_SZombie_Variant_1_Unity_Mask.png.meta        |   143 -
+ .../Textures/T_SZombie_Variant_1_Unreal_Mask.png   |     3 -
+ .../T_SZombie_Variant_1_Unreal_Mask.png.meta       |   143 -
+ .../Assets/SZombie/SZombie_Variant_1/Unity.meta    |     8 -
+ .../Unity/SK_SZombie_Variant_1.fbx                 |     3 -
+ .../Unity/SK_SZombie_Variant_1.fbx.meta            |   114 -
+ .../Assets/ZOMB\304\260E ATTACK ANIMATION.meta"    |     8 -
+ .../Human Animations.meta"                         |     8 -
+ .../Human Animations/Animations.meta"              |     8 -
+ .../Human Animations/Animations/Female.meta"       |     8 -
+ .../Animations/Female/Combat.meta"                 |     8 -
+ .../Animations/Female/Combat/1H.meta"              |     8 -
+ .../Female/Combat/1H/HumanF@Attack1H01_L.fbx"      |     3 -
+ .../Female/Combat/1H/HumanF@Attack1H01_L.fbx.meta" |   975 -
+ .../Female/Combat/1H/HumanF@Attack1H01_R.fbx"      |     3 -
+ .../Female/Combat/1H/HumanF@Attack1H01_R.fbx.meta" |   975 -
+ .../Female/Combat/1H/HumanF@CombatIdle1H01.fbx"    |     3 -
+ .../Combat/1H/HumanF@CombatIdle1H01.fbx.meta"      |   975 -
+ .../Animations/Female/Combat/2H.meta"              |     8 -
+ .../Female/Combat/2H/HumanF@Attack2H01.fbx"        |     3 -
+ .../Female/Combat/2H/HumanF@Attack2H01.fbx.meta"   |   975 -
+ .../Female/Combat/2H/HumanF@CombatIdle2H01.fbx"    |     3 -
+ .../Combat/2H/HumanF@CombatIdle2H01.fbx.meta"      |   975 -
+ .../Female/Combat/HumanF@CombatDamage01.fbx"       |     3 -
+ .../Female/Combat/HumanF@CombatDamage01.fbx.meta"  |   975 -
+ .../Female/Combat/HumanF@CombatIdle01.fbx"         |     3 -
+ .../Female/Combat/HumanF@CombatIdle01.fbx.meta"    |   975 -
+ .../Animations/Female/Combat/HumanF@Death01.fbx"   |     3 -
+ .../Female/Combat/HumanF@Death01.fbx.meta"         |   975 -
+ .../Animations/Female/Combat/Polearm.meta"         |     8 -
+ .../Combat/Polearm/HumanF@AttackPolearm01.fbx"     |     3 -
+ .../Polearm/HumanF@AttackPolearm01.fbx.meta"       |   975 -
+ .../Combat/Polearm/HumanF@CombatIdlePolearm01.fbx" |     3 -
+ .../Polearm/HumanF@CombatIdlePolearm01.fbx.meta"   |   975 -
+ .../Animations/Female/Combat/Shield.meta"          |     8 -
+ .../Combat/Shield/HumanF@AttackShield01.fbx"       |     3 -
+ .../Combat/Shield/HumanF@AttackShield01.fbx.meta"  |   975 -
+ .../Human Animations/Animations/Female/Idles.meta" |     8 -
+ .../Animations/Female/Idles/HumanF@Idle01.fbx"     |     3 -
+ .../Female/Idles/HumanF@Idle01.fbx.meta"           |   975 -
+ .../Animations/Female/Movement.meta"               |     8 -
+ .../Animations/Female/Movement/Run.meta"           |     8 -
+ .../Female/Movement/Run/HumanF@Run01_Backward.fbx" |     3 -
+ .../Movement/Run/HumanF@Run01_Backward.fbx.meta"   |   975 -
+ .../Movement/Run/HumanF@Run01_BackwardLeft.fbx"    |     3 -
+ .../Run/HumanF@Run01_BackwardLeft.fbx.meta"        |   975 -
+ .../Movement/Run/HumanF@Run01_BackwardRight.fbx"   |     3 -
+ .../Run/HumanF@Run01_BackwardRight.fbx.meta"       |   975 -
+ .../Female/Movement/Run/HumanF@Run01_Forward.fbx"  |     3 -
+ .../Movement/Run/HumanF@Run01_Forward.fbx.meta"    |   975 -
+ .../Movement/Run/HumanF@Run01_ForwardLeft.fbx"     |     3 -
+ .../Run/HumanF@Run01_ForwardLeft.fbx.meta"         |   975 -
+ .../Movement/Run/HumanF@Run01_ForwardRight.fbx"    |     3 -
+ .../Run/HumanF@Run01_ForwardRight.fbx.meta"        |   975 -
+ .../Female/Movement/Run/HumanF@Run01_Left.fbx"     |     3 -
+ .../Movement/Run/HumanF@Run01_Left.fbx.meta"       |   975 -
+ .../Female/Movement/Run/HumanF@Run01_Right.fbx"    |     3 -
+ .../Movement/Run/HumanF@Run01_Right.fbx.meta"      |   975 -
+ .../Female/Movement/Run/RootMotion.meta"           |     8 -
+ .../Run/RootMotion/HumanF@Run01_Backward [RM].fbx" |     3 -
+ .../HumanF@Run01_Backward [RM].fbx.meta"           |   976 -
+ .../RootMotion/HumanF@Run01_BackwardLeft [RM].fbx" |     3 -
+ .../HumanF@Run01_BackwardLeft [RM].fbx.meta"       |   976 -
+ .../HumanF@Run01_BackwardRight [RM].fbx"           |     3 -
+ .../HumanF@Run01_BackwardRight [RM].fbx.meta"      |   976 -
+ .../Run/RootMotion/HumanF@Run01_Forward [RM].fbx"  |     3 -
+ .../RootMotion/HumanF@Run01_Forward [RM].fbx.meta" |   976 -
+ .../RootMotion/HumanF@Run01_ForwardLeft [RM].fbx"  |     3 -
+ .../HumanF@Run01_ForwardLeft [RM].fbx.meta"        |   976 -
+ .../RootMotion/HumanF@Run01_ForwardRight [RM].fbx" |     3 -
+ .../HumanF@Run01_ForwardRight [RM].fbx.meta"       |   976 -
+ .../Run/RootMotion/HumanF@Run01_Left [RM].fbx"     |     3 -
+ .../RootMotion/HumanF@Run01_Left [RM].fbx.meta"    |   976 -
+ .../Run/RootMotion/HumanF@Run01_Right [RM].fbx"    |     3 -
+ .../RootMotion/HumanF@Run01_Right [RM].fbx.meta"   |   976 -
+ .../Animations/Female/Movement/Strafe.meta"        |     8 -
+ .../Female/Movement/Strafe/StrafeRun.meta"         |     8 -
+ .../StrafeRun/HumanF@StrafeRun01_BackwardLeft.fbx" |     3 -
+ .../HumanF@StrafeRun01_BackwardLeft.fbx.meta"      |   975 -
+ .../HumanF@StrafeRun01_BackwardRight.fbx"          |     3 -
+ .../HumanF@StrafeRun01_BackwardRight.fbx.meta"     |   975 -
+ .../StrafeRun/HumanF@StrafeRun01_ForwardLeft.fbx"  |     3 -
+ .../HumanF@StrafeRun01_ForwardLeft.fbx.meta"       |   975 -
+ .../StrafeRun/HumanF@StrafeRun01_ForwardRight.fbx" |     3 -
+ .../HumanF@StrafeRun01_ForwardRight.fbx.meta"      |   975 -
+ .../Strafe/StrafeRun/HumanF@StrafeRun01_Left.fbx"  |     3 -
+ .../StrafeRun/HumanF@StrafeRun01_Left.fbx.meta"    |   975 -
+ .../Strafe/StrafeRun/HumanF@StrafeRun01_Right.fbx" |     3 -
+ .../StrafeRun/HumanF@StrafeRun01_Right.fbx.meta"   |   975 -
+ .../Movement/Strafe/StrafeRun/RootMotion.meta"     |     8 -
+ .../HumanF@StrafeRun01_BackwardLeft [RM].fbx"      |     3 -
+ .../HumanF@StrafeRun01_BackwardLeft [RM].fbx.meta" |   976 -
+ .../HumanF@StrafeRun01_BackwardRight [RM].fbx"     |     3 -
+ ...HumanF@StrafeRun01_BackwardRight [RM].fbx.meta" |   976 -
+ .../HumanF@StrafeRun01_ForwardLeft [RM].fbx"       |     3 -
+ .../HumanF@StrafeRun01_ForwardLeft [RM].fbx.meta"  |   976 -
+ .../HumanF@StrafeRun01_ForwardRight [RM].fbx"      |     3 -
+ .../HumanF@StrafeRun01_ForwardRight [RM].fbx.meta" |   976 -
+ .../RootMotion/HumanF@StrafeRun01_Left [RM].fbx"   |     3 -
+ .../HumanF@StrafeRun01_Left [RM].fbx.meta"         |   976 -
+ .../RootMotion/HumanF@StrafeRun01_Right [RM].fbx"  |     3 -
+ .../HumanF@StrafeRun01_Right [RM].fbx.meta"        |   976 -
+ ...HumanMeleeAnimationsFREE_BlenderFiles.zip.meta" |    14 -
+ .../Human Animations/Animations/Male.meta"         |     8 -
+ .../Human Animations/Animations/Male/Combat.meta"  |     8 -
+ .../Animations/Male/Combat/1H.meta"                |     8 -
+ .../Male/Combat/1H/HumanM@Attack1H01_L.fbx"        |     3 -
+ .../Male/Combat/1H/HumanM@Attack1H01_L.fbx.meta"   |   975 -
+ .../Male/Combat/1H/HumanM@Attack1H01_R.fbx"        |     3 -
+ .../Male/Combat/1H/HumanM@Attack1H01_R.fbx.meta"   |   975 -
+ .../Male/Combat/1H/HumanM@CombatIdle1H01.fbx"      |     3 -
+ .../Male/Combat/1H/HumanM@CombatIdle1H01.fbx.meta" |   975 -
+ .../Animations/Male/Combat/2H.meta"                |     8 -
+ .../Male/Combat/2H/HumanM@Attack2H01.fbx"          |     3 -
+ .../Male/Combat/2H/HumanM@Attack2H01.fbx.meta"     |   975 -
+ .../Male/Combat/2H/HumanM@CombatIdle2H01.fbx"      |     3 -
+ .../Male/Combat/2H/HumanM@CombatIdle2H01.fbx.meta" |   975 -
+ .../Male/Combat/HumanM@CombatDamage01.fbx"         |     3 -
+ .../Male/Combat/HumanM@CombatDamage01.fbx.meta"    |   975 -
+ .../Male/Combat/HumanM@CombatIdle01.fbx"           |     3 -
+ .../Male/Combat/HumanM@CombatIdle01.fbx.meta"      |   975 -
+ .../Animations/Male/Combat/HumanM@Death01.fbx"     |     3 -
+ .../Male/Combat/HumanM@Death01.fbx.meta"           |   975 -
+ .../Animations/Male/Combat/Polearm.meta"           |     8 -
+ .../Combat/Polearm/HumanM@AttackPolearm01.fbx"     |     3 -
+ .../Polearm/HumanM@AttackPolearm01.fbx.meta"       |   975 -
+ .../Combat/Polearm/HumanM@CombatIdlePolearm01.fbx" |     3 -
+ .../Polearm/HumanM@CombatIdlePolearm01.fbx.meta"   |   975 -
+ .../Animations/Male/Combat/Shield.meta"            |     8 -
+ .../Male/Combat/Shield/HumanM@AttackShield01.fbx"  |     3 -
+ .../Combat/Shield/HumanM@AttackShield01.fbx.meta"  |   975 -
+ .../Human Animations/Animations/Male/Idles.meta"   |     8 -
+ .../Animations/Male/Idles/HumanM@Idle01.fbx"       |     3 -
+ .../Animations/Male/Idles/HumanM@Idle01.fbx.meta"  |   975 -
+ .../Animations/Male/Movement.meta"                 |     8 -
+ .../Animations/Male/Movement/Run.meta"             |     8 -
+ .../Male/Movement/Run/HumanM@Run01_Backward.fbx"   |     3 -
+ .../Movement/Run/HumanM@Run01_Backward.fbx.meta"   |   975 -
+ .../Movement/Run/HumanM@Run01_BackwardLeft.fbx"    |     3 -
+ .../Run/HumanM@Run01_BackwardLeft.fbx.meta"        |   975 -
+ .../Movement/Run/HumanM@Run01_BackwardRight.fbx"   |     3 -
+ .../Run/HumanM@Run01_BackwardRight.fbx.meta"       |   975 -
+ .../Male/Movement/Run/HumanM@Run01_Forward.fbx"    |     3 -
+ .../Movement/Run/HumanM@Run01_Forward.fbx.meta"    |   975 -
+ .../Movement/Run/HumanM@Run01_ForwardLeft.fbx"     |     3 -
+ .../Run/HumanM@Run01_ForwardLeft.fbx.meta"         |   975 -
+ .../Movement/Run/HumanM@Run01_ForwardRight.fbx"    |     3 -
+ .../Run/HumanM@Run01_ForwardRight.fbx.meta"        |   975 -
+ .../Male/Movement/Run/HumanM@Run01_Left.fbx"       |     3 -
+ .../Male/Movement/Run/HumanM@Run01_Left.fbx.meta"  |   975 -
+ .../Male/Movement/Run/HumanM@Run01_Right.fbx"      |     3 -
+ .../Male/Movement/Run/HumanM@Run01_Right.fbx.meta" |   975 -
+ .../Animations/Male/Movement/Run/RootMotion.meta"  |     8 -
+ .../Run/RootMotion/HumanM@Run01_Backward [RM].fbx" |     3 -
+ .../HumanM@Run01_Backward [RM].fbx.meta"           |   976 -
+ .../RootMotion/HumanM@Run01_BackwardLeft [RM].fbx" |     3 -
+ .../HumanM@Run01_BackwardLeft [RM].fbx.meta"       |   976 -
+ .../HumanM@Run01_BackwardRight [RM].fbx"           |     3 -
+ .../HumanM@Run01_BackwardRight [RM].fbx.meta"      |   976 -
+ .../Run/RootMotion/HumanM@Run01_Forward [RM].fbx"  |     3 -
+ .../RootMotion/HumanM@Run01_Forward [RM].fbx.meta" |   976 -
+ .../RootMotion/HumanM@Run01_ForwardLeft [RM].fbx"  |     3 -
+ .../HumanM@Run01_ForwardLeft [RM].fbx.meta"        |   976 -
+ .../RootMotion/HumanM@Run01_ForwardRight [RM].fbx" |     3 -
+ .../HumanM@Run01_ForwardRight [RM].fbx.meta"       |   976 -
+ .../Run/RootMotion/HumanM@Run01_Left [RM].fbx"     |     3 -
+ .../RootMotion/HumanM@Run01_Left [RM].fbx.meta"    |   976 -
+ .../Run/RootMotion/HumanM@Run01_Right [RM].fbx"    |     3 -
+ .../RootMotion/HumanM@Run01_Right [RM].fbx.meta"   |   976 -
+ .../Animations/Male/Movement/Strafe.meta"          |     8 -
+ .../Male/Movement/Strafe/StrafeRun.meta"           |     8 -
+ .../StrafeRun/HumanM@StrafeRun01_BackwardLeft.fbx" |     3 -
+ .../HumanM@StrafeRun01_BackwardLeft.fbx.meta"      |   975 -
+ .../HumanM@StrafeRun01_BackwardRight.fbx"          |     3 -
+ .../HumanM@StrafeRun01_BackwardRight.fbx.meta"     |   975 -
+ .../StrafeRun/HumanM@StrafeRun01_ForwardLeft.fbx"  |     3 -
+ .../HumanM@StrafeRun01_ForwardLeft.fbx.meta"       |   975 -
+ .../StrafeRun/HumanM@StrafeRun01_ForwardRight.fbx" |     3 -
+ .../HumanM@StrafeRun01_ForwardRight.fbx.meta"      |   975 -
+ .../Strafe/StrafeRun/HumanM@StrafeRun01_Left.fbx"  |     3 -
+ .../StrafeRun/HumanM@StrafeRun01_Left.fbx.meta"    |   975 -
+ .../Strafe/StrafeRun/HumanM@StrafeRun01_Right.fbx" |     3 -
+ .../StrafeRun/HumanM@StrafeRun01_Right.fbx.meta"   |   975 -
+ .../Movement/Strafe/StrafeRun/RootMotion.meta"     |     8 -
+ .../HumanM@StrafeRun01_BackwardLeft [RM].fbx"      |     3 -
+ .../HumanM@StrafeRun01_BackwardLeft [RM].fbx.meta" |   976 -
+ .../HumanM@StrafeRun01_BackwardRight [RM].fbx"     |     3 -
+ ...HumanM@StrafeRun01_BackwardRight [RM].fbx.meta" |   976 -
+ .../HumanM@StrafeRun01_ForwardLeft [RM].fbx"       |     3 -
+ .../HumanM@StrafeRun01_ForwardLeft [RM].fbx.meta"  |   976 -
+ .../HumanM@StrafeRun01_ForwardRight [RM].fbx"      |     3 -
+ .../HumanM@StrafeRun01_ForwardRight [RM].fbx.meta" |   976 -
+ .../RootMotion/HumanM@StrafeRun01_Left [RM].fbx"   |     3 -
+ .../HumanM@StrafeRun01_Left [RM].fbx.meta"         |   976 -
+ .../RootMotion/HumanM@StrafeRun01_Right [RM].fbx"  |     3 -
+ .../HumanM@StrafeRun01_Right [RM].fbx.meta"        |   976 -
+ .../Human Animations/Animations/Masked Poses.meta" |     8 -
+ .../Masked Poses/Human@HandsClosed01.fbx"          |     3 -
+ .../Masked Poses/Human@HandsClosed01.fbx.meta"     |   975 -
+ .../Masked Poses/Human@ObjectGripHands01.fbx"      |     3 -
+ .../Masked Poses/Human@ObjectGripHands01.fbx.meta" |   975 -
+ .../HumanF@ObjectGripShoulder01_L.fbx"             |     3 -
+ .../HumanF@ObjectGripShoulder01_L.fbx.meta"        |   975 -
+ .../HumanF@ObjectGripShoulder01_R.fbx"             |     3 -
+ .../HumanF@ObjectGripShoulder01_R.fbx.meta"        |   975 -
+ .../HumanF@ObjectGripShoulder02_L.fbx"             |     3 -
+ .../HumanF@ObjectGripShoulder02_L.fbx.meta"        |   975 -
+ .../HumanF@ObjectGripShoulder02_R.fbx"             |     3 -
+ .../HumanF@ObjectGripShoulder02_R.fbx.meta"        |   975 -
+ .../Masked Poses/HumanF@WeaponHold2H01.fbx"        |     3 -
+ .../Masked Poses/HumanF@WeaponHold2H01.fbx.meta"   |   975 -
+ .../Masked Poses/HumanF@WeaponHoldPolearm01.fbx"   |     3 -
+ .../HumanF@WeaponHoldPolearm01.fbx.meta"           |   975 -
+ .../HumanM@ObjectGripShoulder01_L.fbx"             |     3 -
+ .../HumanM@ObjectGripShoulder01_L.fbx.meta"        |   975 -
+ .../HumanM@ObjectGripShoulder01_R.fbx"             |     3 -
+ .../HumanM@ObjectGripShoulder01_R.fbx.meta"        |   975 -
+ .../HumanM@ObjectGripShoulder02_L.fbx"             |     3 -
+ .../HumanM@ObjectGripShoulder02_L.fbx.meta"        |   975 -
+ .../HumanM@ObjectGripShoulder02_R.fbx"             |     3 -
+ .../HumanM@ObjectGripShoulder02_R.fbx.meta"        |   975 -
+ .../Masked Poses/HumanM@WeaponHold2H01.fbx"        |     3 -
+ .../Masked Poses/HumanM@WeaponHold2H01.fbx.meta"   |   975 -
+ .../Masked Poses/HumanM@WeaponHoldPolearm01.fbx"   |     3 -
+ .../HumanM@WeaponHoldPolearm01.fbx.meta"           |   975 -
+ .../Human Melee Animations 2.0 FREE.pdf"           |     3 -
+ .../Human Melee Animations 2.0 FREE.pdf.meta"      |    14 -
+ .../Human Animations/Models.meta"                  |     8 -
+ .../Human Animations/Models/Avatar Masks.meta"     |     8 -
+ .../Models/Avatar Masks/Arms.meta"                 |     8 -
+ .../Avatar Masks/Arms/Human Arm Left Mask.mask"    |   129 -
+ .../Arms/Human Arm Left Mask.mask.meta"            |    16 -
+ .../Avatar Masks/Arms/Human Arm Right Mask.mask"   |   129 -
+ .../Arms/Human Arm Right Mask.mask.meta"           |    16 -
+ .../Models/Avatar Masks/Arms/Human Arms Mask.mask" |   129 -
+ .../Avatar Masks/Arms/Human Arms Mask.mask.meta"   |    16 -
+ .../Models/Avatar Masks/Hands.meta"                |     8 -
+ .../Avatar Masks/Hands/Human Hand Left Mask.mask"  |   129 -
+ .../Hands/Human Hand Left Mask.mask.meta"          |    16 -
+ .../Avatar Masks/Hands/Human Hand Right Mask.mask" |   129 -
+ .../Hands/Human Hand Right Mask.mask.meta"         |    16 -
+ .../Avatar Masks/Hands/Human Hands Mask.mask"      |   129 -
+ .../Avatar Masks/Hands/Human Hands Mask.mask.meta" |    16 -
+ .../Models/Avatar Masks/Human Body Full Mask.mask" |   129 -
+ .../Avatar Masks/Human Body Full Mask.mask.meta"   |    16 -
+ .../Avatar Masks/Human Body Upper Mask.mask"       |   129 -
+ .../Avatar Masks/Human Body Upper Mask.mask.meta"  |    16 -
+ .../Models/Avatar Masks/Human Head Mask.mask"      |   129 -
+ .../Models/Avatar Masks/Human Head Mask.mask.meta" |    16 -
+ .../Human Animations/Models/HumanF_Model.fbx"      |     3 -
+ .../Human Animations/Models/HumanF_Model.fbx.meta" |   827 -
+ .../Human Animations/Models/HumanM_Model.fbx"      |     3 -
+ .../Human Animations/Models/HumanM_Model.fbx.meta" |   116 -
+ .../Human Animations/Scripts.meta"                 |     8 -
+ .../Human Animations/Scripts/SpineProxy.cs"        |    65 -
+ .../Human Animations/Scripts/SpineProxy.cs.meta"   |    18 -
+ .../Scripts/UpperBodyAnimations-SpineProxy.url"    |     2 -
+ .../UpperBodyAnimations-SpineProxy.url.meta"       |    14 -
+ .../Human Animations/Unity Demo Scenes.meta"       |     8 -
+ .../Unity Demo Scenes/Human Melee Animations.meta" |     8 -
+ .../AnimatorControllers.meta"                      |     8 -
+ .../AnimatorControllers/Female.meta"               |     8 -
+ .../AnimatorControllers/Female/1H.meta"            |     8 -
+ ...F@Combat - Sword and Shield.overrideController" |    23 -
+ ...bat - Sword and Shield.overrideController.meta" |    16 -
+ ...Movement - Sword and Shield.overrideController" |    41 -
+ ...ent - Sword and Shield.overrideController.meta" |    16 -
+ ...nStrafe01_BackwardLeft - 1H.overrideController" |    13 -
+ ...fe01_BackwardLeft - 1H.overrideController.meta" |    16 -
+ ...Strafe01_BackwardRight - 1H.overrideController" |    13 -
+ ...e01_BackwardRight - 1H.overrideController.meta" |    16 -
+ ...unStrafe01_ForwardLeft - 1H.overrideController" |    13 -
+ ...afe01_ForwardLeft - 1H.overrideController.meta" |    16 -
+ ...nStrafe01_ForwardRight - 1H.overrideController" |    13 -
+ ...fe01_ForwardRight - 1H.overrideController.meta" |    16 -
+ ...umanF@RunStrafe01_Left - 1H.overrideController" |    13 -
+ ...@RunStrafe01_Left - 1H.overrideController.meta" |    16 -
+ ...manF@RunStrafe01_Right - 1H.overrideController" |    13 -
+ ...RunStrafe01_Right - 1H.overrideController.meta" |    16 -
+ .../HumanF@Run_Backward - 1H.overrideController"   |    13 -
+ ...manF@Run_Backward - 1H.overrideController.meta" |    16 -
+ ...umanF@Run_BackwardLeft - 1H.overrideController" |    13 -
+ ...@Run_BackwardLeft - 1H.overrideController.meta" |    16 -
+ ...manF@Run_BackwardRight - 1H.overrideController" |    13 -
+ ...Run_BackwardRight - 1H.overrideController.meta" |    16 -
+ .../1H/HumanF@Run_Forward - 1H.overrideController" |    13 -
+ ...umanF@Run_Forward - 1H.overrideController.meta" |    16 -
+ ...HumanF@Run_ForwardLeft - 1H.overrideController" |    13 -
+ ...F@Run_ForwardLeft - 1H.overrideController.meta" |    16 -
+ ...umanF@Run_ForwardRight - 1H.overrideController" |    13 -
+ ...@Run_ForwardRight - 1H.overrideController.meta" |    16 -
+ .../1H/HumanF@Run_Left - 1H.overrideController"    |    13 -
+ .../HumanF@Run_Left - 1H.overrideController.meta"  |    16 -
+ .../1H/HumanF@Run_Right - 1H.overrideController"   |    13 -
+ .../HumanF@Run_Right - 1H.overrideController.meta" |    16 -
+ .../AnimatorControllers/Female/2H.meta"            |     8 -
+ .../2H/HumanF@Combat - 2H.overrideController"      |    23 -
+ .../2H/HumanF@Combat - 2H.overrideController.meta" |    16 -
+ ...HumanF@Combat Movement - 2H.overrideController" |    37 -
+ ...F@Combat Movement - 2H.overrideController.meta" |    16 -
+ ...nStrafe01_BackwardLeft - 2H.overrideController" |    15 -
+ ...fe01_BackwardLeft - 2H.overrideController.meta" |    16 -
+ ...Strafe01_BackwardRight - 2H.overrideController" |    15 -
+ ...e01_BackwardRight - 2H.overrideController.meta" |    16 -
+ ...unStrafe01_ForwardLeft - 2H.overrideController" |    15 -
+ ...afe01_ForwardLeft - 2H.overrideController.meta" |    16 -
+ ...nStrafe01_ForwardRight - 2H.overrideController" |    15 -
+ ...fe01_ForwardRight - 2H.overrideController.meta" |    16 -
+ ...umanF@RunStrafe01_Left - 2H.overrideController" |    15 -
+ ...@RunStrafe01_Left - 2H.overrideController.meta" |    16 -
+ ...manF@RunStrafe01_Right - 2H.overrideController" |    15 -
+ ...RunStrafe01_Right - 2H.overrideController.meta" |    16 -
+ .../HumanF@Run_Backward - 2H.overrideController"   |    15 -
+ ...manF@Run_Backward - 2H.overrideController.meta" |    16 -
+ ...umanF@Run_BackwardLeft - 2H.overrideController" |    15 -
+ ...@Run_BackwardLeft - 2H.overrideController.meta" |    16 -
+ ...manF@Run_BackwardRight - 2H.overrideController" |    15 -
+ ...Run_BackwardRight - 2H.overrideController.meta" |    16 -
+ .../2H/HumanF@Run_Forward - 2H.overrideController" |    15 -
+ ...umanF@Run_Forward - 2H.overrideController.meta" |    16 -
+ ...HumanF@Run_ForwardLeft - 2H.overrideController" |    15 -
+ ...F@Run_ForwardLeft - 2H.overrideController.meta" |    16 -
+ ...umanF@Run_ForwardRight - 2H.overrideController" |    15 -
+ ...@Run_ForwardRight - 2H.overrideController.meta" |    16 -
+ .../2H/HumanF@Run_Left - 2H.overrideController"    |    15 -
+ .../HumanF@Run_Left - 2H.overrideController.meta"  |    16 -
+ .../2H/HumanF@Run_Right - 2H.overrideController"   |    15 -
+ .../HumanF@Run_Right - 2H.overrideController.meta" |    16 -
+ .../AnimatorControllers/Female/Polearm.meta"       |     8 -
+ .../HumanF@Combat - Polearm.overrideController"    |    23 -
+ ...umanF@Combat - Polearm.overrideController.meta" |    16 -
+ ...F@Combat Movement - Polearm.overrideController" |    35 -
+ ...bat Movement - Polearm.overrideController.meta" |    16 -
+ ...fe01_BackwardLeft - Polearm.overrideController" |    15 -
+ ...BackwardLeft - Polearm.overrideController.meta" |    17 -
+ ...e01_BackwardRight - Polearm.overrideController" |    15 -
+ ...ackwardRight - Polearm.overrideController.meta" |    17 -
+ ...afe01_ForwardLeft - Polearm.overrideController" |    15 -
+ ..._ForwardLeft - Polearm.overrideController.meta" |    17 -
+ ...fe01_ForwardRight - Polearm.overrideController" |    15 -
+ ...ForwardRight - Polearm.overrideController.meta" |    17 -
+ ...@RunStrafe01_Left - Polearm.overrideController" |    15 -
+ ...trafe01_Left - Polearm.overrideController.meta" |    16 -
+ ...RunStrafe01_Right - Polearm.overrideController" |    15 -
+ ...rafe01_Right - Polearm.overrideController.meta" |    16 -
+ ...manF@Run_Backward - Polearm.overrideController" |    15 -
+ ...Run_Backward - Polearm.overrideController.meta" |    16 -
+ ...@Run_BackwardLeft - Polearm.overrideController" |    15 -
+ ...BackwardLeft - Polearm.overrideController.meta" |    16 -
+ ...Run_BackwardRight - Polearm.overrideController" |    15 -
+ ...ackwardRight - Polearm.overrideController.meta" |    16 -
+ ...umanF@Run_Forward - Polearm.overrideController" |    15 -
+ ...@Run_Forward - Polearm.overrideController.meta" |    16 -
+ ...F@Run_ForwardLeft - Polearm.overrideController" |    15 -
+ ..._ForwardLeft - Polearm.overrideController.meta" |    16 -
+ ...@Run_ForwardRight - Polearm.overrideController" |    15 -
+ ...ForwardRight - Polearm.overrideController.meta" |    16 -
+ .../HumanF@Run_Left - Polearm.overrideController"  |    15 -
+ ...anF@Run_Left - Polearm.overrideController.meta" |    16 -
+ .../HumanF@Run_Right - Polearm.overrideController" |    15 -
+ ...nF@Run_Right - Polearm.overrideController.meta" |    16 -
+ .../AnimatorControllers/Male.meta"                 |     8 -
+ .../AnimatorControllers/Male/1H.meta"              |     8 -
+ .../HumanM@Combat - Sword and Shield.controller"   |   547 -
+ ...manM@Combat - Sword and Shield.controller.meta" |    16 -
+ ...@Combat Movement - Sword and Shield.controller" |   632 -
+ ...at Movement - Sword and Shield.controller.meta" |    16 -
+ ...umanM@RunStrafe01_BackwardLeft - 1H.controller" |    72 -
+ ...@RunStrafe01_BackwardLeft - 1H.controller.meta" |    16 -
+ ...manM@RunStrafe01_BackwardRight - 1H.controller" |    72 -
+ ...RunStrafe01_BackwardRight - 1H.controller.meta" |    16 -
+ ...HumanM@RunStrafe01_ForwardLeft - 1H.controller" |    72 -
+ ...M@RunStrafe01_ForwardLeft - 1H.controller.meta" |    16 -
+ ...umanM@RunStrafe01_ForwardRight - 1H.controller" |    72 -
+ ...@RunStrafe01_ForwardRight - 1H.controller.meta" |    16 -
+ .../1H/HumanM@RunStrafe01_Left - 1H.controller"    |    72 -
+ .../HumanM@RunStrafe01_Left - 1H.controller.meta"  |    16 -
+ .../1H/HumanM@RunStrafe01_Right - 1H.controller"   |    72 -
+ .../HumanM@RunStrafe01_Right - 1H.controller.meta" |    16 -
+ .../Male/1H/HumanM@Run_Backward - 1H.controller"   |    72 -
+ .../1H/HumanM@Run_Backward - 1H.controller.meta"   |    16 -
+ .../1H/HumanM@Run_BackwardLeft - 1H.controller"    |    72 -
+ .../HumanM@Run_BackwardLeft - 1H.controller.meta"  |    16 -
+ .../1H/HumanM@Run_BackwardRight - 1H.controller"   |    72 -
+ .../HumanM@Run_BackwardRight - 1H.controller.meta" |    16 -
+ .../Male/1H/HumanM@Run_Forward - 1H.controller"    |    72 -
+ .../1H/HumanM@Run_Forward - 1H.controller.meta"    |    16 -
+ .../1H/HumanM@Run_ForwardLeft - 1H.controller"     |    72 -
+ .../HumanM@Run_ForwardLeft - 1H.controller.meta"   |    16 -
+ .../1H/HumanM@Run_ForwardRight - 1H.controller"    |    72 -
+ .../HumanM@Run_ForwardRight - 1H.controller.meta"  |    16 -
+ .../Male/1H/HumanM@Run_Left - 1H.controller"       |    72 -
+ .../Male/1H/HumanM@Run_Left - 1H.controller.meta"  |    16 -
+ .../Male/1H/HumanM@Run_Right - 1H.controller"      |    72 -
+ .../Male/1H/HumanM@Run_Right - 1H.controller.meta" |    16 -
+ .../AnimatorControllers/Male/2H.meta"              |     8 -
+ .../Male/2H/HumanM@Combat - 2H.controller"         |   434 -
+ .../Male/2H/HumanM@Combat - 2H.controller.meta"    |    16 -
+ .../2H/HumanM@Combat Movement - 2H.controller"     |   588 -
+ .../HumanM@Combat Movement - 2H.controller.meta"   |    16 -
+ ...umanM@RunStrafe01_BackwardLeft - 2H.controller" |   132 -
+ ...@RunStrafe01_BackwardLeft - 2H.controller.meta" |    16 -
+ ...manM@RunStrafe01_BackwardRight - 2H.controller" |   132 -
+ ...RunStrafe01_BackwardRight - 2H.controller.meta" |    16 -
+ ...HumanM@RunStrafe01_ForwardLeft - 2H.controller" |   132 -
+ ...M@RunStrafe01_ForwardLeft - 2H.controller.meta" |    16 -
+ ...umanM@RunStrafe01_ForwardRight - 2H.controller" |   132 -
+ ...@RunStrafe01_ForwardRight - 2H.controller.meta" |    16 -
+ .../2H/HumanM@RunStrafe01_Left - 2H.controller"    |   132 -
+ .../HumanM@RunStrafe01_Left - 2H.controller.meta"  |    16 -
+ .../2H/HumanM@RunStrafe01_Right - 2H.controller"   |   132 -
+ .../HumanM@RunStrafe01_Right - 2H.controller.meta" |    16 -
+ .../Male/2H/HumanM@Run_Backward - 2H.controller"   |   132 -
+ .../2H/HumanM@Run_Backward - 2H.controller.meta"   |    16 -
+ .../2H/HumanM@Run_BackwardLeft - 2H.controller"    |   132 -
+ .../HumanM@Run_BackwardLeft - 2H.controller.meta"  |    16 -
+ .../2H/HumanM@Run_BackwardRight - 2H.controller"   |   132 -
+ .../HumanM@Run_BackwardRight - 2H.controller.meta" |    16 -
+ .../Male/2H/HumanM@Run_Forward - 2H.controller"    |   132 -
+ .../2H/HumanM@Run_Forward - 2H.controller.meta"    |    16 -
+ .../2H/HumanM@Run_ForwardLeft - 2H.controller"     |   132 -
+ .../HumanM@Run_ForwardLeft - 2H.controller.meta"   |    16 -
+ .../2H/HumanM@Run_ForwardRight - 2H.controller"    |   132 -
+ .../HumanM@Run_ForwardRight - 2H.controller.meta"  |    16 -
+ .../Male/2H/HumanM@Run_Left - 2H.controller"       |   132 -
+ .../Male/2H/HumanM@Run_Left - 2H.controller.meta"  |    16 -
+ .../Male/2H/HumanM@Run_Right - 2H.controller"      |   132 -
+ .../Male/2H/HumanM@Run_Right - 2H.controller.meta" |    16 -
+ .../AnimatorControllers/Male/Polearm.meta"         |     8 -
+ .../Polearm/HumanM@Combat - Polearm.controller"    |   486 -
+ .../HumanM@Combat - Polearm.controller.meta"       |    16 -
+ .../HumanM@Combat Movement - Polearm.controller"   |   588 -
+ ...manM@Combat Movement - Polearm.controller.meta" |    16 -
+ ...@RunStrafe01_BackwardLeft - Polearm.controller" |   132 -
+ ...trafe01_BackwardLeft - Polearm.controller.meta" |    17 -
+ ...RunStrafe01_BackwardRight - Polearm.controller" |   132 -
+ ...rafe01_BackwardRight - Polearm.controller.meta" |    17 -
+ ...M@RunStrafe01_ForwardLeft - Polearm.controller" |   132 -
+ ...Strafe01_ForwardLeft - Polearm.controller.meta" |    17 -
+ ...@RunStrafe01_ForwardRight - Polearm.controller" |   132 -
+ ...trafe01_ForwardRight - Polearm.controller.meta" |    17 -
+ .../HumanM@RunStrafe01_Left - Polearm.controller"  |   132 -
+ ...anM@RunStrafe01_Left - Polearm.controller.meta" |    16 -
+ .../HumanM@RunStrafe01_Right - Polearm.controller" |   132 -
+ ...nM@RunStrafe01_Right - Polearm.controller.meta" |    16 -
+ .../HumanM@Run_Backward - Polearm.controller"      |   132 -
+ .../HumanM@Run_Backward - Polearm.controller.meta" |    16 -
+ .../HumanM@Run_BackwardLeft - Polearm.controller"  |   132 -
+ ...anM@Run_BackwardLeft - Polearm.controller.meta" |    16 -
+ .../HumanM@Run_BackwardRight - Polearm.controller" |   132 -
+ ...nM@Run_BackwardRight - Polearm.controller.meta" |    16 -
+ .../HumanM@Run_Forward - Polearm.controller"       |   132 -
+ .../HumanM@Run_Forward - Polearm.controller.meta"  |    16 -
+ .../HumanM@Run_ForwardLeft - Polearm.controller"   |   132 -
+ ...manM@Run_ForwardLeft - Polearm.controller.meta" |    16 -
+ .../HumanM@Run_ForwardRight - Polearm.controller"  |   132 -
+ ...anM@Run_ForwardRight - Polearm.controller.meta" |    16 -
+ .../Polearm/HumanM@Run_Left - Polearm.controller"  |   132 -
+ .../HumanM@Run_Left - Polearm.controller.meta"     |    16 -
+ .../Polearm/HumanM@Run_Right - Polearm.controller" |   132 -
+ .../HumanM@Run_Right - Polearm.controller.meta"    |    16 -
+ ...uman Melee Animations - Unity Demo Scene.unity" | 22417 -----
+ ...Melee Animations - Unity Demo Scene.unity.meta" |    15 -
+ .../Human Melee Animations/Materials.meta"         |     8 -
+ .../Materials/HumanMeleeAnimations_Dummy-Red.mat"  |    95 -
+ .../HumanMeleeAnimations_Dummy-Red.mat.meta"       |    16 -
+ .../Materials/HumanMeleeAnimations_Floor.mat"      |    90 -
+ .../Materials/HumanMeleeAnimations_Floor.mat.meta" |    16 -
+ .../Materials/HumanMeleeAnimations_Weapons.mat"    |    90 -
+ .../HumanMeleeAnimations_Weapons.mat.meta"         |    16 -
+ .../Human Melee Animations/Models.meta"            |     8 -
+ .../Models/Human_Dagger.fbx"                       |     3 -
+ .../Models/Human_Dagger.fbx.meta"                  |   117 -
+ .../Models/Human_Greatsword.fbx"                   |     3 -
+ .../Models/Human_Greatsword.fbx.meta"              |   117 -
+ .../Models/Human_Polearm.fbx"                      |     3 -
+ .../Models/Human_Polearm.fbx.meta"                 |   117 -
+ .../Models/Human_Shield.fbx"                       |     3 -
+ .../Models/Human_Shield.fbx.meta"                  |   117 -
+ .../Human Melee Animations/Models/Human_Sword.fbx" |     3 -
+ .../Models/Human_Sword.fbx.meta"                   |   117 -
+ .../Models/Human_Warhammer.fbx"                    |     3 -
+ .../Models/Human_Warhammer.fbx.meta"               |   117 -
+ .../Human Melee Animations/Prefabs.meta"           |     8 -
+ .../Prefabs/Characters.meta"                       |     8 -
+ .../HumanF_Dummy_Red - Dual Wield.prefab"          |   383 -
+ .../HumanF_Dummy_Red - Dual Wield.prefab.meta"     |    15 -
+ .../HumanF_Dummy_Red - Greatsword.prefab"          |   171 -
+ .../HumanF_Dummy_Red - Greatsword.prefab.meta"     |    15 -
+ .../Characters/HumanF_Dummy_Red - Polearm.prefab"  |   171 -
+ .../HumanF_Dummy_Red - Polearm.prefab.meta"        |    15 -
+ .../HumanF_Dummy_Red - Sword and Shield.prefab"    |   241 -
+ ...umanF_Dummy_Red - Sword and Shield.prefab.meta" |    15 -
+ .../Prefabs/Characters/HumanF_Dummy_Red.prefab"    |   101 -
+ .../Characters/HumanF_Dummy_Red.prefab.meta"       |    15 -
+ .../HumanM_Dummy_Red - Dual Wield.prefab"          |   379 -
+ .../HumanM_Dummy_Red - Dual Wield.prefab.meta"     |    15 -
+ .../HumanM_Dummy_Red - Greatsword.prefab"          |   171 -
+ .../HumanM_Dummy_Red - Greatsword.prefab.meta"     |    15 -
+ .../Characters/HumanM_Dummy_Red - Polearm.prefab"  |   171 -
+ .../HumanM_Dummy_Red - Polearm.prefab.meta"        |    15 -
+ .../HumanM_Dummy_Red - Sword and Shield.prefab"    |   241 -
+ ...umanM_Dummy_Red - Sword and Shield.prefab.meta" |    15 -
+ .../Prefabs/Characters/HumanM_Dummy_Red.prefab"    |   101 -
+ .../Characters/HumanM_Dummy_Red.prefab.meta"       |    15 -
+ .../Human Melee Animations/Prefabs/Weapons.meta"   |     8 -
+ .../Prefabs/Weapons/Human_Dagger.prefab"           |    63 -
+ .../Prefabs/Weapons/Human_Dagger.prefab.meta"      |    15 -
+ .../Prefabs/Weapons/Human_Greatsword.prefab"       |    63 -
+ .../Prefabs/Weapons/Human_Greatsword.prefab.meta"  |    15 -
+ .../Prefabs/Weapons/Human_Polearm.prefab"          |    63 -
+ .../Prefabs/Weapons/Human_Polearm.prefab.meta"     |    15 -
+ .../Prefabs/Weapons/Human_Shield.prefab"           |    63 -
+ .../Prefabs/Weapons/Human_Shield.prefab.meta"      |    15 -
+ .../Prefabs/Weapons/Human_Sword.prefab"            |    63 -
+ .../Prefabs/Weapons/Human_Sword.prefab.meta"       |    15 -
+ .../Prefabs/Weapons/Human_Warhammer.prefab"        |    63 -
+ .../Prefabs/Weapons/Human_Warhammer.prefab.meta"   |    15 -
+ .../Human Melee Animations/Shaders.meta"           |     8 -
+ .../Shaders/HumanMeleeAnimationsScene.shader"      |   126 -
+ .../Shaders/HumanMeleeAnimationsScene.shader.meta" |    17 -
+ .../Human Melee Animations/Textures.meta"          |     8 -
+ .../Textures/HumanMeleeAnimationsTexture.png"      |     3 -
+ .../Textures/HumanMeleeAnimationsTexture.png.meta" |   148 -
+ .../Assets/Zombie_Survival_AssetPack_LowPoly.meta  |     8 -
+ .../Zombie_Survival_AssetPack_LowPoly/Modelos.meta |     8 -
+ .../Low Poly Zombie Survival Asset Pack.fbx        |     3 -
+ .../Low Poly Zombie Survival Asset Pack.fbx.meta   |   114 -
+ .../Low Poly Zombie Survival Asset Pack.obj        |     3 -
+ .../Low Poly Zombie Survival Asset Pack.obj.meta   |   114 -
+ .../Modelos/Zombie_Survival_Pack.blend             |     3 -
+ .../Modelos/Zombie_Survival_Pack.blend.meta        |   114 -
+ .../Textures.meta                                  |     8 -
+ .../Textures/Paleta_Zombie.png                     |     3 -
+ .../Textures/Paleta_Zombie.png.meta                |   143 -
+ .../Combat/Crowbar/Crowbar_Viewmodel.prefab        |    30 +-
+ Assets/LastSignal/Enemies.meta                     |     8 -
+ Assets/LastSignal/Enemies/Zombie.meta              |     8 -
+ .../Enemies/Zombie/AcceptanceNavMesh.asset         |   Bin 12184 -> 0 bytes
+ .../Enemies/Zombie/AcceptanceNavMesh.asset.meta    |     8 -
+ Assets/LastSignal/Enemies/Zombie/Animations.meta   |     8 -
+ .../Enemies/Zombie/Animations/Controllers.meta     |     8 -
+ .../Controllers/AC_Zombie_Shambler.controller      |   218 -
+ .../Controllers/AC_Zombie_Shambler.controller.meta |     8 -
+ .../Enemies/Zombie/Animations/LS_Zombie_Death.anim | 85617 -------------------
+ .../Zombie/Animations/LS_Zombie_Death.anim.meta    |     8 -
+ Assets/LastSignal/Enemies/Zombie/Materials.meta    |     8 -
+ .../Zombie/Materials/M_AcceptanceGround.mat        |   137 -
+ .../Zombie/Materials/M_AcceptanceGround.mat.meta   |     8 -
+ .../Zombie/Materials/M_Zombie_Shambler_URP.mat     |   140 -
+ .../Materials/M_Zombie_Shambler_URP.mat.meta       |     8 -
+ .../LastSignal/Enemies/Zombie/NormalNavMesh.asset  |   Bin 12176 -> 0 bytes
+ .../Enemies/Zombie/NormalNavMesh.asset.meta        |     8 -
+ Assets/LastSignal/Enemies/Zombie/Prefabs.meta      |     8 -
+ .../Zombie/Prefabs/LS_Zombie_Shambler.prefab       |   250 -
+ .../Zombie/Prefabs/LS_Zombie_Shambler.prefab.meta  |     7 -
+ Assets/LastSignal/Enemies/Zombie/Scenes.meta       |     8 -
+ .../Zombie/Scenes/ZombieAssetAcceptance.unity      |   554 -
+ .../Zombie/Scenes/ZombieAssetAcceptance.unity.meta |     7 -
+ Assets/LastSignal/Enemies/Zombie/Shambler.asset    |    66 -
+ .../LastSignal/Enemies/Zombie/Shambler.asset.meta  |     8 -
+ Assets/LastSignal/Enemies/Zombie/Textures.meta     |     8 -
+ .../Textures/T_Zombie_MetallicAO_Smoothness.png    |     3 -
+ .../T_Zombie_MetallicAO_Smoothness.png.meta        |   143 -
+ .../Enemies/Zombie/Textures/T_Zombie_Normal.png    |     3 -
+ .../Zombie/Textures/T_Zombie_Normal.png.meta       |   143 -
+ Assets/LastSignal/Prefabs/Player.prefab            |    36 +-
+ .../Scripts/Editor/ZombieDamageAuthoring.cs        |    20 +-
+ .../Runtime/AI/WorldPopulationAcceptanceRoute.cs   |    10 +-
+ .../Scripts/Runtime/AI/WorldPopulationManager.cs   |    17 +-
+ .../Scripts/Runtime/AI/ZombieController.cs         |    12 +-
+ .../LastSignal/Scripts/Runtime/AI/ZombieHealth.cs  |     5 +-
+ .../Scripts/Runtime/AI/ZombieHitRegion.cs          |     9 +-
+ .../Scripts/Runtime/Combat/IDamageable.cs          |     4 +
+ .../Runtime/Combat/PlayerCombatController.cs       |    12 +-
+ .../Scripts/Runtime/Combat/WeaponViewPresenter.cs  |    39 +-
+ .../Scripts/Runtime/Persistence/SaveCodec.cs       |    25 +
+ .../Scripts/Runtime/Persistence/SaveGame.cs        |    11 +
+ .../Scripts/Runtime/Persistence/SaveSession.cs     |    16 +-
+ .../Scripts/Runtime/Persistence/SaveValidation.cs  |    36 +-
+ .../Scripts/Runtime/Player/FirstPersonMotor.cs     |   218 +-
+ .../Scripts/Runtime/Player/PlayerInputReader.cs    |    11 +-
+ .../Scripts/Runtime/Player/PlayerStance.cs         |    55 +-
+ .../Scripts/Runtime/Session/AcceptanceHud.cs       |     2 +-
+ .../Scripts/Runtime/Session/SessionFlow.cs         |     7 +-
+ .../Scripts/Runtime/WorldCells/WorldCellContent.cs |     4 +-
+ .../Scripts/Runtime/WorldCells/WorldCellManager.cs |    45 +-
+ .../Scripts/Tests/EditMode/SaveFoundationTests.cs  |    17 +
+ .../Tests/EditMode/WorldPopulationManagerTests.cs  |    15 +
+ .../Scripts/Tests/EditMode/ZombieAssetTests.cs     |     6 +-
+ .../Tests/EditMode/ZombieCompositionTests.cs       |     2 +-
+ .../Scripts/Tests/EditMode/ZombieDamageTests.cs    |    89 +-
+ .../Tests/EditMode/ZombieMeleeLogicTests.cs        |     2 +-
+ .../Tests/PlayMode/MovementAcceptanceTests.cs      |    18 +-
+ .../Tests/PlayMode/ZombieNavigationTests.cs        |     2 +-
+ .../Tests/PlayMode/ZombiePresentationTests.cs      |     2 +-
+ .../Scripts/Tests/PlayMode/ZombieRecoveryTests.cs  |     2 +-
+ Assets/Resources/LS_Zombie_Runtime.prefab          |   636 +-
+ .../Evidence/20260924-entry/playmode-route.txt     |    24 +-
+ .../20260925-independent/playmode-route.txt        |     8 +-
+ .../performance.txt                                |    10 +-
+ .../manual-20260926-performance-soak/soak.txt      |    24 +-
+ .../Evidence/20260922-entry/domain-performance.txt |     4 +-
+ .../20260922-entry/runtime-performance.txt         |     4 +-
+ .../20260922-entry/two-expedition-world-time.txt   |     2 +-
+ .../R02/20260927-foundation/noise-trace.txt        |    14 +-
+ .../R02/20260927-foundation/performance.txt        |     2 +-
+ .../20260927-foundation/play-route/noise-save.json |     4 +-
+ .../play-route/noise-save.json.bak                 |     4 +-
+ .../20260927-foundation/integrated-performance.txt |     2 +-
+ .../R03/20260927-foundation/performance.txt        |     2 +-
+ .../Evidence/20260918-B0B/license-source-record.md |     4 +
+ .../S004/Evidence/20260919-P4/performance.txt      |     4 +-
+ .../20260919-P4/regression-P3/performance.txt      |     4 +-
+ .../regression-P3/visual/backstep-contact-fps.png  |   Bin 131 -> 232781 bytes
+ .../regression-P3/visual/backstep-contact-side.png |   Bin 131 -> 179010 bytes
+ .../regression-P3/visual/backstep-recovery-fps.png |   Bin 131 -> 222088 bytes
+ .../visual/backstep-recovery-side.png              |   Bin 131 -> 175272 bytes
+ .../20260919-P4/regression-P3/visual/death-fps.png |   Bin 131 -> 192543 bytes
+ .../regression-P3/visual/death-side.png            |   Bin 131 -> 158721 bytes
+ .../regression-P3/visual/hit-commit-fps.png        |   Bin 131 -> 247822 bytes
+ .../regression-P3/visual/hit-commit-side.png       |   Bin 131 -> 165593 bytes
+ .../regression-P3/visual/hit-contact-fps.png       |   Bin 131 -> 224879 bytes
+ .../regression-P3/visual/hit-contact-side.png      |   Bin 131 -> 161148 bytes
+ .../regression-P3/visual/hit-next-windup-fps.png   |   Bin 131 -> 242873 bytes
+ .../regression-P3/visual/hit-next-windup-side.png  |   Bin 131 -> 164736 bytes
+ .../regression-P3/visual/hit-recovery-fps.png      |   Bin 131 -> 224980 bytes
+ .../regression-P3/visual/hit-recovery-side.png     |   Bin 131 -> 161221 bytes
+ .../regression-P3/visual/hit-start-fps.png         |   Bin 131 -> 242649 bytes
+ .../regression-P3/visual/hit-start-side.png        |   Bin 131 -> 164651 bytes
+ .../regression-P3/visual/motor-sidestep-fps.png    |   Bin 131 -> 252770 bytes
+ .../regression-P3/visual/motor-sidestep-side.png   |   Bin 131 -> 163340 bytes
+ .../regression-P3/visual/normal-approach-fps.png   |   Bin 131 -> 228888 bytes
+ .../regression-P3/visual/normal-approach-side.png  |   Bin 131 -> 166436 bytes
+ .../regression-P3/visual/normal-hit-fps.png        |   Bin 131 -> 228163 bytes
+ .../regression-P3/visual/normal-hit-side.png       |   Bin 131 -> 165898 bytes
+ .../visual/pause-AttackCommit-fps.png              |   Bin 131 -> 247704 bytes
+ .../visual/pause-AttackCommit-side.png             |   Bin 131 -> 165474 bytes
+ .../visual/pause-AttackWindup-fps.png              |   Bin 131 -> 242942 bytes
+ .../visual/pause-AttackWindup-side.png             |   Bin 131 -> 164667 bytes
+ .../regression-P3/visual/rear-contact-fps.png      |   Bin 131 -> 229712 bytes
+ .../regression-P3/visual/rear-contact-side.png     |   Bin 131 -> 157267 bytes
+ .../regression-P3/visual/rear-recovery-fps.png     |   Bin 131 -> 241292 bytes
+ .../regression-P3/visual/rear-recovery-side.png    |   Bin 131 -> 153587 bytes
+ .../regression-P3/visual/restart-fps.png           |   Bin 131 -> 243853 bytes
+ .../regression-P3/visual/restart-side.png          |   Bin 131 -> 140963 bytes
+ .../regression-P3/visual/sidestep-contact-fps.png  |   Bin 131 -> 259143 bytes
+ .../regression-P3/visual/sidestep-contact-side.png |   Bin 131 -> 143314 bytes
+ .../regression-P3/visual/sidestep-recovery-fps.png |   Bin 131 -> 258453 bytes
+ .../visual/sidestep-recovery-side.png              |   Bin 131 -> 138815 bytes
+ .../20260919-P4/regression-P3/visual/trace.txt     |    60 +
+ .../regression-P3/visual/wall-contact-fps.png      |   Bin 131 -> 217883 bytes
+ .../regression-P3/visual/wall-contact-side.png     |   Bin 131 -> 160642 bytes
+ .../regression-P3/visual/wall-recovery-fps.png     |   Bin 131 -> 214541 bytes
+ .../regression-P3/visual/wall-recovery-side.png    |   Bin 131 -> 156887 bytes
+ .../S004/Evidence/20260919-P4/rifle-trace.txt      |    51 +
+ .../20260919-P4/visual/body-hit-react-peak-fps.png |   Bin 131 -> 225855 bytes
+ .../visual/body-hit-react-peak-side.png            |   Bin 131 -> 132795 bytes
+ .../visual/body-hit-react-start-fps.png            |   Bin 131 -> 226737 bytes
+ .../visual/body-hit-react-start-side.png           |   Bin 131 -> 132431 bytes
+ .../20260919-P4/visual/corpse-final-fps.png        |   Bin 131 -> 206421 bytes
+ .../20260919-P4/visual/corpse-final-side.png       |   Bin 131 -> 122783 bytes
+ .../20260919-P4/visual/corpse-inactive-fps.png     |   Bin 131 -> 207427 bytes
+ .../20260919-P4/visual/corpse-inactive-side.png    |   Bin 131 -> 122783 bytes
+ .../20260919-P4/visual/death-middle-fps.png        |   Bin 131 -> 208243 bytes
+ .../20260919-P4/visual/death-middle-side.png       |   Bin 131 -> 121437 bytes
+ .../Evidence/20260919-P4/visual/head-shot-fps.png  |   Bin 131 -> 226700 bytes
+ .../Evidence/20260919-P4/visual/head-shot-side.png |   Bin 131 -> 132796 bytes
+ .../20260919-P4/visual/layout-Attack-fps.png       |   Bin 131 -> 226884 bytes
+ .../20260919-P4/visual/layout-Attack-side.png      |   Bin 131 -> 137391 bytes
+ .../20260919-P4/visual/layout-HitReact-fps.png     |   Bin 131 -> 226884 bytes
+ .../20260919-P4/visual/layout-HitReact-side.png    |   Bin 131 -> 137391 bytes
+ .../20260919-P4/visual/layout-Locomotion-fps.png   |   Bin 131 -> 226884 bytes
+ .../20260919-P4/visual/layout-Locomotion-side.png  |   Bin 131 -> 137435 bytes
+ .../20260919-P4/visual/layout-idle-fps.png         |   Bin 131 -> 226884 bytes
+ .../20260919-P4/visual/layout-idle-side.png        |   Bin 131 -> 137391 bytes
+ .../20260919-P4/visual/lethal-AttackCommit-fps.png |   Bin 131 -> 248471 bytes
+ .../visual/lethal-AttackCommit-side.png            |   Bin 131 -> 142401 bytes
+ .../20260919-P4/visual/lethal-AttackWindup-fps.png |   Bin 131 -> 246944 bytes
+ .../visual/lethal-AttackWindup-side.png            |   Bin 131 -> 142408 bytes
+ .../20260919-P4/visual/lethal-Recovering-fps.png   |   Bin 131 -> 248025 bytes
+ .../20260919-P4/visual/lethal-Recovering-side.png  |   Bin 131 -> 142432 bytes
+ .../20260919-P4/visual/lethal-body-fps.png         |   Bin 131 -> 214793 bytes
+ .../20260919-P4/visual/lethal-body-side.png        |   Bin 131 -> 133038 bytes
+ .../20260919-P4/visual/loop-body-reaction-fps.png  |   Bin 131 -> 260522 bytes
+ .../20260919-P4/visual/loop-body-reaction-side.png |   Bin 131 -> 161532 bytes
+ .../Evidence/20260919-P4/visual/loop-chase-fps.png |   Bin 131 -> 251561 bytes
+ .../20260919-P4/visual/loop-chase-side.png         |   Bin 131 -> 155269 bytes
+ .../20260919-P4/visual/loop-complete-fps.png       |   Bin 131 -> 242360 bytes
+ .../20260919-P4/visual/loop-complete-side.png      |   Bin 131 -> 151655 bytes
+ .../Evidence/20260919-P4/visual/loop-dodge-fps.png |   Bin 131 -> 260337 bytes
+ .../20260919-P4/visual/loop-dodge-side.png         |   Bin 131 -> 161532 bytes
+ .../20260919-P4/visual/loop-lethal-fps.png         |   Bin 131 -> 312881 bytes
+ .../20260919-P4/visual/loop-lethal-side.png        |   Bin 131 -> 160757 bytes
+ .../20260919-P4/visual/loop-player-hit-fps.png     |   Bin 131 -> 279488 bytes
+ .../20260919-P4/visual/loop-player-hit-side.png    |   Bin 131 -> 161947 bytes
+ .../20260919-P4/visual/new-session-alive-fps.png   |   Bin 131 -> 241763 bytes
+ .../20260919-P4/visual/new-session-alive-side.png  |   Bin 131 -> 130638 bytes
+ .../20260919-P4/visual/reaction-recovered-fps.png  |   Bin 131 -> 226705 bytes
+ .../20260919-P4/visual/reaction-recovered-side.png |   Bin 131 -> 132796 bytes
+ .../S004/Evidence/20260919-P4/visual/trace.tsv     |    78 +
+ Docs/Implementation/S004/ZOMBIE_ASSET_INVENTORY.md |    12 +
+ .../20260920-103550-entry/pickup-to-reload.txt     |     2 +-
+ .../20260920-212200-entry/10-expedition-soak.txt   |     2 +-
+ .../Evidence/20260920-212200-entry/performance.txt |     4 +-
+ .../two-expedition-acceptance.txt                  |     2 +-
+ 737 files changed, 1468 insertions(+), 221897 deletions(-)

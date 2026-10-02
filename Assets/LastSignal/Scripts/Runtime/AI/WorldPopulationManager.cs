@@ -208,7 +208,11 @@ namespace LastSignal.AI
                 if (!actor.Initialize() || !actor.Bind(flow.Player)) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); continue; }
                 PopulationActorSnapshot saved = null;
                 for (int d = 0; d < dormant.Count; d++) if (dormant[d].cellId == owner) { saved = dormant[d]; dormant.RemoveAt(d); break; }
-                var health = actor.GetComponent<ZombieHealth>(); if (saved != null) health.RestoreHealth(saved.health);
+                var health = actor.GetComponent<ZombieHealth>(); if (saved != null)
+                {
+                    health.RestoreHealth(saved.health);
+                    actor.GetComponent<ZombieDismemberment>()?.RestoreState(saved.anatomy);
+                }
                 var record = new Physical { Id = saved?.id ?? Guid.NewGuid().ToString("N"), Cell = owner, Health = health };
                 long token = generation;
                 record.Died = () => OnZombieDied(actor, token);
@@ -222,17 +226,28 @@ namespace LastSignal.AI
             if (!Current || token != generation || !physical.TryGetValue(actor, out var record)) return;
             record.Health.Died -= record.Died; physical.Remove(actor);
             var ledger = GetLedger(record.Cell); ledger.Physical--; ledger.Dead++;
-            // Terminal authority is committed before disabling the actor; no corpse can regain population authority.
-            actor.Shutdown(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);
+            // Terminal ledger is already committed. Keep the visual for its bounded death pose.
+            try
+            {
+                var blood = actor.GetComponent<ZombieBloodVfxPresenter>();
+                if (blood && blood.RetainDeathPresentation(actor, record.Cell)) return;
+            }
+            catch (Exception e) { Debug.LogException(e, actor); }
+            // ZombieController.OnDeath has already stopped navigation, contact and damage.
+            // Shutdown would reset the terminal animation before anyone can see it.
+            float deathSeconds = actor.Definition ? actor.Definition.DeathDuration : 0;
+            Destroy(actor.gameObject, Mathf.Max(.1f, deathSeconds) + .1f);
         }
         void OnCellReady(string id) { nextSearch = 0; }
         public void DematerializeCell(string id)
         {
+            ZombieBloodVfxPool.ReleaseCell(id);
             removal.Clear(); foreach (var pair in physical) if (pair.Value.Cell == id) removal.Add(pair.Key);
             foreach (var actor in removal)
             {
                 var record = physical[actor]; record.Health.Died -= record.Died;
-                dormant.Add(new PopulationActorSnapshot { id = record.Id, cellId = record.Cell, health = record.Health.CurrentHealth });
+                dormant.Add(new PopulationActorSnapshot { id = record.Id, cellId = record.Cell,
+                    health = record.Health.CurrentHealth, anatomy = actor.GetComponent<ZombieDismemberment>()?.CaptureState() });
                 var ledger = GetLedger(record.Cell); ledger.Physical--; ledger.Logical++;
                 physical.Remove(actor); actor.Shutdown(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);
             }
@@ -253,8 +268,9 @@ namespace LastSignal.AI
                 m.Add(new MigrationGroupSnapshot { groupId = state.GroupId, sourceCellId = state.SourceCellId, targetCellId = state.TargetCellId,
                     departureTime = state.DepartureTime, arrivalTime = state.ArrivalTime, size = state.Size });
             var units = new List<PopulationActorSnapshot>(); foreach (var unit in dormant)
-                units.Add(new PopulationActorSnapshot { id = unit.id, cellId = unit.cellId, health = unit.health });
-            foreach (var pair in physical) units.Add(new PopulationActorSnapshot { id = pair.Value.Id, cellId = pair.Value.Cell, health = pair.Value.Health.CurrentHealth });
+                units.Add(new PopulationActorSnapshot { id = unit.id, cellId = unit.cellId, health = unit.health, anatomy = unit.anatomy });
+            foreach (var pair in physical) units.Add(new PopulationActorSnapshot { id = pair.Value.Id, cellId = pair.Value.Cell,
+                health = pair.Value.Health.CurrentHealth, anatomy = pair.Key.GetComponent<ZombieDismemberment>()?.CaptureState() });
             return new PopulationSnapshot { pressures = p.ToArray(), ledgers = l.ToArray(), migrations = m.ToArray(), actors = units.ToArray(), lastNoiseSequence = lastNoiseSequence };
         }
         public void SyncFromSave(PopulationSnapshot snap)
@@ -269,7 +285,8 @@ namespace LastSignal.AI
             foreach (var l in snap.ledgers) ledgers.Add(l.cellId, new PopulationLedger { CellId = l.cellId, Logical = l.logical, Dead = l.dead });
             foreach (var m in snap.migrations) migrations.Add(new MigrationGroup { GroupId = m.groupId, SourceCellId = m.sourceCellId, TargetCellId = m.targetCellId,
                 DepartureTime = m.departureTime, ArrivalTime = m.arrivalTime, Size = m.size });
-            foreach (var unit in snap.actors) dormant.Add(new PopulationActorSnapshot { id = unit.id, cellId = unit.cellId, health = unit.health });
+            foreach (var unit in snap.actors) dormant.Add(new PopulationActorSnapshot { id = unit.id, cellId = unit.cellId,
+                health = unit.health, anatomy = unit.anatomy });
             lastNoiseSequence = snap.lastNoiseSequence; nextSearch = 0;
         }
         void ClearActors()
@@ -281,6 +298,7 @@ namespace LastSignal.AI
         }
         public void ClearSession()
         {
+            ZombieBloodVfxPool.ResetSession();
             active = false; simulation?.Unregister(this); simulation = null;
             ClearActors(); dormant.Clear(); pressures.Clear(); ledgers.Clear(); migrations.Clear(); lastNoiseSequence = 0; nextSearch = 0;
         }

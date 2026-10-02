@@ -102,7 +102,10 @@ namespace LastSignal.Tests
             Assert.That(zombie.Runtime.State, Is.EqualTo(ZombieState.Recovering));
             Assert.That(zombie.AttackSequence, Is.EqualTo(sequence)); Assert.That(health.DamageTransactions, Is.EqualTo(1));
             yield return Until(() => zombie.AttackSequence > sequence);
-            Assert.That(health.DamageTransactions, Is.EqualTo(1)); Capture("hit-next-windup");
+            Assert.That(health.DamageTransactions, Is.EqualTo(1));
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("AttackAlternate"), Is.True,
+                "The next attack must select the supplied second Mixamo take.");
+            Capture("hit-next-windup");
         }
         [UnityTest] public IEnumerator BackstepSidestepRearAndWallReallyMiss()
         {
@@ -193,7 +196,7 @@ namespace LastSignal.Tests
             yield return Load(); yield return Until(() => zombie.Runtime.State == ZombieState.AttackWindup);
             var duplicate = session.Player.AddComponent<CapsuleCollider>(); duplicate.isTrigger = true;
             zombie.GetComponentInChildren<Animator>().enabled = false;
-            zombie.Simulate(.9f);
+            zombie.Simulate(zombie.Definition.AttackRecoveryTime - zombie.AttackTime + .02f);
             Assert.That(zombie.Runtime.State, Is.EqualTo(ZombieState.Recovering));
             Assert.That(health.DamageTransactions, Is.EqualTo(1)); Assert.That(zombie.ContactAttempts, Is.EqualTo(1));
             zombie.Simulate(.2f); Assert.That(health.DamageTransactions, Is.EqualTo(1));

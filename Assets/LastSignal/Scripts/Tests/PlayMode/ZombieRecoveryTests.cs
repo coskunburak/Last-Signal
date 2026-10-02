@@ -69,9 +69,12 @@ namespace LastSignal.Tests
             yield return Load("Assets/LastSignal/Scenes/ZombieAcceptance.unity");
             var actor=session.GetComponent<ZombieEncounter>().Actor;actor.enabled=false;
             var presenter=actor.GetComponent<ZombieAnimationPresenter>();var animator=actor.GetComponentInChildren<Animator>();
-            presenter.Present(.92f,1,false);animator.Update(.2f);
+            presenter.Present(actor.Definition.Speed,1,false);animator.Update(.2f);
             Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"),Is.True);
-            Assert.That(animator.speed,Is.EqualTo(.92f/actor.Definition.MeasuredWalkSpeed).Within(.01f));
+            Assert.That(animator.speed,Is.EqualTo(actor.Definition.Speed/actor.Definition.MeasuredWalkSpeed).Within(.01f));
+            presenter.Present(actor.Definition.RunSpeed,true,2,false);animator.Update(.2f);
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Run"),Is.True);
+            Assert.That(animator.speed,Is.EqualTo(1).Within(.01f));
             presenter.Present(0,0,true);Assert.That(animator.speed,Is.Zero);
             presenter.Present(0,.2f,false);animator.Update(.2f);
             Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"),Is.True);Assert.That(animator.speed,Is.EqualTo(1));
@@ -98,7 +101,7 @@ namespace LastSignal.Tests
         {
             probe=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab"));
             var animator=probe.GetComponentInChildren<Animator>();animator.cullingMode=AnimatorCullingMode.CullCompletely;
-            Assert.That(probe.GetComponent<ZombieAnimationPresenter>().Initialize(AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Enemies/Zombie/Shambler.asset")),Is.True);
+            Assert.That(probe.GetComponent<ZombieAnimationPresenter>().Initialize(AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Shambler.asset")),Is.True);
             var hand=animator.GetBoneTransform(HumanBodyBones.RightHand);var initial=hand.position;
             Assert.That(animator.cullingMode,Is.EqualTo(AnimatorCullingMode.CullCompletely));
             animator.cullingMode=AnimatorCullingMode.AlwaysAnimate;animator.Update(0);

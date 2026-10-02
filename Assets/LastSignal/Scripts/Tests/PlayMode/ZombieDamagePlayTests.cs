@@ -63,6 +63,88 @@ namespace LastSignal.Tests
             weapon.OnFirePressed(); weapon.OnFireReleased();
             File.AppendAllText(Evidence+"/rifle-trace.txt", "id="+lastShot.ShotId+" intended="+type+" hit="+lastShot.Hit+" obstruction="+lastShot.MuzzleObstructed+" collider="+(lastShot.Collider?lastShot.Collider.name:"none")+" HP="+health.CurrentHealth+" state="+zombie.Runtime.State+"\n");
         }
+        [UnityTest] public IEnumerator DirectionalPresentationConsumesCommittedHitsWithoutChangingDamageAuthority()
+        {
+            yield return Load();
+            var torso = Region(DamageRegion.Body);
+            int before = health.DamageTransactions;
+            var directions = new[] { Vector3.back, Vector3.forward, Vector3.right, Vector3.left };
+            var expected = new[] { ZombieImpactSide.Front, ZombieImpactSide.Back,
+                ZombieImpactSide.Left, ZombieImpactSide.Right };
+            for (int i = 0; i < directions.Length; i++)
+            {
+                torso.TakeDamage(new DamageInfo { Amount = 5, Direction = directions[i],
+                    SourcePosition = torso.transform.position - directions[i],
+                    HitPoint = torso.transform.position, HitCollider = torso.HitCollider,
+                    Category = DamageCategory.Bullet, ShotId = (ulong)(i + 1) });
+                Assert.That(zombie.LastImpact.Side, Is.EqualTo(expected[i]));
+                Assert.That(health.DamageTransactions, Is.EqualTo(before + i + 1));
+                Assert.That(health.IsAlive, Is.True);
+            }
+            Assert.That(zombie.Runtime.State, Is.EqualTo(ZombieState.HitReact));
+            torso.TakeDamage(new DamageInfo { Amount = 30, Direction = Vector3.back,
+                HitCollider = torso.HitCollider, Category = DamageCategory.Bullet });
+            Assert.That(zombie.LastImpact.Severity, Is.EqualTo(ZombieImpactSeverity.Heavy));
+            Assert.That(zombie.ReactionRemaining, Is.EqualTo(zombie.Definition.HitReactDuration));
+            Assert.That(health.DamageTransactions, Is.EqualTo(before + 5));
+            torso.TakeDamage(new DamageInfo { Amount = 1000, Direction = Vector3.forward,
+                HitCollider = torso.HitCollider, Category = DamageCategory.Bullet });
+            Assert.That(zombie.Runtime.State, Is.EqualTo(ZombieState.Dead));
+            torso.TakeDamage(new DamageInfo { Amount = 5, Direction = Vector3.back,
+                HitCollider = torso.HitCollider, Category = DamageCategory.Bullet });
+            Assert.That(health.DamageTransactions, Is.EqualTo(before + 6));
+        }
+        [UnityTest] public IEnumerator NonlethalRifleHitKeepsChaseMovementAndWalkRunPresentationAlive()
+        {
+            yield return Load();
+            yield return Until(() => zombie.Runtime.State == ZombieState.Chasing &&
+                zombie.Navigation.Running && zombie.Navigation.Velocity.magnitude > .8f);
+            var torso = Region(DamageRegion.Body);
+            Vector3 before = zombie.transform.position;
+            int transactions = health.DamageTransactions;
+            torso.TakeDamage(new DamageInfo { Amount = 30, Direction = -zombie.transform.forward,
+                SourcePosition = torso.transform.position + zombie.transform.forward,
+                HitPoint = torso.transform.position, HitCollider = torso.HitCollider,
+                Category = DamageCategory.Bullet, ShotId = 9001 });
+            Assert.That(zombie.Runtime.State, Is.EqualTo(ZombieState.HitReact));
+            Assert.That(zombie.LastImpact.Severity, Is.EqualTo(ZombieImpactSeverity.Heavy));
+            Assert.That(zombie.LastImpact.UseLegacyClip, Is.True);
+            Assert.That(health.DamageTransactions, Is.EqualTo(transactions + 1));
+            Assert.That(zombie.GetComponent<NavMeshAgent>().hasPath, Is.True);
+            yield return new WaitForSeconds(.18f);
+            Assert.That(zombie.Runtime.State, Is.EqualTo(ZombieState.HitReact));
+            Assert.That(Vector3.Distance(before, zombie.transform.position), Is.GreaterThan(.05f),
+                "A gunshot must not freeze a chasing zombie after chase speed is established.");
+            Assert.That(zombie.Navigation.Velocity.magnitude, Is.GreaterThan(.1f));
+            Assert.That(zombie.GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Run"), Is.True,
+                "The base layer must continue the chase animation through the hit overlay.");
+            var animator = zombie.GetComponentInChildren<Animator>();
+            Assert.That(animator.GetCurrentAnimatorStateInfo(1).IsName("HitReact"), Is.True);
+            Assert.That(animator.GetLayerWeight(1), Is.GreaterThan(.5f),
+                "A surviving rifle body hit must visibly blend the authored damage clip.");
+        }
+
+        [UnityTest] public IEnumerator HeadSeverUsesFlyingBackDeathAndRetainsCanonicalDeath()
+        {
+            yield return Load();
+            var head = Region(DamageRegion.Head);
+            int deaths = 0; health.Died += () => deaths++;
+            var position = zombie.transform.position;
+            head.TakeDamage(new DamageInfo { Amount = 40, Direction = zombie.transform.forward,
+                HitPoint = head.HitCollider.bounds.center, HitCollider = head.HitCollider,
+                Category = DamageCategory.Bullet, ShotId = 9002 });
+            Assert.That(zombie.GetComponent<ZombieDismemberment>().IsSevered(ZombieBodyPart.Head), Is.True);
+            Assert.That(health.CurrentHealth, Is.Zero);
+            Assert.That(deaths, Is.EqualTo(1));
+            Assert.That(zombie.LastImpact.Severity, Is.EqualTo(ZombieImpactSeverity.Sever));
+            Assert.That(zombie.GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0)
+                .IsName("FlyingBackDeath"), Is.True);
+            foreach (var skin in zombie.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+                if (skin.name == "Head") Assert.That(skin.enabled, Is.False);
+            yield return Until(() => zombie.GetComponent<ZombieAnimationPresenter>().CorpseSettled);
+            Assert.That(zombie.transform.position, Is.EqualTo(position));
+            Assert.That(deaths, Is.EqualTo(1));
+        }
         WeaponFireResolver.ShotResult Resolve(DamageRegion type, float amount = 30)
         {
             var collider = Region(type).HitCollider;
