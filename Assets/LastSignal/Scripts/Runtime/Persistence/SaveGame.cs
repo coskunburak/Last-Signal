@@ -16,6 +16,7 @@ namespace LastSignal.Persistence
         public ShelterSnapshot shelter;
         public WorldSnapshot world;
         public PopulationSnapshot population;
+        public LastSignal.Objectives.RelaySnapshot progression;
     }
     // Optional additive extension: absent in old saves means firearm + full stamina.
     [Serializable] public sealed class CombatEquipmentSnapshot
@@ -29,6 +30,7 @@ namespace LastSignal.Persistence
     [Serializable] public sealed class SaveHeader
     {
         public int schemaVersion;
+        public int progressionVersion;
         public string contentVersion, buildId, worldId, timestampUtc;
         public int seed;
         public long generation;
@@ -94,6 +96,14 @@ namespace LastSignal.Persistence
         public string id;
         public float health;
         public TransformSnapshot transform;
+        public ZombieAnatomySnapshot anatomy;
+    }
+    // Optional in existing schemas: null means an intact zombie from an older save.
+    [Serializable] public sealed class ZombieAnatomySnapshot
+    {
+        public int severedMask;
+        public float torsoDamage;
+        public float[] regionalDamage;
     }
     [Serializable] public sealed class WorldSnapshot
     {
@@ -132,6 +142,7 @@ namespace LastSignal.Persistence
     {
         public string id, cellId;
         public float health;
+        public ZombieAnatomySnapshot anatomy;
     }
     [Serializable] public sealed class PopulationSnapshot
     {

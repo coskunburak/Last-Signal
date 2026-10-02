@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-01 19:33:53Z" end-time="2026-10-01 19:34:46Z" duration="53.8901259">
+  <test-suite type="TestSuite" id="1227" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="187" result="Passed" start-time="2026-10-01 19:33:53Z" end-time="2026-10-01 19:34:46Z" duration="53.890126" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1220" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="187" result="Passed" start-time="2026-10-01 19:33:53Z" end-time="2026-10-01 19:34:46Z" duration="53.822831" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="50102" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1221" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="187" result="Passed" start-time="2026-10-01 19:33:53Z" end-time="2026-10-01 19:34:46Z" duration="53.819382" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1222" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="187" result="Passed" start-time="2026-10-01 19:33:53Z" end-time="2026-10-01 19:34:46Z" duration="53.817447" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1151" name="ZombieBehaviorTests" fullname="LastSignal.Tests.ZombieBehaviorTests" classname="LastSignal.Tests.ZombieBehaviorTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-01 19:33:53Z" end-time="2026-10-01 19:34:07Z" duration="14.256905" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1153" name="InitiallyOccludedPlayerIsNotAcquiredAndSearchExpires" fullname="LastSignal.Tests.ZombieBehaviorTests.InitiallyOccludedPlayerIsNotAcquiredAndSearchExpires" methodname="InitiallyOccludedPlayerIsNotAcquiredAndSearchExpires" classname="LastSignal.Tests.ZombieBehaviorTests" runstate="Runnable" seed="100867661" result="Passed" start-time="2026-10-01 19:33:53Z" end-time="2026-10-01 19:34:07Z" duration="14.248587" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1185" name="ZombieMeleeTests" fullname="LastSignal.Tests.ZombieMeleeTests" classname="LastSignal.Tests.ZombieMeleeTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-01 19:34:07Z" end-time="2026-10-01 19:34:20Z" duration="12.701798" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1189" name="DeathIsTerminalAndRestartUsesFreshPlayerAndAttack" fullname="LastSignal.Tests.ZombieMeleeTests.DeathIsTerminalAndRestartUsesFreshPlayerAndAttack" methodname="DeathIsTerminalAndRestartUsesFreshPlayerAndAttack" classname="LastSignal.Tests.ZombieMeleeTests" runstate="Runnable" seed="832373947" result="Passed" start-time="2026-10-01 19:34:07Z" end-time="2026-10-01 19:34:19Z" duration="11.945936" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1193" name="LargeStepDuplicateColliderAndDisabledAnimatorStillHaveOneContact" fullname="LastSignal.Tests.ZombieMeleeTests.LargeStepDuplicateColliderAndDisabledAnimatorStillHaveOneContact" methodname="LargeStepDuplicateColliderAndDisabledAnimatorStillHaveOneContact" classname="LastSignal.Tests.ZombieMeleeTests" runstate="Runnable" seed="321030993" result="Passed" start-time="2026-10-01 19:34:19Z" end-time="2026-10-01 19:34:20Z" duration="0.752212" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1205" name="ZombieProductionAcceptanceTests" fullname="LastSignal.Tests.ZombieProductionAcceptanceTests" classname="LastSignal.Tests.ZombieProductionAcceptanceTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-01 19:34:20Z" end-time="2026-10-01 19:34:46Z" duration="26.270044" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1206" name="ProductionVisualSequenceAndStableMeleeStop" fullname="LastSignal.Tests.ZombieProductionAcceptanceTests.ProductionVisualSequenceAndStableMeleeStop" methodname="ProductionVisualSequenceAndStableMeleeStop" classname="LastSignal.Tests.ZombieProductionAcceptanceTests" runstate="Runnable" seed="1086993726" result="Passed" start-time="2026-10-01 19:34:20Z" end-time="2026-10-01 19:34:46Z" duration="26.268845" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1208" name="ZombieRecoveryTests" fullname="LastSignal.Tests.ZombieRecoveryTests" classname="LastSignal.Tests.ZombieRecoveryTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-01 19:34:46Z" end-time="2026-10-01 19:34:46Z" duration="0.570621" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1211" name="PresenterUsesVelocityAndRestoresSpeedAfterPause" fullname="LastSignal.Tests.ZombieRecoveryTests.PresenterUsesVelocityAndRestoresSpeedAfterPause" methodname="PresenterUsesVelocityAndRestoresSpeedAfterPause" classname="LastSignal.Tests.ZombieRecoveryTests" runstate="Runnable" seed="433063836" result="Passed" start-time="2026-10-01 19:34:46Z" end-time="2026-10-01 19:34:46Z" duration="0.567840" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

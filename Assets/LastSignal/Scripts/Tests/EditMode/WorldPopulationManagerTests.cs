@@ -56,5 +56,20 @@ namespace LastSignal.Tests
             p.actors = new[] { actor, actor }; Assert.IsFalse(SaveValidation.ValidPopulation(p, Cells, 150));
             p.actors = new[] { actor }; actor.health = 0; Assert.IsFalse(SaveValidation.ValidPopulation(p, Cells, 150));
         }
+        [Test] public void InvalidAnatomyIsRejectedAndLegacyAbsenceIsAccepted()
+        {
+            var p = Valid();
+            p.actors = new[] { new PopulationActorSnapshot { id = "unit", cellId = "cell:1:0", health = 50 } };
+            Assert.IsTrue(SaveValidation.ValidPopulation(p, Cells, 150));
+            p.actors[0].anatomy = new ZombieAnatomySnapshot { regionalDamage = new float[9], severedMask = 1 << (int)ZombieBodyPart.RightArm };
+            Assert.IsTrue(SaveValidation.ValidPopulation(p, Cells, 150));
+            p.actors[0].anatomy.regionalDamage[4] = float.NaN;
+            Assert.IsFalse(SaveValidation.ValidPopulation(p, Cells, 150));
+            p.actors[0].anatomy.regionalDamage[4] = 0;
+            p.actors[0].anatomy.severedMask = 1 << (int)ZombieBodyPart.RightLeg;
+            Assert.IsFalse(SaveValidation.ValidPopulation(p, Cells, 150));
+            p.actors[0].anatomy.severedMask = 1 << (int)ZombieBodyPart.Head;
+            Assert.IsFalse(SaveValidation.ValidPopulation(p, Cells, 150));
+        }
     }
 }

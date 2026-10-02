@@ -88,7 +88,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582608947213089163}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.207218684, y: 0.685158136, z: 0.502632394, w: 0.484746761}
+  m_LocalRotation: {x: -0.20721868, y: 0.68515813, z: 0.5026324, w: 0.48474675}
   m_LocalPosition: {x: -0.16380353, y: -0.053691898, z: 0.04271649}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -373,7 +373,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1643258769712899803}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.157217769, y: 0.806224751, z: 0.42727943, w: -0.37777839}
+  m_LocalRotation: {x: 0.15721777, y: 0.80622476, z: 0.42727944, w: -0.37777838}
   m_LocalPosition: {x: 0.16380353, y: -0.053691898, z: 0.04271649}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -668,7 +668,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3339069156470395931}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.00951036496, y: -0.649716095, z: 0.185770288, w: 0.737067126}
+  m_LocalRotation: {x: -0.009510365, y: -0.6497161, z: 0.18577029, w: 0.7370671}
   m_LocalPosition: {x: 3.5527136e-17, y: 2.6645352e-17, z: -0.21154554}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -815,6 +815,7 @@ GameObject:
   - component: {fileID: 115205150761027965}
   - component: {fileID: 3121806271642849327}
   - component: {fileID: 6762869589540750120}
+  - component: {fileID: 7454094187815225018}
   m_Layer: 2
   m_Name: Crowbar_Viewmodel
   m_TagString: Untagged
@@ -967,6 +968,23 @@ MonoBehaviour:
   audioSource: {fileID: 3121806271642849327}
   swing: {fileID: 0}
   impact: {fileID: 8300000, guid: 25e8bbe95ad4f344abd4dd8d7c8636ab, type: 3}
+--- !u!114 &7454094187815225018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3998434111888870627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 420fa53fdac1440fd8310abb4ab79b84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.MeleeStanceViewPresenter
+  visualRoot: {fileID: 0}
+  crouchPositionOffset: {x: 0, y: -0.025, z: -0.015}
+  slidePositionOffset: {x: 0, y: -0.09, z: -0.06}
+  slideRotationOffset: {x: 6, y: 0, z: 5}
+  transitionSeconds: 0.1
 --- !u!1 &4104406659006850714
 GameObject:
   m_ObjectHideFlags: 0
@@ -1195,8 +1213,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4372950000022392422}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.518339416, y: -0.60904191, z: 0.193517655, w: 0.568280845}
-  m_LocalPosition: {x: -0.0559677507, y: 0.0113481784, z: -0.0307796541}
+  m_LocalRotation: {x: -0.5183394, y: -0.6090419, z: 0.19351766, w: 0.5682808}
+  m_LocalPosition: {x: -0.055967752, y: 0.011348179, z: -0.030779654}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1323,7 +1341,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4873643212634784944}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.135428674, y: 0.719040705, z: -0.103289512, w: 0.673773563}
+  m_LocalRotation: {x: -0.13542867, y: 0.7190407, z: -0.103289515, w: 0.6737736}
   m_LocalPosition: {x: -3.5527136e-17, y: 1.7763568e-17, z: -0.21154554}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

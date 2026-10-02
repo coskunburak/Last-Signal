@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac16cb5b55dc0420d944fa3cb3e001f5, type: 3}
+  m_Name: ZombieBlood
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieBloodVfxProfile
+  burstPrefab: {fileID: 505102601824688812, guid: f15b7ebc3a9714a9c90c39de352a402d, type: 3}
+  spurtPrefab: {fileID: 9163001539681482673, guid: 91091a746dcef48abaa5a4cf0ba860b0, type: 3}
+  dripPrefab: {fileID: 1987941489201720589, guid: a2b48f7950eba48bea75b6f7b81de676, type: 3}
+  surfacePrefab: {fileID: 8894178596581112754, guid: e64f13a4ef4bd415f8d54d1bd3de8926, type: 3}
+  head:
+    scale: 1
+    burstCount: 18
+    burstConeAngle: 65
+    spurtDuration: 1.6
+    dripDuration: 2
+    spurtRate: 25
+    dripRate: 5
+    surfaceMarks: 3
+    markSize: 0.3
+  arm:
+    scale: 0.7
+    burstCount: 12
+    burstConeAngle: 32
+    spurtDuration: 1.1
+    dripDuration: 1.5
+    spurtRate: 18
+    dripRate: 5
+    surfaceMarks: 2
+    markSize: 0.22
+  hand:
+    scale: 0.42
+    burstCount: 7
+    burstConeAngle: 20
+    spurtDuration: 0.65
+    dripDuration: 1
+    spurtRate: 10
+    dripRate: 3
+    surfaceMarks: 1
+    markSize: 0.13
+  pressure:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.15
+      value: 0.9
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.48
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.8
+      value: 0.16
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  effectCapacity: 16
+  markCapacity: 32
+  surfaceLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  probeDistance: 3
+  markLifetime: 25
+  poolGrowthDuration: 4

@@ -43,6 +43,7 @@ namespace LastSignal.Persistence
                 return Invalid("Missing required section.");
             if (h.schemaVersion < 3 && save.cells != null) return Invalid("Legacy schema cannot contain cells.");
             if (h.schemaVersion < 4 && save.population != null) return Invalid("Unversioned population data is unsupported; use a pre-S009 checkpoint.");
+            if (h.progressionVersion < 0 || h.progressionVersion > 1 || (h.progressionVersion == 1 && save.progression == null) || (h.progressionVersion == 0 && save.progression != null) || !LastSignal.Objectives.RelayProgression.Valid(save.progression, save.worldTime?.seconds ?? 0)) return Invalid("Invalid relay progression extension.");
             var combat = save.combat;
             if (combat != null && (combat.version != 1 || (combat.selectedSlot != 0 && combat.selectedSlot != 1) ||
                 combat.meleeDefinitionId != MeleeWeaponDefinition.CrowbarId || !Finite(combat.stamina) || combat.stamina < 0 || combat.stamina > PlayerStamina.Maximum ||
@@ -100,8 +101,11 @@ namespace LastSignal.Persistence
             foreach (var enemy in w.enemies)
             {
                 if (enemy == null || !AddId(ids, enemy.id)) return Identity();
-                if (!Pose(enemy.transform) || !Finite(enemy.health) || enemy.health < 0 || enemy.health > maximumEnemyHealth)
-                    return Invalid("Invalid enemy state.");
+                if (!Pose(enemy.transform)) return Invalid("Invalid enemy transform.");
+                if (!Finite(enemy.health) || enemy.health < 0 || enemy.health > maximumEnemyHealth)
+                    return Invalid("Invalid enemy health.");
+                if (!ValidZombieAnatomy(enemy.anatomy))
+                    return Invalid($"Invalid enemy anatomy: mask={enemy.anatomy?.severedMask}, torso={enemy.anatomy?.torsoDamage}, regions={enemy.anatomy?.regionalDamage?.Length}.");
             }
             if (h.schemaVersion >= 3)
             {
@@ -132,8 +136,20 @@ namespace LastSignal.Persistence
                 if (!destination) return Invalid("Player destination is not a visited cell.");
                 if (save.cells.playerCell != "resident" && LastSignal.WorldCells.CellCoordinate.FromWorld(new UnityEngine.Vector3(p.transform.x,p.transform.y,p.transform.z)).Id != save.cells.playerCell) return Invalid("Player cell ownership mismatch.");
             }
+            if (save.progression != null)
+            {
+                if (!stackLimits.TryGetValue(LastSignal.Objectives.RelayProgression.FuseId, out int fuseStack) || fuseStack != 1) return Invalid("Missing unique critical fuse definition.");
+                long fuseCount = CountFuse(save.inventory) + CountFuse(save.shelter.storage) + CountFuse(save.world);
+                if (save.cells?.cells != null) foreach (var cell in save.cells.cells) if (cell.visited) fuseCount += CountFuse(cell.world);
+                int expected = save.progression.repairReceipt == LastSignal.Objectives.RelayProgression.RepairReceipt ? 0 : 1;
+                if (fuseCount != expected) return Invalid("Critical fuse ownership contradicts repair receipt.");
+            }
             return SaveResult.Ok;
         }
+        static long CountFuse(ContainerSnapshot container)
+        { long count=0; foreach(var slot in container.slots) if(slot.definitionId==LastSignal.Objectives.RelayProgression.FuseId) count+=slot.quantity; return count; }
+        static long CountFuse(WorldSnapshot world)
+        { long count=0; foreach(var item in world.items) if(item.definitionId==LastSignal.Objectives.RelayProgression.FuseId && item.disposition==EntityDisposition.Present) count+=item.quantity; return count; }
         public static bool ValidPopulation(PopulationSnapshot pop, HashSet<string> cells, double now)
         {
             if (pop == null || pop.pressures == null || pop.ledgers == null || pop.migrations == null || pop.actors == null ||
@@ -167,9 +183,23 @@ namespace LastSignal.Persistence
             if (total > MaxEntities) return false;
             foreach (var a in pop.actors)
             {
-                if (a == null || !AddId(ids, a.id) || !available.TryGetValue(a.cellId ?? "", out int count) || count <= 0 || !Finite(a.health) || a.health <= 0 || a.health > 100) return false;
+                if (a == null || !AddId(ids, a.id) || !available.TryGetValue(a.cellId ?? "", out int count) || count <= 0 || !Finite(a.health) || a.health <= 0 || a.health > 100 || !ValidZombieAnatomy(a.anatomy) ||
+                    (a.anatomy != null && (a.anatomy.severedMask & (1 << (int)ZombieBodyPart.Head)) != 0)) return false;
                 available[a.cellId] = count - 1;
             }
+            return true;
+        }
+        public static bool ValidZombieAnatomy(ZombieAnatomySnapshot state)
+        {
+            if (state == null) return true;
+            const int allowed = (1 << (int)ZombieBodyPart.Head) | (1 << (int)ZombieBodyPart.LeftArm) |
+                (1 << (int)ZombieBodyPart.RightArm) | (1 << (int)ZombieBodyPart.LeftHand) |
+                (1 << (int)ZombieBodyPart.RightHand);
+            if ((state.severedMask & ~allowed) != 0 || !Finite(state.torsoDamage) ||
+                state.torsoDamage < 0 || state.torsoDamage > 10000 ||
+                state.regionalDamage == null || state.regionalDamage.Length != 9) return false;
+            foreach (float amount in state.regionalDamage)
+                if (!Finite(amount) || amount < 0 || amount > 10000) return false;
             return true;
         }
         SaveResult Container(ContainerSnapshot c, HashSet<string> ids)

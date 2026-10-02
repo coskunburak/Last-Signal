@@ -23,7 +23,7 @@ namespace LastSignal.Tests
             for (int i=0;i<NavMesh.GetSettingsCount();i++)
             { var s=NavMesh.GetSettingsByIndex(i); if(NavMesh.GetSettingsNameFromID(s.agentTypeID)=="LastSignal Shambler")agent.agentTypeID=s.agentTypeID; }
             var controller = actor.AddComponent<ZombieController>();
-            controller.Configure(AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Enemies/Zombie/Shambler.asset"));
+            controller.Configure(AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Shambler.asset"));
             actor.SetActive(true); Assert.That(controller.Initialize(), Is.True);
             var nav = controller.Navigation;
             Assert.That(nav.MoveTo(new Vector3(-5, 0, 7),0,.35f), Is.True);

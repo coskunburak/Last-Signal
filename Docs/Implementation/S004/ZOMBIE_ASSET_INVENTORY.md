@@ -62,3 +62,23 @@ All ten imported PNGs were visually inventoried in `source-texture-contact-sheet
 ## Historical candidates
 
 The earlier alien/crew/captain audit remains in [P1 evidence](Evidence/20260918-P1/README.md). They are not the selected zombie. The original P1 lack-of-model/Idle/Walk blocker is superseded by this measured integration; upstream player/weapon source content remains intact.
+
+## 2026-10-01 Studio New Punch scope addendum
+
+The preceding inventory describes the historical S004 Hotstrike/Kevin integration. The user later requested a Studio New Punch Shambler visual and Phase-1 dismemberment and clarified that the available scope contains **three**, rather than four, packages. Current findings and implementation status are in [the new discovery record](20260930_NEW_PUNCH_DISMEMBERMENT_DISCOVERY.md).
+
+| Package in current local tree | Current role | Source/license status |
+| --- | --- | --- |
+| `Assets/LastSignal/Assets/Zombie/NewPunch/ShirtlessZombieFree` | Selected 13,769-triangle split visual; project-owned variant `Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Prefabs/LS_Zombie_Shirtless_Visual.prefab` now nested by `Assets/Resources/LS_Zombie_Runtime.prefab` | Local version and acquisition evidence pending; vendor FBX and PNG pixels unchanged; four packed-map/AO texture `.meta` sRGB flags corrected to linear |
+| `Assets/LastSignal/Assets/Zombie/ZombieMale_AAB` | Clothed split-body alternative, 25 skinned renderers | Local version and acquisition evidence pending; not modified |
+| `Assets/LastSignal/Assets/Zombie/ArtStore3D/Fat Zombie(Low Poly)` | User-classified Studio New Punch visual-only candidate; intact two-LOD body does not support Phase-1 sever | Local PDF says ArtStore3D publisher ID 71551; user classification and metadata discrepancy retained; acquisition evidence pending |
+
+The selected variant uses the existing S004 controller and clips. After the user explicitly approved continuation, the production prefab received head, arm and hand sever bindings plus a project-owned torso wound overlay. The overlay uses the generated transparent `T_Zombie_TorsoWound.png`, URP material and quad under `Assets/LastSignal/Assets/Zombie/Enemies/Zombie/`; its importer limits the texture to 512 pixels. Focused tests verify the bindings and state changes, while Unity lighting, cut surfaces, player-facing reduced-gore control and full regression still need acceptance. Neither vendor license status nor manual visual acceptance is certified by these tests.
+
+## 2026-10-01 — Blood VFX eki
+
+- Yerel paket: `Assets/LastSignal/Blood VFX/Vefects/Free Blood VFX/`; Vefects, Free Blood VFX - URP **1.0.1**. Meta AssetOrigin productId **375130**, uploadId **906040**.
+- Yerel lisans/satın alma belgesi bulunamadı; uygunluk doğrulanmış olarak işaretlenmedi.
+- Proje sahipli türevler: `Assets/LastSignal/Blood VFX/ProjectOwned/`; üç ParticleSystem prefabı, yüzey kanı prefab/shader/materyali ve data profili.
+- Vendor 398 dosya SHA-256 karşılaştırması: değişiklik yok. SFX veya vendor runtime script bağımlılığı yok.
+- Uygulama, kaynak seçimleri, nüfus ölüm sunumu bağlantısı, odaklı test kanıtları ve açık manuel kabul kapıları: [Kan VFX entegrasyonu](20261001_BLOOD_VFX_INTEGRATION.md).

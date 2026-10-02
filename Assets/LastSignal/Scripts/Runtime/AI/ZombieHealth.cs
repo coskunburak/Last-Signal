@@ -9,6 +9,7 @@ namespace LastSignal
     {
         static readonly ProfilerMarker Marker = new ProfilerMarker("LastSignal.Zombie.Damage");
         [SerializeField, Min(1)] float maxHealth = 100;
+        ZombieDismemberment dismemberment;
         bool accepting = true;
         public float MaxHealth => maxHealth;
         public float CurrentHealth { get; private set; }
@@ -20,6 +21,7 @@ namespace LastSignal
         public event Action Died;
         void Awake()
         {
+            dismemberment = GetComponent<ZombieDismemberment>();
             CurrentHealth = float.IsFinite(maxHealth) && maxHealth > 0 ? maxHealth : 0;
         }
         internal void RestoreHealth(float value)
@@ -45,7 +47,8 @@ namespace LastSignal
             using (Marker.Auto())
             {
                 LastHealthBefore = CurrentHealth;
-                CurrentHealth = Mathf.Max(0, CurrentHealth - info.Amount);
+                bool fatalSever = dismemberment && dismemberment.ResolveCommittedHit(info);
+                CurrentHealth = fatalSever ? 0 : Mathf.Max(0, CurrentHealth - info.Amount);
                 LastDamage = info; DamageTransactions++;
                 // Commit terminal authority before external surviving-hit listeners can run.
                 if (!IsAlive) Died?.Invoke();

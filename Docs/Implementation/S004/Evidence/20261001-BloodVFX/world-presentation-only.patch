@@ -1,0 +1,31 @@
+--- /tmp/ls-blood-baseline/WorldPopulationManager.cs	2026-10-01 20:14:03
++++ Assets/LastSignal/Scripts/Runtime/AI/WorldPopulationManager.cs	2026-10-01 20:16:43
+@@ -226,12 +226,19 @@
+             if (!Current || token != generation || !physical.TryGetValue(actor, out var record)) return;
+             record.Health.Died -= record.Died; physical.Remove(actor);
+             var ledger = GetLedger(record.Cell); ledger.Physical--; ledger.Dead++;
+-            // Terminal authority is committed before disabling the actor; no corpse can regain population authority.
++            // Terminal ledger is already committed. Only a bounded blood presentation may retain the dead visual.
++            try
++            {
++                var blood = actor.GetComponent<ZombieBloodVfxPresenter>();
++                if (blood && blood.RetainDeathPresentation(actor, record.Cell)) return;
++            }
++            catch (Exception e) { Debug.LogException(e, actor); }
+             actor.Shutdown(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);
+         }
+         void OnCellReady(string id) { nextSearch = 0; }
+         public void DematerializeCell(string id)
+         {
++            ZombieBloodVfxPool.ReleaseCell(id);
+             removal.Clear(); foreach (var pair in physical) if (pair.Value.Cell == id) removal.Add(pair.Key);
+             foreach (var actor in removal)
+             {
+@@ -288,6 +295,7 @@
+         }
+         public void ClearSession()
+         {
++            ZombieBloodVfxPool.ResetSession();
+             active = false; simulation?.Unregister(this); simulation = null;
+             ClearActors(); dormant.Clear(); pressures.Clear(); ledgers.Clear(); migrations.Clear(); lastNoiseSequence = 0; nextSearch = 0;
+         }

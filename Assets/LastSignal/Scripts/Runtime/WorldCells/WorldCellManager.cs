@@ -144,7 +144,9 @@ namespace LastSignal.WorldCells
             foreach (var cell in cells.Values) snapshots.Add(cell.Life.State == CellState.Ready ? Capture(cell) : cell.Delta);
             snapshots.Sort((a,b) => StringComparer.Ordinal.Compare(a.id,b.id));
             // Roundtrip ensures callers never retain mutable unloaded authority.
-            return JsonUtility.FromJson<CellWorldSnapshot>(JsonUtility.ToJson(new CellWorldSnapshot { playerCell = CurrentCell, cells = snapshots.ToArray() }));
+            var captured = JsonUtility.FromJson<CellWorldSnapshot>(JsonUtility.ToJson(new CellWorldSnapshot { playerCell = CurrentCell, cells = snapshots.ToArray() }));
+            SaveCodec.NormalizeCellAnatomy(captured);
+            return captured;
         }
         public bool ValidateTopology(CellWorldSnapshot snapshot)
         {
@@ -159,7 +161,15 @@ namespace LastSignal.WorldCells
         {
             if (!ValidateTopology(snapshot)) { Failure = "Cell topology changed."; yield break; }
             foreach (var state in snapshot.cells)
+            {
                 cells[state.id].Delta = JsonUtility.FromJson<CellSnapshot>(JsonUtility.ToJson(state));
+                var delta = cells[state.id].Delta;
+                if (delta?.world?.enemies != null)
+                    foreach (var enemy in delta.world.enemies)
+                        if (enemy?.anatomy != null && enemy.anatomy.severedMask == 0 && enemy.anatomy.torsoDamage == 0 &&
+                            (enemy.anatomy.regionalDamage == null || enemy.anatomy.regionalDamage.Length == 0))
+                            enemy.anatomy = null;
+            }
             // WorldClock must be restored before consuming elapsed timestamps, while player input remains gated.
             if (snapshot.playerCell != "resident")
             {
@@ -205,6 +215,39 @@ namespace LastSignal.WorldCells
                 if (cell.Life.State != CellState.Ready) throw new InvalidOperationException("Drop destination is not ready.");
                 item.transform.SetParent(cell.Runtime.transform, true);
             }
+        }
+        // Recall only a persisted drop, preserving its identity and removing its previous owner.
+        // Resident quest sources are never rerolled or replaced by this operation.
+        public bool RecallDroppedItem(ItemDefinition definition, Vector3 destination)
+        {
+            if (!active || !Stable || OwnershipTransaction.Active) return false;
+            foreach (var cell in cells.Values)
+            {
+                if (cell.Runtime || cell.Delta?.world?.items == null) continue;
+                var items = cell.Delta.world.items;
+                for (int i = 0; i < items.Length; i++)
+                {
+                    var item = items[i];
+                    if (item.definitionId != definition.Id.Value || item.origin != WorldItemOrigin.Drop || item.disposition != EntityDisposition.Present) continue;
+                    OwnershipTransaction.Enter();
+                    GameObject go = null;
+                    try
+                    {
+                        go = Instantiate(definition.WorldPrefab, destination, Quaternion.identity);
+                        var worldItem = go.GetComponent<WorldItem>();
+                        worldItem.Configure(definition, item.quantity);
+                        worldItem.AssignPersistentIdentity(item.id, WorldItemOrigin.Drop);
+                        var replacement = new WorldItemSnapshot[items.Length - 1];
+                        Array.Copy(items, 0, replacement, 0, i);
+                        Array.Copy(items, i + 1, replacement, i, items.Length - i - 1);
+                        cell.Delta.world.items = replacement;
+                        return true;
+                    }
+                    catch { if (go) { go.SetActive(false); Destroy(go); } throw; }
+                    finally { OwnershipTransaction.Exit(); }
+                }
+            }
+            return false;
         }
         public void End()
         {

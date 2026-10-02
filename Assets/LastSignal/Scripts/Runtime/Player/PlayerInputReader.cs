@@ -21,6 +21,8 @@ namespace LastSignal
         public bool SprintHeld { get; private set; }
         public bool FireHeld { get; private set; }
         public bool AimHeld { get; private set; }
+
+        public bool CrouchHeld { get; private set; }
         public event Action InteractRequested;
         public event Action CrouchRequested;
         public event Action PauseRequested;
@@ -102,9 +104,11 @@ namespace LastSignal
             instance.Disable();
             if (GameplayActive) gameplay.Enable(); else ui.Enable();
         }
-
-        void Clear() { Move = Look = Vector2.zero; SprintHeld = false; FireHeld = false; AimHeld = false; }
-
+        void Clear()
+        {
+            Move = Look = Vector2.zero;
+            SprintHeld = CrouchHeld = FireHeld = AimHeld = false;
+        }
         void Update()
         {
             if (!GameplayActive) { Clear(); return; }
@@ -121,6 +125,7 @@ namespace LastSignal
             Move = Vector2.ClampMagnitude(move.ReadValue<Vector2>(), 1f);
             Look = look.ReadValue<Vector2>();
             SprintHeld = sprint.IsPressed();
+            CrouchHeld = crouch.IsPressed();
             FireHeld = attack.IsPressed();
             AimHeld = aim != null && aim.IsPressed();
         }

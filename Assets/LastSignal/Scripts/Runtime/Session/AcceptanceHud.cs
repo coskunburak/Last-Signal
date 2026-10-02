@@ -73,7 +73,7 @@ namespace LastSignal
                 if(value!=shownStamina) { shownStamina=value; staminaDisplay.text="STAMINA  " + value + " / 100"; }
                 staminaDisplay.color=stamina && stamina.Exhausted?new Color(1,.5f,.3f):Color.white;
             }
-            panel.SetActive(menu || (paused && !session.PreparationOpen) || session.PlayerDead);
+            panel.SetActive(menu || (paused && !session.PreparationOpen && !session.JournalOpen) || session.PlayerDead);
             panelTitle.text = menu ? "LAST SIGNAL" : session.PlayerDead ? "ÖLDÜN" : "DURAKLATILDI";
             startButton.gameObject.SetActive(menu);
             resumeButton.gameObject.SetActive(!menu && !session.PlayerDead);

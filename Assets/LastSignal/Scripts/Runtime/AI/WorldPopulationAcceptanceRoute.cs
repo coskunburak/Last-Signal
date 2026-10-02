@@ -231,20 +231,22 @@ namespace LastSignal.AI
             int beforeArrival = pop.GetLedger(A).Logical;
 
             clock.Simulation.AdvanceUntil(
-                travel.arrivalTime - .01,
+                restored.arrivalTime - .01,
                 clock.Exposure);
 
             Check(pop.MigrationCount == 1, "No early arrival");
 
             clock.Simulation.AdvanceUntil(
-                travel.arrivalTime,
+                restored.arrivalTime,
                 clock.Exposure);
 
             Check(
                 pop.MigrationCount == 0 &&
                 pop.GetLedger(A).Logical == beforeArrival + 3 &&
                 pop.TotalAccounted == 30,
-                "Arrival transfers once");
+                $"Arrival transfers once: t={clock.Simulation.Seconds:F9}, eta={restored.arrivalTime:F9}, " +
+                $"migrations={pop.MigrationCount}, logical={pop.GetLedger(A).Logical}, " +
+                $"before={beforeArrival}, total={pop.TotalAccounted}");
 
             log?.Invoke(
                 $"ARRIVAL t={clock.Simulation.Seconds:F6}, " +

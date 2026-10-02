@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &841782702704085221
 Transform:
   m_ObjectHideFlags: 0
@@ -418,6 +418,7 @@ MonoBehaviour:
   clearanceMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  heightTransitionMetersPerSecond: 6
 --- !u!114 &8492070216041348762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,6 +457,17 @@ MonoBehaviour:
   gravityMetersPerSecondSquared: -22
   groundStickMetersPerSecond: -2
   terminalMetersPerSecond: -40
+  slideMinimumEntryMetersPerSecond: 4
+  slideEntryMultiplier: 1.1
+  slideMaximumMetersPerSecond: 7.5
+  slideDecelerationMetersPerSecondSquared: 7
+  slideExitMetersPerSecond: 2
+  slideMaximumSeconds: 0.8
+  slideSteeringDegreesPerSecond: 75
+  slideSlopeGravityFactor: 0.45
+  slideGroundLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &4646052390767188979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1222,6 +1234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6852876106905673588}
   - component: {fileID: 6354113808284678651}
+  - component: {fileID: 5950565294422645574}
   m_Layer: 30
   m_Name: WorldBody
   m_TagString: Untagged
@@ -1257,10 +1270,10 @@ Animator:
   m_GameObject: {fileID: 4582356495926894342}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 10415c92d9e00104b9fe0e149e13a6a9, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
+  m_Controller: {fileID: 9100000, guid: a35d1340d221840209f9f1dc49574e2a, type: 2}
+  m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -1269,6 +1282,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5950565294422645574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4582356495926894342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02eb59b9a3b0e45ea81c8dd17dca0002, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.PlayerLocomotionPresenter
+  directionDampingSeconds: 0.08
+  walkingPlaybackRate: 0.65
+  crouchMetersPerSecond: 1.6
 --- !u!1 &4697467776979506107
 GameObject:
   m_ObjectHideFlags: 0

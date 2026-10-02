@@ -61,6 +61,23 @@ namespace LastSignal.Tests
             Assert.AreEqual(0, saved.world.enemies[0].health); Assert.IsTrue(saved.player.crouching);
             Assert.That(File.ReadAllText(path), Does.Not.Contain("instanceID"));
         }
+        [Test] public void OptionalZombieAnatomyRoundtripsAndLegacyAbsenceRemainsValid()
+        {
+            var state = Fixture();
+            Assert.That(state.world.enemies[0].anatomy, Is.Null);
+            state.world.enemies[0].anatomy = new ZombieAnatomySnapshot
+            {
+                severedMask = 1 << (int)ZombieBodyPart.Head,
+                torsoDamage = 40,
+                regionalDamage = new float[9]
+            };
+            state.world.enemies[0].anatomy.regionalDamage[(int)ZombieBodyPart.Head] = 75;
+            Assert.That(store.Write(state, 0).Success, Is.True);
+            Assert.That(store.Read(0, out var saved).Success, Is.True);
+            Assert.That(saved.world.enemies[0].anatomy.severedMask, Is.EqualTo(1 << (int)ZombieBodyPart.Head));
+            Assert.That(saved.world.enemies[0].anatomy.torsoDamage, Is.EqualTo(40));
+            Assert.That(saved.world.enemies[0].anatomy.regionalDamage[(int)ZombieBodyPart.Head], Is.EqualTo(75));
+        }
         [Test] public void WorldStackMayExceedContainerMaxStackWithoutLoss()
         {
             var state=Fixture();state.world.items[1].quantity=80;

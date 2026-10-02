@@ -27,6 +27,7 @@ namespace LastSignal
         LastSignal.Loot.LootPopulationService loot;
         Shelter.ShelterLoop shelter;
         public bool PreparationOpen => shelter && shelter.Preparing;
+        public bool JournalOpen => GetComponent<Objectives.RelayMission>()?.JournalOpen ?? false;
         public bool PlayerDead => health && !health.IsAlive;
         public void Configure(GameObject prefab, Transform spawn, DoorInteractable[] sceneDoors)
         { playerPrefab = prefab; spawnPoint = spawn; doors = sceneDoors; }
@@ -92,12 +93,13 @@ namespace LastSignal
             Player.GetComponent<PlayerCombatController>()?.BindNoise(Noise, noiseTuning, 1);
             Player.GetComponent<FirstPersonMotor>()?.BindNoise(Noise, noiseTuning, 1);
             GetComponent<Shelter.ShelterSite>()?.Begin();
+            GetComponent<Objectives.RelayMission>()?.Begin();
             SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }
-        public void TogglePause() { if (Restoring) return; if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(!Paused); }
+        public void TogglePause() { if (Restoring) return; if (JournalOpen) GetComponent<Objectives.RelayMission>().CloseJournal(); else if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(!Paused); }
         public void Pause() { if (Player) SetPaused(true); }
-        public void Resume() { if (Restoring) return; if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(false); }
+        public void Resume() { if (Restoring) return; if (JournalOpen) GetComponent<Objectives.RelayMission>().CloseJournal(); else if (PreparationOpen) shelter.ClosePreparation(); else if (Player) SetPaused(false); }
         void SetPaused(bool value)
         {
             Paused = value;
@@ -125,6 +127,7 @@ namespace LastSignal
         {
             Generation++; Restoring = false;
             Noise?.End(); Noise = null;
+            GetComponent<Objectives.RelayMission>()?.End();
             GetComponent<Shelter.ShelterSite>()?.End();
             var cells = GetComponent<WorldCells.WorldCellManager>();
             if (cells) cells.End();

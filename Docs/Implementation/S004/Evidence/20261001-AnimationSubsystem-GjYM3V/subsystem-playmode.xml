@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="20" result="Passed" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-01 18:34:39Z" end-time="2026-10-01 18:35:00Z" duration="20.8543254">
+  <test-suite type="TestSuite" id="1225" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="185" result="Passed" start-time="2026-10-01 18:34:39Z" end-time="2026-10-01 18:35:00Z" duration="20.854325" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1218" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="185" result="Passed" start-time="2026-10-01 18:34:39Z" end-time="2026-10-01 18:35:00Z" duration="20.830705" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="28713" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1219" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="185" result="Passed" start-time="2026-10-01 18:34:39Z" end-time="2026-10-01 18:35:00Z" duration="20.827843" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1220" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="185" result="Passed" start-time="2026-10-01 18:34:39Z" end-time="2026-10-01 18:35:00Z" duration="20.825951" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1130" name="WorldPopulationPlayTests" fullname="LastSignal.Tests.WorldPopulationPlayTests" classname="LastSignal.Tests.WorldPopulationPlayTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-01 18:34:39Z" end-time="2026-10-01 18:34:41Z" duration="1.572067" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1131" name="ProductionRifleTravelDeathSaveLoadRoute" fullname="LastSignal.Tests.WorldPopulationPlayTests.ProductionRifleTravelDeathSaveLoadRoute" methodname="ProductionRifleTravelDeathSaveLoadRoute" classname="LastSignal.Tests.WorldPopulationPlayTests" runstate="Runnable" seed="1808735392" result="Passed" start-time="2026-10-01 18:34:39Z" end-time="2026-10-01 18:34:41Z" duration="1.562750" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=20 generated=15
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+S006 loot seed=12345 resolved=1 generated=1
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1156" name="ZombieBloodVfxPlayTests" fullname="LastSignal.Tests.ZombieBloodVfxPlayTests" classname="LastSignal.Tests.ZombieBloodVfxPlayTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-01 18:34:41Z" end-time="2026-10-01 18:34:44Z" duration="3.386771" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1159" name="ArmSeverCancelsEarlierWristBleeding" fullname="LastSignal.Tests.ZombieBloodVfxPlayTests.ArmSeverCancelsEarlierWristBleeding" methodname="ArmSeverCancelsEarlierWristBleeding" classname="LastSignal.Tests.ZombieBloodVfxPlayTests" runstate="Runnable" seed="583830606" result="Passed" start-time="2026-10-01 18:34:41Z" end-time="2026-10-01 18:34:41Z" duration="0.009096" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1164" name="BleedingExpiresWithinBoundedLifetime" fullname="LastSignal.Tests.ZombieBloodVfxPlayTests.BleedingExpiresWithinBoundedLifetime" methodname="BleedingExpiresWithinBoundedLifetime" classname="LastSignal.Tests.ZombieBloodVfxPlayTests" runstate="Runnable" seed="371544011" result="Passed" start-time="2026-10-01 18:34:41Z" end-time="2026-10-01 18:34:44Z" duration="3.315846" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1163" name="DeathLeaseRequiresTerminalStateAndCellUnloadClearsIt" fullname="LastSignal.Tests.ZombieBloodVfxPlayTests.DeathLeaseRequiresTerminalStateAndCellUnloadClearsIt" methodname="DeathLeaseRequiresTerminalStateAndCellUnloadClearsIt" classname="LastSignal.Tests.ZombieBloodVfxPlayTests" runstate="Runnable" seed="448131299" result="Passed" start-time="2026-10-01 18:34:44Z" end-time="2026-10-01 18:34:44Z" duration="0.011429" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1160" name="DisableAndReuseAreClean" fullname="LastSignal.Tests.ZombieBloodVfxPlayTests.DisableAndReuseAreClean" methodname="DisableAndReuseAreClean" classname="LastSignal.Tests.ZombieBloodVfxPlayTests" runstate="Runnable" seed="943306725" result="Passed" start-time="2026-10-01 18:34:44Z" end-time="2026-10-01 18:34:44Z" duration="0.008941" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1158" name="HeadSeverIsSingleAndDeathStillCommits" fullname="LastSignal.Tests.ZombieBloodVfxPlayTests.HeadSeverIsSingleAndDeathStillCommits" methodname="HeadSeverIsSingleAndDeathStillCommits" classname="LastSignal.Tests.ZombieBloodVfxPlayTests" runstate="Runnable" seed="237422438" result="Passed" start-time="2026-10-01 18:34:44Z" end-time="2026-10-01 18:34:44Z" duration="0.008656" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1161" name="RestoreClearsTransientBleedingWithoutReplay" fullname="LastSignal.Tests.ZombieBloodVfxPlayTests.RestoreClearsTransientBleedingWithoutReplay" methodname="RestoreClearsTransientBleedingWithoutReplay" classname="LastSignal.Tests.ZombieBloodVfxPlayTests" runstate="Runnable" seed="1089366638" result="Passed" start-time="2026-10-01 18:34:44Z" end-time="2026-10-01 18:34:44Z" duration="0.008128" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1157" name="SpawnIsCleanAndGoreToggleClearsAll" fullname="LastSignal.Tests.ZombieBloodVfxPlayTests.SpawnIsCleanAndGoreToggleClearsAll" methodname="SpawnIsCleanAndGoreToggleClearsAll" classname="LastSignal.Tests.ZombieBloodVfxPlayTests" runstate="Runnable" seed="612043021" result="Passed" start-time="2026-10-01 18:34:44Z" end-time="2026-10-01 18:34:44Z" duration="0.008550" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1162" name="SurfaceAndEffectPoolsRemainBoundedAndGoreClearsThem" fullname="LastSignal.Tests.ZombieBloodVfxPlayTests.SurfaceAndEffectPoolsRemainBoundedAndGoreClearsThem" methodname="SurfaceAndEffectPoolsRemainBoundedAndGoreClearsThem" classname="LastSignal.Tests.ZombieBloodVfxPlayTests" runstate="Runnable" seed="1257621490" result="Passed" start-time="2026-10-01 18:34:44Z" end-time="2026-10-01 18:34:44Z" duration="0.013904" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1165" name="ZombieDamagePlayTests" fullname="LastSignal.Tests.ZombieDamagePlayTests" classname="LastSignal.Tests.ZombieDamagePlayTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-01 18:34:44Z" end-time="2026-10-01 18:34:57Z" duration="13.066131" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1167" name="ActualProductionRifleBodyHeadReactionAndDeath" fullname="LastSignal.Tests.ZombieDamagePlayTests.ActualProductionRifleBodyHeadReactionAndDeath" methodname="ActualProductionRifleBodyHeadReactionAndDeath" classname="LastSignal.Tests.ZombieDamagePlayTests" runstate="Runnable" seed="1155310086" result="Passed" start-time="2026-10-01 18:34:44Z" end-time="2026-10-01 18:34:50Z" duration="5.920358" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1169" name="ReactionCooldownAppliesDamageWithoutRestartAndAllowsLaterReaction" fullname="LastSignal.Tests.ZombieDamagePlayTests.ReactionCooldownAppliesDamageWithoutRestartAndAllowsLaterReaction" methodname="ReactionCooldownAppliesDamageWithoutRestartAndAllowsLaterReaction" classname="LastSignal.Tests.ZombieDamagePlayTests" runstate="Runnable" seed="1821304891" result="Passed" start-time="2026-10-01 18:34:50Z" end-time="2026-10-01 18:34:53Z" duration="2.493762" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1174" name="SurvivingReactionInterruptsAllAttackPhases" fullname="LastSignal.Tests.ZombieDamagePlayTests.SurvivingReactionInterruptsAllAttackPhases" methodname="SurvivingReactionInterruptsAllAttackPhases" classname="LastSignal.Tests.ZombieDamagePlayTests" runstate="Runnable" seed="872914340" result="Passed" start-time="2026-10-01 18:34:53Z" end-time="2026-10-01 18:34:57Z" duration="4.644140" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+S001 session started: one player, local input.
+Game object with animator is inactive
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1179" name="ZombieDismembermentPlayTests" fullname="LastSignal.Tests.ZombieDismembermentPlayTests" classname="LastSignal.Tests.ZombieDismembermentPlayTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-01 18:34:57Z" end-time="2026-10-01 18:34:57Z" duration="0.004851" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1180" name="HandSeverDisablesOnlyItsMeshAndHitCollider" fullname="LastSignal.Tests.ZombieDismembermentPlayTests.HandSeverDisablesOnlyItsMeshAndHitCollider" methodname="HandSeverDisablesOnlyItsMeshAndHitCollider" classname="LastSignal.Tests.ZombieDismembermentPlayTests" runstate="Runnable" seed="1837168832" result="Passed" start-time="2026-10-01 18:34:57Z" end-time="2026-10-01 18:34:57Z" duration="0.001860" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1182" name="HeadSeverUsesOneCanonicalDeath" fullname="LastSignal.Tests.ZombieDismembermentPlayTests.HeadSeverUsesOneCanonicalDeath" methodname="HeadSeverUsesOneCanonicalDeath" classname="LastSignal.Tests.ZombieDismembermentPlayTests" runstate="Runnable" seed="805594955" result="Passed" start-time="2026-10-01 18:34:57Z" end-time="2026-10-01 18:34:57Z" duration="0.000851" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1181" name="ReducedGoreKeepsLogicalSeverWithoutDetachedPart" fullname="LastSignal.Tests.ZombieDismembermentPlayTests.ReducedGoreKeepsLogicalSeverWithoutDetachedPart" methodname="ReducedGoreKeepsLogicalSeverWithoutDetachedPart" classname="LastSignal.Tests.ZombieDismembermentPlayTests" runstate="Runnable" seed="1296830393" result="Passed" start-time="2026-10-01 18:34:57Z" end-time="2026-10-01 18:34:57Z" duration="0.000655" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1183" name="TorsoWoundTracksDamageSaveAndReducedGore" fullname="LastSignal.Tests.ZombieDismembermentPlayTests.TorsoWoundTracksDamageSaveAndReducedGore" methodname="TorsoWoundTracksDamageSaveAndReducedGore" classname="LastSignal.Tests.ZombieDismembermentPlayTests" runstate="Runnable" seed="2043838823" result="Passed" start-time="2026-10-01 18:34:57Z" end-time="2026-10-01 18:34:57Z" duration="0.000697" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1184" name="ZombieMeleeTests" fullname="LastSignal.Tests.ZombieMeleeTests" classname="LastSignal.Tests.ZombieMeleeTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-01 18:34:57Z" end-time="2026-10-01 18:35:00Z" duration="2.420404" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1185" name="ValidStrikeHasOneTransactionAndVisibleRecovery" fullname="LastSignal.Tests.ZombieMeleeTests.ValidStrikeHasOneTransactionAndVisibleRecovery" methodname="ValidStrikeHasOneTransactionAndVisibleRecovery" classname="LastSignal.Tests.ZombieMeleeTests" runstate="Runnable" seed="850508069" result="Passed" start-time="2026-10-01 18:34:57Z" end-time="2026-10-01 18:35:00Z" duration="2.415064" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1200" name="ZombiePresentationTests" fullname="LastSignal.Tests.ZombiePresentationTests" classname="LastSignal.Tests.ZombiePresentationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-01 18:35:00Z" end-time="2026-10-01 18:35:00Z" duration="0.032768" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1202" name="DeathHoldsFinalPoseAndClearsGroundOnProductionController" fullname="LastSignal.Tests.ZombiePresentationTests.DeathHoldsFinalPoseAndClearsGroundOnProductionController" methodname="DeathHoldsFinalPoseAndClearsGroundOnProductionController" classname="LastSignal.Tests.ZombiePresentationTests" runstate="Runnable" seed="1831043367" result="Passed" start-time="2026-10-01 18:35:00Z" end-time="2026-10-01 18:35:00Z" duration="0.006409" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1201" name="EveryPresentationStateAnimatesWithoutMovingActorRoot" fullname="LastSignal.Tests.ZombiePresentationTests.EveryPresentationStateAnimatesWithoutMovingActorRoot" methodname="EveryPresentationStateAnimatesWithoutMovingActorRoot" classname="LastSignal.Tests.ZombiePresentationTests" runstate="Runnable" seed="580198485" result="Passed" start-time="2026-10-01 18:35:00Z" end-time="2026-10-01 18:35:00Z" duration="0.025228" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1206" name="ZombieRecoveryTests" fullname="LastSignal.Tests.ZombieRecoveryTests" classname="LastSignal.Tests.ZombieRecoveryTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-01 18:35:00Z" end-time="2026-10-01 18:35:00Z" duration="0.320464" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1209" name="PresenterUsesVelocityAndRestoresSpeedAfterPause" fullname="LastSignal.Tests.ZombieRecoveryTests.PresenterUsesVelocityAndRestoresSpeedAfterPause" methodname="PresenterUsesVelocityAndRestoresSpeedAfterPause" classname="LastSignal.Tests.ZombieRecoveryTests" runstate="Runnable" seed="385885920" result="Passed" start-time="2026-10-01 18:35:00Z" end-time="2026-10-01 18:35:00Z" duration="0.317715" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

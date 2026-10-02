@@ -6,20 +6,31 @@ namespace LastSignal
     public sealed class ZombieAnimationPresenter : MonoBehaviour
     {
         static readonly ProfilerMarker Marker = new ProfilerMarker("LastSignal.Zombie.Presentation");
-        static readonly int Idle = Animator.StringToHash("Idle"), Walk = Animator.StringToHash("Locomotion");
+        static readonly int Idle = Animator.StringToHash("Idle");
+        static readonly int Walk = Animator.StringToHash("Locomotion");
+        static readonly int Run = Animator.StringToHash("Run");
+        static readonly int Attack = Animator.StringToHash("Attack");
+        static readonly int AttackAlternate = Animator.StringToHash("AttackAlternate");
+        static readonly int HitReact = Animator.StringToHash("HitReact");
+        static readonly int HitReactSpeed = Animator.StringToHash("HitReactSpeed");
+        static readonly int Death = Animator.StringToHash("Death");
+        static readonly int FlyingBackDeath = Animator.StringToHash("FlyingBackDeath");
         [SerializeField] Animator animator;
         ZombieDefinition tuning;
-        static readonly int Attack = Animator.StringToHash("Attack");
-        static readonly int HitReact = Animator.StringToHash("HitReact"), Death = Animator.StringToHash("Death");
-        bool damagePresentation, dead, paused;
-        float damageTime;
+        bool damagePresentation, dead, paused, attacking, proceduralReaction;
+        float damageTime, activeDeathDuration, smoothedSpeed, locomotionPlayback = 1;
+        int current;
+        AnimatorCullingMode savedCulling;
+        Transform reactionBone;
+        Vector3 visualBasePosition;
+        bool flyingDeath;
+        ZombieImpactReaction reaction;
+
         public bool CorpseSettled { get; private set; }
         public float DamageTime => damageTime;
-        bool attacking;
-        AnimatorCullingMode savedCulling;
-        int current;
-        float smoothedSpeed;
         public bool HasAnimator => animator && animator.runtimeAnimatorController;
+        public void Configure(Animator value) => animator = value;
+
         public bool HasAttackPresentation(AnimationClip clip)
         {
             if (!HasAnimator || !animator.HasState(0, Attack)) return false;
@@ -27,81 +38,159 @@ namespace LastSignal
                 if (motion == clip) return true;
             return false;
         }
-        public void Configure(Animator value) => animator = value;
+
         public bool Initialize(ZombieDefinition definition)
         {
             tuning = definition;
-            if (!animator || !animator.avatar || !animator.avatar.isValid || !animator.runtimeAnimatorController)
+            if (!animator || !animator.avatar || !animator.avatar.isValid ||
+                !animator.runtimeAnimatorController || !HasHitSpeedParameter())
             { Debug.LogError("Zombie presentation requires the production Humanoid Animator and controller.", this); return false; }
-            animator.applyRootMotion = false; smoothedSpeed = 0; current = Idle;
+            reactionBone = animator.GetBoneTransform(HumanBodyBones.Chest);
+            if (!reactionBone) reactionBone = animator.GetBoneTransform(HumanBodyBones.Spine);
+            visualBasePosition = animator.transform.localPosition;
+            damagePresentation = dead = paused = attacking = proceduralReaction = CorpseSettled = false;
+            damageTime = smoothedSpeed = 0; locomotionPlayback = 1; current = Idle;
+            animator.enabled = true; animator.applyRootMotion = false;
             var culling = animator.cullingMode; animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-            animator.Rebind(); animator.speed = 1; animator.Play(Idle,0,0); animator.Update(0);
-            animator.cullingMode = culling; return true;
+            animator.Rebind(); animator.speed = 1; animator.SetFloat(HitReactSpeed, 1); animator.Play(Idle, 0, 0);
+            if (animator.layerCount > 1) animator.SetLayerWeight(1, 0);
+            animator.Update(0); animator.cullingMode = culling;
+            return true;
         }
+
         public bool HasDamagePresentation() => tuning && tuning.IsDamagePresentationValid &&
-            HasAttackPresentation(tuning.HitReactClip) && animator.HasState(0, HitReact) &&
-            HasAttackPresentation(tuning.DeathClip) && animator.HasState(0, Death);
-        public void BeginDamage(bool lethal)
+            animator && animator.layerCount > 1 && animator.HasState(1, HitReact) &&
+            animator.HasState(0, Death) && animator.HasState(0, FlyingBackDeath) &&
+            HasHitSpeedParameter() &&
+            HasAttackPresentation(tuning.HitReactClip) &&
+            HasAttackPresentation(tuning.DeathClip) &&
+            HasAttackPresentation(tuning.FlyingBackDeathClip);
+
+        bool HasHitSpeedParameter()
+        {
+            foreach (var parameter in animator.parameters)
+                if (parameter.nameHash == HitReactSpeed && parameter.type == AnimatorControllerParameterType.Float)
+                    return true;
+            return false;
+        }
+
+        public void BeginDamage(bool lethal) => BeginDamage(lethal, ZombieImpactReaction.Legacy);
+        public void BeginDamage(bool lethal, ZombieImpactReaction impact)
         {
             if (!animator || dead) return;
             EndAttack();
             if (!damagePresentation) savedCulling = animator.cullingMode;
-            damagePresentation = true; dead = lethal; damageTime = 0;
+            damagePresentation = true; dead = lethal; damageTime = 0; CorpseSettled = false;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-            current = lethal ? Death : HitReact;
-            animator.speed = 0; animator.Play(current, 0, 0); animator.Update(0);
+            reaction = impact;
+            proceduralReaction = !lethal && reactionBone &&
+                (!impact.UseLegacyClip || impact.Side != ZombieImpactSide.Front);
+            animator.SetLayerWeight(1, 0);
+            if (lethal)
+            {
+                current = impact.UseFlyingBackDeath ? FlyingBackDeath : Death;
+                flyingDeath = current == FlyingBackDeath;
+                activeDeathDuration = current == FlyingBackDeath ? tuning.FlyingBackDeathClip.length : tuning.DeathClip.length;
+                animator.Play(current, 0, 0);
+                animator.speed = 1; animator.Update(0); animator.speed = 0;
+            }
+            else
+            {
+                if (impact.UseLegacyClip)
+                {
+                    animator.SetFloat(HitReactSpeed, 1f / locomotionPlayback);
+                    animator.Play(HitReact, 1, 0);
+                    // Commit the overlay state before the first timed step; otherwise the first
+                    // damage tick only enters the state and its normalized time remains zero.
+                    animator.speed = 1; animator.Update(0);
+                    animator.SetFloat(HitReactSpeed, 1f / locomotionPlayback);
+                }
+                animator.speed = 0;
+            }
         }
+
         public void AdvanceDamage(float seconds)
         {
             if (!animator || !damagePresentation || paused || CorpseSettled || seconds <= 0) return;
-            float duration = dead ? tuning.DeathDuration : tuning.HitReactDuration;
+            float duration = dead ? activeDeathDuration : tuning.HitReactDuration;
             float step = Mathf.Min(seconds, Mathf.Max(0, duration - damageTime));
-            damageTime += step; animator.speed = 1; animator.Update(step); animator.speed = 0;
-            if (dead && damageTime >= duration)
+            damageTime += step;
+            if (!dead && reaction.UseLegacyClip)
             {
-                // Hold the evaluated final skeleton; no more Animator work for this corpse.
-                CorpseSettled = true; animator.enabled = false;
+                float fadeIn = Mathf.Clamp01(damageTime / .08f);
+                float fadeOut = Mathf.Clamp01((duration - damageTime) / .12f);
+                animator.SetLayerWeight(1, Mathf.Min(fadeIn, fadeOut));
             }
+            if (!dead && reaction.UseLegacyClip) animator.SetFloat(HitReactSpeed, 1f / locomotionPlayback);
+            animator.speed = 1;
+            animator.Update(dead ? step : step * locomotionPlayback);
+            animator.speed = 0;
+            if (dead)
+                animator.transform.localPosition = visualBasePosition +
+                    Vector3.up * tuning.DeathGroundOffset(damageTime, flyingDeath);
+            if (proceduralReaction)
+            {
+                float phase = Mathf.Clamp01(damageTime / duration);
+                float angle = Mathf.Sin(phase * Mathf.PI) *
+                    (reaction.Severity == ZombieImpactSeverity.Light ? tuning.LightImpactAngle : tuning.HeavyImpactAngle);
+                Vector3 axis = reaction.Side == ZombieImpactSide.Left || reaction.Side == ZombieImpactSide.Right
+                    ? animator.transform.forward : animator.transform.right;
+                if (reaction.Side == ZombieImpactSide.Front || reaction.Side == ZombieImpactSide.Left) angle = -angle;
+                reactionBone.rotation = Quaternion.AngleAxis(angle, axis) * reactionBone.rotation;
+            }
+            if (dead && damageTime >= duration)
+            { CorpseSettled = true; animator.enabled = false; }
         }
+
         public void EndReaction()
         {
             if (!animator || !damagePresentation || dead) return;
-            damagePresentation = false; animator.cullingMode = savedCulling;
-            current = Idle; smoothedSpeed = 0; animator.speed = paused ? 0 : 1;
-            animator.CrossFadeInFixedTime(Idle, tuning.AnimationBlendTime);
+            damagePresentation = proceduralReaction = false;
+            animator.SetLayerWeight(1, 0);
+            animator.cullingMode = savedCulling;
+            animator.speed = paused ? 0 : locomotionPlayback;
+            if (!paused) animator.Update(0);
         }
-        public void BeginAttack()
+
+        public void BeginAttack() => BeginAttack(false);
+        public void BeginAttack(bool alternate)
         {
             if (!animator || attacking || damagePresentation) return;
-            attacking = true; current = Attack;
+            attacking = true; current = alternate ? AttackAlternate : Attack;
             savedCulling = animator.cullingMode; animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-            animator.speed = 0; animator.Play(Attack, 0, 0); animator.Update(0);
+            animator.speed = 0; animator.Play(current, 0, 0); animator.Update(0);
         }
         public void AdvanceAttack(float seconds)
         {
-            if (!animator || !attacking) return;
-            // Manual presentation clock follows the controller; automatic Animator time is frozen.
+            if (!animator || !attacking || paused) return;
             animator.speed = tuning.AttackPlaybackSpeed; animator.Update(seconds); animator.speed = 0;
         }
         public void EndAttack()
         {
             if (!animator || !attacking) return;
             attacking = false; animator.cullingMode = savedCulling;
-            current = Idle; smoothedSpeed = 0; animator.speed = 1;
+            current = Idle; smoothedSpeed = 0; locomotionPlayback = 1;
+            animator.speed = paused ? 0 : 1;
             animator.CrossFadeInFixedTime(Idle, tuning.AnimationBlendTime);
         }
-        public void SetPaused(bool paused)
-        { this.paused = paused; if (animator) animator.speed = paused || attacking || damagePresentation ? 0 : 1; }
-        public void Present(float actualSpeed, float seconds, bool paused)
+        public void SetPaused(bool value)
+        { paused = value; if (animator) animator.speed = value || attacking || damagePresentation ? 0 : locomotionPlayback; }
+
+        public void Present(float actualSpeed, float seconds, bool isPaused) => Present(actualSpeed, false, seconds, isPaused);
+        public void Present(float actualSpeed, bool running, float seconds, bool isPaused)
         {
-            if (!animator || !tuning || attacking || damagePresentation) return;
+            if (!animator || !tuning || attacking || dead) return;
             using (Marker.Auto())
             {
-                if (paused) { animator.speed = 0; return; }
-                smoothedSpeed = actualSpeed < .025f ? 0 : Mathf.MoveTowards(smoothedSpeed,actualSpeed,seconds*tuning.Acceleration);
-                int desired = smoothedSpeed > (current == Walk ? .025f : .08f) ? Walk : Idle;
-                if (desired != current) { current = desired; animator.CrossFadeInFixedTime(desired,tuning.AnimationBlendTime); }
-                animator.speed = current == Idle ? 1 : Mathf.Clamp(smoothedSpeed/tuning.MeasuredWalkSpeed,.8f,1.15f);
+                if (isPaused || paused) { animator.speed = 0; return; }
+                smoothedSpeed = actualSpeed < .025f ? 0 : Mathf.MoveTowards(smoothedSpeed, actualSpeed, seconds * tuning.Acceleration);
+                int desired = smoothedSpeed > (current == Idle ? .08f : .025f) ? running ? Run : Walk : Idle;
+                if (desired != current)
+                { current = desired; animator.CrossFadeInFixedTime(desired, tuning.AnimationBlendTime); }
+                locomotionPlayback = current == Idle ? 1 : current == Run
+                    ? Mathf.Clamp(smoothedSpeed / tuning.MeasuredRunSpeed, .8f, 1.15f)
+                    : Mathf.Clamp(smoothedSpeed / tuning.MeasuredWalkSpeed, .8f, 3.2f);
+                animator.speed = damagePresentation ? 0 : locomotionPlayback;
             }
         }
     }
