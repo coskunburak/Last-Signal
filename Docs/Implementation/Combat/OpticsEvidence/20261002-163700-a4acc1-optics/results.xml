@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-02 13:37:20Z" end-time="2026-10-02 13:37:27Z" duration="6.977235">
+  <test-suite type="TestSuite" id="1237" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="196" result="Failed" site="Child" start-time="2026-10-02 13:37:20Z" end-time="2026-10-02 13:37:27Z" duration="6.977235" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1230" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="196" result="Failed" site="Child" start-time="2026-10-02 13:37:20Z" end-time="2026-10-02 13:37:27Z" duration="6.971189" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="21284" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1231" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="196" result="Failed" site="Child" start-time="2026-10-02 13:37:20Z" end-time="2026-10-02 13:37:27Z" duration="6.970164" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1232" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="196" result="Failed" site="Child" start-time="2026-10-02 13:37:20Z" end-time="2026-10-02 13:37:27Z" duration="6.969267" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1116" name="ScopeOpticPlayTests" fullname="LastSignal.Tests.ScopeOpticPlayTests" classname="LastSignal.Tests.ScopeOpticPlayTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-02 13:37:20Z" end-time="2026-10-02 13:37:27Z" duration="6.967820" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1119" name="AcceptedShotConsumesOneRoundAndReloadHidesScope" fullname="LastSignal.Tests.ScopeOpticPlayTests.AcceptedShotConsumesOneRoundAndReloadHidesScope" methodname="AcceptedShotConsumesOneRoundAndReloadHidesScope" classname="LastSignal.Tests.ScopeOpticPlayTests" runstate="Runnable" seed="694742593" result="Failed" start-time="2026-10-02 13:37:20Z" end-time="2026-10-02 13:37:23Z" duration="2.446417" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="30000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: Reloading
+  But was:  Ready
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.ScopeOpticPlayTests+<AcceptedShotConsumesOneRoundAndReloadHidesScope>d__6.MoveNext () [0x0012a] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/ScopeOpticPlayTests.cs:83
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=2 active=True mouse=Mouse:/Mouse
+]]></output>
+            </test-case>
+            <test-case id="1117" name="AdsAllocatesOnceAndDoesNotChangeAmmo" fullname="LastSignal.Tests.ScopeOpticPlayTests.AdsAllocatesOnceAndDoesNotChangeAmmo" methodname="AdsAllocatesOnceAndDoesNotChangeAmmo" classname="LastSignal.Tests.ScopeOpticPlayTests" runstate="Runnable" seed="89760316" result="Passed" start-time="2026-10-02 13:37:23Z" end-time="2026-10-02 13:37:26Z" duration="2.766767" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="30000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=2 active=True mouse=Mouse:/Mouse
+]]></output>
+            </test-case>
+            <test-case id="1118" name="UnequipReleasesScopeCameraAndRenderTexture" fullname="LastSignal.Tests.ScopeOpticPlayTests.UnequipReleasesScopeCameraAndRenderTexture" methodname="UnequipReleasesScopeCameraAndRenderTexture" classname="LastSignal.Tests.ScopeOpticPlayTests" runstate="Runnable" seed="1824094998" result="Passed" start-time="2026-10-02 13:37:26Z" end-time="2026-10-02 13:37:27Z" duration="1.746975" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="30000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=2 active=True mouse=Mouse:/Mouse
+Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/Combat/OpticsEvidence/20261002-163700-a4acc1-optics/results.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

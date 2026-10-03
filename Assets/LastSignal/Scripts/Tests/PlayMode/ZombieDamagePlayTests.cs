@@ -26,9 +26,12 @@ namespace LastSignal.Tests
         readonly List<GameObject> owned = new List<GameObject>();
         IEnumerator Load(string path = "Assets/LastSignal/Scenes/ZombieAcceptance.unity")
         {
+            Time.timeScale = 1;
             Directory.CreateDirectory(Evidence + "/visual");
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode(path, new LoadSceneParameters(LoadSceneMode.Single));
             yield return null; session = Object.FindAnyObjectByType<SessionFlow>(); session.Resume();
+            // The fixture owns pause timing; losing Editor focus must not stop its clock.
+            session.Player.GetComponent<PlayerInputReader>().FocusLost -= session.Pause;
             session.Player.GetComponent<FirstPersonMotor>().enabled = false;
             zombie = session.GetComponent<ZombieEncounter>().Actor; health = zombie.GetComponent<ZombieHealth>();
             if (path.Contains("ZombieAcceptance")) zombie.GetComponent<NavMeshAgent>().Warp(new Vector3(-8, 0, 0));
@@ -236,12 +239,20 @@ namespace LastSignal.Tests
         [UnityTest] public IEnumerator ReactionCooldownAppliesDamageWithoutRestartAndAllowsLaterReaction()
         {
             yield return Load(); zombie.transform.rotation=Quaternion.Euler(0,180,0);
-            Resolve(DamageRegion.Body,1); Assert.That(zombie.Runtime.State,Is.EqualTo(ZombieState.HitReact));
+            var body = Region(DamageRegion.Body);
+            void HitLight()
+            {
+                int before = health.DamageTransactions;
+                body.TakeDamage(new DamageInfo { Amount = 1, HitCollider = body.HitCollider,
+                    Category = DamageCategory.Bullet, Direction = -zombie.transform.forward });
+                Assert.That(health.DamageTransactions, Is.EqualTo(before + 1));
+            }
+            HitLight(); Assert.That(zombie.Runtime.State,Is.EqualTo(ZombieState.HitReact));
             yield return new WaitForSeconds(.15f); float remaining=zombie.ReactionRemaining;
-            Resolve(DamageRegion.Body,1); Assert.That(zombie.ReactionRemaining,Is.EqualTo(remaining));
+            HitLight(); Assert.That(zombie.ReactionRemaining,Is.EqualTo(remaining));
             yield return new WaitForSeconds(.45f); Assert.That(zombie.Runtime.State,Is.Not.EqualTo(ZombieState.HitReact));
-            for(int i=0;i<5;i++){ Resolve(DamageRegion.Body,1); Assert.That(zombie.Runtime.State,Is.Not.EqualTo(ZombieState.HitReact)); yield return new WaitForSeconds(.12f); }
-            yield return new WaitForSeconds(.5f); Resolve(DamageRegion.Body,1); Assert.That(zombie.Runtime.State,Is.EqualTo(ZombieState.HitReact));
+            for(int i=0;i<5;i++){ HitLight(); Assert.That(zombie.Runtime.State,Is.Not.EqualTo(ZombieState.HitReact)); yield return new WaitForSeconds(.12f); }
+            yield return new WaitForSeconds(.5f); HitLight(); Assert.That(zombie.Runtime.State,Is.EqualTo(ZombieState.HitReact));
             Assert.That(health.DamageTransactions,Is.EqualTo(8)); Assert.That(health.CurrentHealth,Is.EqualTo(92));
         }
         [UnityTest] public IEnumerator PauseReactionDeathAndSessionResetAreSafe()
@@ -307,7 +318,10 @@ namespace LastSignal.Tests
             foreach(var phase in new[]{ZombieState.AttackWindup,ZombieState.AttackCommit,ZombieState.Recovering})
             {
                 yield return Load(); Place(zombie.transform.position+zombie.transform.forward*1.25f);
-                yield return Until(()=>zombie.Runtime.State==phase);
+                yield return Until(()=>zombie.Runtime.State==ZombieState.AttackWindup);
+                // Step transient phases within one test frame so a slow Editor frame cannot skip them.
+                for (int step=0; step<1000 && zombie.Runtime.State!=phase; step++) zombie.Simulate(.01f);
+                Assert.That(zombie.Runtime.State, Is.EqualTo(phase), "Could not reach the requested attack phase by simulation steps.");
                 int before=session.Player.GetComponent<PlayerHealth>().DamageTransactions;
                 Resolve(DamageRegion.Body); Assert.That(zombie.Runtime.State,Is.EqualTo(ZombieState.HitReact));
                 yield return new WaitForSeconds(.45f);
@@ -353,6 +367,8 @@ namespace LastSignal.Tests
         [UnityTest] public IEnumerator ProfileLiveAndMixedPopulationAndWarmedDamage()
         {
             yield return Load(); Place(new Vector3(-8,0,12));
+            zombie.SetPaused(true); // Keep the baseline target fixed while profiling spawned actors.
+            session.Player.GetComponent<PlayerHealth>().enabled = false; // Prevent a long swarm sample from ending the session.
             var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
             var report=new StringBuilder("Editor smoke. Mean marker totals; overlapping nested CPU markers. Direct GC covers synchronous owned paths only.\n");
             foreach(int liveCount in new[]{1,10})

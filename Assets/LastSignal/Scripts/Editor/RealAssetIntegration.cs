@@ -11,7 +11,7 @@ namespace LastSignal.Editor
     public static class RealAssetIntegration
     {
         public const string Val = "Assets/LastSignal/Assets/VAL.fbx";
-        public const string Rifle = "Assets/LastSignal/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx";
+        public const string Rifle = "Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx";
         public const string Prefab = "Assets/Resources/Weapon_AssaultRifle.prefab";
         public const string Evidence = "Docs/Implementation/Combat/Evidence/20260917-RealAssets";
         const string Controller = "Assets/LastSignal/Animations/VAL_MRPoly.controller";
@@ -32,7 +32,7 @@ namespace LastSignal.Editor
             string path = "Assets/LastSignal/Materials/" + name + "_URP.mat";
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (material) return material;
-            var source = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/MR POLY/Low Poly Weapons Set/Materials/" + name + ".mat");
+            var source = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Materials/" + name + ".mat");
             material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
             material.SetColor("_BaseColor", source.GetColor("_Color"));
             material.SetFloat("_Metallic", source.GetFloat("_Metallic"));
@@ -117,7 +117,11 @@ namespace LastSignal.Editor
         [MenuItem("Last Signal/S002/Build Real Asset Adapter")]
         public static void BuildAdapter()
         {
-            var root = new GameObject("FP_AssaultRifle_VAL_MRPoly");
+            var previous = AssetDatabase.LoadAssetAtPath<GameObject>(Prefab);
+            var previousWeapon = previous ? previous.GetComponent<WeaponController>() : null;
+            Vector3 sightPosition = previousWeapon && previousWeapon.AimReference
+                ? previousWeapon.AimReference.localPosition : new Vector3(.05f, .27f, -.124f);
+            var root = new GameObject(previous ? previous.name : "FP_AssaultRifle_VAL_MRPoly");
             try
             {
                 var viewRoot = Child("ViewmodelRoot", root.transform, Vector3.zero);
@@ -145,12 +149,12 @@ namespace LastSignal.Editor
                 rifle.transform.SetParent(Bone(rig, "wpn_body"), true);
                 magazine.SetParent(Bone(rig, "mag"), true); magazine.name = "MRPoly_Magazine";
                 var muzzle = Child("Muzzle", rifle.transform, new Vector3(.049187f, .195646f, .478153f));
-                var sight = Child("AimReference", rifle.transform, new Vector3(.049196f, .266454f, -.120204f));
+                var sight = Child("AimReference", rifle.transform, sightPosition);
                 var casing = Child("CasingEjection", rifle.transform, new Vector3(.079f, .203f, -.050f));
                 Child("RightHandReference", Bone(rig, "hand.R"), Vector3.zero);
                 Child("LeftHandReference", Bone(rig, "hand.L"), Vector3.zero);
                 var weapon = root.AddComponent<WeaponController>();
-                Set(weapon, "definition", AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Runtime/Combat/WeaponDefinition_AssaultRifle.asset"));
+                Set(weapon, "definition", AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Scripts/Runtime/Combat/WeaponDefinition_AssaultRifle.asset"));
                 Set(weapon, "muzzle", muzzle); Set(weapon, "aimReference", sight);
                 var view = root.AddComponent<WeaponViewPresenter>(); view.Configure(weapon, null, viewRoot);
                 var so = new SerializedObject(view);
@@ -175,6 +179,7 @@ namespace LastSignal.Editor
                 flash.GetComponent<ParticleSystemRenderer>().sharedMaterial = flashMaterial;
                 Set(vfx, "muzzleFlash", flash);
                 foreach (var r in rig.GetComponentsInChildren<Renderer>(true)) r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                ScopeOpticAuthoring.Apply(root);
                 PrefabUtility.SaveAsPrefabAsset(root, Prefab);
                 AssetDatabase.SaveAssets();
             }
@@ -194,7 +199,7 @@ namespace LastSignal.Editor
                 var camera = player.GetComponentInChildren<Camera>(); camera.nearClipPlane = .01f; camera.cullingMask &= ~(1 << 30);
                 if (!player.transform.Find("WorldBody"))
                 {
-                    var body = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/tt-3d/LowPolySci-FiStarterPack/Character/Models/space_crew_man.fbx"), player.transform);
+                    var body = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Assets/tt-3d/LowPolySci-FiStarterPack/Character/Models/space_crew_man.fbx"), player.transform);
                     body.name = "WorldBody";
                     foreach (var t in body.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = 30;
                     var anim = body.GetComponent<Animator>();

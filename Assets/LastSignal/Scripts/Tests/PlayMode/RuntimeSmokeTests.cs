@@ -15,10 +15,18 @@ namespace LastSignal.Tests
 
         public override void Setup()
         {
+            InputFixtureIsolation.DisableLiveActions();
             base.Setup();
             Time.timeScale = 1;
             mouse = InputSystem.AddDevice<Mouse>();
             keyboard = InputSystem.AddDevice<Keyboard>();
+        }
+
+        public override void TearDown()
+        {
+            InputFixtureIsolation.DisableLiveActions();
+            Time.timeScale = 1;
+            base.TearDown();
         }
 
         [UnityTest]

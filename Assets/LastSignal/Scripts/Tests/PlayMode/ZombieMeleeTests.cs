@@ -28,6 +28,8 @@ namespace LastSignal.Tests
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode(scene, new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             session = Object.FindAnyObjectByType<SessionFlow>(); session.Resume();
+            // Bu testler oyuncuyu doğrudan konumlandırır; gerçek fare ateşi NPC senaryosunu değiştirmemeli.
+            session.Player.GetComponent<PlayerInputReader>().enabled = false;
             session.Player.GetComponent<FirstPersonMotor>().enabled = false;
             health = session.Player.GetComponent<PlayerHealth>();
             zombie = session.GetComponent<ZombieEncounter>().Actor;
@@ -49,7 +51,9 @@ namespace LastSignal.Tests
         {
             float end = Time.realtimeSinceStartup + limit;
             while (!condition() && Time.realtimeSinceStartup < end) yield return null;
-            Assert.That(condition(), Is.True, "Timeout: " + zombie.Runtime.State + " t=" + zombie.AttackTime + " result=" + zombie.LastMeleeResult);
+            Assert.That(condition(), Is.True, "Timeout: " + zombie.Runtime.State + " t=" + zombie.AttackTime + " result=" + zombie.LastMeleeResult +
+                " paused=" + session.Paused + " timeScale=" + Time.timeScale + " playerHealth=" + health.CurrentHealth +
+                " sequence=" + zombie.AttackSequence + " input=" + session.Player.GetComponent<PlayerInputReader>().GameplayActive);
         }
         void Capture(string label)
         {

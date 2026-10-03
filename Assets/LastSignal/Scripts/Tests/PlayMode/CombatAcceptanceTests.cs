@@ -18,6 +18,7 @@ namespace LastSignal.Tests
 
         public override void Setup()
         {
+            InputFixtureIsolation.DisableLiveActions();
             base.Setup();
             Time.timeScale = 1;
             mouse = InputSystem.AddDevice<Mouse>();
@@ -67,13 +68,27 @@ namespace LastSignal.Tests
             Assert.That(instance, Is.Not.Null);
             
             // Fast-forward equip time so it's ready
-            yield return new WaitForSeconds(instance.Definition.EquipSeconds + 0.1f);
+            yield return WaitForGameplaySeconds(instance.Definition.EquipSeconds + 0.1f);
 
             var targets = Object.FindObjectsByType<DamageableTarget>(FindObjectsSortMode.None);
             foreach (var t in targets) if (t.name == "CombatTarget_10m") target10m = t;
             
             Debug.Log("B0A_ORDER UnitySetUp ready devices=" + InputSystem.devices.Count + " active=" + player.GetComponent<PlayerInputReader>().GameplayActive + " mouse=" + mouse);
             yield return null;
+        }
+
+        // Oyun zamanını bekler; duraklamış bir oturum test turunu süresiz kilitlemez.
+        public static IEnumerator WaitForGameplaySeconds(float seconds)
+        {
+            double deadline = Time.realtimeSinceStartupAsDouble + Mathf.Max(10f, seconds * 4f);
+            float elapsed = 0;
+            while (elapsed < seconds)
+            {
+                Assert.That(Time.realtimeSinceStartupAsDouble, Is.LessThan(deadline),
+                    $"Oyun zamanı ilerlemedi. timeScale={Time.timeScale}, odak={Application.isFocused}. Beklenen süre: {seconds}s.");
+                yield return null;
+                elapsed += Time.deltaTime;
+            }
         }
 
         public override void TearDown()
@@ -88,6 +103,7 @@ namespace LastSignal.Tests
             foreach (var root in sceneFixtures) if (root) Object.DestroyImmediate(root);
             sceneFixtures.Clear();
             Time.timeScale = 1;
+            InputFixtureIsolation.DisableLiveActions();
             base.TearDown();
         }
 

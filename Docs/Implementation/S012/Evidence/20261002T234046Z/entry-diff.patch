@@ -1,0 +1,330 @@
+diff --git a/Assets/LastSignal/Scripts/Editor/RealAssetIntegration.cs b/Assets/LastSignal/Scripts/Editor/RealAssetIntegration.cs
+index 8e9fa35..c60ca7b 100644
+--- a/Assets/LastSignal/Scripts/Editor/RealAssetIntegration.cs
++++ b/Assets/LastSignal/Scripts/Editor/RealAssetIntegration.cs
+@@ -11,7 +11,7 @@ namespace LastSignal.Editor
+     public static class RealAssetIntegration
+     {
+         public const string Val = "Assets/LastSignal/Assets/VAL.fbx";
+-        public const string Rifle = "Assets/LastSignal/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx";
++        public const string Rifle = "Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx";
+         public const string Prefab = "Assets/Resources/Weapon_AssaultRifle.prefab";
+         public const string Evidence = "Docs/Implementation/Combat/Evidence/20260917-RealAssets";
+         const string Controller = "Assets/LastSignal/Animations/VAL_MRPoly.controller";
+@@ -32,7 +32,7 @@ static Material Material(string name)
+             string path = "Assets/LastSignal/Materials/" + name + "_URP.mat";
+             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+             if (material) return material;
+-            var source = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/MR POLY/Low Poly Weapons Set/Materials/" + name + ".mat");
++            var source = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Materials/" + name + ".mat");
+             material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+             material.SetColor("_BaseColor", source.GetColor("_Color"));
+             material.SetFloat("_Metallic", source.GetFloat("_Metallic"));
+@@ -117,7 +117,11 @@ static void EnsureSprintState(AnimatorController ctrl)
+         [MenuItem("Last Signal/S002/Build Real Asset Adapter")]
+         public static void BuildAdapter()
+         {
+-            var root = new GameObject("FP_AssaultRifle_VAL_MRPoly");
++            var previous = AssetDatabase.LoadAssetAtPath<GameObject>(Prefab);
++            var previousWeapon = previous ? previous.GetComponent<WeaponController>() : null;
++            Vector3 sightPosition = previousWeapon && previousWeapon.AimReference
++                ? previousWeapon.AimReference.localPosition : new Vector3(.05f, .27f, -.124f);
++            var root = new GameObject(previous ? previous.name : "FP_AssaultRifle_VAL_MRPoly");
+             try
+             {
+                 var viewRoot = Child("ViewmodelRoot", root.transform, Vector3.zero);
+@@ -145,12 +149,12 @@ public static void BuildAdapter()
+                 rifle.transform.SetParent(Bone(rig, "wpn_body"), true);
+                 magazine.SetParent(Bone(rig, "mag"), true); magazine.name = "MRPoly_Magazine";
+                 var muzzle = Child("Muzzle", rifle.transform, new Vector3(.049187f, .195646f, .478153f));
+-                var sight = Child("AimReference", rifle.transform, new Vector3(.049196f, .266454f, -.120204f));
++                var sight = Child("AimReference", rifle.transform, sightPosition);
+                 var casing = Child("CasingEjection", rifle.transform, new Vector3(.079f, .203f, -.050f));
+                 Child("RightHandReference", Bone(rig, "hand.R"), Vector3.zero);
+                 Child("LeftHandReference", Bone(rig, "hand.L"), Vector3.zero);
+                 var weapon = root.AddComponent<WeaponController>();
+-                Set(weapon, "definition", AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Runtime/Combat/WeaponDefinition_AssaultRifle.asset"));
++                Set(weapon, "definition", AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Scripts/Runtime/Combat/WeaponDefinition_AssaultRifle.asset"));
+                 Set(weapon, "muzzle", muzzle); Set(weapon, "aimReference", sight);
+                 var view = root.AddComponent<WeaponViewPresenter>(); view.Configure(weapon, null, viewRoot);
+                 var so = new SerializedObject(view);
+@@ -175,6 +179,7 @@ public static void BuildAdapter()
+                 flash.GetComponent<ParticleSystemRenderer>().sharedMaterial = flashMaterial;
+                 Set(vfx, "muzzleFlash", flash);
+                 foreach (var r in rig.GetComponentsInChildren<Renderer>(true)) r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
++                ScopeOpticAuthoring.Apply(root);
+                 PrefabUtility.SaveAsPrefabAsset(root, Prefab);
+                 AssetDatabase.SaveAssets();
+             }
+@@ -194,7 +199,7 @@ public static void IntegratePlayer()
+                 var camera = player.GetComponentInChildren<Camera>(); camera.nearClipPlane = .01f; camera.cullingMask &= ~(1 << 30);
+                 if (!player.transform.Find("WorldBody"))
+                 {
+-                    var body = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/tt-3d/LowPolySci-FiStarterPack/Character/Models/space_crew_man.fbx"), player.transform);
++                    var body = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Assets/tt-3d/LowPolySci-FiStarterPack/Character/Models/space_crew_man.fbx"), player.transform);
+                     body.name = "WorldBody";
+                     foreach (var t in body.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = 30;
+                     var anim = body.GetComponent<Animator>();
+diff --git a/Assets/LastSignal/Scripts/Editor/ZombieValidationRunner.cs b/Assets/LastSignal/Scripts/Editor/ZombieValidationRunner.cs
+index 7954bda..9a3a360 100644
+--- a/Assets/LastSignal/Scripts/Editor/ZombieValidationRunner.cs
++++ b/Assets/LastSignal/Scripts/Editor/ZombieValidationRunner.cs
+@@ -10,7 +10,7 @@ namespace LastSignal.Editor
+     public static class ZombieValidationRunner
+     {
+         const string Request = "Temp/LastSignalZombieValidation.json";
+-        [System.Serializable] sealed class Command { public string action; public string filter; public string output; }
++        [System.Serializable] sealed class Command { public string action; public string filter; public string[] filters; public string output; }
+         static ZombieValidationRunner() { EditorApplication.update += Poll; }
+         static void Poll()
+         {
+@@ -40,7 +40,8 @@ static void Run(bool play,Command command)
+         {
+             SessionState.SetString("LastSignal.RegressionPath",command.output);
+             var filter=new Filter { testMode=play?TestMode.PlayMode:TestMode.EditMode,assemblyNames=new[]{play?"LastSignal.PlayModeTests":"LastSignal.EditModeTests"} };
+-            if(!string.IsNullOrEmpty(command.filter))filter.testNames=new[]{command.filter};
++            if(command.filters != null && command.filters.Length > 0)filter.testNames=command.filters;
++            else if(!string.IsNullOrEmpty(command.filter))filter.testNames=new[]{command.filter};
+             ScriptableObject.CreateInstance<TestRunnerApi>().Execute(new ExecutionSettings(filter));
+         }
+     }
+diff --git a/Assets/LastSignal/Scripts/Runtime/LastSignal.Runtime.asmdef b/Assets/LastSignal/Scripts/Runtime/LastSignal.Runtime.asmdef
+index 4640616..93fed5c 100644
+--- a/Assets/LastSignal/Scripts/Runtime/LastSignal.Runtime.asmdef
++++ b/Assets/LastSignal/Scripts/Runtime/LastSignal.Runtime.asmdef
+@@ -1,5 +1,10 @@
+ {
+   "name": "LastSignal.Runtime",
+   "rootNamespace": "LastSignal",
+-  "references": ["Unity.InputSystem", "Unity.ugui"]
++  "references": [
++    "Unity.InputSystem",
++    "Unity.ugui",
++    "Unity.RenderPipelines.Core.Runtime",
++    "Unity.RenderPipelines.Universal.Runtime"
++  ]
+ }
+diff --git a/Assets/LastSignal/Scripts/Tests/EditMode/LastSignal.EditModeTests.asmdef b/Assets/LastSignal/Scripts/Tests/EditMode/LastSignal.EditModeTests.asmdef
+index ff45013..68d477b 100644
+--- a/Assets/LastSignal/Scripts/Tests/EditMode/LastSignal.EditModeTests.asmdef
++++ b/Assets/LastSignal/Scripts/Tests/EditMode/LastSignal.EditModeTests.asmdef
+@@ -1,6 +1,14 @@
+ {
+   "name": "LastSignal.EditModeTests",
+-  "references": ["LastSignal.Runtime", "Unity.InputSystem"],
+-  "includePlatforms": ["Editor"],
+-  "optionalUnityReferences": ["TestAssemblies"]
++  "references": [
++    "LastSignal.Runtime",
++    "Unity.InputSystem",
++    "LastSignal.Editor"
++  ],
++  "includePlatforms": [
++    "Editor"
++  ],
++  "optionalUnityReferences": [
++    "TestAssemblies"
++  ]
+ }
+diff --git a/Assets/LastSignal/Scripts/Tests/EditMode/ProductionAssetTests.cs b/Assets/LastSignal/Scripts/Tests/EditMode/ProductionAssetTests.cs
+index 534cb0b..3026652 100644
+--- a/Assets/LastSignal/Scripts/Tests/EditMode/ProductionAssetTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/EditMode/ProductionAssetTests.cs
+@@ -15,10 +15,17 @@ public void ProductionPrefabUsesSourceMeshesAndOneAnimatedMagazine()
+             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
+             var meshes = prefab.GetComponentsInChildren<MeshFilter>();
+             Assert.That(meshes.Count(m => m.sharedMesh.name == "Magazine.001"), Is.EqualTo(1));
+-            foreach (var mesh in meshes) Assert.That(AssetDatabase.GetAssetPath(mesh.sharedMesh), Is.EqualTo(Rifle));
++            foreach (var mesh in meshes)
++            {
++                string expected = mesh.name == "MRPoly_RifleBody"
++                    ? "Assets/LastSignal/Combat/Optics/MRPoly_Body_Optics.asset"
++                    : mesh.name == "ScopeLens"
++                        ? "Assets/LastSignal/Combat/Optics/MRPoly_RearLens.asset" : Rifle;
++                Assert.That(AssetDatabase.GetAssetPath(mesh.sharedMesh), Is.EqualTo(expected));
++            }
+             var mag = meshes.Single(m => m.sharedMesh.name == "Magazine.001");
+             Assert.That(mag.transform.parent.name, Is.EqualTo("mag"));
+-            Assert.That(meshes.Single(m => m.sharedMesh.name == "M4A1 Carbine").transform.parent.name, Is.EqualTo("wpn_body"));
++            Assert.That(meshes.Single(m => m.name == "MRPoly_RifleBody").transform.parent.name, Is.EqualTo("wpn_body"));
+             Assert.That(prefab.GetComponentsInChildren<SkinnedMeshRenderer>().All(r => AssetDatabase.GetAssetPath(r.sharedMesh) == Val), Is.True);
+             Assert.That(prefab.GetComponentsInChildren<Renderer>().Any(r => r.name == "VAL_Model"), Is.False);
+             Assert.That(prefab.GetComponentsInChildren<Camera>().All(c => !c.enabled), Is.True);
+diff --git a/Assets/LastSignal/Scripts/Tests/EditMode/ZombieAssetTests.cs b/Assets/LastSignal/Scripts/Tests/EditMode/ZombieAssetTests.cs
+index 48641ae..677f04a 100644
+--- a/Assets/LastSignal/Scripts/Tests/EditMode/ZombieAssetTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/EditMode/ZombieAssetTests.cs
+@@ -55,7 +55,9 @@ public void RequiredStatesUseRealHumanoidClipsAndCorrectLoopsWithoutGameplayTran
+             Assert.That(AssetDatabase.GetAssetPath(definition.HitReactClip),
+                 Is.EqualTo("Assets/LastSignal/Assets/Kevin Iglesias/Zombie Animations/Animations/Zombie@Damage01.fbx"));
+             Assert.That(AssetDatabase.GetAssetPath(definition.FlyingBackDeathClip),
+-                Is.EqualTo("Assets/LastSignal/Assets/Animation/Zombie Animation/Flying Back Death.fbx"));
++                Is.EqualTo("Assets/LastSignal/Assets/Animation/Zombie Animation/Zombie Death.fbx"));
++            Assert.That(machine.states.Single(s => s.state.name == "FlyingBackDeath").state.motion,
++                Is.EqualTo(definition.FlyingBackDeathClip), "Ölüm durumu ile tanım aynı üretim klibini kullanmalı.");
+         }
+ 
+         [Test]
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
+index b6ca9e2..3606cc2 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
+@@ -18,6 +18,7 @@ public class CombatAcceptanceTests : InputTestFixture
+ 
+         public override void Setup()
+         {
++            InputFixtureIsolation.DisableLiveActions();
+             base.Setup();
+             Time.timeScale = 1;
+             mouse = InputSystem.AddDevice<Mouse>();
+@@ -67,7 +68,7 @@ public IEnumerator LoadCombatScene()
+             Assert.That(instance, Is.Not.Null);
+             
+             // Fast-forward equip time so it's ready
+-            yield return new WaitForSeconds(instance.Definition.EquipSeconds + 0.1f);
++            yield return WaitForGameplaySeconds(instance.Definition.EquipSeconds + 0.1f);
+ 
+             var targets = Object.FindObjectsByType<DamageableTarget>(FindObjectsSortMode.None);
+             foreach (var t in targets) if (t.name == "CombatTarget_10m") target10m = t;
+@@ -76,6 +77,20 @@ public IEnumerator LoadCombatScene()
+             yield return null;
+         }
+ 
++        // Oyun zamanını bekler; duraklamış bir oturum test turunu süresiz kilitlemez.
++        public static IEnumerator WaitForGameplaySeconds(float seconds)
++        {
++            double deadline = Time.realtimeSinceStartupAsDouble + Mathf.Max(10f, seconds * 4f);
++            float elapsed = 0;
++            while (elapsed < seconds)
++            {
++                Assert.That(Time.realtimeSinceStartupAsDouble, Is.LessThan(deadline),
++                    $"Oyun zamanı ilerlemedi. timeScale={Time.timeScale}, odak={Application.isFocused}. Beklenen süre: {seconds}s.");
++                yield return null;
++                elapsed += Time.deltaTime;
++            }
++        }
++
+         public override void TearDown()
+         {
+             try
+@@ -88,6 +103,7 @@ public override void TearDown()
+             foreach (var root in sceneFixtures) if (root) Object.DestroyImmediate(root);
+             sceneFixtures.Clear();
+             Time.timeScale = 1;
++            InputFixtureIsolation.DisableLiveActions();
+             base.TearDown();
+         }
+ 
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/MovementAcceptanceTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/MovementAcceptanceTests.cs
+index 59dc9be..733d991 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/MovementAcceptanceTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/MovementAcceptanceTests.cs
+@@ -23,6 +23,7 @@ public class MovementAcceptanceTests : InputTestFixture
+         readonly System.Collections.Generic.List<GameObject> fixtures = new System.Collections.Generic.List<GameObject>();
+         public override void Setup()
+         {
++            InputFixtureIsolation.DisableLiveActions();
+             base.Setup();
+             Time.timeScale = 1;
+             keyboard = InputSystem.AddDevice<Keyboard>(); mouse = InputSystem.AddDevice<Mouse>();
+@@ -45,6 +46,7 @@ public override void TearDown()
+             // Only destroy fixture-owned objects; the active scene can also own the test runner.
+             Time.timeScale = 1;
+             Cursor.lockState = CursorLockMode.None;
++            InputFixtureIsolation.DisableLiveActions();
+             base.TearDown();
+         }
+         GameObject Box(string name, Vector3 position, Vector3 scale)
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs
+index dca666a..a841016 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs
+@@ -18,11 +18,11 @@ public sealed class R01CombatPlayTests : InputTestFixture
+     {
+         readonly List<GameObject> owned=new List<GameObject>();
+         SessionFlow flow; Keyboard keyboard; Mouse mouse;
+-        public override void Setup() {base.Setup();Time.timeScale=1;keyboard=InputSystem.AddDevice<Keyboard>();mouse=InputSystem.AddDevice<Mouse>();}
++        public override void Setup() {InputFixtureIsolation.DisableLiveActions();base.Setup();Time.timeScale=1;keyboard=InputSystem.AddDevice<Keyboard>();mouse=InputSystem.AddDevice<Mouse>();}
+         public override void TearDown()
+         {
+             if(flow)flow.ReturnToMenu();foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();
+-            Time.timeScale=1;base.TearDown();
++            Time.timeScale=1;InputFixtureIsolation.DisableLiveActions();base.TearDown();
+         }
+         GameObject Go(string name) {var g=new GameObject(name);owned.Add(g);return g;}
+         [UnityTest] public IEnumerator PhysicsDeduplicatesAndRejectsWallsRangeRearDeadAndEmbeddedOrigin()
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/RuntimeSmokeTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/RuntimeSmokeTests.cs
+index 3ec19c6..deb7e9c 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/RuntimeSmokeTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/RuntimeSmokeTests.cs
+@@ -15,12 +15,20 @@ public class RuntimeSmokeTests : InputTestFixture
+ 
+         public override void Setup()
+         {
++            InputFixtureIsolation.DisableLiveActions();
+             base.Setup();
+             Time.timeScale = 1;
+             mouse = InputSystem.AddDevice<Mouse>();
+             keyboard = InputSystem.AddDevice<Keyboard>();
+         }
+ 
++        public override void TearDown()
++        {
++            InputFixtureIsolation.DisableLiveActions();
++            Time.timeScale = 1;
++            base.TearDown();
++        }
++
+         [UnityTest]
+         public IEnumerator SmokeTest_ThreeSessionCycles()
+         {
+diff --git a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
+index 903c482..74252fa 100644
+--- a/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
++++ b/Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
+@@ -28,6 +28,8 @@ IEnumerator Load(string scene = "Assets/LastSignal/Scenes/ZombieAcceptance.unity
+             yield return EditorSceneManager.LoadSceneAsyncInPlayMode(scene, new LoadSceneParameters(LoadSceneMode.Single));
+             yield return null;
+             session = Object.FindAnyObjectByType<SessionFlow>(); session.Resume();
++            // Bu testler oyuncuyu doğrudan konumlandırır; gerçek fare ateşi NPC senaryosunu değiştirmemeli.
++            session.Player.GetComponent<PlayerInputReader>().enabled = false;
+             session.Player.GetComponent<FirstPersonMotor>().enabled = false;
+             health = session.Player.GetComponent<PlayerHealth>();
+             zombie = session.GetComponent<ZombieEncounter>().Actor;
+@@ -49,7 +51,9 @@ IEnumerator Until(Func<bool> condition, float limit = 5)
+         {
+             float end = Time.realtimeSinceStartup + limit;
+             while (!condition() && Time.realtimeSinceStartup < end) yield return null;
+-            Assert.That(condition(), Is.True, "Timeout: " + zombie.Runtime.State + " t=" + zombie.AttackTime + " result=" + zombie.LastMeleeResult);
++            Assert.That(condition(), Is.True, "Timeout: " + zombie.Runtime.State + " t=" + zombie.AttackTime + " result=" + zombie.LastMeleeResult +
++                " paused=" + session.Paused + " timeScale=" + Time.timeScale + " playerHealth=" + health.CurrentHealth +
++                " sequence=" + zombie.AttackSequence + " input=" + session.Player.GetComponent<PlayerInputReader>().GameplayActive);
+         }
+         void Capture(string label)
+         {
+diff --git a/ProjectSettings/ProjectSettings.asset b/ProjectSettings/ProjectSettings.asset
+index 50361bb..fdb5cc6 100644
+--- a/ProjectSettings/ProjectSettings.asset
++++ b/ProjectSettings/ProjectSettings.asset
+@@ -834,7 +834,7 @@ PlayerSettings:
+   webWasm2023: 1
+   webEnableSubmoduleStrippingCompatibility: 0
+   scriptingDefineSymbols:
+-    Standalone: APP_UI_EDITOR_ONLY
++    Standalone: APP_UI_EDITOR_ONLY;SENTIS_ANALYTICS_ENABLED
+   additionalCompilerArguments: {}
+   platformArchitecture: {}
+   scriptingBackend:
+diff --git a/ProjectSettings/TagManager.asset b/ProjectSettings/TagManager.asset
+index 1a965ea..70d7959 100644
+--- a/ProjectSettings/TagManager.asset
++++ b/ProjectSettings/TagManager.asset
+@@ -34,7 +34,7 @@ TagManager:
+   - 
+   - 
+   - 
+-  - 
++  - FirstPersonViewmodel
+   - 
+   - 
+   m_SortingLayers:

@@ -23,6 +23,7 @@ namespace LastSignal.Tests
         readonly System.Collections.Generic.List<GameObject> fixtures = new System.Collections.Generic.List<GameObject>();
         public override void Setup()
         {
+            InputFixtureIsolation.DisableLiveActions();
             base.Setup();
             Time.timeScale = 1;
             keyboard = InputSystem.AddDevice<Keyboard>(); mouse = InputSystem.AddDevice<Mouse>();
@@ -45,6 +46,7 @@ namespace LastSignal.Tests
             // Only destroy fixture-owned objects; the active scene can also own the test runner.
             Time.timeScale = 1;
             Cursor.lockState = CursorLockMode.None;
+            InputFixtureIsolation.DisableLiveActions();
             base.TearDown();
         }
         GameObject Box(string name, Vector3 position, Vector3 scale)

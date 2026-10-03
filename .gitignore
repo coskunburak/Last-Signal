@@ -117,10 +117,15 @@ InitTestScene*.unity*
 .DS_Store
 !Docs/Implementation/S001/Evidence/**/*.log
 
+# S012 verification runs: keep reports, XML results, performance CSV and screenshots.
+# These files are local run artifacts or copies of evidence already in the project.
+/Docs/Implementation/S012/Evidence/**/generated-artifacts/
+/Docs/Implementation/S012/Evidence/**/start.marker
+/Docs/Implementation/S012/Evidence/**/preexisting-current.json*
+
 # Archives
 *.zip
 *.rar
 *.tar
 *.tar.gz
 *.7z
-

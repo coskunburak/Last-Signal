@@ -18,11 +18,11 @@ namespace LastSignal.Tests
     {
         readonly List<GameObject> owned=new List<GameObject>();
         SessionFlow flow; Keyboard keyboard; Mouse mouse;
-        public override void Setup() {base.Setup();Time.timeScale=1;keyboard=InputSystem.AddDevice<Keyboard>();mouse=InputSystem.AddDevice<Mouse>();}
+        public override void Setup() {InputFixtureIsolation.DisableLiveActions();base.Setup();Time.timeScale=1;keyboard=InputSystem.AddDevice<Keyboard>();mouse=InputSystem.AddDevice<Mouse>();}
         public override void TearDown()
         {
             if(flow)flow.ReturnToMenu();foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();
-            Time.timeScale=1;base.TearDown();
+            Time.timeScale=1;InputFixtureIsolation.DisableLiveActions();base.TearDown();
         }
         GameObject Go(string name) {var g=new GameObject(name);owned.Add(g);return g;}
         [UnityTest] public IEnumerator PhysicsDeduplicatesAndRejectsWallsRangeRearDeadAndEmbeddedOrigin()
