@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-03 00:00:22Z" end-time="2026-10-03 00:00:53Z" duration="30.7293331">
+  <test-suite type="TestSuite" id="1246" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="204" result="Passed" start-time="2026-10-03 00:00:22Z" end-time="2026-10-03 00:00:53Z" duration="30.729333" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1239" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="204" result="Passed" start-time="2026-10-03 00:00:22Z" end-time="2026-10-03 00:00:53Z" duration="30.722908" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="21284" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1240" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="204" result="Passed" start-time="2026-10-03 00:00:22Z" end-time="2026-10-03 00:00:53Z" duration="30.721899" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1241" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="204" result="Passed" start-time="2026-10-03 00:00:22Z" end-time="2026-10-03 00:00:53Z" duration="30.721192" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1116" name="S012IntegrationTests" fullname="LastSignal.Tests.S012IntegrationTests" classname="LastSignal.Tests.S012IntegrationTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-03 00:00:22Z" end-time="2026-10-03 00:00:53Z" duration="30.719861" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1119" name="BothRoutesHaveContinuousCollision" fullname="LastSignal.Tests.S012IntegrationTests.BothRoutesHaveContinuousCollision" methodname="BothRoutesHaveContinuousCollision" classname="LastSignal.Tests.S012IntegrationTests" runstate="Runnable" seed="1480360964" result="Passed" start-time="2026-10-03 00:00:22Z" end-time="2026-10-03 00:00:25Z" duration="3.156043" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1124" name="CellSaveQuitLoadRetainsMission" fullname="LastSignal.Tests.S012IntegrationTests.CellSaveQuitLoadRetainsMission" methodname="CellSaveQuitLoadRetainsMission" classname="LastSignal.Tests.S012IntegrationTests" runstate="Runnable" seed="881164803" result="Passed" start-time="2026-10-03 00:00:25Z" end-time="2026-10-03 00:00:26Z" duration="0.531756" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=1 generated=1
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1117" name="ClueFirstShelterOutputAndRecovery" fullname="LastSignal.Tests.S012IntegrationTests.ClueFirstShelterOutputAndRecovery" methodname="ClueFirstShelterOutputAndRecovery" classname="LastSignal.Tests.S012IntegrationTests" runstate="Runnable" seed="756459394" result="Passed" start-time="2026-10-03 00:00:26Z" end-time="2026-10-03 00:00:41Z" duration="15.215675" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1122" name="CrowbarDamagesLiveEncounter" fullname="LastSignal.Tests.S012IntegrationTests.CrowbarDamagesLiveEncounter" methodname="CrowbarDamagesLiveEncounter" classname="LastSignal.Tests.S012IntegrationTests" runstate="Runnable" seed="268685995" result="Passed" start-time="2026-10-03 00:00:41Z" end-time="2026-10-03 00:00:43Z" duration="1.721748" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1123" name="DeathBeforeExpeditionAndWithFuse" fullname="LastSignal.Tests.S012IntegrationTests.DeathBeforeExpeditionAndWithFuse" methodname="DeathBeforeExpeditionAndWithFuse" classname="LastSignal.Tests.S012IntegrationTests" runstate="Runnable" seed="1270197267" result="Passed" start-time="2026-10-03 00:00:43Z" end-time="2026-10-03 00:00:43Z" duration="0.471961" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1118" name="FuseFirstAndDroppedRecovery" fullname="LastSignal.Tests.S012IntegrationTests.FuseFirstAndDroppedRecovery" methodname="FuseFirstAndDroppedRecovery" classname="LastSignal.Tests.S012IntegrationTests" runstate="Runnable" seed="867232862" result="Passed" start-time="2026-10-03 00:00:43Z" end-time="2026-10-03 00:00:48Z" duration="5.142969" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1121" name="RelayReturnIsTraversable" fullname="LastSignal.Tests.S012IntegrationTests.RelayReturnIsTraversable" methodname="RelayReturnIsTraversable" classname="LastSignal.Tests.S012IntegrationTests" runstate="Runnable" seed="205557934" result="Passed" start-time="2026-10-03 00:00:48Z" end-time="2026-10-03 00:00:51Z" duration="2.070318" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+Account API did not become accessible within 30 seconds. This may be due to network issues or editor focus.
+]]></output>
+            </test-case>
+            <test-case id="1120" name="SprintAndCrouchUseProductionMotor" fullname="LastSignal.Tests.S012IntegrationTests.SprintAndCrouchUseProductionMotor" methodname="SprintAndCrouchUseProductionMotor" classname="LastSignal.Tests.S012IntegrationTests" runstate="Runnable" seed="843326414" result="Passed" start-time="2026-10-03 00:00:51Z" end-time="2026-10-03 00:00:53Z" duration="2.400374" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261003T000005-368564Z/play.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

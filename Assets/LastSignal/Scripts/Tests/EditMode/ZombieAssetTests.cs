@@ -55,7 +55,9 @@ namespace LastSignal.Tests
             Assert.That(AssetDatabase.GetAssetPath(definition.HitReactClip),
                 Is.EqualTo("Assets/LastSignal/Assets/Kevin Iglesias/Zombie Animations/Animations/Zombie@Damage01.fbx"));
             Assert.That(AssetDatabase.GetAssetPath(definition.FlyingBackDeathClip),
-                Is.EqualTo("Assets/LastSignal/Assets/Animation/Zombie Animation/Flying Back Death.fbx"));
+                Is.EqualTo("Assets/LastSignal/Assets/Animation/Zombie Animation/Zombie Death.fbx"));
+            Assert.That(machine.states.Single(s => s.state.name == "FlyingBackDeath").state.motion,
+                Is.EqualTo(definition.FlyingBackDeathClip), "Ölüm durumu ile tanım aynı üretim klibini kullanmalı.");
         }
 
         [Test]

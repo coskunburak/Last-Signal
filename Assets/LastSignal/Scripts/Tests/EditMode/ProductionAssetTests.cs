@@ -15,10 +15,17 @@ namespace LastSignal.Tests
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
             var meshes = prefab.GetComponentsInChildren<MeshFilter>();
             Assert.That(meshes.Count(m => m.sharedMesh.name == "Magazine.001"), Is.EqualTo(1));
-            foreach (var mesh in meshes) Assert.That(AssetDatabase.GetAssetPath(mesh.sharedMesh), Is.EqualTo(Rifle));
+            foreach (var mesh in meshes)
+            {
+                string expected = mesh.name == "MRPoly_RifleBody"
+                    ? "Assets/LastSignal/Combat/Optics/MRPoly_Body_Optics.asset"
+                    : mesh.name == "ScopeLens"
+                        ? "Assets/LastSignal/Combat/Optics/MRPoly_RearLens.asset" : Rifle;
+                Assert.That(AssetDatabase.GetAssetPath(mesh.sharedMesh), Is.EqualTo(expected));
+            }
             var mag = meshes.Single(m => m.sharedMesh.name == "Magazine.001");
             Assert.That(mag.transform.parent.name, Is.EqualTo("mag"));
-            Assert.That(meshes.Single(m => m.sharedMesh.name == "M4A1 Carbine").transform.parent.name, Is.EqualTo("wpn_body"));
+            Assert.That(meshes.Single(m => m.name == "MRPoly_RifleBody").transform.parent.name, Is.EqualTo("wpn_body"));
             Assert.That(prefab.GetComponentsInChildren<SkinnedMeshRenderer>().All(r => AssetDatabase.GetAssetPath(r.sharedMesh) == Val), Is.True);
             Assert.That(prefab.GetComponentsInChildren<Renderer>().Any(r => r.name == "VAL_Model"), Is.False);
             Assert.That(prefab.GetComponentsInChildren<Camera>().All(c => !c.enabled), Is.True);

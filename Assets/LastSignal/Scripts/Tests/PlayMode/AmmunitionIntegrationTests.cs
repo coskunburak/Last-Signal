@@ -35,10 +35,12 @@ namespace LastSignal.Tests
             var loot = session.GetComponent<LootPopulationService>();
             var so = new SerializedObject(loot); so.FindProperty("overrideSeed").boolValue = true; so.FindProperty("explicitSeed").intValue = 12345; so.ApplyModifiedPropertiesWithoutUndo();
             session.BeginSession(); session.Resume(); yield return null;
+            // Editor focus/authentication prompts must not pause an automated fixture.
+            session.Player.GetComponent<PlayerInputReader>().FocusLost -= session.Pause;
             Bind();
             foreach (var zombie in Object.FindObjectsByType<ZombieController>()) zombie.SetPaused(true); // Isolate weapon assertions; existing full regression covers active combat.
             weapon.Initialize(camera.transform, session.Player, magazine); weapon.RequestEquip();
-            yield return new WaitForSeconds(.65f);
+            yield return WaitGameplay(.65f);
             var hud = Object.FindAnyObjectByType<AcceptanceHud>();
             ammoText = (Text)typeof(AcceptanceHud).GetField("ammoDisplay", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(hud);
             Assert.AreEqual(WeaponState.Ready, weapon.RuntimeState.State);
@@ -57,6 +59,18 @@ namespace LastSignal.Tests
         }
         void FireUp()
         { camera.transform.rotation = Quaternion.LookRotation(Vector3.up); weapon.OnFirePressed(); weapon.OnFireReleased(); }
+        static IEnumerator WaitGameplay(float seconds)
+        {
+            float elapsed = 0;
+            double deadline = Time.realtimeSinceStartupAsDouble + Math.Max(10, seconds * 4);
+            while (elapsed < seconds)
+            {
+                Assert.That(Time.realtimeSinceStartupAsDouble, Is.LessThan(deadline),
+                    $"Gameplay clock stopped during ammunition fixture; timeScale={Time.timeScale}, focus={Application.isFocused}");
+                yield return null;
+                elapsed += Time.deltaTime;
+            }
+        }
         void AssertHud()
         { Assert.IsNotNull(ammoText); Assert.That(ammoText.text, Does.EndWith(weapon.RuntimeState.CurrentMagazine + " / " + weapon.RuntimeState.ReserveAmmo)); }
         [UnityTest] public IEnumerator ActualShotsMissWallEmptyAndRejectedRequests()
@@ -65,11 +79,11 @@ namespace LastSignal.Tests
             weapon.ShotFired += r => { shots++; last = r; }; weapon.ShotRejected += () => dry++;
             FireUp(); Assert.AreEqual(1, shots); Assert.AreEqual(1, weapon.RuntimeState.CurrentMagazine); Assert.IsNull(last.Collider); AssertHud();
             FireUp(); Assert.AreEqual(1, shots); // cadence rejection
-            yield return new WaitForSeconds(.15f);
+            yield return WaitGameplay(.15f);
             var wall = GameObject.CreatePrimitive(PrimitiveType.Cube); owned.Add(wall); wall.transform.position = camera.transform.position + Vector3.up * 2; wall.transform.localScale = Vector3.one * .5f; Physics.SyncTransforms();
             FireUp(); Assert.AreEqual(2, shots); Assert.AreEqual(wall.GetComponent<Collider>(), last.Collider); Assert.AreEqual(0, weapon.RuntimeState.CurrentMagazine);
             camera.transform.rotation = Quaternion.LookRotation(Vector3.up); weapon.OnFirePressed();
-            yield return new WaitForSeconds(.5f); Assert.AreEqual(1, dry); Assert.AreEqual(2, shots); Assert.AreEqual(0, weapon.RuntimeState.CurrentMagazine); weapon.OnFireReleased();
+            yield return WaitGameplay(.5f); Assert.AreEqual(1, dry); Assert.AreEqual(2, shots); Assert.AreEqual(0, weapon.RuntimeState.CurrentMagazine); weapon.OnFireReleased();
             inventory.TryAdd(weapon.Definition.Ammunition, 7); weapon.OnReloadRequested(); weapon.OnFirePressed(); Assert.AreEqual(2, shots); Assert.AreEqual(0, weapon.RuntimeState.CurrentMagazine);
         }
         [UnityTest] public IEnumerator MissingMuzzleAndDisabledWeaponConsumeNothing()

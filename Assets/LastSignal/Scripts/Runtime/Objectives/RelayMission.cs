@@ -15,6 +15,8 @@ namespace LastSignal.Objectives
         public RelayPoint radio, relay;
         public Transform recoveryPoint;
         public const string Clue = "Relay maintenance: the gas-station maintenance cache holds the spare fuse. Bring a wrench to the relay at the south edge of the yard. After repair, return to this radio for the contact bulletin.";
+        [SerializeField, TextArea] string maintenanceClue = Clue;
+        public string MaintenanceClue => string.IsNullOrWhiteSpace(maintenanceClue) ? Clue : maintenanceClue;
         public const string Intel = "CONTACT — Maintenance channel restored. A northern route is mentioned; its exact location remains unconfirmed.";
         public RelayProgression Progress { get; private set; }
         public string Feedback { get; private set; } = "Explore the cabin. J: journal";
@@ -76,11 +78,11 @@ namespace LastSignal.Objectives
         {
             if (!Near(radio.transform) || flow.Paused) return false;
             Progress.DiscoverRadio(); Observe(); if (Progress.Repaired) Progress.Listen();
-            Feedback = Progress.Repaired ? Intel : Progress.Acquired ? "Earlier fuse acquisition recognized. Bring the fuse and a wrench to the relay." : Clue;
+            Feedback = Progress.Repaired ? Intel : Progress.Acquired ? "Earlier fuse acquisition recognized. Bring the fuse and a wrench to the relay." : MaintenanceClue;
             JournalOpen = true; CancelRepair(); flow.Pause(); return true;
         }
         public string Journal => Progress == null ? "No active session." : !Progress.Radio ? "Unknown signal. Explore the cabin; no relay location confirmed." :
-            Clue + "\n\n" + (Progress.Repaired ? Intel + (Progress.Listened ? "\nRadio contact heard. Expedition completed." : "\nReturn to the cabin radio to listen.") :
+            MaintenanceClue + "\n\n" + (Progress.Repaired ? Intel + (Progress.Listened ? "\nRadio contact heard. Expedition completed." : "\nReturn to the cabin radio to listen.") :
             "Fuse: " + (Progress.Acquired ? "previous acquisition confirmed; carry it for repair" : "not acquired") + "\nTool: bring a wrench. Relay: not repaired.") +
             "\nMap knowledge: gas station / relay overlook are approximate clues. Enemy and loot positions unknown.";
         public long BeginRepair()

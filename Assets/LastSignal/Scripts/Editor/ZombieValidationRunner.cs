@@ -10,7 +10,7 @@ namespace LastSignal.Editor
     public static class ZombieValidationRunner
     {
         const string Request = "Temp/LastSignalZombieValidation.json";
-        [System.Serializable] sealed class Command { public string action; public string filter; public string output; }
+        [System.Serializable] sealed class Command { public string action; public string filter; public string[] filters; public string output; }
         static ZombieValidationRunner() { EditorApplication.update += Poll; }
         static void Poll()
         {
@@ -40,7 +40,8 @@ namespace LastSignal.Editor
         {
             SessionState.SetString("LastSignal.RegressionPath",command.output);
             var filter=new Filter { testMode=play?TestMode.PlayMode:TestMode.EditMode,assemblyNames=new[]{play?"LastSignal.PlayModeTests":"LastSignal.EditModeTests"} };
-            if(!string.IsNullOrEmpty(command.filter))filter.testNames=new[]{command.filter};
+            if(command.filters != null && command.filters.Length > 0)filter.testNames=command.filters;
+            else if(!string.IsNullOrEmpty(command.filter))filter.testNames=new[]{command.filter};
             ScriptableObject.CreateInstance<TestRunnerApi>().Execute(new ExecutionSettings(filter));
         }
     }

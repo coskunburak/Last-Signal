@@ -1,0 +1,356 @@
+ M Assets/LastSignal/Animations/Zombie/Controllers/AC_Zombie_Shambler.controller
+ M Assets/LastSignal/Scripts/Editor/RealAssetIntegration.cs
+ M Assets/LastSignal/Scripts/Editor/ZombieValidationRunner.cs
+ M Assets/LastSignal/Scripts/Runtime/LastSignal.Runtime.asmdef
+ M Assets/LastSignal/Scripts/Tests/EditMode/LastSignal.EditModeTests.asmdef
+ M Assets/LastSignal/Scripts/Tests/EditMode/ProductionAssetTests.cs
+ M Assets/LastSignal/Scripts/Tests/EditMode/ZombieAssetTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/MovementAcceptanceTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/RuntimeSmokeTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/ZombieMeleeTests.cs
+ M Assets/Resources/Weapon_AssaultRifle.prefab
+ M Docs/Implementation/P02-GAP-S007/Evidence/20260924-entry/playmode-route.txt
+ M Docs/Implementation/P02-GAP-S009/Evidence/20260925-independent/playmode-route.txt
+ M Docs/Implementation/P02-GAP-S009/Evidence/manual-20260926-performance-soak/performance.txt
+ M Docs/Implementation/P02-GAP-S009/Evidence/manual-20260926-performance-soak/soak.txt
+ M Docs/Implementation/P02-GAP/Evidence/20260922-entry/domain-performance.txt
+ M Docs/Implementation/P02-GAP/Evidence/20260922-entry/runtime-performance.txt
+ M Docs/Implementation/P02-GAP/Evidence/20260922-entry/two-expedition-world-time.txt
+ M Docs/Implementation/PreS010-Recovery/Evidence/R02/20260927-foundation/noise-trace.txt
+ M Docs/Implementation/PreS010-Recovery/Evidence/R02/20260927-foundation/performance.txt
+ M Docs/Implementation/PreS010-Recovery/Evidence/R02/20260927-foundation/play-route/noise-save.json
+ M Docs/Implementation/PreS010-Recovery/Evidence/R02/20260927-foundation/play-route/noise-save.json.bak
+ M Docs/Implementation/PreS010-Recovery/Evidence/R03/20260927-foundation/anti-omniscience-trace.txt
+ M Docs/Implementation/PreS010-Recovery/Evidence/R03/20260927-foundation/arrival.txt
+ M Docs/Implementation/PreS010-Recovery/Evidence/R03/20260927-foundation/integrated-performance.txt
+ M Docs/Implementation/PreS010-Recovery/Evidence/R03/20260927-foundation/performance.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/performance.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/performance.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/restart-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/restart-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/trace.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/rifle-trace.txt
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/new-session-alive-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/new-session-alive-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/trace.tsv
+ M Docs/Implementation/S008/Evidence/20260920-212200-entry/10-expedition-soak.txt
+ M Docs/Implementation/S008/Evidence/20260920-212200-entry/performance.txt
+ M Docs/Implementation/S008/Evidence/20260920-212200-entry/two-expedition-acceptance.txt
+ M ProjectSettings/ProjectSettings.asset
+ M ProjectSettings/TagManager.asset
+?? Assets/LastSignal/Combat/Optics.meta
+?? Assets/LastSignal/Combat/Optics/MRPoly_Body_Optics.asset
+?? Assets/LastSignal/Combat/Optics/MRPoly_Body_Optics.asset.meta
+?? Assets/LastSignal/Combat/Optics/MRPoly_FrontLens.mat
+?? Assets/LastSignal/Combat/Optics/MRPoly_FrontLens.mat.meta
+?? Assets/LastSignal/Combat/Optics/MRPoly_RearLens.asset
+?? Assets/LastSignal/Combat/Optics/MRPoly_RearLens.asset.meta
+?? Assets/LastSignal/Combat/Optics/MRPoly_Scope.asset
+?? Assets/LastSignal/Combat/Optics/MRPoly_Scope.asset.meta
+?? Assets/LastSignal/Combat/Optics/MRPoly_ScopeLens.mat
+?? Assets/LastSignal/Combat/Optics/MRPoly_ScopeLens.mat.meta
+?? Assets/LastSignal/Materials/MRPoly.meta
+?? Assets/LastSignal/Materials/MRPoly/Color_Black_01_Mat.mat
+?? Assets/LastSignal/Materials/MRPoly/Color_Black_01_Mat.mat.meta
+?? Assets/LastSignal/Materials/MRPoly/Color_Black_Metal_01_Mat.mat
+?? Assets/LastSignal/Materials/MRPoly/Color_Black_Metal_01_Mat.mat.meta
+?? Assets/LastSignal/Materials/MRPoly/Color_Blue_Metal_01_Mat.mat
+?? Assets/LastSignal/Materials/MRPoly/Color_Blue_Metal_01_Mat.mat.meta
+?? Assets/LastSignal/Materials/MRPoly/Color_Brown_Metal_01_Mat.mat
+?? Assets/LastSignal/Materials/MRPoly/Color_Brown_Metal_01_Mat.mat.meta
+?? Assets/LastSignal/Materials/MRPoly/Color_Gold_Metal_01_Mat.mat
+?? Assets/LastSignal/Materials/MRPoly/Color_Gold_Metal_01_Mat.mat.meta
+?? Assets/LastSignal/Materials/MRPoly/Color_Gray_Metal_01_Mat.mat
+?? Assets/LastSignal/Materials/MRPoly/Color_Gray_Metal_01_Mat.mat.meta
+?? Assets/LastSignal/Materials/MRPoly/Color_Orange_Metal_01_Mat.mat
+?? Assets/LastSignal/Materials/MRPoly/Color_Orange_Metal_01_Mat.mat.meta
+?? Assets/LastSignal/Materials/MRPoly/Color_Red_Metal_01_Mat.mat
+?? Assets/LastSignal/Materials/MRPoly/Color_Red_Metal_01_Mat.mat.meta
+?? Assets/LastSignal/Materials/MRPoly/Color_White_Metal_01_Mat.mat
+?? Assets/LastSignal/Materials/MRPoly/Color_White_Metal_01_Mat.mat.meta
+?? Assets/LastSignal/Prefabs/Combat/MRPoly.meta
+?? Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson.meta
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Black).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Black).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Black-Orange).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Black-Orange).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Black-White).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Black-White).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Blue).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Blue).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Brown-Gold).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Brown-Gold).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Red-Black).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (Red-Black).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (White).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/FirstPerson/Assault Rifle (White).prefab.meta"
+?? Assets/LastSignal/Prefabs/Combat/MRPoly/World.meta
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Black).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Black).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Black-Orange).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Black-Orange).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Black-White).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Black-White).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Blue).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Blue).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Brown-Gold).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Brown-Gold).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Red-Black).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (Red-Black).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (White).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Assault Rifle (White).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Pump Shotgun (Black).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Pump Shotgun (Black).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Pump Shotgun (Blue).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Pump Shotgun (Blue).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Pump Shotgun (Brown-Gold).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Pump Shotgun (Brown-Gold).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Pump Shotgun (White-Gray).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Pump Shotgun (White-Gray).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (Black).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (Black).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (Blue).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (Blue).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (Gold).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (Gold).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (Grip Brown).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (Grip Brown).prefab.meta"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (White).prefab"
+?? "Assets/LastSignal/Prefabs/Combat/MRPoly/World/Tactical Pistol (White).prefab.meta"
+?? Assets/LastSignal/Scripts/Editor/MRPolyCatalogAuthoring.cs
+?? Assets/LastSignal/Scripts/Editor/MRPolyCatalogAuthoring.cs.meta
+?? Assets/LastSignal/Scripts/Editor/ScopeOpticAuthoring.cs
+?? Assets/LastSignal/Scripts/Editor/ScopeOpticAuthoring.cs.meta
+?? Assets/LastSignal/Scripts/Editor/ScopeOpticEvidence.cs
+?? Assets/LastSignal/Scripts/Editor/ScopeOpticEvidence.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Combat/Optics.meta
+?? Assets/LastSignal/Scripts/Runtime/Combat/Optics/ScopeOpticDefinition.cs
+?? Assets/LastSignal/Scripts/Runtime/Combat/Optics/ScopeOpticDefinition.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Combat/Optics/ScopeOpticPresenter.cs
+?? Assets/LastSignal/Scripts/Runtime/Combat/Optics/ScopeOpticPresenter.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/MRPolyCatalogTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/MRPolyCatalogTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/ScopeAuthoringTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/ScopeAuthoringTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/ScopeOpticTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/ScopeOpticTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/InputFixtureIsolation.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/InputFixtureIsolation.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/ScopeOpticPlayTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/ScopeOpticPlayTests.cs.meta
+?? Assets/LastSignal/Shaders.meta
+?? Assets/LastSignal/Shaders/Optics.meta
+?? Assets/LastSignal/Shaders/Optics/ScopeLens.shader
+?? Assets/LastSignal/Shaders/Optics/ScopeLens.shader.meta
+?? Docs/Implementation/Combat/MRPolyCatalog/DURUM_TR.md
+?? Docs/Implementation/Combat/MRPolyCatalog/source-sha256.json
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-162118-10d7b3-edit/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-162118-10d7b3-edit/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-162146-b1c875-optics/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-162146-b1c875-optics/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-162233-4e03d8-play/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-162233-4e03d8-play/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-163629-84c422-edit/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-163629-84c422-edit/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-163700-a4acc1-optics/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-163700-a4acc1-optics/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-163740-248440-play/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-163740-248440-play/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-165516-7bfef1-edit/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-165516-7bfef1-edit/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-165537-671c0e-optics/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-165537-671c0e-optics/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-165636-5629f2-play/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-165636-5629f2-play/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-165903-c22353-play/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-165903-c22353-play/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-171554-0b2a28-play/RAPOR.txt
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-171554-0b2a28-play/results.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-installed/editmode-initial.xml
+?? Docs/Implementation/Combat/OpticsEvidence/20261002-installed/editmode.xml
+?? Docs/Implementation/Combat/OpticsEvidence/DOGRULAMA_DURUMU_TR.md
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162456/performance.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162458/route-a.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162459/route-b.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162500/route-c.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162500/route-d.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162501/route-e.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162503/route-f.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162503/route-g.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162518/route-h.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162519/route-i.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162532/route-j.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162533/route-k.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162534/route-l.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162534/route-m.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162535/route-n.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162535/route-o.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-162536/signature-scenario.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170125/performance.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170128/route-a.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170129/route-b.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170129/route-c.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170130/route-d.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170131/route-e.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170132/route-f.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170133/route-g.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170148/route-h.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170149/route-i.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170202/route-j.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170203/route-k.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170204/route-l.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170204/route-m.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170204/route-n.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170205/route-o.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-170205/signature-scenario.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171817/performance.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171820/route-a.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171820/route-b.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171821/route-c.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171822/route-d.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171822/route-e.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171824/route-f.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171825/route-g.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171839/route-h.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171840/route-i.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171854/route-j.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171855/route-k.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171855/route-l.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171856/route-m.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171856/route-n.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171857/route-o.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R04/20261002-171857/signature-scenario.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1626/performance-chase.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1626/performance-gunshot.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1626/performance-silence.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1626/performance-sprint.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1626/performance-summary.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1702/performance-chase.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1702/performance-gunshot.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1702/performance-silence.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1702/performance-sprint.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1702/performance-summary.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1719/performance-chase.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1719/performance-gunshot.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1719/performance-silence.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1719/performance-sprint.txt
+?? Docs/Implementation/PreS010-Recovery/Evidence/R05/20261002-1719/performance-summary.txt
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/performance-20261002-133958.txt
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/performance-20261002-142513.txt
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133053/A-B-idle-outside-fov.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133053/C-acquisition.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133053/D-walk.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133053/E-obstacle-route.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133053/F-G-corner-memory.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133053/H-L-search-resume.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133053/I-search-timeout.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133053/K-search-pause.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133053/sequence.txt
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/A-B-idle-outside-fov.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/C-acquisition.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/D-walk.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/E-obstacle-route.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/F-G-corner-memory.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/H-L-search-resume.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/I-search-timeout.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/J-reacquisition.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/K-search-pause.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/M-new-session.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/sequence.txt
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-133907/stable-stop-melee.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/A-B-idle-outside-fov.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/C-acquisition.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/D-walk.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/E-obstacle-route.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/F-G-corner-memory.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/H-L-search-resume.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/I-search-timeout.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/J-reacquisition.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/K-search-pause.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/M-new-session.png
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/sequence.txt
+?? Docs/Implementation/S004/Evidence/20260919-P4/regression-P2/visual-20261002-142422/stable-stop-melee.png
+?? Docs/Implementation/S012/Evidence/20261002T234035Z/entry-status.txt
+?? Tools/run-optics-validation.py
