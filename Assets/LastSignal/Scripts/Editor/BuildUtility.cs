@@ -6,7 +6,7 @@ public static class BuildUtility
 {
     public static void BuildP5Mac()
     {
-        var scenes = new string[] { "Assets/LastSignal/Scenes/WorldPopulationAcceptance.unity" };
+        var scenes = new string[] { "Assets/LastSignal/Scenes/Validation/WorldPopulationAcceptance.unity" };
         
         BuildPlayerOptions options = new BuildPlayerOptions
         {

@@ -20,13 +20,14 @@ namespace LastSignal.Editor
     public static class LootAuthoring
     {
         public const string Evidence="Docs/Implementation/S006/Evidence/20260919-entry";
-        public const string ScenePath="Assets/LastSignal/Scenes/ScavengingAcceptance.unity";
-        const string Content="Assets/LastSignal/Loot";
+        public const string ScenePath="Assets/LastSignal/Scenes/Validation/ScavengingAcceptance.unity";
+        const string Profiles="Assets/LastSignal/Data/Loot/Profiles";
+        const string Materials="Assets/LastSignal/Materials/Loot";
         static void Set(Object o,string name,Object value){var s=new SerializedObject(o);s.FindProperty(name).objectReferenceValue=value;s.ApplyModifiedPropertiesWithoutUndo();}
-        static ItemDefinition Item(string id)=>AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/"+id+".asset");
+        static ItemDefinition Item(string id)=>AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/"+id+".asset");
         static LootProfile Profile(string name,int empty,params (string id,int weight,int min,int max)[] entries)
         {
-            string path=Content+"/Profiles/"+name+".asset";
+            string path=Profiles+"/"+name+".asset";
             var p=AssetDatabase.LoadAssetAtPath<LootProfile>(path);
             if(!p){p=ScriptableObject.CreateInstance<LootProfile>();AssetDatabase.CreateAsset(p,path);}
             var s=new SerializedObject(p);s.FindProperty("emptyBasisPoints").intValue=empty;var list=s.FindProperty("entries");list.arraySize=entries.Length;
@@ -37,14 +38,14 @@ namespace LastSignal.Editor
         [MenuItem("Last Signal/Loot/Create S006 acceptance content")]
         public static void CreateAcceptance()
         {
-            Directory.CreateDirectory(Content+"/Profiles");Directory.CreateDirectory(Content+"/Materials");AssetDatabase.Refresh();
+            Directory.CreateDirectory(Profiles);Directory.CreateDirectory(Materials);AssetDatabase.Refresh();
             Visuals();
             var profiles=new[]{
                 Profile("Kitchen",3500,("food.canned",50,1,2),("drink.water",40,1,2),("medical.bandage",10,1,1)),
                 Profile("Clinic",2500,("medical.bandage",90,1,2),("drink.water",10,1,1)),
                 Profile("Workshop",3500,("material.scrap",80,1,4),("tool.wrench",20,1,1)),
                 Profile("Security",5000,("ammo.rifle",90,5,20),("medical.bandage",10,1,2))};
-            var scene=EditorSceneManager.OpenScene("Assets/LastSignal/Scenes/ZombieAcceptance.unity",OpenSceneMode.Single);
+            var scene=EditorSceneManager.OpenScene("Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity",OpenSceneMode.Single);
             var session=Object.FindAnyObjectByType<SessionFlow>();var population=session.gameObject.AddComponent<LootPopulationService>();
             var seed=new SerializedObject(population);seed.FindProperty("overrideSeed").boolValue=true;seed.FindProperty("explicitSeed").intValue=12345;seed.ApplyModifiedPropertiesWithoutUndo();
             // Existing combat arena remains untouched. Copy receives bounded tabletop opportunities along its safe outer lane.
@@ -69,12 +70,12 @@ namespace LastSignal.Editor
         }
         static Material Material(string name,Color color)
         {
-            string path=Content+"/Materials/"+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);
+            string path=Materials+"/"+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);
             if(!m){m=new Material(Shader.Find("Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(m,path);}m.color=color;return m;
         }
         static void Visuals()
         {
-            string vendor="Assets/LastSignal/Assets/Loot/Polygon-Lite Survival Collection/Prefabs/";
+            string vendor="Assets/ThirdParty/Loot/Polygon-Lite Survival Collection/Prefabs/";
             var mapping=new[]{("medical.bandage","Bandage"),("food.canned","Canned_food_A_01"),("drink.water","Flask"),("material.scrap","SM_Scrap_Metal_01"),("ammo.rifle",""),("tool.wrench","")};
             foreach(var pair in mapping)
             {
@@ -137,7 +138,7 @@ namespace LastSignal.Editor
         public static void Distribution()
         {
             var report=new StringBuilder("10000 deterministic seeds per profile, point ID=distribution. Not economy certification.\n");
-            foreach(var guid in AssetDatabase.FindAssets("t:LootProfile",new[]{Content+"/Profiles"}))
+            foreach(var guid in AssetDatabase.FindAssets("t:LootProfile",new[]{Profiles}))
             {
                 var p=AssetDatabase.LoadAssetAtPath<LootProfile>(AssetDatabase.GUIDToAssetPath(guid));var counts=new SortedDictionary<string,int>();
                 for(int i=0;i<10000;i++){var r=p.Select(i,"distribution");string key=r.Item?r.Item.Id.Value:r.Outcome.ToString();counts.TryGetValue(key,out int n);counts[key]=n+1;}

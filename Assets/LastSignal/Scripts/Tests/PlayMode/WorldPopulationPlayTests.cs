@@ -22,7 +22,7 @@ namespace LastSignal.Tests
         [UnitySetUp] public IEnumerator Setup()
         {
             directory = Path.Combine(Path.GetTempPath(), "LastSignal-S009-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(directory);
-            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             flow = UnityEngine.Object.FindAnyObjectByType<SessionFlow>(); Assert.IsNotNull(flow);
             pop = flow.GetComponent<WorldPopulationManager>(); cells = flow.GetComponent<WorldCellManager>(); clock = flow.GetComponent<WorldClock>();

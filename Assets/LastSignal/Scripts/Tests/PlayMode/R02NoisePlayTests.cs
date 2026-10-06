@@ -15,7 +15,7 @@ namespace LastSignal.Tests
         const string Evidence = "Docs/Implementation/PreS010-Recovery/Evidence/R02/20260927-foundation/";
         [UnityTest] public IEnumerator ProductionProducersPressureLifecycleAndSaveLoad()
         {
-            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
             yield return null; yield return null;
             flow = Object.FindAnyObjectByType<SessionFlow>(); Assert.IsNotNull(flow);
             var trace = new StringBuilder(); File.WriteAllText(Evidence + "noise-trace.txt", "");

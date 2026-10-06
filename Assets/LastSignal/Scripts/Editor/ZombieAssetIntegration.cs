@@ -15,20 +15,22 @@ namespace LastSignal.Editor
     /// <summary>B0B asset authoring and reproducible visual-only acceptance. No gameplay dependencies.</summary>
     public static class ZombieAssetIntegration
     {
-        public const string Root = "Assets/LastSignal/Enemies/Zombie";
-        public const string Model = "Assets/LastSignal/Assets/SZombie/SZombie_Variant_1/Unity/SK_SZombie_Variant_1.fbx";
-        public const string Sources = "Assets/LastSignal/Assets/Kevin Iglesias/Zombie Animations";
-        public const string Textures = "Assets/LastSignal/Assets/SZombie/SZombie_Variant_1/Textures/T_SZombie_Variant_1_";
-        public const string Prefab = Root + "/Prefabs/LS_Zombie_Shambler.prefab";
-        public const string Controller = Root + "/Animations/Controllers/AC_Zombie_Shambler.controller";
-        public const string ScenePath = Root + "/Scenes/ZombieAssetAcceptance.unity";
+        public const string Model = "Assets/ThirdParty/Zombies/SZombie/SZombie_Variant_1/Unity/SK_SZombie_Variant_1.fbx";
+        public const string Sources = "Assets/ThirdParty/Animation/KevinIglesias/Zombie Animations";
+        public const string Textures = "Assets/ThirdParty/Zombies/SZombie/SZombie_Variant_1/Textures/T_SZombie_Variant_1_";
+        public const string Prefab = "Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shambler.prefab";
+        public const string Controller = "Assets/LastSignal/Animations/Zombie/Controllers/AC_Zombie_Shambler.controller";
+        public const string ScenePath = "Assets/LastSignal/Scenes/Validation/ZombieAssetAcceptance.unity";
+        const string AnimationRoot = "Assets/LastSignal/Animations/Zombie";
+        const string MaterialRoot = "Assets/LastSignal/Materials/Enemies/Zombie";
+        const string TextureRoot = "Assets/LastSignal/Art/Textures/Zombie";
         public const string Evidence = "Docs/Implementation/S004/Evidence/20260918-B0B";
         public static readonly string[] States = { "Idle", "Locomotion", "Attack", "HitReact", "Death", "IdleVariation", "DeathAlternate" };
         public static readonly string[] Clips = { "Zombie@Idle01", "Zombie@Walk01", "Zombie@Attack01", "Zombie@Damage01", "Zombie@Death01_A", "Zombie@Idle01_Action01", "Zombie@Death01_B" };
 
         public static AnimationClip Clip(string name)
         {
-            if (name == "LS_Zombie_Death") return AssetDatabase.LoadAssetAtPath<AnimationClip>(Root + "/Animations/LS_Zombie_Death.anim");
+            if (name == "LS_Zombie_Death") return AssetDatabase.LoadAssetAtPath<AnimationClip>(AnimationRoot + "/LS_Zombie_Death.anim");
             return AssetDatabase.FindAssets("t:AnimationClip", new[] { Sources }).Select(AssetDatabase.GUIDToAssetPath)
                 .Distinct().SelectMany(AssetDatabase.LoadAllAssetsAtPath).OfType<AnimationClip>().Single(c => c.name == name);
         }
@@ -38,7 +40,7 @@ namespace LastSignal.Editor
             // Target-specific floor correction of existing motion, never vendor curve replacement.
             // Preserve every muscle/rotation curve and add measured vertical clearance only at landing.
             var source = Clip("Zombie@Death01_A");
-            var path = Root + "/Animations/LS_Zombie_Death.anim";
+            var path = AnimationRoot + "/LS_Zombie_Death.anim";
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
             if (!clip) { clip = new AnimationClip(); AssetDatabase.CreateAsset(clip, path); }
             EditorUtility.CopySerialized(source, clip); clip.name = "LS_Zombie_Death";
@@ -69,7 +71,7 @@ namespace LastSignal.Editor
         public static void Build()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play Mode first.");
-            foreach (var dir in new[] { "Materials", "Textures", "Prefabs", "Animations/Controllers", "Scenes" }) Directory.CreateDirectory(Root + "/" + dir);
+            foreach (var dir in new[] { MaterialRoot, TextureRoot, AnimationRoot + "/Controllers", "Assets/LastSignal/Prefabs/Enemies/Zombie", "Assets/LastSignal/Scenes/Validation" }) Directory.CreateDirectory(dir);
             Directory.CreateDirectory(Evidence);
             AssetDatabase.Refresh();
             var avatar = AssetDatabase.LoadAllAssetsAtPath(Model).OfType<Avatar>().Single();
@@ -91,9 +93,9 @@ namespace LastSignal.Editor
             File.WriteAllText(Evidence + "/texture-channel-verification.txt", "Decoded source PNG byte comparisons; mean absolute channel error / 255\nSmoothness vs 1-Roughness=" + inverseError / packed.Length / 255 + "\nVendor mask R vs Metallic=" + redError / packed.Length / 255 + "\nG vs AO=" + greenError / packed.Length / 255 + "\nA vs Smoothness=" + alphaError / packed.Length / 255 + "\nAdapter explicitly packs metallic R, occlusion G, smoothness A.\n");
             var output = new Texture2D(metallic.width, metallic.height, TextureFormat.RGBA32, false, true);
             output.SetPixels32(packed); output.Apply();
-            string maskPath = Root + "/Textures/T_Zombie_MetallicAO_Smoothness.png";
+            string maskPath = TextureRoot + "/T_Zombie_MetallicAO_Smoothness.png";
             File.WriteAllBytes(maskPath, output.EncodeToPNG());
-            string normalPath = Root + "/Textures/T_Zombie_Normal.png";
+            string normalPath = TextureRoot + "/T_Zombie_Normal.png";
             File.Copy(Textures + "OpenGL_Normal.png", normalPath, true);
             foreach (var texture in new[] { metallic, smooth, ao, rough, vendorMask, output }) UnityEngine.Object.DestroyImmediate(texture);
             AssetDatabase.ImportAsset(maskPath); AssetDatabase.ImportAsset(normalPath);
@@ -101,7 +103,7 @@ namespace LastSignal.Editor
             maskImporter.sRGBTexture = false; maskImporter.alphaSource = TextureImporterAlphaSource.FromInput; maskImporter.SaveAndReimport();
             var normalImporter = (TextureImporter)AssetImporter.GetAtPath(normalPath);
             normalImporter.textureType = TextureImporterType.NormalMap; normalImporter.sRGBTexture = false; normalImporter.SaveAndReimport();
-            var matPath = Root + "/Materials/M_Zombie_Shambler_URP.mat";
+            var matPath = MaterialRoot + "/M_Zombie_Shambler_URP.mat";
             var mat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
             if (!mat) { mat = new Material(Shader.Find("Universal Render Pipeline/Lit")); AssetDatabase.CreateAsset(mat, matPath); }
             mat.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(Textures + "A_Albedo.png"));
@@ -159,7 +161,7 @@ namespace LastSignal.Editor
                 PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(Prefab), scene);
                 var floor = GameObject.CreatePrimitive(PrimitiveType.Plane); floor.name = "NeutralGround";
                 UnityEngine.Object.DestroyImmediate(floor.GetComponent<Collider>());
-                var floorPath = Root + "/Materials/M_AcceptanceGround.mat";
+                var floorPath = MaterialRoot + "/M_AcceptanceGround.mat";
                 var floorMat = AssetDatabase.LoadAssetAtPath<Material>(floorPath);
                 if (!floorMat) { floorMat = new Material(Shader.Find("Universal Render Pipeline/Lit")); AssetDatabase.CreateAsset(floorMat, floorPath); }
                 floorMat.color = new Color(.22f, .24f, .26f); floorMat.SetFloat("_Smoothness", .15f); floor.GetComponent<Renderer>().sharedMaterial = floorMat;

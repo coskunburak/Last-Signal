@@ -15,17 +15,16 @@ namespace LastSignal.Editor
     /// <summary>Idempotent project-owned integration of the supplied Humanoid takes.</summary>
     public static class ZombieMixamoProductionAuthoring
     {
-        const string AnimationRoot = "Assets/LastSignal/Assets/Animation/Zombie Animation/";
-        const string ZombieRoot = "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/";
-        const string ControllerPath = ZombieRoot + "Animations/Controllers/AC_Zombie_Shambler.controller";
-        const string MaskPath = ZombieRoot + "Animations/Controllers/LS_Zombie_HitUpperBody.mask";
-        const string DefinitionPath = ZombieRoot + "Shambler.asset";
-        const string VisualPath = ZombieRoot + "Prefabs/LS_Zombie_Shirtless_Visual.prefab";
+        const string AnimationRoot = "Assets/ThirdParty/Animation/AnimationLibraries/Zombie Animation/";
+        const string ControllerPath = "Assets/LastSignal/Animations/Zombie/Controllers/AC_Zombie_Shambler.controller";
+        const string MaskPath = "Assets/LastSignal/Animations/Zombie/Controllers/LS_Zombie_HitUpperBody.mask";
+        const string DefinitionPath = "Assets/LastSignal/Data/Enemies/Zombie/Shambler.asset";
+        const string VisualPath = "Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shirtless_Visual.prefab";
 
         /// <summary>Builds the production scene into a unique evidence directory supplied by the caller.</summary>
         public static void BuildDevelopmentMac()
         {
-            const string scene = "Assets/LastSignal/Scenes/RelayExpedition.unity";
+            const string scene = "Assets/LastSignal/Scenes/Production/RelayExpedition.unity";
             const string evidenceRoot = "Docs/Implementation/S004/Evidence";
             var requested = Environment.GetEnvironmentVariable("LS_ANIMATION_BUILD_EVIDENCE");
             if (string.IsNullOrWhiteSpace(requested))
@@ -151,7 +150,7 @@ namespace LastSignal.Editor
             if (!animator || animator.runtimeAnimatorController != controller || animator.applyRootMotion ||
                 !attackValid || !definition.IsDamagePresentationValid)
                 throw new InvalidOperationException("Production animation contract failed: " + reason);
-            var runtimePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+            var runtimePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
             if (!runtimePrefab) throw new InvalidOperationException("Production zombie runtime prefab is missing.");
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(runtimePrefab);
             try

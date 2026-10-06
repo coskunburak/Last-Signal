@@ -14,8 +14,9 @@ namespace LastSignal.Editor
 {
     public static class S010Authoring
     {
-        public const string Scene = "Assets/LastSignal/Scenes/WorldPopulationAcceptance.unity";
-        const string Folder = "Assets/LastSignal/Shelter";
+        public const string Scene = "Assets/LastSignal/Scenes/Validation/WorldPopulationAcceptance.unity";
+        const string DataFolder = "Assets/LastSignal/Data/Shelter";
+        const string PrefabFolder = "Assets/LastSignal/Prefabs/Shelter";
         static void Set(Object target, string name, Object value)
         { var s = new SerializedObject(target); s.FindProperty(name).objectReferenceValue = value; s.ApplyModifiedPropertiesWithoutUndo(); }
         static void Text(Object target, string name, string value)
@@ -25,10 +26,10 @@ namespace LastSignal.Editor
             var scene = EditorSceneManager.OpenScene(Scene, OpenSceneMode.Single);
             var flow = Object.FindAnyObjectByType<SessionFlow>();
             var site = flow.GetComponent<ShelterSite>(); if (!site) site = flow.gameObject.AddComponent<ShelterSite>();
-            var scrap = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/material.scrap.asset");
-            var ammo = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/ammo.rifle.asset");
-            var wrench = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/tool.wrench.asset");
-            string fuelPath = "Assets/Game/Items/Definitions/fuel.generator.asset";
+            var scrap = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/material.scrap.asset");
+            var ammo = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/ammo.rifle.asset");
+            var wrench = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/tool.wrench.asset");
+            string fuelPath = "Assets/LastSignal/Data/Items/Definitions/fuel.generator.asset";
             var fuel = AssetDatabase.LoadAssetAtPath<ItemDefinition>(fuelPath);
             if (!fuel) { fuel = ScriptableObject.CreateInstance<ItemDefinition>(); AssetDatabase.CreateAsset(fuel, fuelPath); }
             var fs = new SerializedObject(fuel); fs.FindProperty("stableId").FindPropertyRelative("id").stringValue = "fuel.generator";
@@ -36,12 +37,12 @@ namespace LastSignal.Editor
             fs.FindProperty("description").stringValue = "One can powers the shelter generator for 30 world minutes. Noise attracts nearby threats.";
             fs.FindProperty("category").enumValueIndex = 5; fs.ApplyModifiedPropertiesWithoutUndo();
             var fuelGo = Object.Instantiate(scrap.WorldPrefab); fuelGo.name = "Generator fuel can"; fuelGo.GetComponent<WorldItem>().Configure(fuel, 1);
-            var prefab = PrefabUtility.SaveAsPrefabAsset(fuelGo, Folder + "/GeneratorFuel.prefab"); Object.DestroyImmediate(fuelGo); Set(fuel, "worldPrefab", prefab);
-            var catalog = AssetDatabase.LoadAssetAtPath<ItemCatalog>("Assets/Game/Items/Definitions/ItemCatalog.asset");
+            var prefab = PrefabUtility.SaveAsPrefabAsset(fuelGo, PrefabFolder + "/GeneratorFuel.prefab"); Object.DestroyImmediate(fuelGo); Set(fuel, "worldPrefab", prefab);
+            var catalog = AssetDatabase.LoadAssetAtPath<ItemCatalog>("Assets/LastSignal/Data/Items/Definitions/ItemCatalog.asset");
             bool has = false; foreach (var item in catalog.EditorItems) if (item == fuel) has = true;
             if (!has) { var cs = new SerializedObject(catalog); var items = cs.FindProperty("items"); items.InsertArrayElementAtIndex(items.arraySize); items.GetArrayElementAtIndex(items.arraySize - 1).objectReferenceValue = fuel; cs.ApplyModifiedPropertiesWithoutUndo(); }
-            var recipe = AssetDatabase.LoadAssetAtPath<ShelterRecipe>(Folder + "/RifleAmmunition.asset");
-            if (!recipe) { recipe = ScriptableObject.CreateInstance<ShelterRecipe>(); AssetDatabase.CreateAsset(recipe, Folder + "/RifleAmmunition.asset"); }
+            var recipe = AssetDatabase.LoadAssetAtPath<ShelterRecipe>(DataFolder + "/RifleAmmunition.asset");
+            if (!recipe) { recipe = ScriptableObject.CreateInstance<ShelterRecipe>(); AssetDatabase.CreateAsset(recipe, DataFolder + "/RifleAmmunition.asset"); }
             recipe.recipeId = "recipe.rifle-ammunition"; recipe.revision = 1; recipe.input = scrap; recipe.output = ammo; recipe.tool = wrench;
             recipe.inputQuantity = 2; recipe.outputQuantity = 10; recipe.durationWorldSeconds = 600; recipe.requiresPower = true;
             site.recipe = recipe; site.material = scrap; site.fuel = fuel;
@@ -69,7 +70,7 @@ namespace LastSignal.Editor
                 if (assigned >= 3) break;
                 ItemDefinition resource = assigned == 0 ? scrap : assigned == 1 ? fuel : wrench;
                 int amount = assigned == 0 ? 20 : assigned == 1 ? 4 : 1;
-                var path = Folder + "/S010-" + resource.Id.Value + ".asset";
+                var path = DataFolder + "/S010-" + resource.Id.Value + ".asset";
                 var profile = AssetDatabase.LoadAssetAtPath<LootProfile>(path);
                 if (!profile) { profile = ScriptableObject.CreateInstance<LootProfile>(); AssetDatabase.CreateAsset(profile, path); }
                 var ps = new SerializedObject(profile); ps.FindProperty("emptyBasisPoints").intValue = 0;

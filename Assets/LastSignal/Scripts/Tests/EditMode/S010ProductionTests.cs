@@ -17,8 +17,8 @@ namespace LastSignal.Tests
         ShelterProduction production;
         [SetUp] public void Setup()
         {
-            scrap = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/material.scrap.asset");
-            ammo = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/ammo.rifle.asset");
+            scrap = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/material.scrap.asset");
+            ammo = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/ammo.rifle.asset");
             fuel = scrap; // Deterministic fixture; shipped fuel is separately authored.
             recipe = ScriptableObject.CreateInstance<ShelterRecipe>(); recipe.recipeId = "test.ammo"; recipe.input = scrap; recipe.output = ammo;
             source = new InventoryContainer(4); source.TryAdd(scrap, 20);

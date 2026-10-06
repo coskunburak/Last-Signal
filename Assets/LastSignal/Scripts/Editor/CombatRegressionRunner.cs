@@ -19,7 +19,7 @@ namespace LastSignal.Editor
             SessionState.SetString("LastSignal.RegressionPath", RealAssetIntegration.Evidence + (playMode ? "/playmode-results.xml" : "/editmode-results.xml"));
             api.Execute(new ExecutionSettings(new Filter { testMode = playMode ? TestMode.PlayMode : TestMode.EditMode, assemblyNames = new[] { playMode ? "LastSignal.PlayModeTests" : "LastSignal.EditModeTests" } }));
         }
-        sealed class Results : ICallbacks
+        sealed class Results : IErrorCallbacks
         {
             public void RunStarted(ITestAdaptor tests) { }
             public void TestStarted(ITestAdaptor test) { }
@@ -31,6 +31,16 @@ namespace LastSignal.Editor
                 Directory.CreateDirectory(RealAssetIntegration.Evidence);
                 TestRunnerApi.SaveResultToFile(result, path);
                 Debug.Log("REAL_ASSET_REGRESSION " + result.TestStatus + " passed=" + result.PassCount + " failed=" + result.FailCount);
+                SessionState.EraseString("LastSignal.RegressionPath");
+            }
+
+            public void OnError(string message)
+            {
+                var path = SessionState.GetString("LastSignal.RegressionPath", "");
+                if (string.IsNullOrEmpty(path)) return;
+                var errorPath = Path.ChangeExtension(path, ".error.txt");
+                Directory.CreateDirectory(Path.GetDirectoryName(errorPath));
+                File.WriteAllText(errorPath, message);
                 SessionState.EraseString("LastSignal.RegressionPath");
             }
         }

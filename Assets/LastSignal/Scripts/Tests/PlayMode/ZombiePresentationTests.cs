@@ -13,7 +13,7 @@ namespace LastSignal.Tests
         [SetUp]
         public void SetUp()
         {
-            instance = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Prefabs/LS_Zombie_Shirtless_Visual.prefab"));
+            instance = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shirtless_Visual.prefab"));
             gameplayRoot = new GameObject("OwnedZombieGameplayRoot");
             instance.transform.SetParent(gameplayRoot.transform, false);
             animator = instance.GetComponentInChildren<Animator>(); animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
@@ -58,7 +58,7 @@ namespace LastSignal.Tests
             var presenter = instance.AddComponent<ZombieAnimationPresenter>();
             presenter.Configure(animator);
             var definition = AssetDatabase.LoadAssetAtPath<ZombieDefinition>(
-                "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Shambler.asset");
+                "Assets/LastSignal/Data/Enemies/Zombie/Shambler.asset");
             Assert.That(presenter.Initialize(definition), Is.True);
             var impact = ZombieImpactReaction.Select(new DamageInfo { Amount = 30,
                 Direction = Vector3.right, BodyPart = ZombieBodyPart.Torso },
@@ -81,7 +81,7 @@ namespace LastSignal.Tests
             var presenter = instance.AddComponent<ZombieAnimationPresenter>();
             presenter.Configure(animator);
             var definition = AssetDatabase.LoadAssetAtPath<ZombieDefinition>(
-                "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Shambler.asset");
+                "Assets/LastSignal/Data/Enemies/Zombie/Shambler.asset");
             Assert.That(presenter.Initialize(definition), Is.True);
             presenter.Present(.92f, false, 1f, false);
             animator.Update(.2f);
@@ -99,12 +99,56 @@ namespace LastSignal.Tests
             Assert.That(animator.GetLayerWeight(1), Is.GreaterThan(.5f));
         }
 
+        [TestCase(false, AnimatorCullingMode.CullCompletely)]
+        [TestCase(true, AnimatorCullingMode.CullCompletely)]
+        [TestCase(false, AnimatorCullingMode.CullUpdateTransforms)]
+        [TestCase(true, AnimatorCullingMode.CullUpdateTransforms)]
+        public void AttackClockSurvivesPauseAndCullingPolicy(bool alternate, AnimatorCullingMode culling)
+        {
+            var presenter = instance.AddComponent<ZombieAnimationPresenter>();
+            presenter.Configure(animator);
+            var definition = AssetDatabase.LoadAssetAtPath<ZombieDefinition>(
+                "Assets/LastSignal/Data/Enemies/Zombie/Shambler.asset");
+            Assert.IsTrue(presenter.Initialize(definition));
+            animator.cullingMode = culling;
+            presenter.BeginAttack(alternate);
+            Assert.That(animator.cullingMode, Is.EqualTo(AnimatorCullingMode.AlwaysAnimate));
+            Assert.IsFalse(animator.applyRootMotion);
+            string state = alternate ? "AttackAlternate" : "Attack";
+            float commit = definition.AttackCommitTimeFor(alternate);
+            float contact = definition.AttackContactTimeFor(alternate);
+            float duration = definition.AttackClipDurationFor(alternate);
+            presenter.AdvanceAttack(commit);
+            var pose = animator.GetCurrentAnimatorStateInfo(0);
+            Assert.IsTrue(pose.IsName(state));
+            Assert.That(pose.normalizedTime, Is.EqualTo(commit / duration).Within(.005f));
+            var hand = animator.GetBoneTransform(HumanBodyBones.RightHand);
+            Assert.IsNotNull(hand);
+            Vector3 pausedHand = hand.position;
+            presenter.SetPaused(true);
+            presenter.AdvanceAttack(1f);
+            animator.Update(.2f); // Automatic Animator evaluation must also remain frozen.
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).normalizedTime,
+                Is.EqualTo(pose.normalizedTime).Within(.0001f));
+            Assert.That(Vector3.Distance(hand.position, pausedHand), Is.LessThan(.0001f));
+            presenter.SetPaused(false);
+            presenter.AdvanceAttack(contact - commit);
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).normalizedTime,
+                Is.EqualTo(contact / duration).Within(.005f));
+            Assert.That(gameplayRoot.transform.position, Is.EqualTo(Vector3.zero));
+            Assert.That(instance.transform.localPosition.sqrMagnitude, Is.LessThan(.000001f));
+            Assert.That(animator.speed, Is.Zero, "Only the gameplay tick advances an active attack.");
+            presenter.EndAttack();
+            Assert.That(animator.cullingMode, Is.EqualTo(culling));
+            Assert.That(animator.speed, Is.EqualTo(1f));
+        }
+
         void AssertGroundedDeath(bool heavyFrontalTorso, bool headSever = false)
         {
             var presenter = instance.AddComponent<ZombieAnimationPresenter>();
             presenter.Configure(animator);
             var definition = AssetDatabase.LoadAssetAtPath<ZombieDefinition>(
-                "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Shambler.asset");
+                "Assets/LastSignal/Data/Enemies/Zombie/Shambler.asset");
             Assert.That(presenter.Initialize(definition), Is.True);
             var impact = headSever
                 ? ZombieImpactReaction.Select(new DamageInfo { Amount = 40, Direction = Vector3.forward,

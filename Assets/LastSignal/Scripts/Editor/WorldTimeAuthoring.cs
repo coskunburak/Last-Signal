@@ -11,7 +11,7 @@ namespace LastSignal.Editor
 {
     public static class WorldTimeAuthoring
     {
-        public const string ScenePath="Assets/LastSignal/Scenes/WorldTimeAcceptance.unity";
+        public const string ScenePath="Assets/LastSignal/Scenes/Validation/WorldTimeAcceptance.unity";
         public const string Evidence="Docs/Implementation/P02-GAP/Evidence/20260924-final-closure";
         public static void Create()
         {
@@ -21,7 +21,7 @@ namespace LastSignal.Editor
             var clock=flow.gameObject.AddComponent<WorldClock>();var view=flow.gameObject.AddComponent<WorldTimePresentation>();
             GameObject.Find("Roof").AddComponent<RainRoof>();
             var bed=GameObject.CreatePrimitive(PrimitiveType.Cube);bed.name="Shelter rest bed";bed.transform.position=new Vector3(-15,.35f,11);bed.transform.localScale=new Vector3(2,.5f,.9f);
-            bed.GetComponent<Renderer>().sharedMaterial=AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Shelter/Terminal.mat");
+            bed.GetComponent<Renderer>().sharedMaterial=AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Materials/Shelter/Terminal.mat");
             bed.AddComponent<RestPoint>().Configure(clock);
             var hud=UnityEngine.Object.FindAnyObjectByType<AcceptanceHud>();
             var label=new GameObject("World time and rest feedback",typeof(RectTransform),typeof(Text));label.transform.SetParent(hud.transform,false);
@@ -32,7 +32,7 @@ namespace LastSignal.Editor
             main.startColor=new Color(.65f,.8f,1,.5f);var emission=rain.emission;emission.rateOverTime=0;
             var shape=rain.shape;shape.shapeType=ParticleSystemShapeType.Box;shape.scale=new Vector3(14,14,.1f);particles.transform.rotation=Quaternion.Euler(90,0,0);
             var renderer=rain.GetComponent<ParticleSystemRenderer>();renderer.renderMode=ParticleSystemRenderMode.Stretch;renderer.lengthScale=4;renderer.velocityScale=.04f;
-            string materialPath="Assets/LastSignal/Shelter/WorldRain.mat";var material=AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+            string materialPath="Assets/LastSignal/Materials/Shelter/WorldRain.mat";var material=AssetDatabase.LoadAssetAtPath<Material>(materialPath);
             if(!material){material=new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit"));AssetDatabase.CreateAsset(material,materialPath);}renderer.sharedMaterial=material;
             var saveButton=SaveButton(hud.transform,"Save checkpoint",new Vector2(24,-200));
             var loadButton=SaveButton(hud.transform,"Load checkpoint",new Vector2(24,-200));

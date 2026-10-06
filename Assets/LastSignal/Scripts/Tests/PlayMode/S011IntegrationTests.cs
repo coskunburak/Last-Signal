@@ -18,7 +18,7 @@ namespace LastSignal.Tests
         [UnitySetUp] public IEnumerator Setup()
         {
             Time.timeScale=1;
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/RelayExpedition.unity",new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Production/RelayExpedition.unity",new LoadSceneParameters(LoadSceneMode.Single));
             yield return null; flow=Object.FindAnyObjectByType<SessionFlow>(); mission=flow.GetComponent<RelayMission>();
             driver=new GameObject("S011 test driver").AddComponent<RelayAcceptance>(); driver.flow=flow; driver.mission=mission;
             directory=Path.Combine(Application.temporaryCachePath,"s011-tests-"+System.Guid.NewGuid().ToString("N")); Directory.CreateDirectory(directory); flow.Resume(); yield return null;

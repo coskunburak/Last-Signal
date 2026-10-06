@@ -18,7 +18,7 @@ namespace LastSignal.Tests
         {
             evidencePath = Evidence + System.DateTime.Now.ToString("yyyyMMdd-HHmmss") + "/";
             Directory.CreateDirectory(evidencePath);
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/ZombieAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
             yield return null; yield return null;
             flow = Object.FindAnyObjectByType<SessionFlow>(); flow.Resume();
         }

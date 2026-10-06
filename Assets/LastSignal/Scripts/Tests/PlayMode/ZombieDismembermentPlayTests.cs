@@ -15,7 +15,7 @@ namespace LastSignal.Tests
         [SetUp]
         public void SetUp()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
             Assert.That(prefab, Is.Not.Null);
             originalGraphicGore = ZombieGorePreference.GraphicGoreEnabled;
             ZombieGorePreference.SetGraphicGoreEnabled(true);

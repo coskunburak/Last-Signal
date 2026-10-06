@@ -1,7 +1,6 @@
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.TestTools;
 
 namespace LastSignal.Tests
@@ -15,8 +14,8 @@ namespace LastSignal.Tests
         void SetAim(bool held)
         {
             // Fare düğmeleri bit alanıdır; fixture kontrolün tam durumunu güvenle yazar.
-            if (held) fixture.Press(Mouse.current.rightButton);
-            else fixture.Release(Mouse.current.rightButton);
+            if (held) fixture.Press(fixture.TestMouse.rightButton);
+            else fixture.Release(fixture.TestMouse.rightButton);
         }
 
         [UnityTest, Timeout(30000)]
@@ -43,6 +42,22 @@ namespace LastSignal.Tests
             yield return CombatAcceptanceTests.WaitForGameplaySeconds(.6f);
             Assert.That(optic.Target, Is.SameAs(rt));
             Assert.That(weapon.RuntimeState.TotalAmmo, Is.EqualTo(ammo));
+            SetAim(false);
+        }
+
+        [UnityTest, Timeout(30000)]
+        public IEnumerator HeldAimResumesWhenCombatControllerReenables()
+        {
+            yield return fixture.LoadCombatScene();
+            var combat = Object.FindAnyObjectByType<PlayerCombatController>();
+            var optic = combat.ActiveWeapon.GetComponent<ScopeOpticPresenter>();
+            combat.enabled = false;
+            SetAim(true);
+            yield return null;
+            combat.enabled = true;
+            yield return CombatAcceptanceTests.WaitForGameplaySeconds(.6f);
+            Assert.That(optic.Visibility, Is.GreaterThan(.9f));
+            Assert.That(optic.ScopeCamera.enabled, Is.True);
             SetAim(false);
         }
 

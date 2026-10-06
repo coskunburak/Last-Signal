@@ -26,7 +26,7 @@ namespace LastSignal.Tests
         IEnumerator Load()
         {
             Time.timeScale=1;
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/ShelterAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/ShelterAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             session=Object.FindAnyObjectByType<SessionFlow>();loop=session.GetComponent<ShelterLoop>();
             session.Resume();yield return new WaitForSeconds(.8f);

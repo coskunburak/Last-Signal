@@ -15,15 +15,16 @@ namespace LastSignal.Editor
 {
     public static class WorldCellAuthoring
     {
-        public const string ScenePath = "Assets/LastSignal/Scenes/WorldCellAcceptance.unity";
+        public const string ScenePath = "Assets/LastSignal/Scenes/Validation/WorldCellAcceptance.unity";
         public const string Evidence = "Docs/Implementation/P02-GAP-S007/Evidence/20260924-entry";
-        const string Folder = "Assets/LastSignal/WorldCells";
+        const string DataFolder = "Assets/LastSignal/Data/WorldCells";
+        const string PrefabFolder = "Assets/LastSignal/Prefabs/WorldCells";
         public static void Create()
         {
-            Directory.CreateDirectory(Evidence); Directory.CreateDirectory(Folder); AssetDatabase.Refresh();
+            Directory.CreateDirectory(Evidence); Directory.CreateDirectory(DataFolder); Directory.CreateDirectory(PrefabFolder); AssetDatabase.Refresh();
             var scene = EditorSceneManager.OpenScene(WorldTimeAuthoring.ScenePath);
             var flow = UnityEngine.Object.FindAnyObjectByType<SessionFlow>();
-            var catalog = AssetDatabase.LoadAssetAtPath<ItemCatalog>("Assets/Game/Items/Definitions/ItemCatalog.asset");
+            var catalog = AssetDatabase.LoadAssetAtPath<ItemCatalog>("Assets/LastSignal/Data/Items/Definitions/ItemCatalog.asset");
             var definitions = new[] { MakeCell(1), MakeCell(2) };
             var manager = flow.gameObject.AddComponent<WorldCellManager>(); manager.Configure(definitions, catalog);
             var terminal = Box("Two-cell expedition gate", new Vector3(-8,1,8),new Vector3(1,2,.3f),null);
@@ -47,27 +48,27 @@ namespace LastSignal.Editor
             content.loot=root.AddComponent<LootPopulationService>();
             var point=new GameObject("Persistent cell loot");point.transform.SetParent(root.transform);point.transform.position=center+new Vector3(-2,.1f,-2);
             var marker=point.AddComponent<LootSpawnPoint>();var so=new SerializedObject(marker);so.FindProperty("stableId").stringValue="cell-"+x+"-loot";
-            var guaranteedLoot = AssetDatabase.LoadAssetAtPath<LootProfile>("Assets/LastSignal/WorldCells/Guaranteed.asset");
+            var guaranteedLoot = AssetDatabase.LoadAssetAtPath<LootProfile>("Assets/LastSignal/Data/WorldCells/Guaranteed.asset");
             if (!guaranteedLoot)
             {
                 guaranteedLoot = ScriptableObject.CreateInstance<LootProfile>();
-                AssetDatabase.CreateAsset(guaranteedLoot, "Assets/LastSignal/WorldCells/Guaranteed.asset");
+                AssetDatabase.CreateAsset(guaranteedLoot, "Assets/LastSignal/Data/WorldCells/Guaranteed.asset");
                 var profileSo = new SerializedObject(guaranteedLoot);
                 profileSo.FindProperty("emptyBasisPoints").intValue = 0;
                 var entriesProp = profileSo.FindProperty("entries");
                 entriesProp.arraySize = 1;
                 var entryProp = entriesProp.GetArrayElementAtIndex(0);
-                entryProp.FindPropertyRelative("item").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/ammo.rifle.asset");
+                entryProp.FindPropertyRelative("item").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/ammo.rifle.asset");
                 entryProp.FindPropertyRelative("weight").intValue = 1;
                 entryProp.FindPropertyRelative("minQuantity").intValue = 1;
                 entryProp.FindPropertyRelative("maxQuantity").intValue = 1;
                 profileSo.ApplyModifiedPropertiesWithoutUndo();
             }
             so.FindProperty("profile").objectReferenceValue=guaranteedLoot;so.ApplyModifiedPropertiesWithoutUndo();
-            var door=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Door.prefab"),root.transform);
+            var door=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Interactions/Door.prefab"),root.transform);
             door.transform.position=center+new Vector3(2,0,1);Identity(door,"cell-"+x+"-door");
             var encounter=new GameObject("Cell encounter");encounter.transform.SetParent(root.transform);encounter.transform.position=center+new Vector3(4,0,4);
-            content.encounter=encounter.AddComponent<ZombieEncounter>();content.encounter.Configure(AssetDatabase.LoadAssetAtPath<ZombieController>("Assets/Resources/LS_Zombie_Runtime.prefab"),encounter.transform);Identity(encounter,"cell-"+x+"-enemy");
+            content.encounter=encounter.AddComponent<ZombieEncounter>();content.encounter.Configure(AssetDatabase.LoadAssetAtPath<ZombieController>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab"),encounter.transform);Identity(encounter,"cell-"+x+"-enemy");
             var gate=Box("Next cell terminal",center+new Vector3(-4,1,-6),new Vector3(1,2,.3f),root.transform);
             gate.AddComponent<CellPortal>().destination=x==1?"cell:2:0":"cell:1:0";
             var home=Box("Shelter terminal",center+new Vector3(-6,1,-4),new Vector3(.3f,2,1),root.transform);
@@ -77,8 +78,8 @@ namespace LastSignal.Editor
                 sources.Add(new NavMeshBuildSource { shape=NavMeshBuildSourceShape.Box,transform=collider.transform.localToWorldMatrix*Matrix4x4.Translate(collider.center),size=collider.size,area=0 });
             var data=NavMeshBuilder.BuildNavMeshData(NavMesh.GetSettingsByID(-1372625422),sources,new Bounds(center,new Vector3(20,10,20)),Vector3.zero,Quaternion.identity);
             if(!data)throw new InvalidOperationException("Cell nav bake failed.");
-            AssetDatabase.CreateAsset(data,Folder+"/Cell"+x+"Navigation.asset");content.navigation=data;
-            var prefab=PrefabUtility.SaveAsPrefabAsset(root,Folder+"/Cell"+x+".prefab");UnityEngine.Object.DestroyImmediate(root);
+            AssetDatabase.CreateAsset(data,DataFolder+"/Cell"+x+"Navigation.asset");content.navigation=data;
+            var prefab=PrefabUtility.SaveAsPrefabAsset(root,PrefabFolder+"/Cell"+x+".prefab");UnityEngine.Object.DestroyImmediate(root);
             return prefab.GetComponent<WorldCellContent>();
         }
         static void Identity(GameObject go,string id)
@@ -89,7 +90,7 @@ namespace LastSignal.Editor
         static GameObject Box(string name,Vector3 position,Vector3 size,Transform parent)
         {
             var go=GameObject.CreatePrimitive(PrimitiveType.Cube);go.name=name;go.transform.SetParent(parent);go.transform.position=position;go.transform.localScale=size;
-            go.GetComponent<Renderer>().sharedMaterial=AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Shelter/Terminal.mat");return go;
+            go.GetComponent<Renderer>().sharedMaterial=AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Materials/Shelter/Terminal.mat");return go;
         }
         public static void Build()
         {

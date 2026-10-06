@@ -19,8 +19,8 @@ namespace LastSignal.Tests
         {
             owner = new GameObject("S008 test carrier"); player = owner.AddComponent<PlayerInventory>(); player.Initialize(3);
             stash = new ShelterStorage(4);
-            ammo = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/ammo.rifle.asset");
-            scrap = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/material.scrap.asset");
+            ammo = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/ammo.rifle.asset");
+            scrap = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/material.scrap.asset");
         }
         [TearDown] public void Cleanup() => Object.DestroyImmediate(owner);
         int Total => player.GetTotalQuantity(ammo) + stash.GetTotalQuantity(ammo);
@@ -82,7 +82,7 @@ namespace LastSignal.Tests
         }
         [Test] public void AmmoLoopPreservesMagazineBoundaryAndConserves()
         {
-            var definition=AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Scripts/Runtime/Combat/WeaponDefinition_AssaultRifle.asset");
+            var definition=AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Data/Combat/WeaponDefinition_AssaultRifle.asset");
             var weapon=new WeaponRuntimeState(definition,12,player);weapon.TryEquip();weapon.Tick(1);weapon.TryCompleteEquip();
             stash.TryAdd(ammo,40);ItemTransferService.Withdraw(stash,player,ammo,20);Assert.AreEqual(12,weapon.CurrentMagazine);
             Assert.IsTrue(weapon.TryBeginReload());weapon.Tick(10);Assert.IsTrue(weapon.TryCommitReload());weapon.TryCompleteReload();

@@ -18,7 +18,8 @@ namespace LastSignal
     {
         public static bool Valid(in GameplayNoiseEvent e, double now) =>
             e.EventId.Epoch != 0 && e.EventId.Sequence != 0 && e.SourceId != 0 &&
-            GameplayNoiseSystem.ValidPosition(e.Position) && e.Category >= GameplayNoiseCategory.Footstep && e.Category <= GameplayNoiseCategory.Gunshot &&
+            GameplayNoiseSystem.ValidPosition(e.Position) && (e.Category >= GameplayNoiseCategory.Footstep && e.Category <= GameplayNoiseCategory.Gunshot ||
+             e.Category >= GameplayNoiseCategory.VehicleEngine && e.Category <= GameplayNoiseCategory.VehicleImpact) &&
             new GameplayNoiseProfile(e.BaseRadiusMeters, e.Intensity, (float)(e.ExpiresAt - e.SimulationTime)).Valid &&
             e.BaseRadiusMeters > 0 && double.IsFinite(now) && double.IsFinite(e.SimulationTime) && e.SimulationTime >= 0 &&
             e.SimulationTime <= now && double.IsFinite(e.ExpiresAt) && e.ExpiresAt > now;

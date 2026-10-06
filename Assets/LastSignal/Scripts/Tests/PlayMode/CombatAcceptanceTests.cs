@@ -11,6 +11,7 @@ namespace LastSignal.Tests
     {
         Mouse mouse;
         Keyboard keyboard;
+        public Mouse TestMouse => mouse;
         PlayerCombatController combat;
         AcceptanceHud hud;
         DamageableTarget target10m;
@@ -29,7 +30,7 @@ namespace LastSignal.Tests
         {
 
 #if UNITY_EDITOR
-            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/CombatAcceptance.unity", new UnityEngine.SceneManagement.LoadSceneParameters(UnityEngine.SceneManagement.LoadSceneMode.Single));
+            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/CombatAcceptance.unity", new UnityEngine.SceneManagement.LoadSceneParameters(UnityEngine.SceneManagement.LoadSceneMode.Single));
 #else
             SceneManager.LoadScene("CombatAcceptance");
 #endif

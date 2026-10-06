@@ -30,7 +30,7 @@ namespace LastSignal.Tests
         [Test]
         public void ZombiePrefabValidation()
         {
-            var guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/LastSignal/Prefabs/AI" });
+            var guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/LastSignal/Prefabs/Resources", "Assets/LastSignal/Prefabs/Enemies" });
             foreach (var guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);

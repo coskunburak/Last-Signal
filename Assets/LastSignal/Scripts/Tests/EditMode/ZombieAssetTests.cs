@@ -8,8 +8,7 @@ namespace LastSignal.Tests
 {
     public class ZombieAssetTests
     {
-        const string Root = "Assets/LastSignal/Assets/Zombie/Enemies/Zombie";
-        static GameObject Prefab => AssetDatabase.LoadAssetAtPath<GameObject>(Root + "/Prefabs/LS_Zombie_Shirtless_Visual.prefab");
+        static GameObject Prefab => AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shirtless_Visual.prefab");
 
         [Test]
         public void ZombiePresentationHasValidRigAndNoGameplayOrMissingComponents()
@@ -47,15 +46,15 @@ namespace LastSignal.Tests
             Assert.That(machine.anyStateTransitions, Is.Empty);
             Assert.That(controller.layers.Length, Is.EqualTo(2));
             Assert.That(controller.layers[1].avatarMask, Is.Not.Null);
-            var definition = AssetDatabase.LoadAssetAtPath<ZombieDefinition>(Root + "/Shambler.asset");
+            var definition = AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Data/Enemies/Zombie/Shambler.asset");
             var hitState = controller.layers[1].stateMachine.states.Single(s => s.state.name == "HitReact").state;
             Assert.That(hitState.motion, Is.EqualTo(definition.HitReactClip));
             Assert.That(hitState.speedParameterActive, Is.True);
             Assert.That(hitState.speedParameter, Is.EqualTo("HitReactSpeed"));
             Assert.That(AssetDatabase.GetAssetPath(definition.HitReactClip),
-                Is.EqualTo("Assets/LastSignal/Assets/Kevin Iglesias/Zombie Animations/Animations/Zombie@Damage01.fbx"));
+                Is.EqualTo("Assets/ThirdParty/Animation/KevinIglesias/Zombie Animations/Animations/Zombie@Damage01.fbx"));
             Assert.That(AssetDatabase.GetAssetPath(definition.FlyingBackDeathClip),
-                Is.EqualTo("Assets/LastSignal/Assets/Animation/Zombie Animation/Zombie Death.fbx"));
+                Is.EqualTo("Assets/ThirdParty/Animation/AnimationLibraries/Zombie Animation/Zombie Death.fbx"));
             Assert.That(machine.states.Single(s => s.state.name == "FlyingBackDeath").state.motion,
                 Is.EqualTo(definition.FlyingBackDeathClip), "Ölüm durumu ile tanım aynı üretim klibini kullanmalı.");
         }
@@ -76,7 +75,7 @@ namespace LastSignal.Tests
         [Test]
         public void AnimationSourceAvatarsBelongToTheirOwnSkeleton()
         {
-            const string source = "Assets/LastSignal/Assets/Kevin Iglesias/Zombie Animations";
+            const string source = "Assets/ThirdParty/Animation/KevinIglesias/Zombie Animations";
             foreach (var guid in AssetDatabase.FindAssets("t:AnimationClip", new[] { source + "/Animations" }))
             {
                 var importer = (ModelImporter)AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid));

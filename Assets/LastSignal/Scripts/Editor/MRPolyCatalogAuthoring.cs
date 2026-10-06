@@ -9,7 +9,7 @@ namespace LastSignal.Editor
     // Kaynak prefabların eski GUID bağlantılarına bağımlı olmayan proje kopyaları.
     public static class MRPolyCatalogAuthoring
     {
-        public const string Source = "Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set";
+        public const string Source = "Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set";
         public const string Output = "Assets/LastSignal/Prefabs/Combat/MRPoly";
         public const string Materials = "Assets/LastSignal/Materials/MRPoly";
 

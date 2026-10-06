@@ -146,7 +146,7 @@ namespace LastSignal.Tests
         }
         [Test] public void ProductionPrefabRegionsMasksAndAnimationReferencesAreValid()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
             var owner = prefab.GetComponent<ZombieHealth>(); Assert.That(owner, Is.Not.Null);
             Assert.That(prefab.GetComponent<ZombieDismemberment>(), Is.Not.Null);
             Assert.That(prefab.GetComponents<ZombieHealth>().Length, Is.EqualTo(1)); bool head = false, body = false;
@@ -164,7 +164,7 @@ namespace LastSignal.Tests
             Assert.That(head && body && leftArm && rightArm && leftHand && rightHand && torso);
             Assert.That(prefab.GetComponent<ZombieController>().Definition.IsDamagePresentationValid);
             for (int i=0;i<32;i++) Assert.That(Physics.GetIgnoreLayerCollision(8,i), Is.True);
-            var weapon = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
+            var weapon = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab");
             Assert.That(new SerializedObject(weapon.GetComponent<WeaponController>()).FindProperty("hitMask").intValue & (1<<8), Is.Not.Zero);
         }
     }

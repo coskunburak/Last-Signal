@@ -9,7 +9,7 @@ namespace LastSignal.Editor
     // Read-only Editor audit. Production states are not rebound before retarget/pose acceptance.
     public static class ZombieMixamoAudit
     {
-        const string Root = "Assets/LastSignal/Assets/Animation/Zombie Animation/";
+        const string Root = "Assets/ThirdParty/Animation/AnimationLibraries/Zombie Animation/";
         static readonly string[] Names = {
             "Flying Back Death", "Zombie Attack (1)", "Zombie Attack", "Zombie Crawl",
             "Zombie Dying", "Zombie Run", "Zombie Walk"

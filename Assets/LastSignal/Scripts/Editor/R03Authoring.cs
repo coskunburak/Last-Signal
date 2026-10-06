@@ -9,7 +9,7 @@ namespace LastSignal.Editor
         public static void Apply()
         {
             var report = new System.Text.StringBuilder();
-            foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/LastSignal/Enemies", "Assets/Resources" }))
+            foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/LastSignal/Prefabs/Enemies", "Assets/LastSignal/Prefabs/Resources" }))
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
                 var asset = AssetDatabase.LoadAssetAtPath<GameObject>(path);

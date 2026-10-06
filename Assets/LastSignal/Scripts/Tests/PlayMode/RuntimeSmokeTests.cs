@@ -32,7 +32,7 @@ namespace LastSignal.Tests
         [UnityTest]
         public IEnumerator SmokeTest_ThreeSessionCycles()
         {
-            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/CombatAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/CombatAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
             
             for (int i = 0; i < 3; i++)
             {

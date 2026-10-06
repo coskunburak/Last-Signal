@@ -100,7 +100,7 @@ namespace LastSignal.Noise
             double ttl = noise.ExpiresAt - noise.SimulationTime;
             if (!CanEmit || dispatching || noise.EventId.Epoch != Epoch || noise.EventId.Sequence <= highWater ||
                 noise.SourceId == 0 || !ValidPosition(noise.Position) ||
-                noise.Category < GameplayNoiseCategory.Footstep || noise.Category > GameplayNoiseCategory.Generator ||
+                noise.Category < GameplayNoiseCategory.Footstep || noise.Category > GameplayNoiseCategory.VehicleImpact ||
                 !new GameplayNoiseProfile(noise.BaseRadiusMeters, noise.Intensity, (float)ttl).Valid ||
                 !double.IsFinite(now) || !double.IsFinite(noise.SimulationTime) || noise.SimulationTime < 0 || noise.SimulationTime > now ||
                 !double.IsFinite(noise.ExpiresAt) || noise.ExpiresAt <= now || ttl > 30) return false;

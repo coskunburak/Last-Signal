@@ -153,6 +153,14 @@ namespace LastSignal.Persistence
                 catch (InvalidOperationException e) { snapshot = null; return new SaveResult(SaveError.Busy,e.Message); }
             }
             
+            var vehicles = GetComponent<Vehicles.VehicleWorld>();
+            if (vehicles)
+            {
+                if (!vehicles.Actor) { snapshot = null; return Busy(); }
+                result = vehicles.Actor.Capture(out var fleet);
+                if (!result.Success) { snapshot = null; return result; }
+                snapshot.vehicles = fleet; snapshot.header.vehicleVersion = 1;
+            }
             var pop = GetComponent<LastSignal.AI.WorldPopulationManager>();
             if (pop && cells) snapshot.population = pop.GetSaveSnapshot();
             
@@ -235,9 +243,12 @@ namespace LastSignal.Persistence
             watch.Restart();
             try
             {
+                var vehicles = GetComponent<Vehicles.VehicleWorld>();
+                if (vehicles) Require(vehicles.Actor.Restore(candidate.vehicles, catalog));
                 Hydrate(candidate);
+                if (vehicles && !vehicles.Actor.RestoreOccupancy(candidate.vehicles)) throw new InvalidOperationException("Vehicle occupancy restore failed.");
                 Physics.SyncTransforms();
-                if (!PlayerLocationClear()) throw new InvalidOperationException("Saved player capsule overlaps solid world geometry.");
+                if (!(vehicles && vehicles.Actor.Occupied) && !PlayerLocationClear()) throw new InvalidOperationException("Saved player capsule overlaps solid world geometry.");
                 // Finalize transform-dependent state only after all hydration and physics synchronization.
                 var clock=GetComponent<LastSignal.WorldTime.WorldClock>();
                 if(clock) clock.Restore(candidate.worldTime ?? LastSignal.WorldTime.WorldTimeSnapshot.LegacyDefault());
@@ -260,6 +271,15 @@ namespace LastSignal.Persistence
         }
         SaveResult ValidateTopology(SaveGame state)
         {
+            var vehicles = GetComponent<Vehicles.VehicleWorld>();
+            if (state.population?.residentPressure != null && !vehicles) return Invalid("Scene has no resident pressure region.");
+            if (state.vehicles != null && (!vehicles || !vehicles.Prefab || !vehicles.Prefab.Definition ||
+                state.vehicles.vehicles[0].resources.definitionId != vehicles.Prefab.Definition.StableId)) return Invalid("Incompatible vehicle topology.");
+            if (state.vehicles != null)
+            {
+                var pose = state.vehicles.vehicles[0].pose;
+                if (!vehicles.ContainsResidentPosition(new Vector3(pose.x, pose.y, pose.z))) return Invalid("Pickup is outside resident ownership.");
+            }
             var cells = GetComponent<LastSignal.WorldCells.WorldCellManager>();
             if ((cells && (state.header.schemaVersion < 3 || !cells.ValidateTopology(state.cells))) || (!cells && state.header.schemaVersion >= 3)) return Invalid("Incompatible cell topology/schema.");
             if(state.header.schemaVersion >= 2 && !GetComponent<LastSignal.WorldTime.WorldClock>()) return Invalid("This scene cannot restore world-time schema 2.");
@@ -297,8 +317,8 @@ namespace LastSignal.Persistence
             var pop = GetComponent<LastSignal.AI.WorldPopulationManager>();
             if (pop) pop.SyncFromSave(state.population);
             var capsule=player.GetComponent<CharacterController>(); capsule.enabled=false;
-            ApplyPose(player.transform,state.player.transform); capsule.enabled=true;
-            if(!player.GetComponent<PlayerStance>().TrySetCrouching(state.player.crouching)) throw new InvalidOperationException("Saved stance is obstructed.");
+            ApplyPose(player.transform,state.player.transform); capsule.enabled=string.IsNullOrEmpty(state.vehicles?.occupiedVehicleId);
+            if(string.IsNullOrEmpty(state.vehicles?.occupiedVehicleId) && !player.GetComponent<PlayerStance>().TrySetCrouching(state.player.crouching)) throw new InvalidOperationException("Saved stance is obstructed.");
             player.GetComponent<FirstPersonLook>().RestorePitch(state.player.pitch);
             player.GetComponent<PlayerHealth>().RestoreHealth(state.player.health);
             var weapon=player.GetComponent<PlayerCombatController>().Firearm;

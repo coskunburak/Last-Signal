@@ -6,6 +6,7 @@ namespace LastSignal.Persistence
     // missing sections must remain detectable when parsing old/corrupt JSON.
     [Serializable] public sealed class SaveGame
     {
+        public LastSignal.Vehicles.VehicleWorldSnapshot vehicles;
         public LastSignal.WorldTime.WorldTimeSnapshot worldTime;
         public LastSignal.WorldCells.CellWorldSnapshot cells;
         public SaveHeader header;
@@ -31,6 +32,7 @@ namespace LastSignal.Persistence
     {
         public int schemaVersion;
         public int progressionVersion;
+        public int vehicleVersion;
         public string contentVersion, buildId, worldId, timestampUtc;
         public int seed;
         public long generation;
@@ -146,6 +148,7 @@ namespace LastSignal.Persistence
     }
     [Serializable] public sealed class PopulationSnapshot
     {
+        public CellPressureSnapshot residentPressure;
         public long lastNoiseSequence;
         public PopulationActorSnapshot[] actors;
         public CellPressureSnapshot[] pressures;

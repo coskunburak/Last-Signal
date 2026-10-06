@@ -7,7 +7,7 @@ namespace LastSignal.Tests
 {
     public sealed class ScopeOpticTests
     {
-        const string Folder = "Assets/LastSignal/Combat/Optics/";
+        const string Folder = "Assets/LastSignal/Models/Weapons/Optics/";
 
         [Test]
         public void FovPreservesSpecifiedAngularMagnification()
@@ -26,7 +26,7 @@ namespace LastSignal.Tests
         public void RearLensIsSeparatedAndOpaqueBodyTrianglesRemainUnchanged()
         {
             var source = AssetDatabase.LoadAssetAtPath<GameObject>(
-                "Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx")
+                "Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Models/Assault Rifle.fbx")
                 .GetComponent<MeshFilter>().sharedMesh;
             var body = AssetDatabase.LoadAssetAtPath<Mesh>(Folder + "MRPoly_Body_Optics.asset");
             var rear = AssetDatabase.LoadAssetAtPath<Mesh>(Folder + "MRPoly_RearLens.asset");
@@ -42,7 +42,7 @@ namespace LastSignal.Tests
         [Test]
         public void PrefabHasOneConfiguredScopeAndNoAuthoredExtraCamera()
         {
-            var root = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
+            var root = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab");
             var optics = root.GetComponents<ScopeOpticPresenter>();
             Assert.That(optics.Length, Is.EqualTo(1));
             Assert.That(optics[0].Definition, Is.Not.Null);

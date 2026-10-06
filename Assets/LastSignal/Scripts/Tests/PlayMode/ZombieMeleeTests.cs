@@ -23,7 +23,7 @@ namespace LastSignal.Tests
         ZombieController zombie;
         PlayerHealth health;
         readonly List<GameObject> owned = new List<GameObject>();
-        IEnumerator Load(string scene = "Assets/LastSignal/Scenes/ZombieAcceptance.unity")
+        IEnumerator Load(string scene = "Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity")
         {
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode(scene, new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
@@ -189,7 +189,7 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator NormalGameplayRouteApproachesAndAttacksProductionPlayer()
         {
-            yield return Load("Assets/Scenes/SampleScene.unity");
+            yield return Load("Assets/ThirdParty/UnityURPTemplate/Scenes/SampleScene.unity");
             Place(zombie.transform.position + zombie.transform.forward * 3);
             yield return Until(() => zombie.Runtime.State == ZombieState.Chasing); Capture("normal-approach");
             yield return Until(() => health.DamageTransactions > 0, 10); Capture("normal-hit");
@@ -239,7 +239,7 @@ namespace LastSignal.Tests
                 yield return Load(); session.GetComponent<ZombieEncounter>().End(); Place(new Vector3(-8, 0, 0));
                 var serialized = new SerializedObject(health); serialized.FindProperty("maxHealth").floatValue = 10000;
                 serialized.ApplyModifiedPropertiesWithoutUndo(); health.ResetForSession();
-                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
                 var actors = new ZombieController[count];
                 for (int i = 0; i < count; i++)
                 {
@@ -276,7 +276,7 @@ namespace LastSignal.Tests
         [UnityTest] public IEnumerator RebindingDuringCommitCannotTransferOldStrike()
         {
             yield return Load(); yield return Until(() => zombie.Runtime.State == ZombieState.AttackCommit);
-            var replacement = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab"), session.Player.transform.position, session.Player.transform.rotation);
+            var replacement = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player/Player.prefab"), session.Player.transform.position, session.Player.transform.rotation);
             replacement.AddComponent<Noise.GameplayNoiseContext>().Bind(session);
             owned.Add(replacement); var nextHealth = replacement.GetComponent<PlayerHealth>();
             Assert.That(zombie.Bind(replacement), Is.True);

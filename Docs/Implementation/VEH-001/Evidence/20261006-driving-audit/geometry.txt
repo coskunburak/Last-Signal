@@ -1,0 +1,86 @@
+Wheel binding validation=True 
+0 Physics_FL_Mesh -> FL_Mesh colliderPosition=(-1.00000, 0.49512, 1.35614) radius=0.51 meshSize=(0.49899, 1.02323, 1.02325) suspension=0.25 spring=35000 damper=4500
+1 Physics_FR_Mesh -> FR_Mesh colliderPosition=(0.95000, 0.49512, 1.35614) radius=0.51 meshSize=(0.49899, 1.02323, 1.02325) suspension=0.25 spring=35000 damper=4500
+2 Physics_BL_Mesh -> BL_Mesh colliderPosition=(-1.00000, 0.49512, -1.29386) radius=0.51 meshSize=(0.49899, 1.02323, 1.02325) suspension=0.25 spring=35000 damper=4500
+3 Physics_BR_Mesh -> BR_Mesh colliderPosition=(0.95000, 0.49512, -1.29386) radius=0.51 meshSize=(0.49899, 1.02323, 1.02325) suspension=0.25 spring=35000 damper=4500
+{
+    "MonoBehaviour": {
+        "m_Enabled": true,
+        "m_EditorHideFlags": 0,
+        "m_Name": "",
+        "m_EditorClassIdentifier": "LastSignal.MotionCore::LastSignal.Vehicles.MotionCoreIntegration.MotionCoreVehiclePhysicsAdapter",
+        "centerOfMass": {
+            "fileID": 2438690447956431529,
+            "guid": "f9133a393ce084a31bc1c841544d0396",
+            "type": 3
+        },
+        "bodyMass": 1800.0,
+        "axles": [
+            {
+                "leftWheel": {
+                    "fileID": 3539603482195426599,
+                    "guid": "f9133a393ce084a31bc1c841544d0396",
+                    "type": 3
+                },
+                "rightWheel": {
+                    "fileID": 5548484952017223038,
+                    "guid": "f9133a393ce084a31bc1c841544d0396",
+                    "type": 3
+                },
+                "leftVisual": {
+                    "fileID": 5597348789864631616,
+                    "guid": "f9133a393ce084a31bc1c841544d0396",
+                    "type": 3
+                },
+                "rightVisual": {
+                    "fileID": 4886108094425604229,
+                    "guid": "f9133a393ce084a31bc1c841544d0396",
+                    "type": 3
+                },
+                "steering": true,
+                "handbrake": false,
+                "antiRollForce": 4500.0
+            },
+            {
+                "leftWheel": {
+                    "fileID": 6694793503636059368,
+                    "guid": "f9133a393ce084a31bc1c841544d0396",
+                    "type": 3
+                },
+                "rightWheel": {
+                    "fileID": 3453747260888287956,
+                    "guid": "f9133a393ce084a31bc1c841544d0396",
+                    "type": 3
+                },
+                "leftVisual": {
+                    "fileID": 5469905932803338152,
+                    "guid": "f9133a393ce084a31bc1c841544d0396",
+                    "type": 3
+                },
+                "rightVisual": {
+                    "fileID": 7312784964894128724,
+                    "guid": "f9133a393ce084a31bc1c841544d0396",
+                    "type": 3
+                },
+                "steering": false,
+                "handbrake": true,
+                "antiRollForce": 4500.0
+            }
+        ],
+        "drivetrain": 0,
+        "maxMotorTorque": 2000.0,
+        "maxBrakeTorque": 3200.0,
+        "reverseTorqueScale": 0.44999998807907107,
+        "handbrakeTorque": 4500.0,
+        "idleBrakeTorque": 150.0,
+        "maxSpeedKph": 64.80000305175781,
+        "maxReverseSpeedKph": 18.0,
+        "steerAngleAtZeroSpeed": 32.0,
+        "steerAngleAtTopSpeed": 8.0,
+        "steerInputRateDegPerSec": 100.0,
+        "steerReturnRateDegPerSec": 200.0,
+        "handbrakeGripFactor": 0.8999999761581421,
+        "downforce": 2.0,
+        "serviceBrakeTorque": 3200.0
+    }
+}

@@ -14,7 +14,7 @@ namespace LastSignal.Editor
 {
     public static class S011Authoring
     {
-        public const string Scene = "Assets/LastSignal/Scenes/RelayExpedition.unity";
+        public const string Scene = "Assets/LastSignal/Scenes/Production/RelayExpedition.unity";
         const string Evidence = "Docs/Implementation/S011/Evidence/20260929-closure/";
         static void Set(Object target, string name, Object value)
         { var s = new SerializedObject(target); s.FindProperty(name).objectReferenceValue = value; s.ApplyModifiedPropertiesWithoutUndo(); }
@@ -24,9 +24,9 @@ namespace LastSignal.Editor
             var scene = EditorSceneManager.OpenScene(Scene, OpenSceneMode.Single);
             var flow = Object.FindAnyObjectByType<SessionFlow>();
             var mission = flow.GetComponent<RelayMission>(); if (!mission) mission = flow.gameObject.AddComponent<RelayMission>();
-            var scrap = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/material.scrap.asset");
-            var tool = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/tool.wrench.asset");
-            const string path = "Assets/Game/Items/Definitions/quest.relay-fuse.asset";
+            var scrap = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/material.scrap.asset");
+            var tool = AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/tool.wrench.asset");
+            const string path = "Assets/LastSignal/Data/Items/Definitions/quest.relay-fuse.asset";
             var fuse = AssetDatabase.LoadAssetAtPath<ItemDefinition>(path);
             if (!fuse) { fuse = ScriptableObject.CreateInstance<ItemDefinition>(); AssetDatabase.CreateAsset(fuse, path); }
             var data = new SerializedObject(fuse); data.FindProperty("stableId").FindPropertyRelative("id").stringValue = RelayProgression.FuseId;
@@ -34,8 +34,8 @@ namespace LastSignal.Editor
             data.FindProperty("description").stringValue = "Unique relay spare. Dropped fuse can be recalled at the cabin radio; repair consumes it once.";
             data.ApplyModifiedPropertiesWithoutUndo();
             var item = Object.Instantiate(scrap.WorldPrefab); item.name = "Relay fuse"; item.GetComponent<WorldItem>().Configure(fuse, 1);
-            var prefab = PrefabUtility.SaveAsPrefabAsset(item, "Assets/LastSignal/Shelter/RelayFuse.prefab"); Object.DestroyImmediate(item); Set(fuse, "worldPrefab", prefab);
-            var catalog = AssetDatabase.LoadAssetAtPath<ItemCatalog>("Assets/Game/Items/Definitions/ItemCatalog.asset");
+            var prefab = PrefabUtility.SaveAsPrefabAsset(item, "Assets/LastSignal/Prefabs/Shelter/RelayFuse.prefab"); Object.DestroyImmediate(item); Set(fuse, "worldPrefab", prefab);
+            var catalog = AssetDatabase.LoadAssetAtPath<ItemCatalog>("Assets/LastSignal/Data/Items/Definitions/ItemCatalog.asset");
             bool found = false; foreach (var entry in catalog.EditorItems) if (entry == fuse) found = true;
             if (!found) { var c = new SerializedObject(catalog); var entries = c.FindProperty("items"); entries.InsertArrayElementAtIndex(entries.arraySize); entries.GetArrayElementAtIndex(entries.arraySize-1).objectReferenceValue = fuse; c.ApplyModifiedPropertiesWithoutUndo(); }
             mission.fuse = fuse; mission.tool = tool;
@@ -58,8 +58,8 @@ namespace LastSignal.Editor
                 var text = sign.GetComponent<TextMesh>(); text.text="GAS STATION\nMAINTENANCE CACHE\nRelay spare fuse"; text.fontSize=48; text.characterSize=.06f; text.anchor=TextAnchor.MiddleCenter;
             }
             var point = pointObject.GetComponent<LootSpawnPoint>();
-            var profile = AssetDatabase.LoadAssetAtPath<LootProfile>("Assets/LastSignal/Shelter/S011-Fuse.asset");
-            if (!profile) { profile = ScriptableObject.CreateInstance<LootProfile>(); AssetDatabase.CreateAsset(profile,"Assets/LastSignal/Shelter/S011-Fuse.asset"); }
+            var profile = AssetDatabase.LoadAssetAtPath<LootProfile>("Assets/LastSignal/Data/Shelter/S011-Fuse.asset");
+            if (!profile) { profile = ScriptableObject.CreateInstance<LootProfile>(); AssetDatabase.CreateAsset(profile,"Assets/LastSignal/Data/Shelter/S011-Fuse.asset"); }
             var p = new SerializedObject(profile); p.FindProperty("emptyBasisPoints").intValue = 0; var rows = p.FindProperty("entries"); rows.arraySize = 1;
             var row = rows.GetArrayElementAtIndex(0); row.FindPropertyRelative("item").objectReferenceValue=fuse; row.FindPropertyRelative("weight").intValue=1;
             row.FindPropertyRelative("minQuantity").intValue=1; row.FindPropertyRelative("maxQuantity").intValue=1; p.ApplyModifiedPropertiesWithoutUndo();

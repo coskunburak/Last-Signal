@@ -18,7 +18,7 @@ namespace LastSignal.Tests
         GameObject player;
         IEnumerator Setup()
         {
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/ZombieAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             session=Object.FindAnyObjectByType<SessionFlow>();session.Resume();player=session.Player;
             player.GetComponent<FirstPersonMotor>().enabled=false;
@@ -50,7 +50,13 @@ namespace LastSignal.Tests
             yield return Setup();actor.transform.position=new Vector3(-3,0,2);actor.transform.rotation=Quaternion.Euler(0,90,0);
             actor.GetComponent<NavMeshAgent>().Warp(actor.transform.position);
             Place(new Vector3(3,0,2));yield return Wait(.8f);Assert.That(zombie.Runtime.State,Is.EqualTo(ZombieState.Idle));
-            Place(new Vector3(-1,0,2));yield return State(ZombieState.Chasing);
+            // Re-establish the exact visible fixture after the occlusion wait.
+            actor.GetComponent<NavMeshAgent>().Warp(new Vector3(-3,0,2));
+            actor.transform.rotation=Quaternion.Euler(0,90,0);
+            Place(actor.transform.position+actor.transform.forward*2);
+            Assert.That(zombie.Perception.Evaluate(zombie.Definition).Visible,Is.True,
+                "The acquisition target must be in clear view after the occlusion phase");
+            yield return State(ZombieState.Chasing);
             Place(new Vector3(100,0,100));yield return State(ZombieState.Searching);
             yield return Wait(3);Assert.That(zombie.Search.Inspecting||zombie.Search.PointIndex>0,Is.True,"Search must inspect the remembered area");
             yield return State(ZombieState.Idle,14);Assert.That(zombie.Runtime.HasMemory,Is.False);

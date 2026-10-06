@@ -14,7 +14,7 @@ namespace LastSignal.Tests
         const string Evidence="Docs/Implementation/PreS010-Recovery/Evidence/R03/20260927-foundation/";
         SessionFlow flow;
         IEnumerator Setup()
-        { yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/ZombieAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return null;yield return null;flow=Object.FindAnyObjectByType<SessionFlow>();flow.Resume(); }
+        { yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return null;yield return null;flow=Object.FindAnyObjectByType<SessionFlow>();flow.Resume(); }
         [UnityTest] public IEnumerator RealGunshotSnapshotPauseReactionSearchVisionAndSessionSoak()
         {yield return Setup();File.WriteAllText(Evidence+"anti-omniscience-trace.txt","");yield return R03AcceptanceRoute.Run(flow,Evidence+"play-route",line=>File.AppendAllText(Evidence+"anti-omniscience-trace.txt",line+"\n"));}
         [UnityTest] public IEnumerator ThirtyListenersWarmedPhysicsAllocationAndNoEventCost()

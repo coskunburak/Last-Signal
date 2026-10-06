@@ -8,7 +8,7 @@ namespace LastSignal.Editor
         [MenuItem("Last Signal/S002/Analyze VAL Animations")]
         public static void AnalyzeVAL()
         {
-            string path = "Assets/LastSignal/VAL.fbx";
+            string path = "Assets/ThirdParty/Characters/VAL.fbx";
             Object[] assets = AssetDatabase.LoadAllAssetsAtPath(path);
             Debug.Log($"--- Analyzing {path} ---");
             foreach (var asset in assets)

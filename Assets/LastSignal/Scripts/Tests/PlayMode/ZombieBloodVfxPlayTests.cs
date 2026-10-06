@@ -17,7 +17,7 @@ namespace LastSignal.Tests
         {
             original = ZombieGorePreference.GraphicGoreEnabled;
             ZombieGorePreference.SetGraphicGoreEnabled(true);
-            actor = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab"));
+            actor = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab"));
             sever = actor.GetComponent<ZombieDismemberment>();
             pool = Object.FindAnyObjectByType<ZombieBloodVfxPool>();
             Assert.That(pool, Is.Not.Null);
@@ -73,7 +73,7 @@ namespace LastSignal.Tests
             try
             {
                 floor.transform.position = new Vector3(10, -.1f, 0); floor.transform.localScale = new Vector3(10, .2f, 10);
-                floor.GetComponent<Renderer>().sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Materials/M_AcceptanceGround.mat");
+                floor.GetComponent<Renderer>().sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Materials/Enemies/Zombie/M_AcceptanceGround.mat");
                 anchor.transform.position = new Vector3(10, 1, 0);
                 Physics.SyncTransforms();
                 var presenter = actor.GetComponent<ZombieBloodVfxPresenter>();
@@ -109,9 +109,14 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator BleedingExpiresWithinBoundedLifetime()
         {
+            var region = actor.GetComponent<ZombieBloodVfxPresenter>().Profile.hand;
+            var started = Time.time;
             Hit(ZombieBodyPart.LeftHand, 35);
-            yield return new WaitForSeconds(3.3f);
-            Assert.That(pool.ActiveEffects, Is.Zero);
+            Assert.That(pool.ActiveEffects, Is.EqualTo(1));
+            var limit = region.spurtDuration + region.dripDuration + 1.5f + .5f;
+            while (pool.ActiveEffects != 0 && Time.time - started < limit)
+                yield return null;
+            Assert.That(pool.ActiveEffects, Is.Zero, "Bleeding exceeded the configured bounded lifetime");
         }
         [UnityTest] public IEnumerator HeadSprayFollowsStumpDecaysAndExpires()
         {

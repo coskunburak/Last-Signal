@@ -22,7 +22,7 @@ namespace LastSignal.Tests
         readonly List<GameObject> owned=new List<GameObject>();
         IEnumerator Load()
         {
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/ZombieAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;session=Object.FindAnyObjectByType<SessionFlow>();session.Resume();
             session.Player.GetComponent<FirstPersonMotor>().enabled=false;
         }
@@ -71,7 +71,7 @@ namespace LastSignal.Tests
         [UnityTest]public IEnumerator ProfileOneTenAndTwentyFiveProductionActors()
         {
             yield return Load();session.GetComponent<ZombieEncounter>().End();Place(new Vector3(-5,0,7));
-            var source=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+            var source=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
             var report=new StringBuilder("Editor technical smoke; not shipping density certification. Per-frame totals after 3 seconds warmup, >=5 seconds and >=300 sampled frames. GC counter includes entire Editor/test harness; direct ManagedTickBytes separately counts synchronous AI ticks. CPU values are nanoseconds converted to ms; nested markers overlap.\n");
             foreach(int count in new[]{1,10,25})
             {

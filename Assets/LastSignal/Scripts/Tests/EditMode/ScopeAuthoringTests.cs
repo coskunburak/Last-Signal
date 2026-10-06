@@ -11,7 +11,7 @@ namespace LastSignal.Tests
         [Test]
         public void ReapplyingOpticsPreservesSourceAimAndAssetIdentity()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab");
             Assert.That(prefab.GetComponent<ScopeOpticPresenter>(), Is.Not.Null,
                 "Önce Install on Existing Rifle Prefab çalıştırılmalıdır.");
             byte[] sourceBytes = File.ReadAllBytes(ScopeOpticAuthoring.SourcePath);

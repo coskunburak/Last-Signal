@@ -17,7 +17,7 @@ namespace LastSignal.Tests
         [UnitySetUp] public IEnumerator Setup()
         {
             directory=Path.Combine(Path.GetTempPath(),"LastSignal-Cells-"+Guid.NewGuid().ToString("N"));
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldCellAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/WorldCellAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;cells=UnityEngine.Object.FindAnyObjectByType<WorldCellManager>();flow=cells.GetComponent<SessionFlow>();flow.Resume();
         }
         [UnityTearDown] public IEnumerator Cleanup()

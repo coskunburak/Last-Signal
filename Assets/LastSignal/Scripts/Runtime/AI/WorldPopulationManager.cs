@@ -64,6 +64,7 @@ namespace LastSignal.AI
         long generation, lastNoiseSequence;
         double nextSearch;
         bool active;
+        CellPressureState residentPressure;
         public event Action<string> PressureChanged;
         public int PhysicalCount => physical.Count;
         public int MigrationCount => migrations.Count;
@@ -89,6 +90,7 @@ namespace LastSignal.AI
                 ledgers.Add(id, new PopulationLedger { CellId = id, Logical = initialPopulationPerCell });
                 pressures.Add(id, new CellPressureState { CellId = id, LastUpdateTime = clock.Simulation.Seconds });
             }
+            if (GetComponent<Vehicles.VehicleWorld>()) residentPressure = new CellPressureState { CellId = "resident", LastUpdateTime = clock.Simulation.Seconds };
             BindClock();
         }
         public void BindClock()
@@ -100,7 +102,7 @@ namespace LastSignal.AI
         // events even after the bounded diagnostic receipt window is compacted.
         public void ReportNoise(string receiptId, string cellId, float intensity)
         {
-            if (!Current || flow.Restoring || !ledgers.ContainsKey(cellId ?? "") || !float.IsFinite(intensity) || intensity <= 0 ||
+            if (!Current || flow.Restoring || !(ledgers.ContainsKey(cellId ?? "") || (cellId == "resident" && residentPressure != null)) || !float.IsFinite(intensity) || intensity <= 0 ||
                 receiptId == null || !receiptId.StartsWith("noise:", StringComparison.Ordinal) ||
                 !long.TryParse(receiptId.Substring(6), out var sequence) || sequence <= lastNoiseSequence) return;
             lastNoiseSequence = sequence;
@@ -108,10 +110,12 @@ namespace LastSignal.AI
             state.Pressure = Mathf.Clamp(state.Pressure + intensity * NoiseIntensityMultiplier, 0, MaxPressure);
             state.Receipts.Add(receiptId);
             if (state.Receipts.Count > MaxReceipts) state.Receipts.RemoveAt(0);
-            EvaluateMigration(cellId); PressureChanged?.Invoke(cellId);
+            if (cellId != "resident") EvaluateMigration(cellId);
+            PressureChanged?.Invoke(cellId);
         }
         public CellPressureState GetPressure(string id)
         {
+            if (id == "resident" && residentPressure != null) { residentPressure.ApplyDecay(clock.Simulation.Seconds, DecayRatePerSecond); return residentPressure; }
             if (!pressures.TryGetValue(id, out var state)) throw new ArgumentException("Unknown population cell: " + id);
             state.ApplyDecay(clock.Simulation.Seconds, DecayRatePerSecond); return state;
         }
@@ -160,6 +164,7 @@ namespace LastSignal.AI
         {
             if (!Current) return;
             foreach (var p in pressures.Values) p.ApplyDecay(to, DecayRatePerSecond);
+            residentPressure?.ApplyDecay(to, DecayRatePerSecond);
             for (int i = migrations.Count - 1; i >= 0; --i)
             {
                 var m = migrations[i]; if (m.ArrivalTime > to) continue;
@@ -271,7 +276,14 @@ namespace LastSignal.AI
                 units.Add(new PopulationActorSnapshot { id = unit.id, cellId = unit.cellId, health = unit.health, anatomy = unit.anatomy });
             foreach (var pair in physical) units.Add(new PopulationActorSnapshot { id = pair.Value.Id, cellId = pair.Value.Cell,
                 health = pair.Value.Health.CurrentHealth, anatomy = pair.Key.GetComponent<ZombieDismemberment>()?.CaptureState() });
-            return new PopulationSnapshot { pressures = p.ToArray(), ledgers = l.ToArray(), migrations = m.ToArray(), actors = units.ToArray(), lastNoiseSequence = lastNoiseSequence };
+            CellPressureSnapshot resident = null;
+            if (residentPressure != null)
+            {
+                residentPressure.ApplyDecay(clock.Simulation.Seconds, DecayRatePerSecond);
+                resident = new CellPressureSnapshot { cellId = "resident", pressure = residentPressure.Pressure, lastUpdateTime = residentPressure.LastUpdateTime,
+                    receipts = residentPressure.Receipts.ConvertAll(id => new NoiseReceiptSnapshot { id = id }).ToArray() };
+            }
+            return new PopulationSnapshot { residentPressure = resident, pressures = p.ToArray(), ledgers = l.ToArray(), migrations = m.ToArray(), actors = units.ToArray(), lastNoiseSequence = lastNoiseSequence };
         }
         public void SyncFromSave(PopulationSnapshot snap)
         {
@@ -287,6 +299,13 @@ namespace LastSignal.AI
                 DepartureTime = m.departureTime, ArrivalTime = m.arrivalTime, Size = m.size });
             foreach (var unit in snap.actors) dormant.Add(new PopulationActorSnapshot { id = unit.id, cellId = unit.cellId,
                 health = unit.health, anatomy = unit.anatomy });
+            if (residentPressure != null)
+            {
+                var saved = snap.residentPressure;
+                residentPressure = new CellPressureState { CellId = "resident", Pressure = saved?.pressure ?? 0,
+                    LastUpdateTime = saved?.lastUpdateTime ?? clock.Simulation.Seconds,
+                    Receipts = saved == null ? new List<string>() : new List<string>(Array.ConvertAll(saved.receipts, r => r.id)) };
+            }
             lastNoiseSequence = snap.lastNoiseSequence; nextSearch = 0;
         }
         void ClearActors()
@@ -300,6 +319,7 @@ namespace LastSignal.AI
         {
             ZombieBloodVfxPool.ResetSession();
             active = false; simulation?.Unregister(this); simulation = null;
+            residentPressure = null;
             ClearActors(); dormant.Clear(); pressures.Clear(); ledgers.Clear(); migrations.Clear(); lastNoiseSequence = 0; nextSearch = 0;
         }
         void OnDestroy()

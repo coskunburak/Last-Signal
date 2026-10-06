@@ -10,10 +10,18 @@ namespace LastSignal.Editor
     public static class ZombieValidationRunner
     {
         const string Request = "Temp/LastSignalZombieValidation.json";
+        const string Heartbeat = "Temp/LastSignalZombieValidation-heartbeat";
+        static double nextHeartbeat;
         [System.Serializable] sealed class Command { public string action; public string filter; public string[] filters; public string output; }
         static ZombieValidationRunner() { EditorApplication.update += Poll; }
         static void Poll()
         {
+            if (EditorApplication.timeSinceStartup >= nextHeartbeat)
+            {
+                Directory.CreateDirectory("Temp");
+                File.WriteAllText(Heartbeat, "");
+                nextHeartbeat = EditorApplication.timeSinceStartup + 2;
+            }
             if (EditorApplication.isCompiling || EditorApplication.isUpdating || !File.Exists(Request)) return;
             var text=File.ReadAllText(Request);File.Delete(Request);
             var command=JsonUtility.FromJson<Command>(text);
@@ -38,6 +46,13 @@ namespace LastSignal.Editor
         [System.Serializable] sealed class Status { public string action; public bool compileFailed,playing; }
         static void Run(bool play,Command command)
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                var errorPath = Path.ChangeExtension(command.output, ".error.txt");
+                Directory.CreateDirectory(Path.GetDirectoryName(errorPath));
+                File.WriteAllText(errorPath, "Exit Play Mode before starting a validation run.");
+                return;
+            }
             SessionState.SetString("LastSignal.RegressionPath",command.output);
             var filter=new Filter { testMode=play?TestMode.PlayMode:TestMode.EditMode,assemblyNames=new[]{play?"LastSignal.PlayModeTests":"LastSignal.EditModeTests"} };
             if(command.filters != null && command.filters.Length > 0)filter.testNames=command.filters;

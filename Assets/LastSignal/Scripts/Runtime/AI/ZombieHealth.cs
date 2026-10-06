@@ -9,6 +9,14 @@ namespace LastSignal
     {
         static readonly ProfilerMarker Marker = new ProfilerMarker("LastSignal.Zombie.Damage");
         [SerializeField, Min(1)] float maxHealth = 100;
+        [SerializeField, Min(1)] float vehicleEffectiveMass = 80;
+        Collider[] vehicleResponseColliders;
+        void OnEnable()
+        {
+            vehicleResponseColliders = GetComponents<Collider>();
+            Vehicles.VehicleInfectedContactResponse.Register(vehicleResponseColliders, false, vehicleEffectiveMass);
+        }
+        void OnDisable() => Vehicles.VehicleInfectedContactResponse.Unregister(vehicleResponseColliders, false);
         ZombieDismemberment dismemberment;
         bool accepting = true;
         public float MaxHealth => maxHealth;

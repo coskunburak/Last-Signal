@@ -14,9 +14,9 @@ namespace LastSignal.Editor
 {
     public static class S001Project
     {
-        public const string ScenePath = "Assets/LastSignal/Scenes/S001Acceptance.unity";
-        public const string PlayerPath = "Assets/LastSignal/Prefabs/Player.prefab";
-        public const string DoorPath = "Assets/LastSignal/Prefabs/Door.prefab";
+        public const string ScenePath = "Assets/LastSignal/Scenes/Validation/S001Acceptance.unity";
+        public const string PlayerPath = "Assets/LastSignal/Prefabs/Player/Player.prefab";
+        public const string DoorPath = "Assets/LastSignal/Prefabs/Interactions/Door.prefab";
         static string Evidence => Environment.GetEnvironmentVariable("LAST_SIGNAL_EVIDENCE") ?? "Docs/Implementation/S001/Evidence/20260917-S001";
         static Material floor, concrete, teal, amber, red;
 
@@ -54,7 +54,7 @@ namespace LastSignal.Editor
             teal = Material("Passable", new Color(.08f, .62f, .57f));
             amber = Material("Door", new Color(.95f, .55f, .12f));
             red = Material("Blocked", new Color(.78f, .18f, .16f));
-            var actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>("Assets/InputSystem_Actions.inputactions");
+            var actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>("Assets/LastSignal/Settings/Input/InputSystem_Actions.inputactions");
             if (!actions || actions.FindAction("Player/Pause") == null) throw new InvalidOperationException("Player/Pause missing.");
             var player = new GameObject("Player");
             player.SetActive(false);
@@ -237,8 +237,8 @@ namespace LastSignal.Editor
         {
             Validate();
             var scenes = new[] { 
-                "Assets/LastSignal/Scenes/S001Acceptance.unity",
-                "Assets/LastSignal/Scenes/CombatAcceptance.unity"
+                "Assets/LastSignal/Scenes/Validation/S001Acceptance.unity",
+                "Assets/LastSignal/Scenes/Validation/CombatAcceptance.unity"
             };
             var options = new BuildPlayerOptions
             {

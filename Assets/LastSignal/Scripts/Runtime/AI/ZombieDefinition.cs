@@ -33,6 +33,9 @@ namespace LastSignal
             Noise.GameplayNoiseCategory.SprintFootstep => sprintSensitivity,
             Noise.GameplayNoiseCategory.MeleeImpact => meleeSensitivity,
             Noise.GameplayNoiseCategory.Gunshot => gunshotSensitivity,
+            Noise.GameplayNoiseCategory.VehicleEngine => footstepSensitivity,
+            Noise.GameplayNoiseCategory.VehicleHorn => gunshotSensitivity,
+            Noise.GameplayNoiseCategory.VehicleImpact => meleeSensitivity,
             _ => 0 };
         public bool IsHearingValid => Positive(hearingThreshold) && Positive(hearingMemoryDuration) &&
             Positive(investigateDuration) && Positive(investigateArrivalDistance) &&
@@ -69,6 +72,14 @@ namespace LastSignal
         [SerializeField] AnimationClip hitReactClip;
         [SerializeField] AnimationClip deathClip;
         [SerializeField] AnimationClip flyingBackDeathClip;
+        [SerializeField] AnimationClip vehicleFallClip, vehicleGetUpClip;
+        [SerializeField] float vehicleFallDuration = .8f, vehicleGroundDuration = .6f, vehicleGetUpDuration = 2;
+        public AnimationClip VehicleFallClip => vehicleFallClip;
+        public AnimationClip VehicleGetUpClip => vehicleGetUpClip;
+        public float VehicleFallDuration => vehicleFallDuration;
+        public float VehicleGroundDuration => vehicleGroundDuration;
+        public float VehicleGetUpDuration => vehicleGetUpDuration;
+        public float VehicleReactionDuration => vehicleFallDuration + vehicleGroundDuration + vehicleGetUpDuration;
         [SerializeField] AnimationCurve deathGroundOffset = AnimationCurve.Constant(0, 1, 0);
         [SerializeField] AnimationCurve flyingBackGroundOffset = AnimationCurve.Constant(0, 1, 0);
         [SerializeField, Min(.01f)] float hitReactCooldown = 1.5f;

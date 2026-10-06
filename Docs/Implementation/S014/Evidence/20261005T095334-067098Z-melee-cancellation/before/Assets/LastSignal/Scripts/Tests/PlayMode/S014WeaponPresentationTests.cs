@@ -1,0 +1,196 @@
+#if UNITY_EDITOR
+using System.Collections;
+using LastSignal.Inventory;
+using NUnit.Framework;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.TestTools;
+
+namespace LastSignal.Tests
+{
+    public sealed class S014WeaponPresentationTests : InputTestFixture
+    {
+        GameObject player;
+        PlayerInputReader input;
+        PlayerCombatController combat;
+        WeaponController weapon;
+        Animator animator;
+
+        public override void Setup()
+        {
+            InputFixtureIsolation.DisableLiveActions();
+            base.Setup();
+            Time.timeScale = 1;
+            InputSystem.AddDevice<Keyboard>();
+            InputSystem.AddDevice<Mouse>();
+            player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/LastSignal/Prefabs/Player/Player.prefab"), new Vector3(500, 100, 500), Quaternion.identity);
+            player.GetComponent<FirstPersonMotor>().enabled = false;
+            var inventory = player.GetComponent<PlayerInventory>();
+            if (!inventory) inventory = player.AddComponent<PlayerInventory>();
+            inventory.Initialize(24);
+            input = player.GetComponent<PlayerInputReader>();
+            input.SetGameplay(true);
+            combat = player.GetComponent<PlayerCombatController>();
+        }
+
+        public override void TearDown()
+        {
+            if (player) Object.DestroyImmediate(player);
+            Time.timeScale = 1;
+            InputFixtureIsolation.DisableLiveActions();
+            base.TearDown();
+        }
+
+        IEnumerator PrepareReload(bool empty)
+        {
+            yield return null;
+            weapon = combat.Firearm;
+            Assert.That(weapon, Is.Not.Null);
+            animator = weapon.GetComponentInChildren<Animator>(true);
+            yield return WaitReady();
+            var inventory = player.GetComponent<PlayerInventory>();
+            Assert.That(inventory.TryAdd(weapon.Definition.Ammunition, 60), Is.EqualTo(60));
+            // Seed the authoritative state without rays/noise, then use the real controller reload.
+            int shots = empty ? weapon.RuntimeState.CurrentMagazine : 1;
+            for (int i = 0; i < shots; i++)
+            {
+                weapon.RuntimeState.Tick(weapon.Definition.FireCooldownSeconds + .01f);
+                Assert.That(weapon.RuntimeState.TryConsumeShot(), Is.True);
+            }
+            weapon.OnReloadRequested();
+            Assert.That(weapon.RuntimeState.State, Is.EqualTo(WeaponState.Reloading));
+            yield return new WaitForSeconds(.15f);
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName(empty ? "EmptyReload" : "Reload"), Is.True);
+        }
+
+        IEnumerator WaitReady()
+        {
+            float deadline = Time.realtimeSinceStartup + 5;
+            while (weapon.RuntimeState.State != WeaponState.Ready ||
+                !animator.GetCurrentAnimatorStateInfo(0).IsName("Ready") || animator.IsInTransition(0))
+            {
+                Assert.That(Time.realtimeSinceStartup, Is.LessThan(deadline), "Production rifle did not return to Ready.");
+                yield return null;
+            }
+        }
+
+        [UnityTest] public IEnumerator TacticalReloadPausesWithGameplayInput() => PausedReload(false);
+        [UnityTest] public IEnumerator EmptyReloadPausesWithGameplayInput() => PausedReload(true);
+
+        IEnumerator PausedReload(bool empty)
+        {
+            yield return PrepareReload(empty);
+            input.SetGameplay(false); // A modal lock without pausing the world's time.
+            yield return null;
+            float timer = weapon.RuntimeState.StateTimer;
+            float pose = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            int total = weapon.RuntimeState.TotalAmmo;
+            int magazine = weapon.RuntimeState.CurrentMagazine;
+            yield return new WaitForSeconds(.3f);
+            Assert.That(weapon.RuntimeState.StateTimer, Is.EqualTo(timer).Within(.001f));
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).normalizedTime, Is.EqualTo(pose).Within(.001f),
+                "Reload presentation must not finish ahead of its frozen ammo transaction.");
+            Assert.That(weapon.RuntimeState.CurrentMagazine, Is.EqualTo(magazine));
+            Assert.That(weapon.RuntimeState.TotalAmmo, Is.EqualTo(total));
+            input.SetGameplay(true);
+            yield return WaitReady();
+            Assert.That(weapon.RuntimeState.CurrentMagazine, Is.EqualTo(weapon.Definition.MagazineCapacity));
+            Assert.That(weapon.RuntimeState.TotalAmmo, Is.EqualTo(total));
+        }
+
+        [UnityTest] public IEnumerator SwitchingBeforeReloadCommitClearsPendingPresentation()
+        {
+            yield return PrepareReload(false);
+            int total = weapon.RuntimeState.TotalAmmo;
+            int magazine = weapon.RuntimeState.CurrentMagazine;
+            Assert.That(weapon.RuntimeState.ReloadCommitted, Is.False);
+            Assert.That(combat.SelectSlot(PlayerCombatController.CombatSlot.Melee), Is.True);
+            Assert.That(weapon.RuntimeState.CurrentMagazine, Is.EqualTo(magazine));
+            Assert.That(combat.SelectSlot(PlayerCombatController.CombatSlot.Firearm), Is.True);
+            yield return WaitReady();
+            yield return new WaitForSeconds(.15f);
+            Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Ready"), Is.True);
+            Assert.That(weapon.RuntimeState.CurrentMagazine, Is.EqualTo(magazine));
+            Assert.That(weapon.RuntimeState.TotalAmmo, Is.EqualTo(total));
+        }
+
+        [UnityTest] public IEnumerator UnequipBeforeCommitPreservesMagazine() => InterruptReload(false);
+        [UnityTest] public IEnumerator UnequipAfterCommitPreservesTransferredAmmo() => InterruptReload(true);
+
+        [UnityTest] public IEnumerator CrowbarStancePreservesAuthoredSwingAndGameplayOrigin()
+        {
+            yield return null;
+            Assert.IsTrue(combat.SelectSlot(PlayerCombatController.CombatSlot.Melee));
+            var melee = combat.Melee;
+            var anim = melee.GetComponentInChildren<Animator>(true);
+            var serialized = new SerializedObject(melee);
+            var origin = (Transform)serialized.FindProperty("meleeOrigin").objectReferenceValue;
+            Vector3 originBefore = origin.position;
+            Assert.IsTrue(melee.TryAttack());
+            anim.Play("Swing", 0, 0);
+            anim.Update(0); // Enter the state before advancing its clock.
+            anim.Update(.22f); // Sample the authored windup apex, then allow stance LateUpdate.
+            anim.speed = 0;
+            Quaternion swing = anim.transform.localRotation;
+            Assert.Greater(Quaternion.Angle(Quaternion.identity, swing), 20f);
+            // Cross a full frame so stance LateUpdate runs even in batchmode.
+            // WaitForEndOfFrame is not supported by the batch test runner.
+            yield return null;
+            yield return null;
+            Assert.Less(Quaternion.Angle(swing, anim.transform.localRotation), .1f,
+                "Stance must not erase the Animator's swing rotation.");
+            Assert.Less(Vector3.Distance(originBefore, origin.position), .001f,
+                "Visual stance composition must not move the authoritative melee origin.");
+            Assert.AreEqual(1, System.Array.FindAll(melee.GetComponentsInChildren<Transform>(true),
+                t => t.name == "StancePivot").Length);
+            anim.speed = 1;
+        }
+
+        IEnumerator InterruptReload(bool afterCommit)
+        {
+            yield return PrepareReload(true);
+            int total = weapon.RuntimeState.TotalAmmo;
+            if (afterCommit)
+            {
+                float deadline = Time.realtimeSinceStartup + 5;
+                while (!weapon.RuntimeState.ReloadCommitted)
+                {
+                    Assert.That(Time.realtimeSinceStartup, Is.LessThan(deadline), "Reload never committed.");
+                    yield return null;
+                }
+            }
+            Assert.That(weapon.RuntimeState.State, Is.EqualTo(WeaponState.Reloading));
+            Assert.That(weapon.RuntimeState.ReloadCommitted, Is.EqualTo(afterCommit));
+            int magazine = weapon.RuntimeState.CurrentMagazine;
+            Assert.That(magazine, Is.EqualTo(afterCommit ? weapon.Definition.MagazineCapacity : 0));
+            int transitions = 0;
+            WeaponState observedFrom = WeaponState.Holstered;
+            WeaponState observedTo = WeaponState.Holstered;
+            System.Action<WeaponState, WeaponState> observe = (from, to) =>
+            { transitions++; observedFrom = from; observedTo = to; };
+            weapon.StateTransitioned += observe;
+            weapon.RequestUnequip();
+            weapon.RequestUnequip(); // Repeated input must not restart or republish the action.
+            weapon.StateTransitioned -= observe;
+            Assert.That(weapon.RuntimeState.State, Is.EqualTo(WeaponState.Unequipping));
+            Assert.That(transitions, Is.EqualTo(1));
+            Assert.That(observedFrom, Is.EqualTo(WeaponState.Reloading));
+            Assert.That(observedTo, Is.EqualTo(WeaponState.Unequipping));
+            Assert.That(weapon.RuntimeState.CurrentMagazine, Is.EqualTo(magazine));
+            Assert.That(weapon.RuntimeState.TotalAmmo, Is.EqualTo(total));
+            float holsterDeadline = Time.realtimeSinceStartup + 5;
+            while (weapon.RuntimeState.State != WeaponState.Holstered)
+            {
+                Assert.That(Time.realtimeSinceStartup, Is.LessThan(holsterDeadline));
+                yield return null;
+            }
+            weapon.RequestEquip();
+            yield return WaitReady();
+            Assert.That(weapon.RuntimeState.CurrentMagazine, Is.EqualTo(magazine));
+            Assert.That(weapon.RuntimeState.TotalAmmo, Is.EqualTo(total));
+        }
+    }
+}
+#endif

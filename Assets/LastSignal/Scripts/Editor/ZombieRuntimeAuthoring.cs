@@ -11,7 +11,7 @@ namespace LastSignal.Editor
     // Separate runtime wrapper preserves the B0B presentation-only prefab and its contracts.
     public static class ZombieRuntimeAuthoring
     {
-        public const string PrefabPath = ZombieAcceptanceAuthoring.Root + "/Prefabs/LS_Zombie_Runtime.prefab";
+        public const string PrefabPath = "Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab";
         public static void Compose()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play Mode before authoring.");
@@ -22,7 +22,7 @@ namespace LastSignal.Editor
                 {
                     // Ignore Raycast excludes the body from existing rifle queries, not physical collision.
                     root.layer = 2;
-                    var visual = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(ZombieAcceptanceAuthoring.Root + "/Prefabs/LS_Zombie_Shambler.prefab"));
+                    var visual = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shambler.prefab"));
                     visual.transform.SetParent(root.transform, false);
                     var agent = root.AddComponent<NavMeshAgent>(); agent.enabled = false;
                     agent.agentTypeID = ZombieAcceptanceAuthoring.AgentType(); agent.radius = .32f; agent.height = 1.81f;
@@ -40,7 +40,7 @@ namespace LastSignal.Editor
             Integrate(ZombieAcceptanceAuthoring.ScenePath, new Vector3(-5,0,-4), false);
             AssetDatabase.SaveAssets();
         }
-        public static void IntegrateNormal() => Integrate("Assets/Scenes/SampleScene.unity", new Vector3(-5,0,7), true);
+        public static void IntegrateNormal() => Integrate("Assets/ThirdParty/UnityURPTemplate/Scenes/SampleScene.unity", new Vector3(-5,0,7), true);
         static void Integrate(string path, Vector3 position, bool bake)
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play Mode before authoring.");
@@ -84,7 +84,7 @@ namespace LastSignal.Editor
                     {
                         surface.BuildNavMesh();
                         surface.navMeshData.name = "NormalNavMesh";
-                        var asset = ZombieAcceptanceAuthoring.Root + "/NormalNavMesh.asset";
+                        var asset = ZombieAcceptanceAuthoring.DataRoot + "/NormalNavMesh.asset";
                         var existing = AssetDatabase.LoadAssetAtPath<NavMeshData>(asset);
                         if (existing)
                         {

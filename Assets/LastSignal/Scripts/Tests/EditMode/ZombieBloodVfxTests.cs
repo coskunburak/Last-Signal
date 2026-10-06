@@ -48,7 +48,7 @@ namespace LastSignal.Tests
         }
         [Test] public void ProductionProfileHasOrderedBudgetsAndExplicitAnchors()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
             var presenter = prefab.GetComponent<ZombieBloodVfxPresenter>();
             Assert.That(presenter, Is.Not.Null);
             var profile = presenter.Profile;
@@ -70,7 +70,7 @@ namespace LastSignal.Tests
         }
         [Test] public void AuthoredPrefabsHaveBoundedParticlesAndSupportedMaterials()
         {
-            var profile = AssetDatabase.LoadAssetAtPath<ZombieBloodVfxProfile>("Assets/LastSignal/Blood VFX/ProjectOwned/ZombieBlood.asset");
+            var profile = AssetDatabase.LoadAssetAtPath<ZombieBloodVfxProfile>("Assets/LastSignal/Data/VFX/Blood/ZombieBlood.asset");
             foreach (var prefab in new[] { profile.burstPrefab, profile.spurtPrefab, profile.dripPrefab })
                 foreach (var ps in prefab.GetComponentsInChildren<ParticleSystem>(true))
                 {
@@ -90,7 +90,7 @@ namespace LastSignal.Tests
         }
         [Test] public void ProductionTorsoWoundIsSurfaceSkinnedAndLit()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
             var binding = new SerializedObject(prefab.GetComponent<ZombieDismemberment>()).FindProperty("torsoWoundVisual");
             var wound = binding.objectReferenceValue as GameObject;
             Assert.That(wound, Is.Not.Null);
@@ -116,7 +116,7 @@ namespace LastSignal.Tests
         }
         [Test] public void HeadPressureIsStrongPulsedAndFiniteWithoutIncreasingCapacity()
         {
-            var p = AssetDatabase.LoadAssetAtPath<ZombieBloodVfxProfile>("Assets/LastSignal/Blood VFX/ProjectOwned/ZombieBlood.asset");
+            var p = AssetDatabase.LoadAssetAtPath<ZombieBloodVfxProfile>("Assets/LastSignal/Data/VFX/Blood/ZombieBlood.asset");
             Assert.That(p.IsValid, Is.True);
             Assert.That(p.head.burstCount, Is.EqualTo(32));
             Assert.That(p.head.spurtRate, Is.GreaterThanOrEqualTo(60));

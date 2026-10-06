@@ -44,7 +44,7 @@ namespace LastSignal.Tests
         }
         IEnumerator Load()
         {
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/PersistenceAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/PersistenceAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
             foreach(var g in SceneManager.GetActiveScene().GetRootGameObjects())if((g.hideFlags&HideFlags.DontSave)==0)owned.Add(g);
             yield return null;flow=Object.FindAnyObjectByType<SessionFlow>();if(flow.InMenu)flow.BeginSession();flow.Resume();yield return null;yield return null;
         }
@@ -79,7 +79,7 @@ namespace LastSignal.Tests
         }
         [Test] public void ProductionPrefabHasBoundedPresentationAndValidReferences()
         {
-            var p=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Combat/Crowbar/Crowbar_Viewmodel.prefab");Assert.IsNotNull(p);
+            var p=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Combat/Crowbar/Crowbar_Viewmodel.prefab");Assert.IsNotNull(p);
             Assert.IsTrue(p.GetComponent<MeleeWeaponController>().HasValidAuthoring);Assert.AreEqual(Vector3.one,p.transform.localScale);
             Assert.AreEqual(0,p.GetComponentsInChildren<Collider>(true).Length);Assert.AreEqual(0,p.GetComponentsInChildren<Rigidbody>(true).Length);
             Assert.AreEqual(1,p.GetComponentsInChildren<Animator>(true).Length);Assert.AreEqual(1,p.GetComponentsInChildren<AudioSource>(true).Length);

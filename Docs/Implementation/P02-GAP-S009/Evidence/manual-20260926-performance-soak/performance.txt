@@ -1,16 +1,16 @@
 Unity version: 6000.5.0f1
 Branch: s009-audit-continuation-20260925
 HEAD: 52a1f90
-Measurement date/time: 2026-10-01T22:42:32.1865810+03:00
+Measurement date/time: 2026-10-02T17:20:19.8216780+03:00
 Measurement method: System.Diagnostics.Stopwatch, GC.GetTotalMemory in PlayMode
 Warmup count: 1000
 Iteration count: 10000
 
-ReportNoise: mean 0.0021 ms
-Duplicate receipt: mean 0.0004 ms
-Pressure decay: mean 0.0007 ms
-Migration: mean 0.0022 ms
-Materialization query: mean 0.1627 ms
-Allocations: Approx 730.73 bytes per core operation batch (measured over 10000 iters)
+ReportNoise: mean 0.0016 ms
+Duplicate receipt: mean 0.0003 ms
+Pressure decay: mean 0.0005 ms
+Migration: mean 0.0016 ms
+Materialization query: mean 0.1469 ms
+Allocations: Approx 721.31 bytes per core operation batch (measured over 10000 iters)
 Receipt bound: max observed count 10 (MaxReceipts = 10)
 Conclusion: Measured operations are extremely fast (microseconds), well within CPU budget. No recurring avoidable GC patterns in logical paths.

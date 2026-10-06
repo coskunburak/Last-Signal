@@ -13,6 +13,14 @@ namespace LastSignal
         ZombieDismemberment dismemberment;
         Collider[] ownedColliders;
         float reactionRemaining, reactionReadyAt;
+        CapsuleCollider vehicleCapsule;
+        bool vehicleReaction, vehicleCapsuleWasEnabled;
+        public bool VehicleReactionActive => vehicleReaction;
+        void ReleaseVehicleReaction(bool restore)
+        {
+            if (restore && vehicleCapsule && vehicleCapsuleWasEnabled) vehicleCapsule.enabled = true;
+            vehicleReaction = false; vehicleCapsuleWasEnabled = false;
+        }
         ZombieImpactSeverity reactionPriority;
         public ZombieImpactReaction LastImpact { get; private set; }
         ZombieState reactionReturn;
@@ -142,6 +150,7 @@ namespace LastSignal
             if (IsDead) return false;
             // Rebinding is an explicit lifecycle boundary, including a rejected/null replacement.
             // A strike committed against A can never become a strike against B.
+            ReleaseVehicleReaction(health && health.IsAlive);
             if (presentation) presentation.EndReaction();
             reactionRemaining = reactionReadyAt = 0; reactionPriority = ZombieImpactSeverity.Light;
             LastImpact = ZombieImpactReaction.Legacy;
@@ -169,6 +178,7 @@ namespace LastSignal
         }
         public void Shutdown()
         {
+            ReleaseVehicleReaction(health && health.IsAlive);
             noiseListener?.Release(); ClearAuditory();
             if (health) health.SetDamageEnabled(false);
             if (presentation && !IsDead) presentation.EndReaction();
@@ -203,17 +213,19 @@ namespace LastSignal
             auditory.Advance(seconds, definition.HearingMemoryDuration);
             if (runtime.State == ZombieState.HitReact)
             {
-                // Preserve the existing destination and movement during a nonlethal hit.
-                if (reactionReturn == ZombieState.Chasing) Chase(seconds);
-                else if (reactionReturn == ZombieState.Investigating)
+                // Vehicle recoil temporarily owns NavMesh movement within the existing HitReact.
+                bool vehicleRecoil = navigation.AdvanceVehicleImpact(seconds);
+                if (!vehicleReaction && !vehicleRecoil && reactionReturn == ZombieState.Chasing) Chase(seconds);
+                else if (!vehicleReaction && !vehicleRecoil && reactionReturn == ZombieState.Investigating)
                     navigation.MoveTo(investigateDestination, clock, definition.InvestigateArrivalDistance);
                 navigation.SetRunning(reactionReturn == ZombieState.Chasing);
-                navigation.Tick(seconds, clock);
+                if (!vehicleReaction && !vehicleRecoil) navigation.Tick(seconds, clock);
                 presentation.Present(navigation.Velocity.magnitude, navigation.Running, seconds, false);
                 reactionRemaining = Mathf.Max(0, reactionRemaining - seconds);
                 presentation.AdvanceDamage(seconds);
                 if (reactionRemaining <= 0)
                 {
+                    ReleaseVehicleReaction(true);
                     presentation.EndReaction();
                     reactionPriority = ZombieImpactSeverity.Light;
                     // A sound accepted during the reaction is usable once its commitment ends.
@@ -278,15 +290,26 @@ namespace LastSignal
             var impact = ZombieImpactReaction.Select(info, transform.rotation, health.MaxHealth, severed,
                 definition.HeavyImpactHealthFraction, definition.MinimumHeavyImpact);
             LastImpact = impact;
+            if (vehicleReaction) return; // Damage/death commits remain canonical; no reaction restart.
+            bool vehicleHit = info.Category == DamageCategory.VehicleImpact;
+            if (vehicleHit && !vehicleReaction)
+            {
+                vehicleCapsule = GetComponent<CapsuleCollider>();
+                vehicleCapsuleWasEnabled = vehicleCapsule && vehicleCapsule.enabled;
+                if (vehicleCapsule) vehicleCapsule.enabled = false;
+                vehicleReaction = true;
+                navigation.BeginVehicleImpact(info.Direction, Mathf.Lerp(.6f, 2.5f, Mathf.Clamp01(info.Amount / 100f)));
+            }
             bool reacting = runtime.State == ZombieState.HitReact;
-            if (reacting && impact.Severity <= reactionPriority ||
-                !reacting && clock < reactionReadyAt && impact.Severity == ZombieImpactSeverity.Light) return;
+            if (!vehicleHit && (reacting && impact.Severity <= reactionPriority ||
+                !reacting && clock < reactionReadyAt && impact.Severity == ZombieImpactSeverity.Light)) return;
             if (reacting)
             {
                 reactionPriority = impact.Severity;
-                reactionRemaining = definition.HitReactDuration;
+                reactionRemaining = vehicleHit ? definition.VehicleReactionDuration : definition.HitReactDuration;
                 reactionReadyAt = clock + definition.HitReactCooldown;
-                presentation.BeginDamage(false, impact);
+                if (vehicleHit) { presentation.BeginVehicleKnockdown(impact); navigation.Suspend(true); }
+                else presentation.BeginDamage(false, impact);
                 return;
             }
             reactionWasInvestigating = runtime.State == ZombieState.Investigating;
@@ -296,9 +319,10 @@ namespace LastSignal
                 search.Begin(runtime.LastKnownPosition, runtime.LastSeenDirection);
             ClearAttack();
             runtime.Transition(ZombieState.HitReact);
-            reactionRemaining = definition.HitReactDuration; reactionReadyAt = clock + definition.HitReactCooldown;
+            reactionRemaining = vehicleHit ? definition.VehicleReactionDuration : definition.HitReactDuration; reactionReadyAt = clock + definition.HitReactCooldown;
             reactionPriority = impact.Severity;
-            presentation.BeginDamage(false, impact);
+            if (vehicleHit) { presentation.BeginVehicleKnockdown(impact); navigation.Suspend(true); }
+            else presentation.BeginDamage(false, impact);
         }
         void OnDeath()
         {
@@ -307,6 +331,7 @@ namespace LastSignal
                 LastImpact = ZombieImpactReaction.Select(health.LastDamage, transform.rotation,
                     health.MaxHealth, dismemberment && dismemberment.IsSevered(health.LastDamage.BodyPart),
                     definition.HeavyImpactHealthFraction, definition.MinimumHeavyImpact);
+            ReleaseVehicleReaction(false);
             noiseListener?.Release(); ClearAuditory();
             ClearAttack(); reactionRemaining = 0; sequence = 0;
             runtime.Transition(ZombieState.Dead); search.Clear(); holding = false;

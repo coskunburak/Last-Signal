@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 09:50:27Z" end-time="2026-10-06 09:50:30Z" duration="2.7668815">
+  <test-suite type="TestSuite" id="1311" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="261" result="Failed" site="Child" start-time="2026-10-06 09:50:27Z" end-time="2026-10-06 09:50:30Z" duration="2.766882" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1304" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="261" result="Failed" site="Child" start-time="2026-10-06 09:50:27Z" end-time="2026-10-06 09:50:30Z" duration="2.743522" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1305" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="261" result="Failed" site="Child" start-time="2026-10-06 09:50:27Z" end-time="2026-10-06 09:50:30Z" duration="2.741775" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1306" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="261" result="Failed" site="Child" start-time="2026-10-06 09:50:27Z" end-time="2026-10-06 09:50:30Z" duration="2.740363" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1183" name="VehicleZombieIntegrationTests" fullname="LastSignal.Tests.VehicleZombieIntegrationTests" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-10-06 09:50:27Z" end-time="2026-10-06 09:50:30Z" duration="2.738863" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1194" name="ChassisOcclusionRejectsQuietImpactButPreservesDamageAndPressure" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.ChassisOcclusionRejectsQuietImpactButPreservesDamageAndPressure" methodname="ChassisOcclusionRejectsQuietImpactButPreservesDamageAndPressure" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="257789418" result="Failed" start-time="2026-10-06 09:50:27Z" end-time="2026-10-06 09:50:30Z" duration="2.721724" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  impact closing=6.74571 severity=0.2739168; noise=VehicleImpact radius=21.861 intensity=0.1643501; distance=4.204304 clear=0.1592908 blocked=False obstacle=none; obstacleDistance=0 car=(-338.46, 0.14, -125.00) forward=(1.00, -0.02, 0.00); occludedStrength=0.06371631 threshold=0.12; registered=True canHear=True paused=False candidates=1 queries=1 heard=1 accepted=1; witness=(-335.00, 1.52, -129.00) source=(-336.29, 1.37, -125.00)
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.VehicleZombieIntegrationTests+<SurvivorAndWitnessHearing>d__17.MoveNext () [0x005cc] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/VehicleZombieIntegrationTests.cs:225
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+impact closing=6.74571 severity=0.2739168; noise=VehicleImpact radius=21.861 intensity=0.1643501; distance=4.204304 clear=0.1592908 blocked=False obstacle=none; obstacleDistance=0 car=(-338.46, 0.14, -125.00) forward=(1.00, -0.02, 0.00); occludedStrength=0.06371631 threshold=0.12; registered=True canHear=True paused=False candidates=1 queries=1 heard=1 accepted=1; witness=(-335.00, 1.52, -129.00) source=(-336.29, 1.37, -125.00)
+Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261006T095010-245761Z/play.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

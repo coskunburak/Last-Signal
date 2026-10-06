@@ -81,7 +81,7 @@ namespace LastSignal
             crosshair.enabled = !menu && !paused && !session.PlayerDead;
             prompt.text = menu || paused || session.PlayerDead || !interaction ? "" : interaction.Prompt;
             status.text = stance && stance.StandBlocked ? "Baş üstünde engel var. Açık alanda C ile tekrar dene." :
-                "WASD  Hareket    MOUSE  Bakış    SHIFT  Koş    C  Çömel    E  Kullan    R  Şarjör    SAĞ FARE  Nişan    SOL FARE  Saldırı    1  Tüfek    3  Levye    ESC  Menü";
+                "WASD  Hareket    MOUSE  Bakış    SHIFT  Koş    C  Çömel    E  Kullan    R  Şarjör    SAĞ FARE/Q  Nişan    SOL FARE  Saldırı    1  Tüfek    3  Levye    ESC  Menü";
 
             if (ammoDisplay) ammoDisplay.enabled = ammoWeapon && !menu && !paused && !session.PlayerDead;
         }

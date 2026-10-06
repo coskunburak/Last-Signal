@@ -8,8 +8,8 @@ namespace LastSignal.Editor
     // Temporary, unsaved production-rig preview. Never changes the runtime controller or source FBX.
     public sealed class ZombieMixamoPreview : EditorWindow
     {
-        const string VisualPath = "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Prefabs/LS_Zombie_Shirtless_Visual.prefab";
-        const string ClipRoot = "Assets/LastSignal/Assets/Animation/Zombie Animation/";
+        const string VisualPath = "Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shirtless_Visual.prefab";
+        const string ClipRoot = "Assets/ThirdParty/Animation/AnimationLibraries/Zombie Animation/";
         static readonly string[] Names = {
             "Zombie Walk", "Zombie Run", "Zombie Attack", "Zombie Attack (1)",
             "Zombie Dying", "Flying Back Death", "Zombie Crawl"
@@ -75,7 +75,7 @@ namespace LastSignal.Editor
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             visualBasePosition = animator.transform.localPosition;
             tuning = AssetDatabase.LoadAssetAtPath<ZombieDefinition>(
-                "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Shambler.asset");
+                "Assets/LastSignal/Data/Enemies/Zombie/Shambler.asset");
             Selection.activeGameObject = preview;
             SceneView.lastActiveSceneView?.FrameSelected();
             BindClip();
