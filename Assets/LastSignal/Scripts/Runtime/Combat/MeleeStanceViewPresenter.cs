@@ -10,9 +10,15 @@ namespace LastSignal
         [SerializeField] Vector3 slidePositionOffset = new Vector3(0, -.09f, -.06f);
         [SerializeField] Vector3 slideRotationOffset = new Vector3(6f, 0, 5f);
         [SerializeField, Min(.01f)] float transitionSeconds = .1f;
+        [Header("Wide FOV Pose")]
+        [SerializeField] float referenceFov = 75f;
+        [SerializeField] float wideFov = 100f;
+        [SerializeField] Vector3 wideFovPositionOffset = new Vector3(0, 0, -.12f);
 
         PlayerStance stance;
         FirstPersonMotor motor;
+        Camera view;
+        Transform stancePivot;
         Vector3 basePosition;
         Quaternion baseRotation;
         float crouchWeight;
@@ -28,14 +34,22 @@ namespace LastSignal
                 return;
             }
 
-            basePosition = visualRoot.localPosition;
-            baseRotation = visualRoot.localRotation;
+            // The Animator owns VisualRoot, including equip translation and swing
+            // rotation. Compose stance above it, without moving the gameplay origin.
+            stancePivot = new GameObject("StancePivot").transform;
+            stancePivot.gameObject.layer = visualRoot.gameObject.layer;
+            stancePivot.SetParent(visualRoot.parent, false);
+            visualRoot.SetParent(stancePivot, false);
+            basePosition = stancePivot.localPosition;
+            baseRotation = stancePivot.localRotation;
         }
 
         public void Configure(PlayerStance playerStance, FirstPersonMotor playerMotor)
         {
             stance = playerStance;
             motor = playerMotor;
+            var look = GetComponentInParent<FirstPersonLook>();
+            view = look ? look.View : null;
         }
 
         void LateUpdate()
@@ -46,18 +60,22 @@ namespace LastSignal
             crouchWeight = Mathf.MoveTowards(crouchWeight, stance.IsCrouching ? 1f : 0f, step);
             slideWeight = Mathf.MoveTowards(slideWeight, motor.IsSliding ? 1f : 0f, step);
             float crouchPose = crouchWeight * (1f - slideWeight);
+            // Keep the open shoulder ends behind the camera at wide gameplay FOVs.
+            // Only the visual pivot moves; meleeOrigin retains its gameplay pose.
+            float fovWeight = view ? Mathf.InverseLerp(referenceFov, wideFov, view.fieldOfView) : 0;
 
-            visualRoot.localPosition = basePosition +
-                crouchPositionOffset * crouchPose + slidePositionOffset * slideWeight;
-            visualRoot.localRotation = baseRotation *
+            stancePivot.localPosition = basePosition +
+                crouchPositionOffset * crouchPose + slidePositionOffset * slideWeight +
+                wideFovPositionOffset * fovWeight;
+            stancePivot.localRotation = baseRotation *
                 Quaternion.Euler(slideRotationOffset * slideWeight);
         }
 
         void OnDisable()
         {
-            if (!visualRoot) return;
-            visualRoot.localPosition = basePosition;
-            visualRoot.localRotation = baseRotation;
+            if (!stancePivot) return;
+            stancePivot.localPosition = basePosition;
+            stancePivot.localRotation = baseRotation;
             crouchWeight = slideWeight = 0;
         }
     }

@@ -24,7 +24,7 @@ namespace LastSignal.Tests
         ZombieHealth health;
         WeaponFireResolver.ShotResult lastShot;
         readonly List<GameObject> owned = new List<GameObject>();
-        IEnumerator Load(string path = "Assets/LastSignal/Scenes/ZombieAcceptance.unity")
+        IEnumerator Load(string path = "Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity")
         {
             Time.timeScale = 1;
             Directory.CreateDirectory(Evidence + "/visual");
@@ -291,13 +291,13 @@ namespace LastSignal.Tests
             var box=(BoxCollider)r.HitCollider; duplicate.center=box.center; duplicate.size=box.size*.9f;
             // One actual collider remains nearest. The extra collider must not cause a second dispatch.
             Resolve(DamageRegion.Body); Assert.That(health.DamageTransactions,Is.EqualTo(1)); Object.DestroyImmediate(duplicate);
-            var other=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab"),new Vector3(-6,0,0),Quaternion.identity); owned.Add(other);
+            var other=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab"),new Vector3(-6,0,0),Quaternion.identity); owned.Add(other);
             var otherHealth=other.GetComponent<ZombieHealth>(); Resolve(DamageRegion.Head,1000);
             Assert.That(otherHealth.CurrentHealth,Is.EqualTo(otherHealth.MaxHealth)); Assert.That(otherHealth.DamageTransactions,Is.Zero);
         }
         [UnityTest] public IEnumerator FirstCompleteCombatLoopInNormalRoute()
         {
-            yield return Load("Assets/Scenes/SampleScene.unity"); Place(zombie.transform.position+zombie.transform.forward*3);
+            yield return Load("Assets/ThirdParty/UnityURPTemplate/Scenes/SampleScene.unity"); Place(zombie.transform.position+zombie.transform.forward*3);
             yield return Until(()=>zombie.Runtime.State==ZombieState.Chasing); Capture("loop-chase");
             yield return Until(()=>zombie.Runtime.State==ZombieState.AttackCommit,10);
             var playerHealth=session.Player.GetComponent<PlayerHealth>();
@@ -369,7 +369,7 @@ namespace LastSignal.Tests
             yield return Load(); Place(new Vector3(-8,0,12));
             zombie.SetPaused(true); // Keep the baseline target fixed while profiling spawned actors.
             session.Player.GetComponent<PlayerHealth>().enabled = false; // Prevent a long swarm sample from ending the session.
-            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
             var report=new StringBuilder("Editor smoke. Mean marker totals; overlapping nested CPU markers. Direct GC covers synchronous owned paths only.\n");
             foreach(int liveCount in new[]{1,10})
             {

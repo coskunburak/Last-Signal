@@ -5,14 +5,14 @@ using UnityEngine.InputSystem;
 namespace LastSignal
 {
     [DefaultExecutionOrder(-200)]
-    public sealed class PlayerInputReader : MonoBehaviour
+    public sealed partial class PlayerInputReader : MonoBehaviour
     {
         [SerializeField] InputActionAsset actions;
-        InputActionAsset instance;
-        InputActionMap gameplay, ui;
-        InputAction move, look, sprint, crouch, interact, pause, cancel;
-        InputAction attack, aim, reload, inventory;
-        InputAction meleeSlot, firearmSlot;
+        [NonSerialized] InputActionAsset instance;
+        [NonSerialized] InputActionMap gameplay, ui;
+        [NonSerialized] InputAction move, look, sprint, crouch, interact, pause, cancel;
+        [NonSerialized] InputAction attack, aim, reload, inventory;
+        [NonSerialized] InputAction meleeSlot, firearmSlot;
         public event Action MeleeSlotRequested, FirearmSlotRequested;
         bool neutralRequired = true;
         public bool GameplayActive { get; private set; }
@@ -36,8 +36,11 @@ namespace LastSignal
 
         public void Configure(InputActionAsset source) => actions = source;
 
-        void Awake()
+        void Awake() => InitializeInput();
+
+        void InitializeInput()
         {
+            if (instance) return;
             if (!actions) { Debug.LogError("Player input requires an InputActionAsset.", this); enabled = false; return; }
             instance = Instantiate(actions);
             gameplay = instance.FindActionMap("Player", true);
@@ -59,6 +62,9 @@ namespace LastSignal
 
         void OnEnable()
         {
+            // Script reloads can call OnEnable without Awake; action maps must belong
+            // to a fresh clone, never to the Input System state from the old domain.
+            if (!instance) InitializeInput();
             if (!instance) return;
             interact.performed += OnInteract;
             crouch.performed += OnCrouch;
@@ -89,20 +95,28 @@ namespace LastSignal
             if (meleeSlot != null) meleeSlot.performed -= OnMeleeSlot;
             if (firearmSlot != null) firearmSlot.performed -= OnFirearmSlot;
             instance.Disable();
-            GameplayActive = false;
+            GameplayActive = DrivingActive = false;
+            ResetVehicleInput();
             Clear();
+            Destroy(instance);
+            instance = null;
+            gameplay = ui = null;
+            move = look = sprint = crouch = interact = pause = cancel = null;
+            attack = aim = reload = inventory = meleeSlot = firearmSlot = null;
         }
 
         void OnDestroy() { if (instance) Destroy(instance); }
 
         public void SetGameplay(bool active)
         {
-            GameplayActive = active && isActiveAndEnabled;
+            DrivingActive = active && drivingContext && isActiveAndEnabled;
+            GameplayActive = active && !drivingContext && isActiveAndEnabled;
+            ResetVehicleInput();
             Clear();
             neutralRequired = true;
             if (!instance) return;
             instance.Disable();
-            if (GameplayActive) gameplay.Enable(); else ui.Enable();
+            if (DrivingActive) vehicleMap?.Enable(); else if (GameplayActive) gameplay.Enable(); else ui.Enable();
         }
         void Clear()
         {
@@ -111,6 +125,7 @@ namespace LastSignal
         }
         void Update()
         {
+            if (DrivingActive) { UpdateVehicleInput(); return; }
             if (!GameplayActive) { Clear(); return; }
             // Require release after focus/menu transitions. Held keys cannot resume a stale intent.
             if (neutralRequired)

@@ -12,7 +12,7 @@ namespace LastSignal.Persistence
             => Capture(inventory ? inventory.Container : null, id, out snapshot);
         public static SaveResult Capture(ShelterStorage storage, string id, out ContainerSnapshot snapshot)
             => Capture(storage?.Container, id, out snapshot);
-        static SaveResult Capture(InventoryContainer container, string id, out ContainerSnapshot snapshot)
+        internal static SaveResult Capture(InventoryContainer container, string id, out ContainerSnapshot snapshot)
         {
             snapshot = null;
             if (container == null || string.IsNullOrWhiteSpace(id) || id.Length > 128)
@@ -31,7 +31,7 @@ namespace LastSignal.Persistence
             => Restore(inventory ? inventory.Container : null, snapshot, expectedId, catalog);
         public static SaveResult Restore(ShelterStorage storage, ContainerSnapshot snapshot, string expectedId, ItemCatalog catalog)
             => Restore(storage?.Container, snapshot, expectedId, catalog);
-        static SaveResult Restore(InventoryContainer container, ContainerSnapshot snapshot, string expectedId, ItemCatalog catalog)
+        internal static SaveResult Restore(InventoryContainer container, ContainerSnapshot snapshot, string expectedId, ItemCatalog catalog)
         {
             if (container == null || !catalog || snapshot == null || string.IsNullOrWhiteSpace(expectedId) || snapshot.id != expectedId ||
                 snapshot.capacity < 1 || snapshot.capacity > 256 || snapshot.slots == null || snapshot.slots.Length != snapshot.capacity)

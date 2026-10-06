@@ -5,9 +5,13 @@ Her çalışma ayrı kanıt üretir; tarihsel test artifactlerini yedekler ve ge
 import argparse, datetime, hashlib, json, pathlib, shutil, subprocess, tempfile, time, xml.etree.ElementTree as ET
 root=pathlib.Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('mode',choices=['edit','play']);p.add_argument('--filter',default='');p.add_argument('--timeout',type=int,default=1800);a=p.parse_args()
+heartbeat=root/'Temp/LastSignalZombieValidation-heartbeat'
+if not heartbeat.exists() or time.time()-heartbeat.stat().st_mtime>15:
+ raise SystemExit('Unity Editor açık ve derlemesi bitmiş olmalı; doğrulayıcıdan güncel sinyal alınamadı. Projeyi Unity’de açıp tekrar deneyin.')
 run=root/'Docs/Implementation/S012/Evidence'/datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S-%fZ')
-run.mkdir(parents=True);output=run/(a.mode+'.xml');request=root/'Temp/LastSignalZombieValidation.json'
+run.mkdir(parents=True);output=run/(a.mode+'.xml');error=output.with_suffix('.error.txt');request=root/'Temp/LastSignalZombieValidation.json'
 if request.exists():raise SystemExit('Bekleyen Unity isteği var; üzerine yazılmadı.')
+request.parent.mkdir(parents=True,exist_ok=True) # Unity may remove Temp when the Editor closes.
 # Eski testler sabit Evidence yollarına yazıyor. Kullanıcının mevcut baytları saklanır.
 backup=pathlib.Path(tempfile.mkdtemp(prefix='s012-evidence-'));before={}
 for path in (root/'Docs/Implementation').rglob('*'):
@@ -15,7 +19,7 @@ for path in (root/'Docs/Implementation').rglob('*'):
  rel=path.relative_to(root);before[str(rel)]=hashlib.sha256(path.read_bytes()).hexdigest();dest=backup/rel;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(path,dest)
 (run/'source-head.txt').write_bytes(subprocess.check_output(['git','rev-parse','HEAD'],cwd=root))
 manifest={}
-for folder in ['Assets/LastSignal','Assets/Game','Assets/Resources','Packages','ProjectSettings']:
+for folder in ['Assets/LastSignal','Assets/ThirdParty','Packages','ProjectSettings']:
  for path in (root/folder).rglob('*'):
   if path.is_file():manifest[str(path.relative_to(root))]=hashlib.sha256(path.read_bytes()).hexdigest()
 (run/'source-manifest.json').write_text(json.dumps(manifest,indent=2))
@@ -23,11 +27,12 @@ for folder in ['Assets/LastSignal','Assets/Game','Assets/Resources','Packages','
 request.write_text(json.dumps({'action':a.mode,'filter':a.filter,'output':str(output)}))
 started=time.monotonic();result=None
 while time.monotonic()-started<a.timeout:
+ if error.exists():break
  if output.exists():
   try:result=ET.parse(output).getroot();break
   except ET.ParseError:pass
  time.sleep(2)
-if result is None:
+if result is None and not error.exists():
  print('BLOCKED: XML zaman aşımı; canlı testin dosyaları geri yüklenmedi. Yedek: '+str(backup),flush=True);raise SystemExit(2)
 # Sonuç dosyası test bitiminden sonra yazılır; yalnız testin değiştirdiği tarihsel dosyaları taşı.
 changes=[]
@@ -42,6 +47,9 @@ for rel in before:
  if not (root/rel).exists():shutil.copy2(backup/rel,root/rel)
 (run/'preserved-historical-paths.json').write_text(json.dumps(changes,indent=2))
 shutil.rmtree(backup) # Restored originals and retained generated artifacts above.
+if error.exists():
+ print('BLOCKED: Unity Test Runner hatası: '+error.read_text().strip(),flush=True)
+ raise SystemExit(2)
 (run/'result.json').write_text(json.dumps(result.attrib,indent=2));print(json.dumps(result.attrib),flush=True)
 if result.get('failed')!='0' or result.get('result')!='Passed':
  for case in result.iter('test-case'):

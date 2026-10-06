@@ -1,10 +1,12 @@
 using UnityEngine;
+using Unity.Profiling;
 
 namespace LastSignal
 {
     [DefaultExecutionOrder(-50)]
     public sealed class FirstPersonLook : MonoBehaviour
     {
+        static readonly ProfilerMarker VehicleCameraMarker = new ProfilerMarker("LastSignal.Vehicle.Camera");
         [SerializeField] PlayerInputReader input;
         [SerializeField] Camera view;
         [SerializeField, Range(0, 1)] float degreesPerMousePixel = .12f;
@@ -28,13 +30,18 @@ namespace LastSignal
         {
             float targetFov = fovOverride > 0 ? fovOverride : fieldOfViewDegrees;
             view.fieldOfView = targetFov;
-            if (input.GameplayActive) ApplyLook(input.Look);
+            if (input.DrivingActive) { using (VehicleCameraMarker.Auto()) ApplyLook(input.Look); }
+            else if (input.GameplayActive) ApplyLook(input.Look);
         }
 
         public void ApplyLook(Vector2 mouseDelta)
         {
-            transform.Rotate(0, mouseDelta.x * degreesPerMousePixel * sensitivityMultiplier, 0, Space.World);
-            Pitch = Mathf.Clamp(Pitch - mouseDelta.y * degreesPerMousePixel * sensitivityMultiplier, -pitchLimitDegrees, pitchLimitDegrees);
+            float yaw = mouseDelta.x * degreesPerMousePixel * sensitivityMultiplier;
+            if (input && input.DrivingActive)
+                transform.localRotation = Quaternion.Euler(0, Mathf.Clamp(Mathf.DeltaAngle(0, transform.localEulerAngles.y) + yaw, -110, 110), 0);
+            else transform.Rotate(0, yaw, 0, Space.World);
+            float pitchLimit = input && input.DrivingActive ? Mathf.Min(pitchLimitDegrees, 60) : pitchLimitDegrees;
+            Pitch = Mathf.Clamp(Pitch - mouseDelta.y * degreesPerMousePixel * sensitivityMultiplier, -pitchLimit, pitchLimit);
             view.transform.localRotation = Quaternion.Euler(Pitch, 0, 0);
         }
 

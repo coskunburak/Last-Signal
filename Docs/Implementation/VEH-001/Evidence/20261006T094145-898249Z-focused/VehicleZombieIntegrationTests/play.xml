@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Failed(Child)" total="13" passed="12" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 09:42:08Z" end-time="2026-10-06 09:42:51Z" duration="42.8346135">
+  <test-suite type="TestSuite" id="1310" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-06 09:42:08Z" end-time="2026-10-06 09:42:51Z" duration="42.834614" total="13" passed="12" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1303" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-06 09:42:08Z" end-time="2026-10-06 09:42:51Z" duration="42.814471" total="13" passed="12" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1304" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-06 09:42:08Z" end-time="2026-10-06 09:42:51Z" duration="42.812800" total="13" passed="12" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1305" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-06 09:42:08Z" end-time="2026-10-06 09:42:51Z" duration="42.811970" total="13" passed="12" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1183" name="VehicleZombieIntegrationTests" fullname="LastSignal.Tests.VehicleZombieIntegrationTests" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" testcasecount="13" result="Failed" site="Child" start-time="2026-10-06 09:42:08Z" end-time="2026-10-06 09:42:51Z" duration="42.809737" total="13" passed="12" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1190" name="ActiveProductionEncounterKillPersistsWithConditionAndResidentNoise" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.ActiveProductionEncounterKillPersistsWithConditionAndResidentNoise" methodname="ActiveProductionEncounterKillPersistsWithConditionAndResidentNoise" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="963407314" result="Passed" start-time="2026-10-06 09:42:08Z" end-time="2026-10-06 09:42:12Z" duration="4.061601" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1193" name="ActiveSurvivorReactsAndWitnessHearsThroughCanonicalNoise" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.ActiveSurvivorReactsAndWitnessHearsThroughCanonicalNoise" methodname="ActiveSurvivorReactsAndWitnessHearsThroughCanonicalNoise" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="828878778" result="Failed" start-time="2026-10-06 09:42:12Z" end-time="2026-10-06 09:42:14Z" duration="1.855573" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  impact closing=6.74571 severity=0.2739168; noise=VehicleImpact radius=21.861 intensity=0.1643501; distance=4.214967 clear=0.1591946 blocked=True obstacle=LS_Vehicle_UtilityPickup_01(Clone); occludedStrength=0.06367783 threshold=0.12; registered=True canHear=True paused=False candidates=1 queries=1 heard=0 accepted=0; witness=(-335.00, 1.52, -129.00) source=(-336.32, 1.37, -125.00)
+  Expected: greater than 0
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.VehicleZombieIntegrationTests+<ActiveSurvivorReactsAndWitnessHearsThroughCanonicalNoise>d__15.MoveNext () [0x004de] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/VehicleZombieIntegrationTests.cs:210
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+impact closing=6.74571 severity=0.2739168; noise=VehicleImpact radius=21.861 intensity=0.1643501; distance=4.214967 clear=0.1591946 blocked=True obstacle=LS_Vehicle_UtilityPickup_01(Clone); occludedStrength=0.06367783 threshold=0.12; registered=True canHear=True paused=False candidates=1 queries=1 heard=0 accepted=0; witness=(-335.00, 1.52, -129.00) source=(-336.32, 1.37, -125.00)
+]]></output>
+            </test-case>
+            <test-case id="1195" name="DisabledActorAndPausedSessionCannotCommitDamage" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.DisabledActorAndPausedSessionCannotCommitDamage" methodname="DisabledActorAndPausedSessionCannotCommitDamage" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="1299741902" result="Passed" start-time="2026-10-06 09:42:14Z" end-time="2026-10-06 09:42:18Z" duration="3.382380" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1187" name="HighSpeedDeathIsSingleAndDespawnCleansContactLedger" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.HighSpeedDeathIsSingleAndDespawnCleansContactLedger" methodname="HighSpeedDeathIsSingleAndDespawnCleansContactLedger" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="806094306" result="Passed" start-time="2026-10-06 09:42:18Z" end-time="2026-10-06 09:42:20Z" duration="1.981738" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1192" name="HundredRealContactsReleaseCacheAndListeners" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.HundredRealContactsReleaseCacheAndListeners" methodname="HundredRealContactsReleaseCacheAndListeners" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="983277497" result="Passed" start-time="2026-10-06 09:42:20Z" end-time="2026-10-06 09:42:31Z" duration="11.393217" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+SOAK impacts=100; cache_peak=1; cache_end=0; listeners=1/1; managed_warm=1371832320; managed_mid=1371807744; managed_end=1371811840; scope=production-prefab isolated physics, AI disabled; allocations include fixture instantiate/destroy
+]]></output>
+            </test-case>
+            <test-case id="1188" name="MultipleBodyCollidersAndContinuousContactCommitOnlyOnce" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.MultipleBodyCollidersAndContinuousContactCommitOnlyOnce" methodname="MultipleBodyCollidersAndContinuousContactCommitOnlyOnce" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="1874448288" result="Passed" start-time="2026-10-06 09:42:31Z" end-time="2026-10-06 09:42:34Z" duration="3.274434" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+Account API did not become accessible within 30 seconds. This may be due to network issues or editor focus.
+]]></output>
+            </test-case>
+            <test-case id="1186" name="ParkingContactCannotKillOrSpendCondition" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.ParkingContactCannotKillOrSpendCondition" methodname="ParkingContactCannotKillOrSpendCondition" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="887703611" result="Passed" start-time="2026-10-06 09:42:34Z" end-time="2026-10-06 09:42:36Z" duration="1.915216" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1184" name="ProductionBodyContactCommitsOnceAndUsesCanonicalDamageNoiseCost" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.ProductionBodyContactCommitsOnceAndUsesCanonicalDamageNoiseCost" methodname="ProductionBodyContactCommitsOnceAndUsesCanonicalDamageNoiseCost" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="1518073876" result="Passed" start-time="2026-10-06 09:42:36Z" end-time="2026-10-06 09:42:38Z" duration="1.871936" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1185" name="ReverseContactUsesRearAndCorrectDirection" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.ReverseContactUsesRearAndCorrectDirection" methodname="ReverseContactUsesRearAndCorrectDirection" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="1109806968" result="Passed" start-time="2026-10-06 09:42:38Z" end-time="2026-10-06 09:42:40Z" duration="1.871024" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1189" name="SeparationAllowsSecondImpactAndDeadContactHasNoCost" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.SeparationAllowsSecondImpactAndDeadContactHasNoCost" methodname="SeparationAllowsSecondImpactAndDeadContactHasNoCost" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="1559468174" result="Passed" start-time="2026-10-06 09:42:40Z" end-time="2026-10-06 09:42:47Z" duration="6.847392" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1194" name="ServiceColliderDoesNotOwnDamage" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.ServiceColliderDoesNotOwnDamage" methodname="ServiceColliderDoesNotOwnDamage" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="1042545187" result="Passed" start-time="2026-10-06 09:42:47Z" end-time="2026-10-06 09:42:49Z" duration="2.051947" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1191" name="SmallGroupUsesDistinctTargetIdentity" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.SmallGroupUsesDistinctTargetIdentity" methodname="SmallGroupUsesDistinctTargetIdentity" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="1923162473" result="Passed" start-time="2026-10-06 09:42:49Z" end-time="2026-10-06 09:42:51Z" duration="1.863289" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1196" name="TrunkInteractionRayStillFindsServiceAfterContactFilter" fullname="LastSignal.Tests.VehicleZombieIntegrationTests.TrunkInteractionRayStillFindsServiceAfterContactFilter" methodname="TrunkInteractionRayStillFindsServiceAfterContactFilter" classname="LastSignal.Tests.VehicleZombieIntegrationTests" runstate="Runnable" seed="187962210" result="Passed" start-time="2026-10-06 09:42:51Z" end-time="2026-10-06 09:42:51Z" duration="0.421187" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261006T094145-943211Z/play.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

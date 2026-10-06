@@ -1,0 +1,71 @@
+using UnityEngine;
+
+namespace LastSignal
+{
+    [DefaultExecutionOrder(120)]
+    public sealed class MeleeStanceViewPresenter : MonoBehaviour
+    {
+        [SerializeField] Transform visualRoot;
+        [SerializeField] Vector3 crouchPositionOffset = new Vector3(0, -.025f, -.015f);
+        [SerializeField] Vector3 slidePositionOffset = new Vector3(0, -.09f, -.06f);
+        [SerializeField] Vector3 slideRotationOffset = new Vector3(6f, 0, 5f);
+        [SerializeField, Min(.01f)] float transitionSeconds = .1f;
+
+        PlayerStance stance;
+        FirstPersonMotor motor;
+        Transform stancePivot;
+        Vector3 basePosition;
+        Quaternion baseRotation;
+        float crouchWeight;
+        float slideWeight;
+
+        void Awake()
+        {
+            if (!visualRoot) visualRoot = transform.Find("VisualRoot");
+            if (!visualRoot)
+            {
+                Debug.LogError("Melee stance requires VisualRoot.", this);
+                enabled = false;
+                return;
+            }
+
+            // The Animator owns VisualRoot, including equip translation and swing
+            // rotation. Compose stance above it, without moving the gameplay origin.
+            stancePivot = new GameObject("StancePivot").transform;
+            stancePivot.gameObject.layer = visualRoot.gameObject.layer;
+            stancePivot.SetParent(visualRoot.parent, false);
+            visualRoot.SetParent(stancePivot, false);
+            basePosition = stancePivot.localPosition;
+            baseRotation = stancePivot.localRotation;
+        }
+
+        public void Configure(PlayerStance playerStance, FirstPersonMotor playerMotor)
+        {
+            stance = playerStance;
+            motor = playerMotor;
+        }
+
+        void LateUpdate()
+        {
+            if (!stance || !motor || !visualRoot) return;
+
+            float step = Time.deltaTime / transitionSeconds;
+            crouchWeight = Mathf.MoveTowards(crouchWeight, stance.IsCrouching ? 1f : 0f, step);
+            slideWeight = Mathf.MoveTowards(slideWeight, motor.IsSliding ? 1f : 0f, step);
+            float crouchPose = crouchWeight * (1f - slideWeight);
+
+            stancePivot.localPosition = basePosition +
+                crouchPositionOffset * crouchPose + slidePositionOffset * slideWeight;
+            stancePivot.localRotation = baseRotation *
+                Quaternion.Euler(slideRotationOffset * slideWeight);
+        }
+
+        void OnDisable()
+        {
+            if (!stancePivot) return;
+            stancePivot.localPosition = basePosition;
+            stancePivot.localRotation = baseRotation;
+            crouchWeight = slideWeight = 0;
+        }
+    }
+}

@@ -9,7 +9,7 @@ namespace LastSignal.Tests
     {
         [Test] public void RuntimeWrapperHasOneAuthorityAndNoMissingComponents()
         {
-            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
             Assert.That(prefab,Is.Not.Null);
             Assert.That(prefab.GetComponentsInChildren<ZombieController>().Length,Is.EqualTo(1));
             Assert.That(prefab.GetComponent<ZombiePerception>(),Is.Not.Null);
@@ -21,7 +21,7 @@ namespace LastSignal.Tests
         }
         [Test] public void NormalBakeDoesNotIncludeOtherOpenAcceptanceScenes()
         {
-            var data=AssetDatabase.LoadAssetAtPath<NavMeshData>("Assets/LastSignal/Assets/Zombie/Enemies/Zombie/NormalNavMesh.asset");
+            var data=AssetDatabase.LoadAssetAtPath<NavMeshData>("Assets/LastSignal/Data/Enemies/Zombie/NormalNavMesh.asset");
             Assert.That(data,Is.Not.Null);
             // Normal ground is 40x40 at the origin, with targets up to z=20.
             // The parkour scene extends to z=30 and must never contaminate this bake.

@@ -15,7 +15,7 @@ namespace LastSignal.Tests
         [UnitySetUp] public IEnumerator Setup()
         {
             Time.timeScale=1;
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/IntegratedGraybox.unity",new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Production/IntegratedGraybox.unity",new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;driver=new GameObject("S012 test driver").AddComponent<S012Acceptance>();driver.Bind();driver.flow.Resume();
             directory=Path.Combine(Application.temporaryCachePath,"s012-"+System.Guid.NewGuid().ToString("N"));Directory.CreateDirectory(directory);
         }

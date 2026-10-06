@@ -47,11 +47,29 @@ namespace LastSignal
         }
         public void ResetPolicy()
         { policy.Reset(); failures = stuckFailures = 0; Exhausted = Stuck = false; retryAt = 0; progressAge = 0; progressOrigin = transform.position; }
+        Vector3 impactMotion;
+        float impactRemaining;
+        public void BeginVehicleImpact(Vector3 direction, float distance)
+        {
+            Stop();
+            impactMotion = Vector3.ProjectOnPlane(direction, Vector3.up).normalized * Mathf.Clamp(distance, 0, 2.5f) / .45f;
+            impactRemaining = .45f;
+        }
+        public bool AdvanceVehicleImpact(float seconds)
+        {
+            if (impactRemaining <= 0 || !Ready) return false;
+            float step = Mathf.Min(Mathf.Max(0, seconds), impactRemaining); impactRemaining -= step;
+            Vector3 offset = impactMotion * step;
+            // Keep NavMesh ownership; clamp movement at an edge instead of enabling competing bodies.
+            if (agent.Raycast(transform.position + offset, out var edge)) offset = edge.position - transform.position;
+            agent.Move(offset); agent.isStopped = true;
+            return true;
+        }
         public void Stop()
         {
-            requested = false; progressAge = 0;
+            requested = false; progressAge = 0; impactRemaining = 0;
             if (!Ready) return;
-            agent.isStopped = true; agent.ResetPath(); agent.velocity = Vector3.zero;
+            agent.ResetPath(); agent.velocity = Vector3.zero; agent.isStopped = true;
             policy.Reset();
         }
         public void Suspend(bool paused)

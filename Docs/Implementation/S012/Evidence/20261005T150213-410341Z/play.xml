@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 15:02:30Z" end-time="2026-10-05 15:02:34Z" duration="4.3909021">
+  <test-suite type="TestSuite" id="1285" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="238" result="Failed" site="Child" start-time="2026-10-05 15:02:30Z" end-time="2026-10-05 15:02:34Z" duration="4.390902" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1278" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="238" result="Failed" site="Child" start-time="2026-10-05 15:02:30Z" end-time="2026-10-05 15:02:34Z" duration="4.383845" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1279" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="238" result="Failed" site="Child" start-time="2026-10-05 15:02:30Z" end-time="2026-10-05 15:02:34Z" duration="4.381943" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1280" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="238" result="Failed" site="Child" start-time="2026-10-05 15:02:30Z" end-time="2026-10-05 15:02:34Z" duration="4.380789" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1168" name="VehicleOccupancyTests" fullname="LastSignal.Tests.VehicleOccupancyTests" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-05 15:02:30Z" end-time="2026-10-05 15:02:34Z" duration="4.379176" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1170" name="BlockedExitsRetainDriverAndFallbackIsSafe" fullname="LastSignal.Tests.VehicleOccupancyTests.BlockedExitsRetainDriverAndFallbackIsSafe" methodname="BlockedExitsRetainDriverAndFallbackIsSafe" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="49916869" result="Failed" start-time="2026-10-05 15:02:30Z" end-time="2026-10-05 15:02:32Z" duration="1.985711" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[SetUp : Unhandled log message: '[Error] Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[LastSignal.ZombieNavigation:Initialize (LastSignal.ZombieDefinition) (at Assets/LastSignal/Scripts/Runtime/AI/ZombieNavigation.cs:40)
+LastSignal.ZombieController:Initialize () (at Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs:118)
+LastSignal.ZombieEncounter:Begin (UnityEngine.GameObject) (at Assets/LastSignal/Scripts/Runtime/Session/ZombieEncounter.cs:17)
+LastSignal.SessionFlow:BeginSession (bool) (at Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:83)
+LastSignal.SessionFlow:BeginSession () (at Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:35)
+LastSignal.SessionFlow:Start () (at Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:34)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.
+S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1169" name="EnterExitPreservesPlayerAndGatesOnFootAuthority" fullname="LastSignal.Tests.VehicleOccupancyTests.EnterExitPreservesPlayerAndGatesOnFootAuthority" methodname="EnterExitPreservesPlayerAndGatesOnFootAuthority" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="543389370" result="Failed" start-time="2026-10-05 15:02:32Z" end-time="2026-10-05 15:02:33Z" duration="1.199893" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[SetUp : Unhandled log message: '[Error] Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[LastSignal.ZombieNavigation:Initialize (LastSignal.ZombieDefinition) (at Assets/LastSignal/Scripts/Runtime/AI/ZombieNavigation.cs:40)
+LastSignal.ZombieController:Initialize () (at Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs:118)
+LastSignal.ZombieEncounter:Begin (UnityEngine.GameObject) (at Assets/LastSignal/Scripts/Runtime/Session/ZombieEncounter.cs:17)
+LastSignal.SessionFlow:BeginSession (bool) (at Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:83)
+LastSignal.SessionFlow:BeginSession () (at Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:35)
+LastSignal.SessionFlow:Start () (at Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:34)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.
+S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1171" name="UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" fullname="LastSignal.Tests.VehicleOccupancyTests.UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" methodname="UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="108805892" result="Failed" start-time="2026-10-05 15:02:33Z" end-time="2026-10-05 15:02:34Z" duration="1.185345" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[SetUp : Unhandled log message: '[Error] Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[LastSignal.ZombieNavigation:Initialize (LastSignal.ZombieDefinition) (at Assets/LastSignal/Scripts/Runtime/AI/ZombieNavigation.cs:40)
+LastSignal.ZombieController:Initialize () (at Assets/LastSignal/Scripts/Runtime/AI/ZombieController.cs:118)
+LastSignal.ZombieEncounter:Begin (UnityEngine.GameObject) (at Assets/LastSignal/Scripts/Runtime/Session/ZombieEncounter.cs:17)
+LastSignal.SessionFlow:BeginSession (bool) (at Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:83)
+LastSignal.SessionFlow:BeginSession () (at Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:35)
+LastSignal.SessionFlow:Start () (at Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs:34)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Zombie spawn has no matching NavMesh within bounded correction radius. Move the encounter spawn onto the baked Shambler surface.
+S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261005T150213-410341Z/play.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

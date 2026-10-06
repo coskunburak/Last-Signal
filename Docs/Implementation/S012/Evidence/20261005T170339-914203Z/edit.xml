@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="24" result="Passed" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:54Z" duration="0.7898134">
+  <test-suite type="TestSuite" id="1000" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="498" result="Passed" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:54Z" duration="0.789813" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1594" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="488" result="Passed" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:54Z" duration="0.699482" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1595" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="488" result="Passed" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:54Z" duration="0.608752" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1596" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="488" result="Passed" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:54Z" duration="0.508601" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1349" name="VehicleFoundationTests" fullname="LastSignal.Tests.VehicleFoundationTests" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" testcasecount="24" result="Passed" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:54Z" duration="0.407299" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1351" name="EngineRequiresReadyDriverAndWorkingCondition" fullname="LastSignal.Tests.VehicleFoundationTests.EngineRequiresReadyDriverAndWorkingCondition" methodname="EngineRequiresReadyDriverAndWorkingCondition" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1214782568" result="Passed" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:53Z" duration="0.041911" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1360" name="ExhaustionStopsEngineAndCannotCreateNegativeFuel" fullname="LastSignal.Tests.VehicleFoundationTests.ExhaustionStopsEngineAndCannotCreateNegativeFuel" methodname="ExhaustionStopsEngineAndCannotCreateNegativeFuel" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1735937737" result="Passed" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:53Z" duration="0.004404" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1376" name="InvalidDefinitionAndNonfiniteIntentFailClosed" fullname="LastSignal.Tests.VehicleFoundationTests.InvalidDefinitionAndNonfiniteIntentFailClosed" methodname="InvalidDefinitionAndNonfiniteIntentFailClosed" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="648056796" result="Passed" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:53Z" duration="0.003217" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1364" name="InvalidElapsedCannotMutateFuel" fullname="LastSignal.Tests.VehicleFoundationTests.InvalidElapsedCannotMutateFuel" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-05 17:03:53Z" end-time="2026-10-05 17:03:54Z" duration="0.045333" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1361" name="InvalidElapsedCannotMutateFuel(double.NaN)" fullname="LastSignal.Tests.VehicleFoundationTests.InvalidElapsedCannotMutateFuel(double.NaN)" methodname="InvalidElapsedCannotMutateFuel" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="111777552" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000548" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1362" name="InvalidElapsedCannotMutateFuel(double.PositiveInfinity)" fullname="LastSignal.Tests.VehicleFoundationTests.InvalidElapsedCannotMutateFuel(double.PositiveInfinity)" methodname="InvalidElapsedCannotMutateFuel" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="721026730" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000178" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1363" name="InvalidElapsedCannotMutateFuel(-1)" fullname="LastSignal.Tests.VehicleFoundationTests.InvalidElapsedCannotMutateFuel(-1)" methodname="InvalidElapsedCannotMutateFuel" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1634636207" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000170" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1356" name="RefuelRejectsAbsentCanAndRunningEngine" fullname="LastSignal.Tests.VehicleFoundationTests.RefuelRejectsAbsentCanAndRunningEngine" methodname="RefuelRejectsAbsentCanAndRunningEngine" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="979635416" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.001223" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1368" name="ResourceRoundtripPreservesFuelDamageCargoAndRestoresEngineOff" fullname="LastSignal.Tests.VehicleFoundationTests.ResourceRoundtripPreservesFuelDamageCargoAndRestoresEngineOff" methodname="ResourceRoundtripPreservesFuelDamageCargoAndRestoresEngineOff" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="67664163" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.005019" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1373" name="SeatFiftyTransitionsLeaveNoOwner" fullname="LastSignal.Tests.VehicleFoundationTests.SeatFiftyTransitionsLeaveNoOwner" methodname="SeatFiftyTransitionsLeaveNoOwner" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="432385910" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.001584" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1370" name="UnknownCargoRejectsWholeResourceRestore" fullname="LastSignal.Tests.VehicleFoundationTests.UnknownCargoRejectsWholeResourceRestore" methodname="UnknownCargoRejectsWholeResourceRestore" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="898767104" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000350" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1369" name="UnknownDefinitionRejectsWithoutTouchingSource" fullname="LastSignal.Tests.VehicleFoundationTests.UnknownDefinitionRejectsWithoutTouchingSource" methodname="UnknownDefinitionRejectsWithoutTouchingSource" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="620817283" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000358" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1365" name="VEH_CARGO_001_ObserversSeeBothOwnersCommitted" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_CARGO_001_ObserversSeeBothOwnersCommitted" methodname="VEH_CARGO_001_ObserversSeeBothOwnersCommitted" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1803606466" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000750" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1366" name="VEH_CARGO_002_FullCargoLeavesSourceUnchanged" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_CARGO_002_FullCargoLeavesSourceUnchanged" methodname="VEH_CARGO_002_FullCargoLeavesSourceUnchanged" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1104402345" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000241" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1367" name="VEH_CARGO_003_BidirectionalConservation" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_CARGO_003_BidirectionalConservation" methodname="VEH_CARGO_003_BidirectionalConservation" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="344591433" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.002238" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1375" name="VEH_DMG_001_002_CompoundAndContinuousContactsAreOneImpact" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_DMG_001_002_CompoundAndContinuousContactsAreOneImpact" methodname="VEH_DMG_001_002_CompoundAndContinuousContactsAreOneImpact" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1477384389" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000763" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1350" name="VEH_FUEL_001_EmptyCannotStart" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_FUEL_001_EmptyCannotStart" methodname="VEH_FUEL_001_EmptyCannotStart" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1541143394" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000241" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1352" name="VEH_FUEL_002_RefuelCommitsBeforeObserverAndBlocksReentry" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_FUEL_002_RefuelCommitsBeforeObserverAndBlocksReentry" methodname="VEH_FUEL_002_RefuelCommitsBeforeObserverAndBlocksReentry" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1568967250" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000420" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1355" name="VEH_FUEL_003_NoOverflowOrLostCan" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_FUEL_003_NoOverflowOrLostCan" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.100282" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1353" name="VEH_FUEL_003_NoOverflowOrLostCan(60)" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_FUEL_003_NoOverflowOrLostCan(60)" methodname="VEH_FUEL_003_NoOverflowOrLostCan" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1205229363" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000580" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1354" name="VEH_FUEL_003_NoOverflowOrLostCan(58)" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_FUEL_003_NoOverflowOrLostCan(58)" methodname="VEH_FUEL_003_NoOverflowOrLostCan" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1958975334" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.005920" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1359" name="VEH_FUEL_004_ElapsedTimeIndependentOfFrameRate" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_FUEL_004_ElapsedTimeIndependentOfFrameRate" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.085829" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1357" name="VEH_FUEL_004_ElapsedTimeIndependentOfFrameRate(20)" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_FUEL_004_ElapsedTimeIndependentOfFrameRate(20)" methodname="VEH_FUEL_004_ElapsedTimeIndependentOfFrameRate" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="883040216" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.002202" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1358" name="VEH_FUEL_004_ElapsedTimeIndependentOfFrameRate(120)" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_FUEL_004_ElapsedTimeIndependentOfFrameRate(120)" methodname="VEH_FUEL_004_ElapsedTimeIndependentOfFrameRate" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="883054021" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000711" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1374" name="VEH_INP_001_002_003_ResetBlocksHeldThrottleUntilRelease" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_INP_001_002_003_ResetBlocksHeldThrottleUntilRelease" methodname="VEH_INP_001_002_003_ResetBlocksHeldThrottleUntilRelease" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="617468459" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.002474" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1371" name="VEH_INT_001_OneSeatOwnerAndRollback" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_INT_001_OneSeatOwnerAndRollback" methodname="VEH_INT_001_OneSeatOwnerAndRollback" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="1993134798" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000735" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1372" name="VEH_INT_004_BlockedOrFastExitRetainsDriver" fullname="LastSignal.Tests.VehicleFoundationTests.VEH_INT_004_BlockedOrFastExitRetainsDriver" methodname="VEH_INT_004_BlockedOrFastExitRetainsDriver" classname="LastSignal.Tests.VehicleFoundationTests" runstate="Runnable" seed="461184976" result="Passed" start-time="2026-10-05 17:03:54Z" end-time="2026-10-05 17:03:54Z" duration="0.000499" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261005T170339-914203Z/edit.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

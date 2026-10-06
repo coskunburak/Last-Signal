@@ -20,7 +20,7 @@ namespace LastSignal.Tests
         {
             directory=Path.Combine(Path.GetTempPath(),"LastSignal-Integration-"+Guid.NewGuid().ToString("N"));path=Path.Combine(directory,"current.json");
             Time.timeScale=1;
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/PersistenceAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/PersistenceAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
             yield return null; saves=Object.FindAnyObjectByType<SaveSession>();flow=saves.GetComponent<SessionFlow>();flow.Resume();yield return new WaitForSeconds(.9f);
         }
         [UnityTearDown] public IEnumerator Cleanup()
@@ -73,6 +73,87 @@ namespace LastSignal.Tests
             var load=saves.Load(path);Assert.IsTrue(load.MoveNext());Assert.IsTrue(flow.Restoring);
             ((IDisposable)load).Dispose();Assert.IsTrue(flow.InMenu);Assert.IsFalse(flow.Restoring);
             yield return null;yield return saves.Load(path);Assert.IsTrue(saves.LastResult.Success,saves.LastResult.Message);
+        }
+
+        [UnityTest] public IEnumerator S014ReloadBeforeCommitSurvivesSaveDeathAndLoad()
+        { yield return ReloadSaveDeathAndLoad(false); }
+
+        [UnityTest] public IEnumerator S014ReloadAfterCommitSurvivesSaveDeathAndLoad()
+        { yield return ReloadSaveDeathAndLoad(true); }
+
+        IEnumerator ReloadSaveDeathAndLoad(bool afterCommit)
+        {
+            var combat = flow.Player.GetComponent<PlayerCombatController>();
+            var weapon = combat.Firearm;
+            Assert.IsNotNull(weapon);
+            yield return WaitForRifleReady(weapon);
+            var inventory = flow.Player.GetComponent<PlayerInventory>();
+            Assert.AreEqual(60, inventory.TryAdd(weapon.Definition.Ammunition, 60));
+            var state = weapon.RuntimeState;
+            Assert.IsTrue(state.TryConsumeShot()); // Seed a partial magazine without affecting the encounter.
+            int total = state.TotalAmmo;
+            int commits = 0;
+            weapon.ReloadCommitted += () => commits++;
+            weapon.OnReloadRequested();
+            Assert.AreEqual(WeaponState.Reloading, state.State);
+            if (afterCommit)
+            {
+                float deadline = Time.realtimeSinceStartup + 5;
+                while (!state.ReloadCommitted)
+                {
+                    Assert.Less(Time.realtimeSinceStartup, deadline, "Reload never reached commit.");
+                    yield return null;
+                }
+            }
+            Assert.AreEqual(WeaponState.Reloading, state.State);
+            Assert.AreEqual(afterCommit, state.ReloadCommitted);
+            int magazine = state.CurrentMagazine;
+            int reserve = state.ReserveAmmo;
+            Assert.AreEqual(afterCommit ? 1 : 0, commits);
+            Assert.IsTrue(saves.Save(path).Success, saves.LastResult.Message);
+            byte[] savedBytes = File.ReadAllBytes(path);
+            Assert.AreEqual(WeaponState.Reloading, state.State, "Saving must not commit or cancel the live action.");
+            Assert.AreEqual(magazine, state.CurrentMagazine);
+            Assert.AreEqual(reserve, state.ReserveAmmo);
+
+            var health = flow.Player.GetComponent<PlayerHealth>();
+            health.TakeDamage(new DamageInfo { Amount = health.MaxHealth + 1 });
+            Assert.IsTrue(flow.PlayerDead);
+            Assert.IsNull(combat.Firearm, "Session death must detach the weapon synchronously.");
+            Assert.AreEqual(WeaponState.Holstered, state.State);
+            Assert.AreEqual(magazine, state.CurrentMagazine);
+            Assert.AreEqual(reserve, state.ReserveAmmo);
+            Assert.IsFalse(saves.Save(path).Success, "A dead session must not replace the living checkpoint.");
+            CollectionAssert.AreEqual(savedBytes, File.ReadAllBytes(path));
+            yield return null; // Complete the old viewmodel's deferred destruction.
+            Assert.IsTrue(weapon == null);
+
+            flow.ReturnToMenu();
+            yield return null;
+            yield return saves.Load(path);
+            Assert.IsTrue(saves.LastResult.Success, saves.LastResult.Message);
+            Assert.IsFalse(flow.PlayerDead);
+            var restored = flow.Player.GetComponent<PlayerCombatController>().Firearm;
+            Assert.IsNotNull(restored);
+            yield return WaitForRifleReady(restored);
+            Assert.AreEqual(magazine, restored.RuntimeState.CurrentMagazine);
+            Assert.AreEqual(reserve, restored.RuntimeState.ReserveAmmo);
+            Assert.AreEqual(total, restored.RuntimeState.TotalAmmo);
+            Assert.IsFalse(restored.RuntimeState.ReloadCommitted, "A load must not replay the old reload transaction.");
+            Assert.AreEqual(afterCommit ? 1 : 0, commits, "Destroyed weapon must not publish a stale commit.");
+        }
+
+        static IEnumerator WaitForRifleReady(WeaponController weapon)
+        {
+            var animator = weapon.GetComponentInChildren<Animator>(true);
+            Assert.IsNotNull(animator);
+            float deadline = Time.realtimeSinceStartup + 5;
+            while (weapon.RuntimeState.State != WeaponState.Ready ||
+                !animator.GetCurrentAnimatorStateInfo(0).IsName("Ready") || animator.IsInTransition(0))
+            {
+                Assert.Less(Time.realtimeSinceStartup, deadline, "Restored production rifle did not settle into Ready.");
+                yield return null;
+            }
         }
     }
 }

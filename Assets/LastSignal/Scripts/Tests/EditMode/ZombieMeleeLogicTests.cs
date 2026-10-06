@@ -7,7 +7,7 @@ namespace LastSignal.Tests
     public class ZombieMeleeLogicTests
     {
         ZombieDefinition definition;
-        [SetUp] public void Setup() => definition = Object.Instantiate(AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Shambler.asset"));
+        [SetUp] public void Setup() => definition = Object.Instantiate(AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Data/Enemies/Zombie/Shambler.asset"));
         [TearDown] public void Cleanup() => Object.DestroyImmediate(definition);
         [Test] public void ProductionTuningAndPrefabContractsAreValid()
         {
@@ -21,9 +21,9 @@ namespace LastSignal.Tests
             Assert.That(definition.AttackContactTimeFor(true), Is.EqualTo(definition.AttackClipDurationFor(true) * .32f).Within(.001f));
             Assert.That(definition.AttackDurationFor(true), Is.EqualTo(definition.AttackClipDurationFor(true) * .70f).Within(.001f));
             Assert.That(definition.AttackDurationFor(true), Is.GreaterThan(definition.AttackRecoveryTimeFor(true)));
-            var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab");
+            var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player/Player.prefab");
             Assert.That(player.GetComponents<PlayerHealth>().Length, Is.EqualTo(1));
-            var zombie = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab");
+            var zombie = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
             Assert.That(zombie.transform.Find("MeleeOrigin"), Is.Not.Null);
             foreach (var c in player.GetComponentsInChildren<Component>(true)) Assert.That(c, Is.Not.Null);
         }

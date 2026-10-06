@@ -57,6 +57,27 @@ namespace LastSignal.Persistence
                 return Invalid("Invalid player state. Schema v1 accepts living-player checkpoints only.");
             var result = Container(save.inventory, ids); if (!result.Success) return result;
             result = Container(save.shelter.storage, ids); if (!result.Success) return result;
+            if (h.vehicleVersion < 0 || h.vehicleVersion > 1 || (h.vehicleVersion == 0 && save.vehicles != null) ||
+                (h.vehicleVersion == 1 && save.vehicles == null)) return Invalid("Invalid vehicle extension marker.");
+            if (save.vehicles != null)
+            {
+                var fleet = save.vehicles;
+                if (fleet.version != 1 || fleet.vehicles == null || fleet.vehicles.Length != 1) return Invalid("Invalid vehicle topology.");
+                foreach (var vehicle in fleet.vehicles)
+                {
+                    var r = vehicle?.resources;
+                    if (r == null || r.version != 1 || r.vehicleId != Vehicles.VehicleDefinition.UtilityPickupId ||
+                        r.definitionId != Vehicles.VehicleDefinition.UtilityPickupId || !AddId(ids, r.vehicleId) ||
+                        !Pose(vehicle.pose) || vehicle.ownerCell != "resident" ||
+                        !double.IsFinite(r.fuelLiters) || r.fuelLiters < 0 || r.fuelLiters > 60 ||
+                        !double.IsFinite(r.condition) || r.condition < 0 || r.condition > 1 || r.cargo == null ||
+                        r.cargo.id != r.vehicleId + ":cargo" || r.cargo.capacity != 16) return Invalid("Invalid resident utility pickup state.");
+                    result = Container(r.cargo, ids); if (!result.Success) return result;
+                }
+                if (!string.IsNullOrEmpty(fleet.occupiedVehicleId) &&
+                    (fleet.occupiedVehicleId != Vehicles.VehicleDefinition.UtilityPickupId || (save.cells != null && save.cells.playerCell != "resident")))
+                    return Invalid("Invalid vehicle occupancy owner.");
+            }
             var production = save.shelter.production;
             if (production != null && (save.worldTime == null || !Shelter.ShelterProduction.ValidSnapshot(production, save.worldTime.seconds) ||
                 (production.job != null && (!stackLimits.ContainsKey(production.job.inputId) || !stackLimits.ContainsKey(production.job.outputId))))) return Invalid("Invalid shelter production extension.");
@@ -141,6 +162,7 @@ namespace LastSignal.Persistence
                 if (!stackLimits.TryGetValue(LastSignal.Objectives.RelayProgression.FuseId, out int fuseStack) || fuseStack != 1) return Invalid("Missing unique critical fuse definition.");
                 long fuseCount = CountFuse(save.inventory) + CountFuse(save.shelter.storage) + CountFuse(save.world);
                 if (save.cells?.cells != null) foreach (var cell in save.cells.cells) if (cell.visited) fuseCount += CountFuse(cell.world);
+                if (save.vehicles != null) foreach (var vehicle in save.vehicles.vehicles) fuseCount += CountFuse(vehicle.resources.cargo);
                 int expected = save.progression.repairReceipt == LastSignal.Objectives.RelayProgression.RepairReceipt ? 0 : 1;
                 if (fuseCount != expected) return Invalid("Critical fuse ownership contradicts repair receipt.");
             }
@@ -162,6 +184,16 @@ namespace LastSignal.Persistence
                 if (p == null || !cells.Contains(p.cellId ?? "") || !ids.Add(p.cellId) || !Finite(p.pressure) || p.pressure < 0 || p.pressure > 1 ||
                     !LastSignal.WorldTime.WorldTimeSettings.ValidTime(p.lastUpdateTime) || p.lastUpdateTime > now || p.receipts == null || p.receipts.Length > 64) return false;
                 foreach (var r in p.receipts)
+                    if (r == null || !Id(r.id) || !r.id.StartsWith("noise:", StringComparison.Ordinal) ||
+                        !long.TryParse(r.id.Substring(6), out var sequence) || sequence < 1 || sequence > pop.lastNoiseSequence || !receipts.Add(r.id)) return false;
+            }
+            var resident = pop.residentPressure;
+            if (resident != null)
+            {
+                if (resident.cellId != "resident" || !Finite(resident.pressure) || resident.pressure < 0 || resident.pressure > 1 ||
+                    !LastSignal.WorldTime.WorldTimeSettings.ValidTime(resident.lastUpdateTime) || resident.lastUpdateTime > now ||
+                    resident.receipts == null || resident.receipts.Length > 64) return false;
+                foreach (var r in resident.receipts)
                     if (r == null || !Id(r.id) || !r.id.StartsWith("noise:", StringComparison.Ordinal) ||
                         !long.TryParse(r.id.Substring(6), out var sequence) || sequence < 1 || sequence > pop.lastNoiseSequence || !receipts.Add(r.id)) return false;
             }

@@ -7,16 +7,20 @@ namespace LastSignal.Editor
 {
     public static class ZombieBloodVfxAuthoring
     {
-        public const string Output = "Assets/LastSignal/Blood VFX/ProjectOwned";
-        const string Vendor = "Assets/LastSignal/Blood VFX/Vefects/Free Blood VFX/VFX/";
-        const string Runtime = "Assets/Resources/LS_Zombie_Runtime.prefab";
+        const string DataFolder = "Assets/LastSignal/Data/VFX/Blood";
+        const string MaterialFolder = "Assets/LastSignal/Materials/VFX/Blood";
+        const string PrefabFolder = "Assets/LastSignal/Prefabs/VFX/Blood";
+        const string Vendor = "Assets/ThirdParty/VFX/Vefects/Free Blood VFX/VFX/";
+        const string Runtime = "Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab";
         [MenuItem("Last Signal/Zombie/Author Blood VFX")]
         public static void Create()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play mode first.");
-            if (AssetDatabase.LoadAssetAtPath<ZombieBloodVfxProfile>(Output + "/ZombieBlood.asset"))
+            if (AssetDatabase.LoadAssetAtPath<ZombieBloodVfxProfile>(DataFolder + "/ZombieBlood.asset"))
                 throw new InvalidOperationException("Blood assets already exist. Edit existing assets; do not overwrite tuning.");
-            System.IO.Directory.CreateDirectory(Output);
+            System.IO.Directory.CreateDirectory(DataFolder);
+            System.IO.Directory.CreateDirectory(MaterialFolder);
+            System.IO.Directory.CreateDirectory(PrefabFolder);
             AssetDatabase.Refresh();
             var profile = ScriptableObject.CreateInstance<ZombieBloodVfxProfile>();
             profile.burstPrefab = Particle("PS_LS_Blood_SeverBurst", false, false);
@@ -24,7 +28,7 @@ namespace LastSignal.Editor
             profile.dripPrefab = Particle("PS_LS_Blood_Drip", true, true);
             profile.surfacePrefab = Surface();
             profile.pressure = new AnimationCurve(new Keyframe(0, 1), new Keyframe(.15f, .9f), new Keyframe(.5f, .48f), new Keyframe(.8f, .16f), new Keyframe(1, 0));
-            AssetDatabase.CreateAsset(profile, Output + "/ZombieBlood.asset");
+            AssetDatabase.CreateAsset(profile, DataFolder + "/ZombieBlood.asset");
             var root = PrefabUtility.LoadPrefabContents(Runtime);
             try
             {
@@ -99,14 +103,14 @@ namespace LastSignal.Editor
                         var material = new Material(renderer.sharedMaterial) { name = "M_" + name, enableInstancing = true };
                         material.SetFloat("_DepthFade", .025f); material.SetFloat("_EmissionMultiply", 0); material.SetFloat("_Smoothness", .4f);
                         material.SetFloat("_LUTDesaturate", .2f); material.SetFloat("_LUTValueIntensity", .65f);
-                        AssetDatabase.CreateAsset(material, Output + "/M_" + name + "_" + p.name + ".mat");
+                        AssetDatabase.CreateAsset(material, MaterialFolder + "/M_" + name + "_" + p.name + ".mat");
                         renderer.sharedMaterial = material;
                     }
                     p.transform.localRotation = Quaternion.identity;
                     p.transform.localPosition = Vector3.zero;
                     p.transform.localScale = Vector3.one;
                 }
-                return PrefabUtility.SaveAsPrefabAsset(go, Output + "/" + name + ".prefab");
+                return PrefabUtility.SaveAsPrefabAsset(go, PrefabFolder + "/" + name + ".prefab");
             }
             finally { UnityEngine.Object.DestroyImmediate(go); }
         }
@@ -116,12 +120,12 @@ namespace LastSignal.Editor
             var material = new Material(Shader.Find("LastSignal/BloodSurface")) { name = "M_LS_BloodSurface", enableInstancing = true };
             material.SetTexture("_BaseMap", vendor.GetTexture("_ErosionTexture"));
             material.SetColor("_BaseColor", new Color(.23f, .027f, .023f, .8f));
-            AssetDatabase.CreateAsset(material, Output + "/M_LS_BloodSurface.mat");
+            AssetDatabase.CreateAsset(material, MaterialFolder + "/M_LS_BloodSurface.mat");
             var go = GameObject.CreatePrimitive(PrimitiveType.Quad); go.name = "LS_BloodSurface"; go.layer = 2;
             UnityEngine.Object.DestroyImmediate(go.GetComponent<Collider>());
             go.GetComponent<MeshRenderer>().sharedMaterial = material;
             go.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
-            var result = PrefabUtility.SaveAsPrefabAsset(go, Output + "/LS_BloodSurface.prefab");
+            var result = PrefabUtility.SaveAsPrefabAsset(go, PrefabFolder + "/LS_BloodSurface.prefab");
             UnityEngine.Object.DestroyImmediate(go);
             return result;
         }

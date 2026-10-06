@@ -15,8 +15,8 @@ namespace LastSignal.Editor
 {
     public static class S012Authoring
     {
-        public const string Scene = "Assets/LastSignal/Scenes/IntegratedGraybox.unity";
-        const string Folder = "Assets/LastSignal/S012";
+        public const string Scene = "Assets/LastSignal/Scenes/Production/IntegratedGraybox.unity";
+        const string Folder = "Assets/LastSignal/Data/WorldCells";
         static Material material;
         static GameObject Box(string name, Vector3 at, Vector3 size, Transform parent)
         {
@@ -52,7 +52,7 @@ namespace LastSignal.Editor
             Directory.CreateDirectory(Folder); AssetDatabase.Refresh();
             if(!AssetDatabase.CopyAsset(S011Authoring.Scene,Scene)) throw new InvalidOperationException("Scene copy failed.");
             var s = EditorSceneManager.OpenScene(Scene);
-            material = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Shelter/Terminal.mat");
+            material = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Materials/Shelter/Terminal.mat");
             var flow = Object.FindAnyObjectByType<SessionFlow>();
             var mission = flow.GetComponent<RelayMission>();
             var navigation = GameObject.Find("NavigationWorld");

@@ -11,7 +11,7 @@ namespace LastSignal.Tests
         [Test]
         public void PlayerPrefabHasSafeCapsuleAndCompleteReferences()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player/Player.prefab");
             Assert.That(prefab, Is.Not.Null);
             var capsule = prefab.GetComponent<CharacterController>();
             Assert.That(capsule.height, Is.EqualTo(1.8f));
@@ -28,7 +28,7 @@ namespace LastSignal.Tests
         [Test]
         public void InputAssetHasSeparateContextsAndTapInteraction()
         {
-            var asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>("Assets/InputSystem_Actions.inputactions");
+            var asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>("Assets/LastSignal/Settings/Input/InputSystem_Actions.inputactions");
             foreach (string name in new[] { "Move", "Look", "Sprint", "Crouch", "Interact", "Pause" })
                 Assert.That(asset.FindAction("Player/" + name), Is.Not.Null);
             Assert.That(asset.FindAction("Player/Interact").interactions, Is.Null.Or.Empty);
@@ -37,7 +37,7 @@ namespace LastSignal.Tests
         [Test]
         public void AcceptanceSceneContainsSessionAndBothDoorFixturesWithoutMissingScripts()
         {
-            var scene = EditorSceneManager.OpenScene("Assets/LastSignal/Scenes/S001Acceptance.unity");
+            var scene = EditorSceneManager.OpenScene("Assets/LastSignal/Scenes/Validation/S001Acceptance.unity");
             Assert.That(Object.FindObjectsByType<SessionFlow>().Length, Is.EqualTo(1));
             Assert.That(Object.FindObjectsByType<DoorInteractable>().Length, Is.EqualTo(2));
             Assert.That(Object.FindObjectsByType<PlayerInputReader>().Length, Is.Zero, "Spawn from prefab, never a second scene player");

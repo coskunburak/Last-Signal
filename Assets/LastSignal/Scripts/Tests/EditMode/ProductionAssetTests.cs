@@ -7,20 +7,20 @@ namespace LastSignal.Tests
 {
     public class ProductionAssetTests
     {
-        const string Rifle = "Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx";
-        const string Val = "Assets/LastSignal/Assets/VAL.fbx";
+        const string Rifle = "Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Models/Assault Rifle.fbx";
+        const string Val = "Assets/ThirdParty/Characters/VAL.fbx";
         [Test]
         public void ProductionPrefabUsesSourceMeshesAndOneAnimatedMagazine()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab");
             var meshes = prefab.GetComponentsInChildren<MeshFilter>();
             Assert.That(meshes.Count(m => m.sharedMesh.name == "Magazine.001"), Is.EqualTo(1));
             foreach (var mesh in meshes)
             {
                 string expected = mesh.name == "MRPoly_RifleBody"
-                    ? "Assets/LastSignal/Combat/Optics/MRPoly_Body_Optics.asset"
+                    ? "Assets/LastSignal/Models/Weapons/Optics/MRPoly_Body_Optics.asset"
                     : mesh.name == "ScopeLens"
-                        ? "Assets/LastSignal/Combat/Optics/MRPoly_RearLens.asset" : Rifle;
+                        ? "Assets/LastSignal/Models/Weapons/Optics/MRPoly_RearLens.asset" : Rifle;
                 Assert.That(AssetDatabase.GetAssetPath(mesh.sharedMesh), Is.EqualTo(expected));
             }
             var mag = meshes.Single(m => m.sharedMesh.name == "Magazine.001");
@@ -33,7 +33,7 @@ namespace LastSignal.Tests
         [Test]
         public void ProductionAnimatorReferencesEveryRequiredRealClip()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab");
             var clips = prefab.GetComponentInChildren<Animator>().runtimeAnimatorController.animationClips;
             foreach (string action in new[] { "idle", "draw", "shoot", "reload", "reload_full", "hide" })
             {

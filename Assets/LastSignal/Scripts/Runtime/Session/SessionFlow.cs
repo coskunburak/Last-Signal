@@ -94,6 +94,7 @@ namespace LastSignal
             Player.GetComponent<FirstPersonMotor>()?.BindNoise(Noise, noiseTuning, 1);
             GetComponent<Shelter.ShelterSite>()?.Begin();
             GetComponent<Objectives.RelayMission>()?.Begin();
+            GetComponent<Vehicles.VehicleWorld>()?.Begin(this);
             SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }
@@ -103,6 +104,7 @@ namespace LastSignal
         void SetPaused(bool value)
         {
             Paused = value;
+            if (value || PlayerDead) GetComponent<Vehicles.VehicleWorld>()?.Suspend();
             if (value && Player) Player.GetComponent<FirstPersonMotor>()?.ResetNoiseCadence();
             if (zombieEncounter) zombieEncounter.SetPaused(value);
             Time.timeScale = value ? 0 : 1;
@@ -120,6 +122,7 @@ namespace LastSignal
         void OnPlayerDied()
         {
             if (input) input.SetGameplay(false);
+            GetComponent<Vehicles.VehicleWorld>()?.Suspend();
             CancelPlayerCombat();
             Cursor.lockState = CursorLockMode.None; Cursor.visible = true;
         }
@@ -149,6 +152,7 @@ namespace LastSignal
             var ui = FindObjectOfType<LastSignal.Inventory.UI.InventoryUI>(true);
             if (ui) ui.Unbind();
             if (Player) { Player.SetActive(false); Destroy(Player); }
+            GetComponent<Vehicles.VehicleWorld>()?.End();
             Player = null;
             input = null;
             inventory = null;

@@ -10,7 +10,7 @@ namespace LastSignal.Tests
 {
     public sealed class S012SceneTests
     {
-        [SetUp] public void Setup(){EditorSceneManager.OpenScene("Assets/LastSignal/Scenes/IntegratedGraybox.unity");}
+        [SetUp] public void Setup(){EditorSceneManager.OpenScene("Assets/LastSignal/Scenes/Production/IntegratedGraybox.unity");}
         [Test] public void CandidateHasFullAreaAndValidSingleAuthority()
         {
             var ground=GameObject.Find("S012 ground 400 x 400 m").GetComponent<Collider>();

@@ -11,7 +11,7 @@ namespace LastSignal.Editor
 {
     public static class ShelterAuthoring
     {
-        public const string ScenePath="Assets/LastSignal/Scenes/ShelterAcceptance.unity";
+        public const string ScenePath="Assets/LastSignal/Scenes/Validation/ShelterAcceptance.unity";
         public const string Evidence="Docs/Implementation/S008/Evidence/20260920-212200-entry";
         static void Set(Object target,string name,Object value){var s=new SerializedObject(target);s.FindProperty(name).objectReferenceValue=value;s.ApplyModifiedPropertiesWithoutUndo();}
         static Transform Anchor(string name,Vector3 position,float yaw,Transform root)
@@ -22,7 +22,7 @@ namespace LastSignal.Editor
         }
         static Material Material(string name,Color color)
         {
-            string path="Assets/LastSignal/Shelter/"+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);
+            string path="Assets/LastSignal/Materials/Shelter/"+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);
             if(!m){m=new Material(Shader.Find("Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(m,path);}m.color=color;return m;
         }
         static void Sign(Transform root,string text,Vector3 position,float yaw,float scale=.025f)
@@ -36,8 +36,8 @@ namespace LastSignal.Editor
         [MenuItem("Last Signal/Shelter/Create S008 acceptance scene")]
         public static void CreateAcceptance()
         {
-            Directory.CreateDirectory("Assets/LastSignal/Shelter");AssetDatabase.Refresh();
-            var scene=EditorSceneManager.OpenScene("Assets/LastSignal/Scenes/ScavengingAcceptance.unity",OpenSceneMode.Single);
+            Directory.CreateDirectory("Assets/LastSignal/Materials/Shelter");AssetDatabase.Refresh();
+            var scene=EditorSceneManager.OpenScene("Assets/LastSignal/Scenes/Validation/ScavengingAcceptance.unity",OpenSceneMode.Single);
             var session=Object.FindAnyObjectByType<SessionFlow>();var loop=session.gameObject.AddComponent<ShelterLoop>();
             var root=new GameObject("Shelter / physically enclosed cabin").transform;
             var wall=Material("Cabin",new Color(.26f,.20f,.14f));var trim=Material("Terminal",new Color(.16f,.45f,.40f));

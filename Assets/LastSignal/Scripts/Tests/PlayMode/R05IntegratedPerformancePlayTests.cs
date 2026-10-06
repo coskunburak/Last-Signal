@@ -26,7 +26,7 @@ namespace LastSignal.Tests
         {
             dir = "Docs/Implementation/PreS010-Recovery/Evidence/R05/" + DateTime.Now.ToString("yyyyMMdd-HHmm") + "/";
             Directory.CreateDirectory(dir);
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             flow = UnityEngine.Object.FindAnyObjectByType<SessionFlow>();
             flow.Resume();

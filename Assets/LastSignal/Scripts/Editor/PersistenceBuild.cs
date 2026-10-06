@@ -10,7 +10,7 @@ namespace LastSignal.Editor
 {
     public static class PersistenceBuild
     {
-        public const string ScenePath="Assets/LastSignal/Scenes/PersistenceAcceptance.unity";
+        public const string ScenePath="Assets/LastSignal/Scenes/Validation/PersistenceAcceptance.unity";
         public const string Evidence="Docs/Implementation/RoadmapRecovery/Evidence/20260921-112305";
         [MenuItem("Last Signal/Recovery/Build Persistence Development")]
         public static void Build()

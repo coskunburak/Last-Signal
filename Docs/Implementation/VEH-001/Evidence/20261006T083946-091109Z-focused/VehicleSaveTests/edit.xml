@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="9" result="Passed" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.0398301">
+  <test-suite type="TestSuite" id="1943" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="515" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.039830" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1926" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="505" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.037921" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1927" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="505" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.037646" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1928" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="505" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.037410" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1705" name="VehicleSaveTests" fullname="LastSignal.Tests.VehicleSaveTests" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.036994" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1706" name="AdditiveExtensionRoundtripsWithoutChangingBaseSchema" fullname="LastSignal.Tests.VehicleSaveTests.AdditiveExtensionRoundtripsWithoutChangingBaseSchema" methodname="AdditiveExtensionRoundtripsWithoutChangingBaseSchema" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" seed="69788549" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.033363" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1715" name="InvalidFuelRejected" fullname="LastSignal.Tests.VehicleSaveTests.InvalidFuelRejected" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000849" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1712" name="InvalidFuelRejected(double.NaN)" fullname="LastSignal.Tests.VehicleSaveTests.InvalidFuelRejected(double.NaN)" methodname="InvalidFuelRejected" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" seed="2013375448" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000101" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1713" name="InvalidFuelRejected(-1)" fullname="LastSignal.Tests.VehicleSaveTests.InvalidFuelRejected(-1)" methodname="InvalidFuelRejected" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" seed="1124833821" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000026" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1714" name="InvalidFuelRejected(61)" fullname="LastSignal.Tests.VehicleSaveTests.InvalidFuelRejected(61)" methodname="InvalidFuelRejected" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" seed="1699015422" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000026" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1707" name="LegacyAbsentExtensionRemainsAbsent" fullname="LastSignal.Tests.VehicleSaveTests.LegacyAbsentExtensionRemainsAbsent" methodname="LegacyAbsentExtensionRemainsAbsent" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" seed="1692807521" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000430" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1711" name="MissingRequiredVehicleSectionRejected" fullname="LastSignal.Tests.VehicleSaveTests.MissingRequiredVehicleSectionRejected" methodname="MissingRequiredVehicleSectionRejected" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" seed="1689930408" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000060" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1716" name="UnknownCargoAndWrongSeatOwnerRejected" fullname="LastSignal.Tests.VehicleSaveTests.UnknownCargoAndWrongSeatOwnerRejected" methodname="UnknownCargoAndWrongSeatOwnerRejected" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" seed="1948699708" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000084" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1710" name="UnknownOrUnmarkedExtensionRejected" fullname="LastSignal.Tests.VehicleSaveTests.UnknownOrUnmarkedExtensionRejected" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000436" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1708" name="UnknownOrUnmarkedExtensionRejected(0)" fullname="LastSignal.Tests.VehicleSaveTests.UnknownOrUnmarkedExtensionRejected(0)" methodname="UnknownOrUnmarkedExtensionRejected" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" seed="791741186" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000059" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1709" name="UnknownOrUnmarkedExtensionRejected(2)" fullname="LastSignal.Tests.VehicleSaveTests.UnknownOrUnmarkedExtensionRejected(2)" methodname="UnknownOrUnmarkedExtensionRejected" classname="LastSignal.Tests.VehicleSaveTests" runstate="Runnable" seed="1971048098" result="Passed" start-time="2026-10-06 08:42:12Z" end-time="2026-10-06 08:42:12Z" duration="0.000038" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261006T084204-436595Z/edit.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -80,7 +80,7 @@ namespace LastSignal.Tests
         [Test] public void EveryProductionPrefabHasOneListenerAndSafeWorldMask()
         {
             int count=0;
-            foreach(var guid in AssetDatabase.FindAssets("t:Prefab",new[]{"Assets/Resources","Assets/LastSignal/Enemies"}))
+            foreach(var guid in AssetDatabase.FindAssets("t:Prefab",new[]{"Assets/LastSignal/Prefabs/Resources","Assets/LastSignal/Prefabs/Enemies"}))
             foreach(var actor in AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid)).GetComponentsInChildren<ZombieController>(true))
             { count++;Assert.AreEqual(1,actor.GetComponents<ZombieNoiseListener>().Length);Assert.IsTrue(actor.Definition.IsValid(out _));foreach(var c in actor.GetComponentsInChildren<Collider>(true))Assert.AreEqual(0,actor.Definition.OcclusionMask&(1<<c.gameObject.layer)); }
             Assert.Greater(count,0);

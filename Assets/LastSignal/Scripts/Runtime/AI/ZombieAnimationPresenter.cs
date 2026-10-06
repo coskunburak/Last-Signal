@@ -23,7 +23,18 @@ namespace LastSignal
         AnimatorCullingMode savedCulling;
         Transform reactionBone;
         Vector3 visualBasePosition;
-        bool flyingDeath;
+        bool flyingDeath, vehicleKnockdown;
+        static readonly int VehicleFall = Animator.StringToHash("VehicleFall");
+        static readonly int VehicleGetUp = Animator.StringToHash("VehicleGetUp");
+        public bool VehicleKnockdown => vehicleKnockdown;
+        public void BeginVehicleKnockdown(ZombieImpactReaction impact)
+        {
+            if (!HasAnimator || dead || vehicleKnockdown) return;
+            BeginDamage(false, impact);
+            vehicleKnockdown = true; proceduralReaction = false;
+            animator.SetLayerWeight(1, 0);
+            current = VehicleFall; animator.Play(VehicleFall, 0, 0); animator.Update(0);
+        }
         ZombieImpactReaction reaction;
 
         public bool CorpseSettled { get; private set; }
@@ -48,7 +59,7 @@ namespace LastSignal
             reactionBone = animator.GetBoneTransform(HumanBodyBones.Chest);
             if (!reactionBone) reactionBone = animator.GetBoneTransform(HumanBodyBones.Spine);
             visualBasePosition = animator.transform.localPosition;
-            damagePresentation = dead = paused = attacking = proceduralReaction = CorpseSettled = false;
+            damagePresentation = dead = paused = attacking = proceduralReaction = vehicleKnockdown = CorpseSettled = false;
             damageTime = smoothedSpeed = 0; locomotionPlayback = 1; current = Idle;
             animator.enabled = true; animator.applyRootMotion = false;
             var culling = animator.cullingMode; animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
@@ -78,7 +89,7 @@ namespace LastSignal
         public void BeginDamage(bool lethal, ZombieImpactReaction impact)
         {
             if (!animator || dead) return;
-            EndAttack();
+            EndAttack(); vehicleKnockdown = false;
             if (!damagePresentation) savedCulling = animator.cullingMode;
             damagePresentation = true; dead = lethal; damageTime = 0; CorpseSettled = false;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
@@ -112,6 +123,17 @@ namespace LastSignal
         public void AdvanceDamage(float seconds)
         {
             if (!animator || !damagePresentation || paused || CorpseSettled || seconds <= 0) return;
+            if (vehicleKnockdown && !dead)
+            {
+                damageTime = Mathf.Min(damageTime + seconds, tuning.VehicleReactionDuration);
+                float getUpStart = tuning.VehicleFallDuration + tuning.VehicleGroundDuration;
+                bool rising = damageTime >= getUpStart;
+                current = rising ? VehicleGetUp : VehicleFall;
+                float phase = rising ? (damageTime - getUpStart) / tuning.VehicleGetUpDuration
+                    : damageTime / tuning.VehicleFallDuration;
+                animator.Play(current, 0, Mathf.Clamp01(phase)); animator.Update(0);
+                return;
+            }
             float duration = dead ? activeDeathDuration : tuning.HitReactDuration;
             float step = Mathf.Min(seconds, Mathf.Max(0, duration - damageTime));
             damageTime += step;
@@ -145,7 +167,9 @@ namespace LastSignal
         public void EndReaction()
         {
             if (!animator || !damagePresentation || dead) return;
-            damagePresentation = proceduralReaction = false;
+            bool wasKnockedDown = vehicleKnockdown;
+            damagePresentation = proceduralReaction = vehicleKnockdown = false;
+            if (wasKnockedDown) { current = Idle; animator.CrossFadeInFixedTime(Idle, tuning.AnimationBlendTime); }
             animator.SetLayerWeight(1, 0);
             animator.cullingMode = savedCulling;
             animator.speed = paused ? 0 : locomotionPlayback;
@@ -179,7 +203,7 @@ namespace LastSignal
         public void Present(float actualSpeed, float seconds, bool isPaused) => Present(actualSpeed, false, seconds, isPaused);
         public void Present(float actualSpeed, bool running, float seconds, bool isPaused)
         {
-            if (!animator || !tuning || attacking || dead) return;
+            if (!animator || !tuning || attacking || dead || vehicleKnockdown) return;
             using (Marker.Auto())
             {
                 if (isPaused || paused) { animator.speed = 0; return; }

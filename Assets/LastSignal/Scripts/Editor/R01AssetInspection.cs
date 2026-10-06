@@ -11,9 +11,9 @@ namespace LastSignal.EditorTools
         {
             var report = new StringBuilder();
             string[] paths = {
-                "Assets/LastSignal/Combat/Crowbar/Source/Crowbar.obj",
-                "Assets/LastSignal/Assets/first-person-arms/source/fpsarms.fbx",
-                "Assets/LastSignal/Assets/Zombie_Survival_AssetPack_LowPoly/Modelos/Low Poly Zombie Survival Asset Pack.fbx"
+                "Assets/LastSignal/Models/Weapons/Crowbar/Source/Crowbar.obj",
+                "Assets/ThirdParty/Characters/FirstPersonArms/source/fpsarms.fbx",
+                "Assets/ThirdParty/Zombies/Zombie_Survival_AssetPack_LowPoly/Modelos/Low Poly Zombie Survival Asset Pack.fbx"
             };
             foreach (string path in paths)
             {

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Failed(Child)" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 22:16:54Z" end-time="2026-10-05 22:17:05Z" duration="10.5189762">
+  <test-suite type="TestSuite" id="1294" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="246" result="Failed" site="Child" start-time="2026-10-05 22:16:54Z" end-time="2026-10-05 22:17:05Z" duration="10.518976" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1287" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="246" result="Failed" site="Child" start-time="2026-10-05 22:16:54Z" end-time="2026-10-05 22:17:05Z" duration="10.509696" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1288" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="246" result="Failed" site="Child" start-time="2026-10-05 22:16:54Z" end-time="2026-10-05 22:17:05Z" duration="10.507220" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1289" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="246" result="Failed" site="Child" start-time="2026-10-05 22:16:54Z" end-time="2026-10-05 22:17:05Z" duration="10.505361" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1168" name="VehicleOccupancyTests" fullname="LastSignal.Tests.VehicleOccupancyTests" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-05 22:16:54Z" end-time="2026-10-05 22:17:05Z" duration="10.503732" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1170" name="BlockedExitsRetainDriverAndFallbackIsSafe" fullname="LastSignal.Tests.VehicleOccupancyTests.BlockedExitsRetainDriverAndFallbackIsSafe" methodname="BlockedExitsRetainDriverAndFallbackIsSafe" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="522036154" result="Passed" start-time="2026-10-05 22:16:54Z" end-time="2026-10-05 22:16:57Z" duration="2.068991" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1174" name="CabinRainProtectionAndResidentPressureUseExistingAuthorities" fullname="LastSignal.Tests.VehicleOccupancyTests.CabinRainProtectionAndResidentPressureUseExistingAuthorities" methodname="CabinRainProtectionAndResidentPressureUseExistingAuthorities" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="1889663760" result="Passed" start-time="2026-10-05 22:16:57Z" end-time="2026-10-05 22:16:58Z" duration="1.220145" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1169" name="EnterExitPreservesPlayerAndGatesOnFootAuthority" fullname="LastSignal.Tests.VehicleOccupancyTests.EnterExitPreservesPlayerAndGatesOnFootAuthority" methodname="EnterExitPreservesPlayerAndGatesOnFootAuthority" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="1506865002" result="Passed" start-time="2026-10-05 22:16:58Z" end-time="2026-10-05 22:16:59Z" duration="1.344936" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1172" name="OccupiedDiskSaveRestoresSamePickupResourcesPoseAndDriverWithEngineOff" fullname="LastSignal.Tests.VehicleOccupancyTests.OccupiedDiskSaveRestoresSamePickupResourcesPoseAndDriverWithEngineOff" methodname="OccupiedDiskSaveRestoresSamePickupResourcesPoseAndDriverWithEngineOff" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="703397400" result="Passed" start-time="2026-10-05 22:16:59Z" end-time="2026-10-05 22:17:00Z" duration="1.385255" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1173" name="PhysicalKeyboardDrivesAndHeldThrottleCannotResumeAfterPause" fullname="LastSignal.Tests.VehicleOccupancyTests.PhysicalKeyboardDrivesAndHeldThrottleCannotResumeAfterPause" methodname="PhysicalKeyboardDrivesAndHeldThrottleCannotResumeAfterPause" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="793031219" result="Failed" start-time="2026-10-05 22:17:00Z" end-time="2026-10-05 22:17:04Z" duration="3.219761" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  neutral: ready=True occupied=True driving=True engine=True fuel=8.000 condition=1.000 W=False throttle=0 brake=0 reverse=0 handbrake=False position=(-340.0002, 0.1395, -125.0002) velocity=(0.0006, 0.0064, 0.0001) kinematic=False constraints=None
+  Physics_FL_Mesh: motor=0.00 brake=3200.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3291.56 grip=1.000/1.000
+  Physics_FR_Mesh: motor=0.00 brake=3200.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3510.08 grip=1.000/1.000
+  Physics_BL_Mesh: motor=0.00 brake=4500.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3493.44 grip=1.000/0.900
+  Physics_BR_Mesh: motor=0.00 brake=4500.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3712.22 grip=1.000/0.900
+drive 1: ready=True occupied=True driving=True engine=True fuel=8.000 condition=1.000 W=False throttle=0 brake=0 reverse=0 handbrake=False position=(-340.0002, 0.1390, -125.0003) velocity=(-0.0001, -0.0003, 0.0001) kinematic=False constraints=None
+  Physics_FL_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3332.11 grip=1.000/1.000
+  Physics_FR_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3559.87 grip=1.000/1.000
+  Physics_BL_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3541.20 grip=1.000/1.000
+  Physics_BR_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3769.22 grip=1.000/1.000
+drive 2: ready=True occupied=True driving=True engine=True fuel=8.000 condition=1.000 W=False throttle=0 brake=0 reverse=0 handbrake=False position=(-340.0002, 0.1391, -125.0003) velocity=(0.0000, 0.0000, 0.0000) kinematic=False constraints=None
+  Physics_FL_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3328.57 grip=1.000/1.000
+  Physics_FR_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3556.72 grip=1.000/1.000
+  Physics_BL_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3536.67 grip=1.000/1.000
+  Physics_BR_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3764.44 grip=1.000/1.000
+drive 3: ready=True occupied=True driving=True engine=True fuel=8.000 condition=1.000 W=False throttle=0 brake=0 reverse=0 handbrake=False position=(-340.0002, 0.1391, -125.0003) velocity=(0.0000, 0.0000, 0.0000) kinematic=False constraints=None
+  Physics_FL_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3328.89 grip=1.000/1.000
+  Physics_FR_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3556.32 grip=1.000/1.000
+  Physics_BL_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3537.27 grip=1.000/1.000
+  Physics_BR_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3765.30 grip=1.000/1.000
+drive 4: ready=True occupied=True driving=True engine=True fuel=7.999 condition=1.000 W=False throttle=0 brake=0 reverse=0 handbrake=False position=(-340.0002, 0.1391, -125.0003) velocity=(0.0000, 0.0000, 0.0000) kinematic=False constraints=None
+  Physics_FL_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3328.84 grip=1.000/1.000
+  Physics_FR_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3556.31 grip=1.000/1.000
+  Physics_BL_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3537.55 grip=1.000/1.000
+  Physics_BR_Mesh: motor=0.00 brake=150.00 rpm=0.00 grounded=True surface=S012 ground 400 x 400 m force=3764.97 grip=1.000/1.000
+
+  Expected: greater than 0.300000012f
+  But was:  0.000416513154f
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.VehicleOccupancyTests+<PhysicalKeyboardDrivesAndHeldThrottleCannotResumeAfterPause>d__10.MoveNext () [0x0019f] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/VehicleOccupancyTests.cs:114
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1171" name="UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" fullname="LastSignal.Tests.VehicleOccupancyTests.UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" methodname="UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="234520466" result="Passed" start-time="2026-10-05 22:17:04Z" end-time="2026-10-05 22:17:05Z" duration="1.254928" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261005T221633-961831Z/play.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

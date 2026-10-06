@@ -88,6 +88,8 @@ namespace LastSignal.WorldTime
         public bool QueryRoof()
         {
             if (!Flow.Player) return false;
+            var vehicle = Flow.GetComponent<Vehicles.VehicleWorld>()?.Actor;
+            if (vehicle && vehicle.Occupied) return vehicle.RainCovered;
             var position = Flow.Player.transform.position + Vector3.up * 1.5f;
             int count = Physics.RaycastNonAlloc(position, Vector3.up, roofHits, 30, ~((1 << 8) | (1 << 2)), QueryTriggerInteraction.Ignore);
             // Overflow is conservatively exposed; never award shelter based on a truncated query.
@@ -114,7 +116,7 @@ namespace LastSignal.WorldTime
             if (Sleeping || Flow.Restoring || (Simulation != null && Simulation.Advancing)) return SleepRejection.TransitionInProgress;
             if (!point || !point.isActiveAndEnabled || point.Clock != this || point.gameObject.scene != gameObject.scene ||
                 (Flow.Player.transform.position - point.transform.position).sqrMagnitude > point.UseRange * point.UseRange) return SleepRejection.NotAtBed;
-            if (Flow.Paused || !shelter || shelter.State != ExpeditionState.Shelter || !QueryRoof()) return SleepRejection.UnsafeState;
+            if ((Flow.GetComponent<Vehicles.VehicleWorld>()?.Actor?.Occupied ?? false) || Flow.Paused || !shelter || shelter.State != ExpeditionState.Shelter || !QueryRoof()) return SleepRejection.UnsafeState;
             var site = GetComponent<ShelterSite>();
             if (site && (site.Production == null || !site.Production.Installed(ShelterModule.Bed))) return SleepRejection.UnsafeState;
             if (ThreatNearby()) return SleepRejection.ThreatNearby;

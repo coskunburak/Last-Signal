@@ -8,9 +8,9 @@ namespace LastSignal.Editor
     // Manual, bounded validation of the two body-parts candidates and the current gameplay wrapper.
     public static class StudioNewPunchZombieValidator
     {
-        const string Shirtless = "Assets/LastSignal/Assets/Zombie/NewPunch/ShirtlessZombieFree/Prefabs/ShirtlessZombie_BodyParts_FREE_URP.prefab";
-        const string ZombieMale = "Assets/LastSignal/Assets/Zombie/ZombieMale_AAB/Prefabs/URP/ZombieMale_AAB_BodyParts_URP.prefab";
-        const string Runtime = "Assets/Resources/LS_Zombie_Runtime.prefab";
+        const string Shirtless = "Assets/ThirdParty/Zombies/NewPunch/ShirtlessZombieFree/Prefabs/ShirtlessZombie_BodyParts_FREE_URP.prefab";
+        const string ZombieMale = "Assets/ThirdParty/Zombies/ZombieMale_AAB/Prefabs/URP/ZombieMale_AAB_BodyParts_URP.prefab";
+        const string Runtime = "Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab";
 
         [MenuItem("Last Signal/Zombie/Validate Studio New Punch Candidates")]
         public static void Validate()

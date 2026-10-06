@@ -10,7 +10,7 @@ namespace LastSignal.Editor
         public static void Build()
         {
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
-                scenes = new[] { "Assets/LastSignal/Scenes/ZombieAcceptance.unity" },
+                scenes = new[] { "Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity" },
                 locationPathName = "Builds/R04/LastSignal.app",
                 target = BuildTarget.StandaloneOSX,
                 options = BuildOptions.Development

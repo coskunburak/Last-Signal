@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 20:37:58Z" end-time="2026-10-06 20:38:25Z" duration="27.5528615">
+  <test-suite type="TestSuite" id="1317" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="266" result="Failed" site="Child" start-time="2026-10-06 20:37:58Z" end-time="2026-10-06 20:38:25Z" duration="27.552862" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1310" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="266" result="Failed" site="Child" start-time="2026-10-06 20:37:58Z" end-time="2026-10-06 20:38:25Z" duration="27.515452" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1311" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="266" result="Failed" site="Child" start-time="2026-10-06 20:37:58Z" end-time="2026-10-06 20:38:25Z" duration="27.514193" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1312" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="266" result="Failed" site="Child" start-time="2026-10-06 20:37:58Z" end-time="2026-10-06 20:38:25Z" duration="27.513346" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1181" name="VehicleZombieDominanceTests" fullname="LastSignal.Tests.VehicleZombieDominanceTests" classname="LastSignal.Tests.VehicleZombieDominanceTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-06 20:37:58Z" end-time="2026-10-06 20:38:25Z" duration="27.512021" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1186" name="PerformanceCourseGeneratesThreeRealImpacts" fullname="LastSignal.Tests.VehicleZombieDominanceTests.PerformanceCourseGeneratesThreeRealImpacts" methodname="PerformanceCourseGeneratesThreeRealImpacts" classname="LastSignal.Tests.VehicleZombieDominanceTests" runstate="Runnable" seed="783402763" result="Failed" start-time="2026-10-06 20:37:58Z" end-time="2026-10-06 20:38:25Z" duration="27.488367" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.VehicleZombieDominanceTests+<PerformanceCourseGeneratesThreeRealImpacts>d__8.MoveNext () [0x00223] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/VehicleZombieDominanceTests.cs:105
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+Account API did not become accessible within 30 seconds. This may be due to network issues or editor focus.
+COURSE impacts=4 living_ai=1 contacts=1 [other=East boundary (UnityEngine.BoxCollider); own=LS_Vehicle_UtilityPickup_01(Clone) (UnityEngine.BoxCollider); infected=False; alive=False; otherBounds=Center: (0.00, 2.00, 0.00), Extents: (0.50, 2.00, 200.00); carPosition=(-2.66, 0.14, -141.92)] 
+Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261006T203737-307516Z/play.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

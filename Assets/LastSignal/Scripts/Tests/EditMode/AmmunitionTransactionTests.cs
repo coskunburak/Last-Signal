@@ -19,7 +19,7 @@ namespace LastSignal.Tests
             owner = new GameObject("Ammo test inventory");
             inventory = owner.AddComponent<PlayerInventory>();
             inventory.Initialize(24);
-            definition = AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Scripts/Runtime/Combat/WeaponDefinition_AssaultRifle.asset");
+            definition = AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Data/Combat/WeaponDefinition_AssaultRifle.asset");
             ammo = definition.Ammunition;
         }
         [TearDown] public void Cleanup() => Object.DestroyImmediate(owner);

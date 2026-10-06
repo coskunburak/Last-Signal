@@ -9,15 +9,17 @@ namespace LastSignal.Editor
 {
     public static class ScopeOpticAuthoring
     {
-        public const string SourcePath = "Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx";
-        public const string Folder = "Assets/LastSignal/Combat/Optics";
-        public const string BodyPath = Folder + "/MRPoly_Body_Optics.asset";
-        public const string LensPath = Folder + "/MRPoly_RearLens.asset";
-        public const string ProfilePath = Folder + "/MRPoly_Scope.asset";
+        public const string SourcePath = "Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Models/Assault Rifle.fbx";
+        public const string Folder = "Assets/LastSignal/Materials/Combat/Optics";
+        const string MeshFolder = "Assets/LastSignal/Models/Weapons/Optics";
+        const string DataFolder = "Assets/LastSignal/Data/Combat/Optics";
+        public const string BodyPath = MeshFolder + "/MRPoly_Body_Optics.asset";
+        public const string LensPath = MeshFolder + "/MRPoly_RearLens.asset";
+        public const string ProfilePath = DataFolder + "/MRPoly_Scope.asset";
         public const string MaterialPath = Folder + "/MRPoly_ScopeLens.mat";
         public const string FrontMaterialPath = Folder + "/MRPoly_FrontLens.mat";
         public const string LayerName = "FirstPersonViewmodel";
-        const string PrefabPath = "Assets/Resources/Weapon_AssaultRifle.prefab";
+        const string PrefabPath = "Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab";
         const float RearZ = -.120204f;
 
         [MenuItem("Last Signal/Optics/Install on Existing Rifle Prefab")]
@@ -59,6 +61,8 @@ namespace LastSignal.Editor
             if (!shader || ShaderUtil.ShaderHasError(shader))
                 throw new InvalidOperationException("ScopeLens shader bulunamadı veya derleme hatası var.");
             EnsureFolder(Folder);
+            EnsureFolder(MeshFolder);
+            EnsureFolder(DataFolder);
             var profile = AssetDatabase.LoadAssetAtPath<ScopeOpticDefinition>(ProfilePath);
             if (!profile)
             {

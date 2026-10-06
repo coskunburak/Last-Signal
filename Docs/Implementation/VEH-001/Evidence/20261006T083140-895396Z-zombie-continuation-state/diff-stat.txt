@@ -1,0 +1,196 @@
+ .../Scripts/Runtime/AI/WorldPopulationManager.cs   |   26 +-
+ .../Scripts/Runtime/AI/ZombieAuditoryMemory.cs     |    3 +-
+ .../Scripts/Runtime/AI/ZombieController.cs         |   11 +-
+ .../Scripts/Runtime/AI/ZombieDefinition.cs         |    3 +
+ .../Scripts/Runtime/AI/ZombieNavigation.cs         |   20 +-
+ .../Scripts/Runtime/Combat/IDamageable.cs          |    2 +-
+ .../Runtime/Combat/MeleeStanceViewPresenter.cs     |   34 +-
+ .../Scripts/Runtime/Combat/MeleeWeaponPresenter.cs |    9 +-
+ .../Runtime/Combat/PlayerCombatController.cs       |   13 +
+ .../Runtime/Combat/WeaponAnimationPresenter.cs     |   55 +-
+ .../Scripts/Runtime/Combat/WeaponController.cs     |   10 +-
+ .../Scripts/Runtime/Noise/GameplayNoiseEvent.cs    |    2 +-
+ .../Scripts/Runtime/Noise/GameplayNoiseSystem.cs   |    2 +-
+ .../Runtime/Noise/WorldPressureNoiseAdapter.cs     |   13 +-
+ .../Runtime/Persistence/InventorySnapshots.cs      |    4 +-
+ .../Scripts/Runtime/Persistence/SaveCodec.cs       |    8 +-
+ .../Scripts/Runtime/Persistence/SaveGame.cs        |    3 +
+ .../Scripts/Runtime/Persistence/SaveSession.cs     |   26 +-
+ .../Scripts/Runtime/Persistence/SaveValidation.cs  |   32 +
+ .../Scripts/Runtime/Player/FirstPersonLook.cs      |   13 +-
+ .../Scripts/Runtime/Player/PlayerInputReader.cs    |   12 +-
+ .../Scripts/Runtime/Session/SessionFlow.cs         |    4 +
+ .../Scripts/Runtime/WorldTime/WorldClock.cs        |    4 +-
+ .../Tests/PlayMode/LastSignal.PlayModeTests.asmdef |   18 +-
+ .../Tests/PlayMode/PersistenceIntegrationTests.cs  |   81 +
+ .../Tests/PlayMode/ZombiePresentationTests.cs      |   44 +
+ .../Input/InputSystem_Actions.inputactions         |  371 ++++
+ Assets/ThirdParty/Environment.meta                 |    8 -
+ Assets/ThirdParty/Environment/TT3D.meta            |    8 -
+ .../Environment/TT3D/LowPolySci-FiStarterPack.meta |    8 -
+ .../TT3D/LowPolySci-FiStarterPack/Character.meta   |    8 -
+ .../Character/Materials.meta                       |    8 -
+ .../Character/Materials/alien_enemy.mat            |   83 -
+ .../Character/Materials/alien_enemy.mat.meta       |    8 -
+ .../Character/Materials/badge.mat                  |   83 -
+ .../Character/Materials/badge.mat.meta             |    8 -
+ .../Character/Materials/cap.mat                    |   83 -
+ .../Character/Materials/cap.mat.meta               |    8 -
+ .../Character/Materials/cap_badge.mat              |   83 -
+ .../Character/Materials/cap_badge.mat.meta         |    8 -
+ .../Character/Materials/hitman_jacket.mat          |   83 -
+ .../Character/Materials/hitman_jacket.mat.meta     |    8 -
+ .../Character/Materials/space_crew_man.mat         |   83 -
+ .../Character/Materials/space_crew_man.mat.meta    |    8 -
+ .../Character/Materials/space_crew_man_helmet.mat  |   83 -
+ .../Materials/space_crew_man_helmet.mat.meta       |    8 -
+ .../Character/Materials/spaceship_captain.mat      |   83 -
+ .../Character/Materials/spaceship_captain.mat.meta |    8 -
+ .../LowPolySci-FiStarterPack/Character/Models.meta |    8 -
+ .../Character/Models/alien_enemy.fbx               |    3 -
+ .../Character/Models/alien_enemy.fbx.meta          |  563 -------
+ .../Character/Models/space_crew_man.fbx            |    3 -
+ .../Character/Models/space_crew_man.fbx.meta       |  573 -------
+ .../Character/Models/spaceship_captain.fbx         |    3 -
+ .../Character/Models/spaceship_captain.fbx.meta    |  603 -------
+ .../Character/Prefabs.meta                         |    8 -
+ .../Character/Prefabs/alien_enemy.prefab           | 1295 --------------
+ .../Character/Prefabs/alien_enemy.prefab.meta      |    7 -
+ .../Character/Prefabs/space_crew_man.prefab        | 1415 ----------------
+ .../Character/Prefabs/space_crew_man.prefab.meta   |    7 -
+ .../Character/Prefabs/spaceship_captain.prefab     | 1775 --------------------
+ .../Prefabs/spaceship_captain.prefab.meta          |    7 -
+ .../Character/Textures.meta                        |    8 -
+ .../Character/Textures/alien_enemy.meta            |    8 -
+ .../Character/Textures/alien_enemy/alien_enemy.png |    3 -
+ .../Textures/alien_enemy/alien_enemy.png.meta      |  114 --
+ .../Character/Textures/space_crew_man.meta         |    8 -
+ .../Textures/space_crew_man/space_crew_man.png     |    3 -
+ .../space_crew_man/space_crew_man.png.meta         |  114 --
+ .../space_crew_man/space_crew_man_helmet.png       |    3 -
+ .../space_crew_man/space_crew_man_helmet.png.meta  |  114 --
+ .../Character/Textures/spaceship_captain.meta      |    8 -
+ .../Character/Textures/spaceship_captain/badge.png |    3 -
+ .../Textures/spaceship_captain/badge.png.meta      |  114 --
+ .../Character/Textures/spaceship_captain/cap.png   |    3 -
+ .../Textures/spaceship_captain/cap.png.meta        |  114 --
+ .../Textures/spaceship_captain/cap_badge.png       |    3 -
+ .../Textures/spaceship_captain/cap_badge.png.meta  |  114 --
+ .../spaceship_captain/spaceship_captain.png        |    3 -
+ .../spaceship_captain/spaceship_captain.png.meta   |  114 --
+ .../spaceship_captain/spaceship_captain_jacket.png |    3 -
+ .../spaceship_captain_jacket.png.meta              |  114 --
+ .../TT3D/LowPolySci-FiStarterPack/Demo.meta        |    8 -
+ .../TT3D/LowPolySci-FiStarterPack/Demo/Demo.unity  |  491 ------
+ .../LowPolySci-FiStarterPack/Demo/Demo.unity.meta  |    7 -
+ .../LowPolySci-FiStarterPack/Documentation.meta    |    8 -
+ .../Documentation/Readme.txt                       |   23 -
+ .../Documentation/Readme.txt.meta                  |    7 -
+ .../Evidence/20260924-entry/playmode-route.txt     |   24 +-
+ .../20260925-independent/playmode-route.txt        |    8 +-
+ .../performance.txt                                |   14 +-
+ .../manual-20260926-performance-soak/soak.txt      |   24 +-
+ .../Evidence/20260922-entry/domain-performance.txt |    4 +-
+ .../20260922-entry/runtime-performance.txt         |    4 +-
+ .../20260922-entry/two-expedition-world-time.txt   |    2 +-
+ .../R02/20260927-foundation/noise-trace.txt        |   14 +-
+ .../R02/20260927-foundation/performance.txt        |    2 +-
+ .../20260927-foundation/play-route/noise-save.json |    4 +-
+ .../play-route/noise-save.json.bak                 |    4 +-
+ .../20260927-foundation/anti-omniscience-trace.txt |    2 +-
+ .../Evidence/R03/20260927-foundation/arrival.txt   |    2 +-
+ .../20260927-foundation/integrated-performance.txt |    2 +-
+ .../R03/20260927-foundation/performance.txt        |    2 +-
+ .../S004/Evidence/20260919-P4/performance.txt      |    4 +-
+ .../20260919-P4/regression-P3/performance.txt      |    4 +-
+ .../regression-P3/visual/backstep-contact-fps.png  |  Bin 131 -> 238408 bytes
+ .../regression-P3/visual/backstep-contact-side.png |  Bin 131 -> 169863 bytes
+ .../regression-P3/visual/backstep-recovery-fps.png |  Bin 131 -> 230628 bytes
+ .../visual/backstep-recovery-side.png              |  Bin 131 -> 170843 bytes
+ .../20260919-P4/regression-P3/visual/death-fps.png |  Bin 131 -> 233807 bytes
+ .../regression-P3/visual/death-side.png            |  Bin 131 -> 157986 bytes
+ .../regression-P3/visual/hit-commit-fps.png        |  Bin 131 -> 258663 bytes
+ .../regression-P3/visual/hit-commit-side.png       |  Bin 131 -> 159693 bytes
+ .../regression-P3/visual/hit-contact-fps.png       |  Bin 131 -> 263280 bytes
+ .../regression-P3/visual/hit-contact-side.png      |  Bin 131 -> 158070 bytes
+ .../regression-P3/visual/hit-next-windup-fps.png   |  Bin 131 -> 247392 bytes
+ .../regression-P3/visual/hit-next-windup-side.png  |  Bin 131 -> 160865 bytes
+ .../regression-P3/visual/hit-recovery-fps.png      |  Bin 131 -> 242784 bytes
+ .../regression-P3/visual/hit-recovery-side.png     |  Bin 131 -> 158852 bytes
+ .../regression-P3/visual/hit-start-fps.png         |  Bin 131 -> 239353 bytes
+ .../regression-P3/visual/hit-start-side.png        |  Bin 131 -> 161179 bytes
+ .../regression-P3/visual/motor-sidestep-fps.png    |  Bin 131 -> 289918 bytes
+ .../regression-P3/visual/motor-sidestep-side.png   |  Bin 131 -> 155672 bytes
+ .../regression-P3/visual/normal-approach-fps.png   |  Bin 131 -> 228084 bytes
+ .../regression-P3/visual/normal-approach-side.png  |  Bin 131 -> 163977 bytes
+ .../regression-P3/visual/normal-hit-fps.png        |  Bin 131 -> 271407 bytes
+ .../regression-P3/visual/normal-hit-side.png       |  Bin 131 -> 164296 bytes
+ .../visual/pause-AttackCommit-fps.png              |  Bin 131 -> 258538 bytes
+ .../visual/pause-AttackCommit-side.png             |  Bin 131 -> 159513 bytes
+ .../visual/pause-AttackWindup-fps.png              |  Bin 131 -> 247846 bytes
+ .../visual/pause-AttackWindup-side.png             |  Bin 131 -> 160391 bytes
+ .../regression-P3/visual/rear-contact-fps.png      |  Bin 131 -> 262463 bytes
+ .../regression-P3/visual/rear-contact-side.png     |  Bin 131 -> 148652 bytes
+ .../regression-P3/visual/rear-recovery-fps.png     |  Bin 131 -> 254849 bytes
+ .../regression-P3/visual/rear-recovery-side.png    |  Bin 131 -> 149569 bytes
+ .../regression-P3/visual/restart-fps.png           |  Bin 131 -> 242686 bytes
+ .../regression-P3/visual/restart-side.png          |  Bin 131 -> 140957 bytes
+ .../regression-P3/visual/sidestep-contact-fps.png  |  Bin 131 -> 265659 bytes
+ .../regression-P3/visual/sidestep-contact-side.png |  Bin 131 -> 142482 bytes
+ .../regression-P3/visual/sidestep-recovery-fps.png |  Bin 131 -> 257198 bytes
+ .../visual/sidestep-recovery-side.png              |  Bin 131 -> 144062 bytes
+ .../20260919-P4/regression-P3/visual/trace.txt     |   84 +
+ .../regression-P3/visual/wall-contact-fps.png      |  Bin 131 -> 208512 bytes
+ .../regression-P3/visual/wall-contact-side.png     |  Bin 131 -> 151129 bytes
+ .../regression-P3/visual/wall-recovery-fps.png     |  Bin 131 -> 207526 bytes
+ .../regression-P3/visual/wall-recovery-side.png    |  Bin 131 -> 151760 bytes
+ .../S004/Evidence/20260919-P4/rifle-trace.txt      |   48 +
+ .../20260919-P4/visual/body-hit-react-peak-fps.png |  Bin 131 -> 221910 bytes
+ .../visual/body-hit-react-peak-side.png            |  Bin 131 -> 129279 bytes
+ .../visual/body-hit-react-start-fps.png            |  Bin 131 -> 225931 bytes
+ .../visual/body-hit-react-start-side.png           |  Bin 131 -> 132282 bytes
+ .../20260919-P4/visual/corpse-final-fps.png        |  Bin 131 -> 204295 bytes
+ .../20260919-P4/visual/corpse-final-side.png       |  Bin 131 -> 126186 bytes
+ .../20260919-P4/visual/corpse-inactive-fps.png     |  Bin 131 -> 205768 bytes
+ .../20260919-P4/visual/corpse-inactive-side.png    |  Bin 131 -> 126226 bytes
+ .../20260919-P4/visual/death-middle-fps.png        |  Bin 131 -> 208807 bytes
+ .../20260919-P4/visual/death-middle-side.png       |  Bin 131 -> 123337 bytes
+ .../Evidence/20260919-P4/visual/head-shot-fps.png  |  Bin 131 -> 226112 bytes
+ .../Evidence/20260919-P4/visual/head-shot-side.png |  Bin 131 -> 131248 bytes
+ .../20260919-P4/visual/layout-Attack-fps.png       |  Bin 131 -> 225917 bytes
+ .../20260919-P4/visual/layout-Attack-side.png      |  Bin 131 -> 136773 bytes
+ .../20260919-P4/visual/layout-HitReact-fps.png     |  Bin 131 -> 225917 bytes
+ .../20260919-P4/visual/layout-HitReact-side.png    |  Bin 131 -> 136650 bytes
+ .../20260919-P4/visual/layout-Locomotion-fps.png   |  Bin 131 -> 225917 bytes
+ .../20260919-P4/visual/layout-Locomotion-side.png  |  Bin 131 -> 136618 bytes
+ .../20260919-P4/visual/layout-idle-fps.png         |  Bin 131 -> 225917 bytes
+ .../20260919-P4/visual/layout-idle-side.png        |  Bin 131 -> 136650 bytes
+ .../20260919-P4/visual/lethal-AttackCommit-fps.png |  Bin 131 -> 282174 bytes
+ .../visual/lethal-AttackCommit-side.png            |  Bin 131 -> 131667 bytes
+ .../20260919-P4/visual/lethal-AttackWindup-fps.png |  Bin 131 -> 307635 bytes
+ .../visual/lethal-AttackWindup-side.png            |  Bin 131 -> 129646 bytes
+ .../20260919-P4/visual/lethal-Recovering-fps.png   |  Bin 131 -> 279381 bytes
+ .../20260919-P4/visual/lethal-Recovering-side.png  |  Bin 131 -> 133507 bytes
+ .../20260919-P4/visual/lethal-body-fps.png         |  Bin 131 -> 212586 bytes
+ .../20260919-P4/visual/lethal-body-side.png        |  Bin 131 -> 133203 bytes
+ .../20260919-P4/visual/loop-body-reaction-fps.png  |  Bin 131 -> 256973 bytes
+ .../20260919-P4/visual/loop-body-reaction-side.png |  Bin 131 -> 148479 bytes
+ .../Evidence/20260919-P4/visual/loop-chase-fps.png |  Bin 131 -> 250521 bytes
+ .../20260919-P4/visual/loop-chase-side.png         |  Bin 131 -> 151405 bytes
+ .../20260919-P4/visual/loop-complete-fps.png       |  Bin 131 -> 262521 bytes
+ .../20260919-P4/visual/loop-complete-side.png      |  Bin 131 -> 146507 bytes
+ .../Evidence/20260919-P4/visual/loop-dodge-fps.png |  Bin 131 -> 256970 bytes
+ .../20260919-P4/visual/loop-dodge-side.png         |  Bin 131 -> 148479 bytes
+ .../20260919-P4/visual/loop-lethal-fps.png         |  Bin 131 -> 315744 bytes
+ .../20260919-P4/visual/loop-lethal-side.png        |  Bin 131 -> 152326 bytes
+ .../20260919-P4/visual/loop-player-hit-fps.png     |  Bin 131 -> 270683 bytes
+ .../20260919-P4/visual/loop-player-hit-side.png    |  Bin 131 -> 151324 bytes
+ .../20260919-P4/visual/new-session-alive-fps.png   |  Bin 131 -> 241093 bytes
+ .../20260919-P4/visual/new-session-alive-side.png  |  Bin 131 -> 130636 bytes
+ .../20260919-P4/visual/reaction-recovered-fps.png  |  Bin 131 -> 226096 bytes
+ .../20260919-P4/visual/reaction-recovered-side.png |  Bin 131 -> 131248 bytes
+ .../S004/Evidence/20260919-P4/visual/trace.tsv     |   68 +
+ .../20260920-212200-entry/10-expedition-soak.txt   |    2 +-
+ .../Evidence/20260920-212200-entry/performance.txt |    4 +-
+ .../two-expedition-acceptance.txt                  |    2 +-
+ 195 files changed, 1034 insertions(+), 8667 deletions(-)

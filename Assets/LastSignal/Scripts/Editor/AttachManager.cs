@@ -7,7 +7,7 @@ public class AttachManager
     [MenuItem("Tools/Attach Manager")]
     public static void Attach()
     {
-        string[] scenes = { "Assets/LastSignal/Scenes/WorldTimeAcceptance.unity", "Assets/LastSignal/Scenes/ZombieAcceptance.unity", "Assets/LastSignal/Scenes/CombatAcceptance.unity" };
+        string[] scenes = { "Assets/LastSignal/Scenes/Validation/WorldTimeAcceptance.unity", "Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity", "Assets/LastSignal/Scenes/Validation/CombatAcceptance.unity" };
         foreach (string p in AssetDatabase.FindAssets("t:Scene"))
         {
             string path = AssetDatabase.GUIDToAssetPath(p);
@@ -24,7 +24,7 @@ public class AttachManager
                     }
                     var pop = go.GetComponent<LastSignal.AI.WorldPopulationManager>();
                     // assign prefab? We need to find zombie prefab
-                    var zombiePrefab = AssetDatabase.LoadAssetAtPath<LastSignal.ZombieController>("Assets/Resources/LS_Zombie_Runtime.prefab");
+                    var zombiePrefab = AssetDatabase.LoadAssetAtPath<LastSignal.ZombieController>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab");
                     if (zombiePrefab != null)
                     {
                         var so = new SerializedObject(pop);

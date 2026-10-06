@@ -20,7 +20,14 @@ namespace LastSignal
             if(controller) { controller.AttackCommitted -= OnSwing; controller.ImpactCommitted -= OnImpact; }
             if(audioSource) audioSource.Stop();
         }
-        void OnSwing() { if(animator) animator.Play("Swing",0,0); if(audioSource && swing) audioSource.PlayOneShot(swing,.45f); }
+        void OnSwing()
+        {
+            // Record the accepted attack synchronously. It can be cancelled before
+            // our next Update; polling alone would miss Windup and leave Swing playing.
+            previous = MeleeState.Windup;
+            if(animator) animator.Play("Swing",0,0);
+            if(audioSource && swing) audioSource.PlayOneShot(swing,.45f);
+        }
         void OnImpact() { if(audioSource && impact) audioSource.PlayOneShot(impact,.6f); }
         void Update()
         {

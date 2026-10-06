@@ -10,8 +10,8 @@ namespace LastSignal.Editor.Inventory
         [MenuItem("Tools/Last Signal/Seed S005 Items")]
         public static void SeedItems()
         {
-            EnsureFolder("Assets/Game/Items/Definitions");
-            EnsureFolder("Assets/Game/Items/Prefabs");
+            EnsureFolder("Assets/LastSignal/Data/Items/Definitions");
+            EnsureFolder("Assets/LastSignal/Prefabs/Items");
 
             var catalog = ScriptableObject.CreateInstance<ItemCatalog>();
 
@@ -30,7 +30,7 @@ namespace LastSignal.Editor.Inventory
 
             foreach (var data in items)
             {
-                string prefabPath = $"Assets/Game/Items/Prefabs/{data.id}.prefab";
+                string prefabPath = $"Assets/LastSignal/Prefabs/Items/{data.id}.prefab";
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
                 
                 if (prefab == null)
@@ -44,7 +44,7 @@ namespace LastSignal.Editor.Inventory
                     Object.DestroyImmediate(go);
                 }
 
-                string defPath = $"Assets/Game/Items/Definitions/{data.id}.asset";
+                string defPath = $"Assets/LastSignal/Data/Items/Definitions/{data.id}.asset";
                 ItemDefinition def = AssetDatabase.LoadAssetAtPath<ItemDefinition>(defPath);
                 if (def == null)
                 {
@@ -64,7 +64,7 @@ namespace LastSignal.Editor.Inventory
             }
 
             listField.SetValue(catalog, itemsList);
-            AssetDatabase.CreateAsset(catalog, "Assets/Game/Items/Definitions/ItemCatalog.asset");
+            AssetDatabase.CreateAsset(catalog, "Assets/LastSignal/Data/Items/Definitions/ItemCatalog.asset");
             AssetDatabase.SaveAssets();
             Debug.Log("S005 items and catalog seeded successfully.");
         }

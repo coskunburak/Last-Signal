@@ -32,6 +32,8 @@ namespace LastSignal
         public WeaponDefinition Definition => definition;
         public Transform Muzzle => muzzle;
         public Transform AimReference => aimReference;
+        // Presentation pauses with the same gate as the authoritative action clock.
+        public bool IsSimulationActive => runtimeState != null && GameplayAllowed;
 
         // ── Events for presentation layers ──────────────────────────────
         public event Action<WeaponState> StateChanged;
@@ -115,13 +117,15 @@ namespace LastSignal
         public void RequestUnequip()
         {
             if (runtimeState == null) return;
-            // Cancel reload if pre-commit
-            if (runtimeState.State == WeaponState.Reloading && !runtimeState.ReloadCommitted)
+            var previous = runtimeState.State;
+            // Interrupt the presentation on either side of the commit. The runtime's
+            // cancel contract preserves any ammunition already transferred.
+            if (runtimeState.State == WeaponState.Reloading)
                 runtimeState.TryCancelReload();
             if (runtimeState.TryUnequip())
             {
                 StateChanged?.Invoke(runtimeState.State);
-                StateTransitioned?.Invoke(WeaponState.Ready, runtimeState.State);
+                StateTransitioned?.Invoke(previous, runtimeState.State);
             }
         }
 

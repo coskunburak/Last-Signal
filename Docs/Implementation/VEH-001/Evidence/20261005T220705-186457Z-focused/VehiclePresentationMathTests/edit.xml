@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 22:08:23Z" end-time="2026-10-05 22:08:24Z" duration="0.6207907">
+  <test-suite type="TestSuite" id="1621" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="505" result="Passed" start-time="2026-10-05 22:08:23Z" end-time="2026-10-05 22:08:24Z" duration="0.620791" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1603" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="495" result="Passed" start-time="2026-10-05 22:08:23Z" end-time="2026-10-05 22:08:24Z" duration="0.524619" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1604" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="495" result="Passed" start-time="2026-10-05 22:08:23Z" end-time="2026-10-05 22:08:24Z" duration="0.424734" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1605" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="495" result="Passed" start-time="2026-10-05 22:08:23Z" end-time="2026-10-05 22:08:24Z" duration="0.323467" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1385" name="VehiclePresentationMathTests" fullname="LastSignal.Tests.VehiclePresentationMathTests" classname="LastSignal.Tests.VehiclePresentationMathTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-05 22:08:23Z" end-time="2026-10-05 22:08:24Z" duration="0.224602" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1393" name="InvalidSteeringTelemetryCannotProduceInvalidRotation" fullname="LastSignal.Tests.VehiclePresentationMathTests.InvalidSteeringTelemetryCannotProduceInvalidRotation" methodname="InvalidSteeringTelemetryCannotProduceInvalidRotation" classname="LastSignal.Tests.VehiclePresentationMathTests" runstate="Runnable" seed="1644362853" result="Passed" start-time="2026-10-05 22:08:24Z" end-time="2026-10-05 22:08:24Z" duration="0.002746" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1392" name="SteeringUsesActualFrontAnglesAndClampsRange" fullname="LastSignal.Tests.VehiclePresentationMathTests.SteeringUsesActualFrontAnglesAndClampsRange" classname="LastSignal.Tests.VehiclePresentationMathTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-05 22:08:24Z" end-time="2026-10-05 22:08:24Z" duration="0.119904" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1386" name="SteeringUsesActualFrontAnglesAndClampsRange(0,0,0)" fullname="LastSignal.Tests.VehiclePresentationMathTests.SteeringUsesActualFrontAnglesAndClampsRange(0,0,0)" methodname="SteeringUsesActualFrontAnglesAndClampsRange" classname="LastSignal.Tests.VehiclePresentationMathTests" runstate="Runnable" seed="1959647068" result="Passed" start-time="2026-10-05 22:08:24Z" end-time="2026-10-05 22:08:24Z" duration="0.021399" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1387" name="SteeringUsesActualFrontAnglesAndClampsRange(32,32,270)" fullname="LastSignal.Tests.VehiclePresentationMathTests.SteeringUsesActualFrontAnglesAndClampsRange(32,32,270)" methodname="SteeringUsesActualFrontAnglesAndClampsRange" classname="LastSignal.Tests.VehiclePresentationMathTests" runstate="Runnable" seed="1876482090" result="Passed" start-time="2026-10-05 22:08:24Z" end-time="2026-10-05 22:08:24Z" duration="0.000377" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1388" name="SteeringUsesActualFrontAnglesAndClampsRange(-32,-32,-270)" fullname="LastSignal.Tests.VehiclePresentationMathTests.SteeringUsesActualFrontAnglesAndClampsRange(-32,-32,-270)" methodname="SteeringUsesActualFrontAnglesAndClampsRange" classname="LastSignal.Tests.VehiclePresentationMathTests" runstate="Runnable" seed="430055768" result="Passed" start-time="2026-10-05 22:08:24Z" end-time="2026-10-05 22:08:24Z" duration="0.000097" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1389" name="SteeringUsesActualFrontAnglesAndClampsRange(0,16,67.5f)" fullname="LastSignal.Tests.VehiclePresentationMathTests.SteeringUsesActualFrontAnglesAndClampsRange(0,16,67.5f)" methodname="SteeringUsesActualFrontAnglesAndClampsRange" classname="LastSignal.Tests.VehiclePresentationMathTests" runstate="Runnable" seed="566376156" result="Passed" start-time="2026-10-05 22:08:24Z" end-time="2026-10-05 22:08:24Z" duration="0.000730" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1390" name="SteeringUsesActualFrontAnglesAndClampsRange(64,64,270)" fullname="LastSignal.Tests.VehiclePresentationMathTests.SteeringUsesActualFrontAnglesAndClampsRange(64,64,270)" methodname="SteeringUsesActualFrontAnglesAndClampsRange" classname="LastSignal.Tests.VehiclePresentationMathTests" runstate="Runnable" seed="386688889" result="Passed" start-time="2026-10-05 22:08:24Z" end-time="2026-10-05 22:08:24Z" duration="0.000172" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1391" name="SteeringUsesActualFrontAnglesAndClampsRange(-64,-64,-270)" fullname="LastSignal.Tests.VehiclePresentationMathTests.SteeringUsesActualFrontAnglesAndClampsRange(-64,-64,-270)" methodname="SteeringUsesActualFrontAnglesAndClampsRange" classname="LastSignal.Tests.VehiclePresentationMathTests" runstate="Runnable" seed="678052761" result="Passed" start-time="2026-10-05 22:08:24Z" end-time="2026-10-05 22:08:24Z" duration="0.000088" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261005T220810-852326Z/edit.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

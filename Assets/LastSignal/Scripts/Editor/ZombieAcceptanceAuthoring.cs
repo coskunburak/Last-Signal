@@ -11,9 +11,9 @@ namespace LastSignal.Editor
 {
     public static class ZombieAcceptanceAuthoring
     {
-        public const string ScenePath = "Assets/LastSignal/Scenes/ZombieAcceptance.unity";
-        public const string Root = "Assets/LastSignal/Enemies/Zombie";
-        public const string DefinitionPath = Root + "/Shambler.asset";
+        public const string ScenePath = "Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity";
+        public const string DataRoot = "Assets/LastSignal/Data/Enemies/Zombie";
+        public const string DefinitionPath = DataRoot + "/Shambler.asset";
         public const string Evidence = "Docs/Implementation/S004/Evidence/20260918-P2";
         public static int AgentType()
         {
@@ -63,7 +63,7 @@ namespace LastSignal.Editor
                 RenderSettings.ambientLight = new Color(.45f, .45f, .45f);
                 var spawn = new GameObject("PlayerSpawn").transform; spawn.position = new Vector3(-5, .05f, 7); spawn.rotation = Quaternion.Euler(0, 180, 0);
                 var session = new GameObject("Session").AddComponent<SessionFlow>();
-                session.Configure(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab"), spawn, Array.Empty<DoorInteractable>());
+                session.Configure(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player/Player.prefab"), spawn, Array.Empty<DoorInteractable>());
                 var zombieSpawn = new GameObject("ZombieSpawn").transform; zombieSpawn.position = new Vector3(-5, 0, -4);
                 var camera = new GameObject("EvidenceCamera").AddComponent<Camera>(); camera.enabled = false;
                 camera.transform.position = new Vector3(-12, 12, -14); camera.transform.LookAt(new Vector3(0, 0, 3));
@@ -84,7 +84,7 @@ namespace LastSignal.Editor
         public static void Bake(NavMeshSurface surface, string name)
         {
             surface.BuildNavMesh();
-            string path = Root + "/" + name + "NavMesh.asset";
+            string path = DataRoot + "/" + name + "NavMesh.asset";
             if (AssetDatabase.LoadAssetAtPath<NavMeshData>(path)) throw new InvalidOperationException("Refusing to overwrite existing bake: " + path);
             AssetDatabase.CreateAsset(surface.navMeshData, path);
         }
@@ -92,7 +92,7 @@ namespace LastSignal.Editor
         {
             var go = GameObject.CreatePrimitive(PrimitiveType.Cube); go.name = name; go.transform.SetParent(parent);
             go.transform.position = position; go.transform.localScale = scale;
-            go.GetComponent<Renderer>().sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>(Root + "/Materials/M_AcceptanceGround.mat");
+            go.GetComponent<Renderer>().sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Materials/Enemies/Zombie/M_AcceptanceGround.mat");
         }
     }
 }

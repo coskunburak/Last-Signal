@@ -8,7 +8,7 @@ namespace LastSignal.EditorTools
     // not rebuild the weapon or replace the source meshes/materials.
     public static class CrowbarPoseAuthoring
     {
-        const string PrefabPath = "Assets/LastSignal/Combat/Crowbar/Crowbar_Viewmodel.prefab";
+        const string PrefabPath = "Assets/LastSignal/Prefabs/Combat/Crowbar/Crowbar_Viewmodel.prefab";
 
         [MenuItem("Last Signal/Combat/Refine crowbar pose")]
         public static void Apply()

@@ -25,7 +25,7 @@ namespace LastSignal.Tests
         [UnitySetUp] public IEnumerator Setup()
         {
             Time.timeScale = 1;
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
             yield return null; flow = Object.FindAnyObjectByType<SessionFlow>(); site = flow.GetComponent<ShelterSite>(); loop = flow.GetComponent<ShelterLoop>(); clock = flow.GetComponent<WorldClock>();
             flow.Resume(); yield return null; Assert.IsNotNull(site); Assert.IsNotNull(site.Production);
         }
@@ -82,7 +82,7 @@ namespace LastSignal.Tests
             stash.capacity = 48; stash.slots = new SlotSnapshot[48];
             for (int i = 0; i < stash.slots.Length; i++) stash.slots[i] = new SlotSnapshot();
             stash.slots[47] = new SlotSnapshot { definitionId = site.recipe.output.Id.Value, quantity = 10 };
-            var catalog = AssetDatabase.LoadAssetAtPath<ItemCatalog>("Assets/Game/Items/Definitions/ItemCatalog.asset");
+            var catalog = AssetDatabase.LoadAssetAtPath<ItemCatalog>("Assets/LastSignal/Data/Items/Definitions/ItemCatalog.asset");
             Assert.IsTrue(InventorySnapshots.Restore(loop.Storage, stash, "shelter.storage", catalog).Success);
             Place(new Vector3(loop.StoragePoint.transform.position.x + 1, .05f, loop.StoragePoint.transform.position.z));
             Assert.IsTrue(loop.TryUse(loop.StoragePoint));

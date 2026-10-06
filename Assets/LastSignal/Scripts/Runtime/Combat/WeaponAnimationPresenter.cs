@@ -23,37 +23,74 @@ namespace LastSignal
         static readonly int HashUnequip = Animator.StringToHash("Unequip");
         static readonly int HashSprinting = Animator.StringToHash("Sprinting");
 
-        WeaponState lastState = WeaponState.Holstered;
+        WeaponController subscribedWeapon;
+
+        void Awake() => motor = GetComponentInParent<FirstPersonMotor>();
+        void OnTransformParentChanged() => motor = GetComponentInParent<FirstPersonMotor>();
 
         public void Configure(WeaponController ctrl, Animator anim)
         {
+            Unsubscribe();
             weapon = ctrl;
             animator = anim;
+            motor = GetComponentInParent<FirstPersonMotor>();
+            if (isActiveAndEnabled) Subscribe();
         }
 
         void OnEnable()
         {
+            ResetPendingTriggers();
+            Subscribe();
+        }
+
+        void Subscribe()
+        {
+            Unsubscribe();
             if (!weapon) return;
-            weapon.ShotFired += OnShotFired;
-            weapon.StateTransitioned += OnStateTransitioned;
+            subscribedWeapon = weapon;
+            subscribedWeapon.ShotFired += OnShotFired;
+            subscribedWeapon.StateTransitioned += OnStateTransitioned;
         }
 
         void OnDisable()
         {
             if (animator) animator.SetBool(HashSprinting, false);
-            if (!weapon) return;
-            weapon.ShotFired -= OnShotFired;
-            weapon.StateTransitioned -= OnStateTransitioned;
+            ResetPendingTriggers();
+            Unsubscribe();
+        }
+
+        void Unsubscribe()
+        {
+            if (subscribedWeapon)
+            {
+                subscribedWeapon.ShotFired -= OnShotFired;
+                subscribedWeapon.StateTransitioned -= OnStateTransitioned;
+            }
+            subscribedWeapon = null;
+        }
+
+        void ResetPendingTriggers()
+        {
+            if (!animator || !animator.runtimeAnimatorController) return;
+            animator.ResetTrigger(HashFire);
+            animator.ResetTrigger(HashReload);
+            animator.ResetTrigger(HashEmptyReload);
+            animator.ResetTrigger(HashEquip);
+            animator.ResetTrigger(HashUnequip);
         }
 
         void Update()
         {
-            if (!weapon || !animator || weapon.RuntimeState == null) return;
+            if (!animator) return;
+            // Inventory/modal input locks do not necessarily set Time.timeScale to zero.
+            // Letting the clip advance while StateTimer is frozen shows an inserted
+            // magazine before the inventory transaction can commit.
+            animator.speed = weapon && weapon.IsSimulationActive ? 1f : 0f;
+            if (!weapon || weapon.RuntimeState == null) return;
             var state = weapon.RuntimeState;
 
             animator.SetInteger(HashState, (int)state.State);
             animator.SetFloat(HashAimAmount, state.AimAmount);
-            if (!motor) motor = GetComponentInParent<FirstPersonMotor>();
             animator.SetBool(HashSprinting, motor && motor.IsSprinting && state.State == WeaponState.Ready);
         }
 
@@ -65,6 +102,7 @@ namespace LastSignal
         void OnStateTransitioned(WeaponState from, WeaponState to)
         {
             if (!animator) return;
+            ResetPendingTriggers();
             switch (to)
             {
                 case WeaponState.Equipping:
@@ -81,7 +119,6 @@ namespace LastSignal
                         animator.SetTrigger(HashReload);
                     break;
             }
-            lastState = to;
         }
 
         // ── Animation Event receivers (presentation only) ───────────────

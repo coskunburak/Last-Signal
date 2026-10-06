@@ -7,13 +7,13 @@ namespace LastSignal.Editor
 {
     public static class StudioNewPunchVisualAuthoring
     {
-        public const string SourcePath = "Assets/LastSignal/Assets/Zombie/NewPunch/ShirtlessZombieFree/Prefabs/ShirtlessZombie_BodyParts_FREE_URP.prefab";
-        public const string ControllerPath = "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Animations/Controllers/AC_Zombie_Shambler.controller";
-        public const string OutputPath = "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Prefabs/LS_Zombie_Shirtless_Visual.prefab";
-        public const string RuntimePath = "Assets/Resources/LS_Zombie_Runtime.prefab";
-        const string WoundTexturePath = "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Textures/T_Zombie_TorsoWound.png";
-        const string WoundMaterialPath = "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Materials/M_Zombie_TorsoWound_URP.mat";
-        const string WoundMeshPath = "Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Prefabs/SM_Zombie_TorsoWound_Quad.asset";
+        public const string SourcePath = "Assets/ThirdParty/Zombies/NewPunch/ShirtlessZombieFree/Prefabs/ShirtlessZombie_BodyParts_FREE_URP.prefab";
+        public const string ControllerPath = "Assets/LastSignal/Animations/Zombie/Controllers/AC_Zombie_Shambler.controller";
+        public const string OutputPath = "Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shirtless_Visual.prefab";
+        public const string RuntimePath = "Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab";
+        const string WoundTexturePath = "Assets/LastSignal/Art/Textures/Zombie/T_Zombie_TorsoWound.png";
+        const string WoundMaterialPath = "Assets/LastSignal/Materials/Enemies/Zombie/M_Zombie_TorsoWound_URP.mat";
+        const string WoundMeshPath = "Assets/LastSignal/Models/Enemies/Zombie/SM_Zombie_TorsoWound_Quad.asset";
 
         [MenuItem("Last Signal/Zombie/Create Shirtless Visual Candidate")]
         public static void CreateVisualCandidate()

@@ -44,6 +44,9 @@ namespace LastSignal.Persistence
                 if (candidate?.population?.actors != null)
                     foreach (var actor in candidate.population.actors)
                         if (actor != null) NormalizeAnatomy(ref actor.anatomy);
+                var resident = candidate?.population?.residentPressure;
+                if (resident != null && string.IsNullOrEmpty(resident.cellId) && resident.pressure == 0 && resident.lastUpdateTime == 0 &&
+                    (resident.receipts == null || resident.receipts.Length == 0)) candidate.population.residentPressure = null;
                 // Unity JsonUtility materializes null serializable objects. Schema 1 has no time section.
                 if (candidate != null && candidate.header != null && candidate.header.schemaVersion == 1) candidate.worldTime = null;
                 if (candidate != null && candidate.header != null && candidate.header.schemaVersion < 3) candidate.cells = null;
@@ -56,7 +59,7 @@ namespace LastSignal.Persistence
                     // Eski şemalarda population yoktur. Unity'nin oluşturduğu
                     // tamamen boş nesneyi yok kabul et; gerçek veriyi silme.
                     bool emptyPopulation =
-                        population.lastNoiseSequence == 0 &&
+                        population.lastNoiseSequence == 0 && population.residentPressure == null &&
                         (population.pressures == null ||
                         population.pressures.Length == 0) &&
                         (population.ledgers == null ||
@@ -88,6 +91,9 @@ namespace LastSignal.Persistence
                         production.fuelSeconds == 0 && production.lastProcessed == 0 && production.sequence == 0 && emptyJob)
                         candidate.shelter.production = null;
                 }
+                if (candidate?.header != null && candidate.header.vehicleVersion == 0 && candidate.vehicles != null &&
+                    candidate.vehicles.version == 0 && string.IsNullOrEmpty(candidate.vehicles.occupiedVehicleId) &&
+                    (candidate.vehicles.vehicles == null || candidate.vehicles.vehicles.Length == 0)) candidate.vehicles = null;
                 var result = validation.Validate(candidate); if (!result.Success) return result;
                 state = candidate;
                 return SaveResult.Ok;

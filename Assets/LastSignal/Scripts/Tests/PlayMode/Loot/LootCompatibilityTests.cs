@@ -17,7 +17,7 @@ namespace LastSignal.Tests
         [Test] public void SeedItemsHaveVisibleWorldRepresentation()
         {
             foreach(string id in new[]{"medical.bandage","food.canned","drink.water","ammo.rifle","material.scrap","tool.wrench"})
-            {var item=AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/Game/Items/Definitions/"+id+".asset");Assert.IsNotEmpty(item.WorldPrefab.GetComponentsInChildren<Renderer>(true),id+" has no visible world representation");}
+            {var item=AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/"+id+".asset");Assert.IsNotEmpty(item.WorldPrefab.GetComponentsInChildren<Renderer>(true),id+" has no visible world representation");}
         }
         [UnityTest] public IEnumerator RebindingSlotDoesNotDoubleInvokeClick()
         {

@@ -33,7 +33,7 @@ namespace LastSignal.Editor
             var mag = weapon.GetComponentsInChildren<Transform>().First(t => t.name == "MRPoly_Magazine");
             log.AppendLine(name + ": state=" + weapon.RuntimeState.State + "; ammo=" + weapon.RuntimeState.CurrentMagazine + "; reserve=" + weapon.RuntimeState.ReserveAmmo + "; clip=" + string.Join(",", anim.GetCurrentAnimatorClipInfo(0).Select(c => c.clip.name)) + "; mag=" + mag.position.ToString("F4"));
         }
-        static void Aim(bool held) => typeof(PlayerCombatController).GetMethod(held ? "OnAimPressed" : "OnAimReleased", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(player, null);
+        static void Aim(bool held) => player.SetEvidenceAim(held);
         static void Tick()
         {
             if (!EditorApplication.isPlaying || !weapon) { EditorApplication.update -= Tick; return; }

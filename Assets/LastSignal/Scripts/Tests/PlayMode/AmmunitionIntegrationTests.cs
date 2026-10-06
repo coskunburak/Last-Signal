@@ -28,7 +28,7 @@ namespace LastSignal.Tests
         IEnumerator Load(int magazine = 30)
         {
             Time.timeScale = 1;
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/ScavengingAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/ScavengingAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             session = Object.FindAnyObjectByType<SessionFlow>();
             session.ReturnToMenu(); yield return null;

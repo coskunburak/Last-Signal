@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Failed(Child)" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 09:46:38Z" end-time="2026-10-05 09:46:52Z" duration="14.5295253">
+  <test-suite type="TestSuite" id="1266" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="222" result="Failed" site="Child" start-time="2026-10-05 09:46:38Z" end-time="2026-10-05 09:46:52Z" duration="14.529525" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1259" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="222" result="Failed" site="Child" start-time="2026-10-05 09:46:38Z" end-time="2026-10-05 09:46:52Z" duration="14.519434" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="80697" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1260" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="222" result="Failed" site="Child" start-time="2026-10-05 09:46:38Z" end-time="2026-10-05 09:46:52Z" duration="14.517409" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1261" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="222" result="Failed" site="Child" start-time="2026-10-05 09:46:38Z" end-time="2026-10-05 09:46:52Z" duration="14.516057" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1137" name="S014WeaponPresentationTests" fullname="LastSignal.Tests.S014WeaponPresentationTests" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-05 09:46:38Z" end-time="2026-10-05 09:46:52Z" duration="14.511655" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1143" name="CrowbarStancePreservesAuthoredSwingAndGameplayOrigin" fullname="LastSignal.Tests.S014WeaponPresentationTests.CrowbarStancePreservesAuthoredSwingAndGameplayOrigin" methodname="CrowbarStancePreservesAuthoredSwingAndGameplayOrigin" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="797334294" result="Failed" start-time="2026-10-05 09:46:38Z" end-time="2026-10-05 09:46:38Z" duration="0.380513" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Unhandled log message: '[Exception] Exception: UnityTest yielded WaitForEndOfFrame, which is not evoked in batchmode.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[UnityEngine.TestTools.Utils.CoroutineRunner+<WrapEnumeratorForChecks>d__8.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/Utils/CoroutineRunner.cs:68)
+UnityEngine.SetupCoroutine.InvokeMoveNext (System.Collections.IEnumerator enumerator, System.IntPtr returnValueAddress) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Exception: UnityTest yielded WaitForEndOfFrame, which is not evoked in batchmode.
+UnityEngine.TestTools.Utils.CoroutineRunner+<WrapEnumeratorForChecks>d__8.MoveNext () (at ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/Utils/CoroutineRunner.cs:68)
+UnityEngine.SetupCoroutine.InvokeMoveNext (System.Collections.IEnumerator enumerator, System.IntPtr returnValueAddress) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+]]></output>
+            </test-case>
+            <test-case id="1139" name="EmptyReloadPausesWithGameplayInput" fullname="LastSignal.Tests.S014WeaponPresentationTests.EmptyReloadPausesWithGameplayInput" methodname="EmptyReloadPausesWithGameplayInput" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="587761915" result="Passed" start-time="2026-10-05 09:46:38Z" end-time="2026-10-05 09:46:42Z" duration="4.213914" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1140" name="SwitchingBeforeReloadCommitClearsPendingPresentation" fullname="LastSignal.Tests.S014WeaponPresentationTests.SwitchingBeforeReloadCommitClearsPendingPresentation" methodname="SwitchingBeforeReloadCommitClearsPendingPresentation" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="192301184" result="Passed" start-time="2026-10-05 09:46:42Z" end-time="2026-10-05 09:46:44Z" duration="1.395803" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1138" name="TacticalReloadPausesWithGameplayInput" fullname="LastSignal.Tests.S014WeaponPresentationTests.TacticalReloadPausesWithGameplayInput" methodname="TacticalReloadPausesWithGameplayInput" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="1173587650" result="Passed" start-time="2026-10-05 09:46:44Z" end-time="2026-10-05 09:46:47Z" duration="3.376578" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1142" name="UnequipAfterCommitPreservesTransferredAmmo" fullname="LastSignal.Tests.S014WeaponPresentationTests.UnequipAfterCommitPreservesTransferredAmmo" methodname="UnequipAfterCommitPreservesTransferredAmmo" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="949348086" result="Passed" start-time="2026-10-05 09:46:47Z" end-time="2026-10-05 09:46:50Z" duration="3.409992" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1141" name="UnequipBeforeCommitPreservesMagazine" fullname="LastSignal.Tests.S014WeaponPresentationTests.UnequipBeforeCommitPreservesMagazine" methodname="UnequipBeforeCommitPreservesMagazine" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="1177275840" result="Passed" start-time="2026-10-05 09:46:50Z" end-time="2026-10-05 09:46:52Z" duration="1.727041" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -19,7 +19,7 @@ namespace LastSignal.Tests
         [UnitySetUp] public IEnumerator Setup()
         {
             directory=Path.Combine(Path.GetTempPath(),"LastSignal-Time-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(directory);
-            Time.timeScale=1;yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldTimeAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
+            Time.timeScale=1;yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/WorldTimeAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;clock=Object.FindAnyObjectByType<WorldClock>();flow=clock.Flow;bed=Object.FindAnyObjectByType<RestPoint>();flow.Resume();yield return null;
             var actor=Object.FindAnyObjectByType<ZombieEncounter>().Actor;
             actor.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(new Vector3(10,.05f,-10));Physics.SyncTransforms();
@@ -117,10 +117,10 @@ namespace LastSignal.Tests
         [UnityTest] public IEnumerator LegacySceneCheckpointUsesDeterministicWorldDefaults()
         {
             flow.ReturnToMenu();yield return null;
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/PersistenceAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return null;yield return null;
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/PersistenceAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return null;yield return null;
             var legacy=Object.FindAnyObjectByType<SaveSession>();var legacyFlow=legacy.GetComponent<SessionFlow>();legacyFlow.Pause();
             string path=Path.Combine(directory,"legacy.json");Assert.IsTrue(legacy.Save(path).Success);legacyFlow.ReturnToMenu();yield return null;
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldTimeAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return null;yield return null;
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/WorldTimeAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));yield return null;yield return null;
             clock=Object.FindAnyObjectByType<WorldClock>();flow=clock.Flow;flow.ReturnToMenu();yield return null;yield return clock.GetComponent<SaveSession>().Load(path);flow.Pause();
             Assert.IsTrue(clock.GetComponent<SaveSession>().LastResult.Success);Assert.AreEqual(28800,clock.Simulation.Seconds);Assert.IsFalse(clock.Simulation.Raining);Assert.AreEqual(0,clock.Simulation.Wetness);
         }

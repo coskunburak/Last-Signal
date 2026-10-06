@@ -10,9 +10,9 @@ namespace LastSignal.Editor
     /// <summary>Reproducible, project-owned adapter. Never changes the source meshes or animation curves.</summary>
     public static class RealAssetIntegration
     {
-        public const string Val = "Assets/LastSignal/Assets/VAL.fbx";
-        public const string Rifle = "Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx";
-        public const string Prefab = "Assets/Resources/Weapon_AssaultRifle.prefab";
+        public const string Val = "Assets/ThirdParty/Characters/VAL.fbx";
+        public const string Rifle = "Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Models/Assault Rifle.fbx";
+        public const string Prefab = "Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab";
         public const string Evidence = "Docs/Implementation/Combat/Evidence/20260917-RealAssets";
         const string Controller = "Assets/LastSignal/Animations/VAL_MRPoly.controller";
 
@@ -32,7 +32,7 @@ namespace LastSignal.Editor
             string path = "Assets/LastSignal/Materials/" + name + "_URP.mat";
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (material) return material;
-            var source = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Materials/" + name + ".mat");
+            var source = AssetDatabase.LoadAssetAtPath<Material>("Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Materials/" + name + ".mat");
             material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
             material.SetColor("_BaseColor", source.GetColor("_Color"));
             material.SetFloat("_Metallic", source.GetFloat("_Metallic"));
@@ -154,7 +154,7 @@ namespace LastSignal.Editor
                 Child("RightHandReference", Bone(rig, "hand.R"), Vector3.zero);
                 Child("LeftHandReference", Bone(rig, "hand.L"), Vector3.zero);
                 var weapon = root.AddComponent<WeaponController>();
-                Set(weapon, "definition", AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Scripts/Runtime/Combat/WeaponDefinition_AssaultRifle.asset"));
+                Set(weapon, "definition", AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Data/Combat/WeaponDefinition_AssaultRifle.asset"));
                 Set(weapon, "muzzle", muzzle); Set(weapon, "aimReference", sight);
                 var view = root.AddComponent<WeaponViewPresenter>(); view.Configure(weapon, null, viewRoot);
                 var so = new SerializedObject(view);
@@ -190,7 +190,7 @@ namespace LastSignal.Editor
         [MenuItem("Last Signal/S002/Integrate Production Player")]
         public static void IntegratePlayer()
         {
-            const string path = "Assets/LastSignal/Prefabs/Player.prefab";
+            const string path = "Assets/LastSignal/Prefabs/Player/Player.prefab";
             var player = PrefabUtility.LoadPrefabContents(path);
             try
             {
@@ -199,7 +199,7 @@ namespace LastSignal.Editor
                 var camera = player.GetComponentInChildren<Camera>(); camera.nearClipPlane = .01f; camera.cullingMask &= ~(1 << 30);
                 if (!player.transform.Find("WorldBody"))
                 {
-                    var body = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Assets/tt-3d/LowPolySci-FiStarterPack/Character/Models/space_crew_man.fbx"), player.transform);
+                    var body = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ThirdParty/Environment/TT3D/LowPolySci-FiStarterPack/Character/Models/space_crew_man.fbx"), player.transform);
                     body.name = "WorldBody";
                     foreach (var t in body.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = 30;
                     var anim = body.GetComponent<Animator>();
@@ -215,8 +215,8 @@ namespace LastSignal.Editor
             }
             finally { PrefabUtility.UnloadPrefabContents(player); }
             EditorBuildSettings.scenes = new[] {
-                new EditorBuildSettingsScene("Assets/LastSignal/Scenes/S001Acceptance.unity", true),
-                new EditorBuildSettingsScene("Assets/LastSignal/Scenes/CombatAcceptance.unity", true) };
+                new EditorBuildSettingsScene("Assets/LastSignal/Scenes/Validation/S001Acceptance.unity", true),
+                new EditorBuildSettingsScene("Assets/LastSignal/Scenes/Validation/CombatAcceptance.unity", true) };
             AssetDatabase.SaveAssets();
         }
 

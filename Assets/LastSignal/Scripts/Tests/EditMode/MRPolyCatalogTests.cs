@@ -13,7 +13,7 @@ namespace LastSignal.Tests
         [Test]
         public void EverySourceVariantHasAWorldPrefabWithValidMeshesAndUrpMaterials()
         {
-            var source = Directory.GetFiles("Assets/LastSignal/Assets/MR POLY/Low Poly Weapons Set/Prefabs", "*.prefab", SearchOption.AllDirectories);
+            var source = Directory.GetFiles("Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Prefabs", "*.prefab", SearchOption.AllDirectories);
             Assert.That(source.Length, Is.EqualTo(16));
             foreach (var path in source)
             {
@@ -37,7 +37,7 @@ namespace LastSignal.Tests
         [Test]
         public void RifleVariantsRetainValidatedAdsOpticsAndAnimationWiring()
         {
-            var source = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Weapon_AssaultRifle.prefab");
+            var source = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab");
             var baseline = source.GetComponent<WeaponController>();
             var paths = Directory.GetFiles(Root + "/FirstPerson", "*.prefab");
             Assert.That(paths.Length, Is.EqualTo(7));

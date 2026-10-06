@@ -29,7 +29,7 @@ namespace LastSignal.Tests
             keyboard = InputSystem.AddDevice<Keyboard>(); mouse = InputSystem.AddDevice<Mouse>();
             floor = Box("Test ground", new Vector3(0, -.25f, 0), new Vector3(100, .5f, 100));
 #if UNITY_EDITOR
-            player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab"), new Vector3(0, .05f, 0), Quaternion.identity); player.AddComponent<LastSignal.Inventory.PlayerInventory>().Initialize(24);
+            player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player/Player.prefab"), new Vector3(0, .05f, 0), Quaternion.identity); player.AddComponent<LastSignal.Inventory.PlayerInventory>().Initialize(24);
 #endif
             input = player.GetComponent<PlayerInputReader>();
             stance = player.GetComponent<PlayerStance>();
@@ -66,7 +66,7 @@ namespace LastSignal.Tests
         DoorInteractable Door(Vector3 position)
         {
 #if UNITY_EDITOR
-            var obj = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Door.prefab"), position, Quaternion.identity);
+            var obj = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Interactions/Door.prefab"), position, Quaternion.identity);
             fixtures.Add(obj); Physics.SyncTransforms(); return obj.GetComponent<DoorInteractable>();
 #else
             return null;
@@ -254,7 +254,7 @@ namespace LastSignal.Tests
         {
             Object.DestroyImmediate(player); Object.DestroyImmediate(floor);
 #if UNITY_EDITOR
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/S001Acceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/S001Acceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
 #endif
             foreach (var root in SceneManager.GetActiveScene().GetRootGameObjects())
                 if ((root.hideFlags & HideFlags.DontSave) == 0) fixtures.Add(root);
@@ -302,7 +302,7 @@ namespace LastSignal.Tests
         {
             Object.DestroyImmediate(player); Object.DestroyImmediate(floor);
 #if UNITY_EDITOR
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/S001Acceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/S001Acceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
 #endif
             foreach (var root in SceneManager.GetActiveScene().GetRootGameObjects())
                 if ((root.hideFlags & HideFlags.DontSave) == 0) fixtures.Add(root);

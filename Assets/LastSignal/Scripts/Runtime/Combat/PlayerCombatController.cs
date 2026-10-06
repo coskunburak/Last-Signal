@@ -21,7 +21,10 @@ namespace LastSignal
         public MeleeWeaponController Melee => melee;
         public WeaponController Firearm => activeWeapon;
         WeaponController activeWeapon;
-        bool aimInputHeld;
+#if UNITY_EDITOR
+        bool evidenceAimHeld;
+        public void SetEvidenceAim(bool held) => evidenceAimHeld = held;
+#endif
         FirstPersonMotor motor;
 
         void Awake() => motor = GetComponent<FirstPersonMotor>();
@@ -57,8 +60,6 @@ namespace LastSignal
             if (!input) return;
             input.FirePressed += OnFirePressed;
             input.FireReleased += OnFireReleased;
-            input.AimPressed += OnAimPressed;
-            input.AimReleased += OnAimReleased;
             input.ReloadRequested += OnReload;
             input.MeleeSlotRequested += SelectMelee;
             input.FirearmSlotRequested += SelectFirearm;
@@ -69,13 +70,13 @@ namespace LastSignal
             if (!input) return;
             input.FirePressed -= OnFirePressed;
             input.FireReleased -= OnFireReleased;
-            input.AimPressed -= OnAimPressed;
-            input.AimReleased -= OnAimReleased;
             input.ReloadRequested -= OnReload;
             input.MeleeSlotRequested -= SelectMelee;
             input.FirearmSlotRequested -= SelectFirearm;
             CancelGameplayActions(false);
-            aimInputHeld = false;
+#if UNITY_EDITOR
+            evidenceAimHeld = false;
+#endif
         }
 
         /// <summary>
@@ -126,9 +127,23 @@ namespace LastSignal
             if (look) look.SetSensitivityMultiplier(1);
         }
 
+        bool vehicleHolstered;
+        public void SetVehicleHolstered(bool value)
+        {
+            vehicleHolstered = value; CancelGameplayActions(false);
+            if (melee) melee.gameObject.SetActive(!value && SelectedSlot == CombatSlot.Melee);
+            if (activeWeapon)
+            {
+                activeWeapon.gameObject.SetActive(!value && SelectedSlot == CombatSlot.Firearm);
+                if (!value && SelectedSlot == CombatSlot.Firearm) activeWeapon.RequestEquip();
+            }
+            if (look) { look.SetFOVOverride(-1); look.SetSensitivityMultiplier(1); }
+        }
         public void CancelGameplayActions(bool terminal)
         {
-            aimInputHeld = false;
+#if UNITY_EDITOR
+            evidenceAimHeld = false;
+#endif
             if (melee) { melee.Cancel(); if (terminal) melee.gameObject.SetActive(false); }
             if (!activeWeapon) return;
             activeWeapon.OnFireReleased();
@@ -137,12 +152,17 @@ namespace LastSignal
 
         void Update()
         {
+            if (vehicleHolstered) return;
             if (!input || !input.GameplayActive) { if (melee) melee.Cancel(); }
             if (SelectedSlot != CombatSlot.Firearm || !activeWeapon || activeWeapon.RuntimeState == null) return;
             // Update aim amount (smooth interpolation).
             var state = activeWeapon.RuntimeState;
             float adsSpeed = activeWeapon.Definition.AdsTransitionSeconds;
-            float targetAim = aimInputHeld && input.GameplayActive &&
+            bool aimHeld = input.AimHeld;
+#if UNITY_EDITOR
+            aimHeld |= evidenceAimHeld;
+#endif
+            float targetAim = aimHeld && input.GameplayActive &&
                 !(motor && motor.IsSliding) ? 1f : 0f;
             if (adsSpeed > 0)
                 state.AimAmount = Mathf.MoveTowards(state.AimAmount, targetAim, Time.deltaTime / adsSpeed);
@@ -159,7 +179,9 @@ namespace LastSignal
             if (slot != CombatSlot.Firearm && slot != CombatSlot.Melee) return false;
             if (slot == CombatSlot.Melee && !melee) return false;
             if (slot == SelectedSlot) return true;
-            aimInputHeld = false;
+#if UNITY_EDITOR
+            evidenceAimHeld = false;
+#endif
             if (melee) { melee.Cancel(); melee.gameObject.SetActive(false); }
             if (activeWeapon) { activeWeapon.OnFireReleased(); activeWeapon.gameObject.SetActive(false); }
             SelectedSlot = slot;
@@ -171,8 +193,6 @@ namespace LastSignal
         }
         void OnFirePressed() { if (SelectedSlot == CombatSlot.Melee) { if (melee) melee.TryAttack(); } else if (activeWeapon) activeWeapon.OnFirePressed(); }
         void OnFireReleased() { if (activeWeapon) activeWeapon.OnFireReleased(); }
-        void OnAimPressed() => aimInputHeld = SelectedSlot == CombatSlot.Firearm;
-        void OnAimReleased() => aimInputHeld = false;
         void OnReload() { if (SelectedSlot == CombatSlot.Firearm && activeWeapon) activeWeapon.OnReloadRequested(); }
     }
 }

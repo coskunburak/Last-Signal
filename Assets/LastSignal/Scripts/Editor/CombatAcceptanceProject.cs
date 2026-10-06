@@ -12,7 +12,7 @@ namespace LastSignal.Editor
         [MenuItem("Last Signal/S002/Create Combat Assets")]
         public static void CreateAssets()
         {
-            Directory.CreateDirectory("Assets/LastSignal/Runtime/Combat");
+            Directory.CreateDirectory("Assets/LastSignal/Data/Combat");
             Directory.CreateDirectory("Assets/LastSignal/Prefabs/Combat");
             Directory.CreateDirectory("Assets/LastSignal/Animations");
             Directory.CreateDirectory("Assets/LastSignal/Scenes");
@@ -22,7 +22,7 @@ namespace LastSignal.Editor
             Debug.Log("WeaponDefinition created.");
             RealAssetIntegration.BuildAdapter();
             RealAssetIntegration.IntegratePlayer();
-            if (!AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/LastSignal/Scenes/CombatAcceptance.unity")) CreateTestScene();
+            if (!AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/LastSignal/Scenes/Validation/CombatAcceptance.unity")) CreateTestScene();
             
             AssetDatabase.SaveAssets();
             Debug.Log("S002_COMBAT_ASSETS CREATED");
@@ -30,7 +30,7 @@ namespace LastSignal.Editor
 
         static WeaponDefinition CreateWeaponDefinition()
         {
-            string path = "Assets/LastSignal/Runtime/Combat/WeaponDefinition_AssaultRifle.asset";
+            string path = "Assets/LastSignal/Data/Combat/WeaponDefinition_AssaultRifle.asset";
             var def = AssetDatabase.LoadAssetAtPath<WeaponDefinition>(path);
             if (!def)
             {
@@ -38,7 +38,7 @@ namespace LastSignal.Editor
                 var so = new SerializedObject(def);
                 so.FindProperty("weaponName").stringValue = "Assault Rifle";
                 so.FindProperty("magazineCapacity").intValue = 30;
-                so.FindProperty("ammunition").objectReferenceValue = AssetDatabase.LoadAssetAtPath<LastSignal.Inventory.Data.ItemDefinition>("Assets/Game/Items/Definitions/ammo.rifle.asset");
+                so.FindProperty("ammunition").objectReferenceValue = AssetDatabase.LoadAssetAtPath<LastSignal.Inventory.Data.ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/ammo.rifle.asset");
                 so.FindProperty("startingMagazine").intValue = 30;
                 so.FindProperty("fireMode").enumValueIndex = (int)FireMode.Automatic;
                 so.FindProperty("roundsPerMinute").floatValue = 600;
@@ -73,7 +73,7 @@ namespace LastSignal.Editor
             var rootStateMachine = controller.layers[0].stateMachine;
 
             // Load clips
-            var valAssets = AssetDatabase.LoadAllAssetsAtPath("Assets/LastSignal/VAL.fbx");
+            var valAssets = AssetDatabase.LoadAllAssetsAtPath("Assets/ThirdParty/Characters/VAL.fbx");
             AnimationClip GetClip(string name) => valAssets.OfType<AnimationClip>().FirstOrDefault(c => c.name == "LVA4_Armature|" + name);
 
             var clipIdle = GetClip("wpn_val_idle");
@@ -142,7 +142,7 @@ namespace LastSignal.Editor
             string path = "Assets/LastSignal/Prefabs/Combat/FPSArms.prefab";
             if (AssetDatabase.LoadAssetAtPath<GameObject>(path)) return;
 
-            var valModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/VAL.fbx");
+            var valModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ThirdParty/Characters/VAL.fbx");
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(valModel);
             instance.name = "FPSArms";
             
@@ -162,10 +162,10 @@ namespace LastSignal.Editor
 
         static void CreateAssaultRiflePrefab(WeaponDefinition def)
         {
-            string path = "Assets/Resources/Weapon_AssaultRifle.prefab";
+            string path = "Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab";
             if (AssetDatabase.LoadAssetAtPath<GameObject>(path)) return;
 
-            var mrPoly = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/MR POLY/Low Poly Weapons Set/Models/Assault Rifle.fbx");
+            var mrPoly = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Models/Assault Rifle.fbx");
             if (!mrPoly) { Debug.LogError("Could not find MR POLY Assault Rifle FBX!"); return; }
             
             var root = new GameObject("Weapon_AssaultRifle");
@@ -234,9 +234,9 @@ namespace LastSignal.Editor
         {
             if (EditorApplication.isPlaying || UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty)
                 throw new System.InvalidOperationException("Exit Play Mode and save the current scene before recovery.");
-            if (System.IO.File.Exists("Assets/LastSignal/Scenes/CombatAcceptance.unity"))
+            if (System.IO.File.Exists("Assets/LastSignal/Scenes/Validation/CombatAcceptance.unity"))
                 throw new System.InvalidOperationException("Refusing to overwrite CombatAcceptance.");
-            var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab");
+            var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player/Player.prefab");
             if (!player || !player.GetComponent<PlayerCombatController>())
                 throw new System.InvalidOperationException("Recovery requires the existing combat-ready player prefab.");
             System.IO.Directory.CreateDirectory("Assets/LastSignal/Scenes");
@@ -271,7 +271,7 @@ namespace LastSignal.Editor
             target2.AddComponent<DamageableTarget>();
 
             // Setup session player
-            var playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab");
+            var playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player/Player.prefab");
             var playerInstance = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab);
             
             // Add Combat Controller to player
@@ -289,13 +289,13 @@ namespace LastSignal.Editor
                 so.FindProperty("weaponParent").objectReferenceValue = wpnParent;
                 so.ApplyModifiedProperties();
 
-                PrefabUtility.SaveAsPrefabAsset(playerInstance, "Assets/LastSignal/Prefabs/Player.prefab");
+                PrefabUtility.SaveAsPrefabAsset(playerInstance, "Assets/LastSignal/Prefabs/Player/Player.prefab");
             }
             Object.DestroyImmediate(playerInstance);
 
             var spawn = new GameObject("Spawn").transform;
             var session = new GameObject("Session", typeof(SessionFlow)).GetComponent<SessionFlow>();
-            session.Configure(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player.prefab"), spawn, new DoorInteractable[0]);
+            session.Configure(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player/Player.prefab"), spawn, new DoorInteractable[0]);
 
             // Add HUD
             var hudMethod = typeof(S001Project).GetMethod("CreateHud", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
@@ -323,7 +323,7 @@ namespace LastSignal.Editor
                 so.ApplyModifiedProperties();
             }
 
-            EditorSceneManager.SaveScene(scene, "Assets/LastSignal/Scenes/CombatAcceptance.unity");
+            EditorSceneManager.SaveScene(scene, "Assets/LastSignal/Scenes/Validation/CombatAcceptance.unity");
         }
     }
 }

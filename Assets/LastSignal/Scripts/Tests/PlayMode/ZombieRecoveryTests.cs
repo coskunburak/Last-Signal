@@ -21,7 +21,7 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator NormalRouteTenSessionsClearTargetsTimersAndPausePresentation()
         {
-            yield return Load("Assets/Scenes/SampleScene.unity");
+            yield return Load("Assets/ThirdParty/UnityURPTemplate/Scenes/SampleScene.unity");
             var encounter=session.GetComponent<ZombieEncounter>(); Assert.That(encounter,Is.Not.Null);
             for(int cycle=0;cycle<10;cycle++)
             {
@@ -46,7 +46,7 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator NavigationInvalidOffMeshStuckAndObstacleAreSafe()
         {
-            yield return Load("Assets/LastSignal/Scenes/ZombieAcceptance.unity");
+            yield return Load("Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity");
             var actor=session.GetComponent<ZombieEncounter>().Actor;actor.enabled=false;
             var nav=actor.Navigation;var agent=actor.GetComponent<NavMeshAgent>();
             Assert.That(nav.MoveTo(new Vector3(-5,0,7),0,.35f),Is.True);
@@ -66,7 +66,7 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator PresenterUsesVelocityAndRestoresSpeedAfterPause()
         {
-            yield return Load("Assets/LastSignal/Scenes/ZombieAcceptance.unity");
+            yield return Load("Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity");
             var actor=session.GetComponent<ZombieEncounter>().Actor;actor.enabled=false;
             var presenter=actor.GetComponent<ZombieAnimationPresenter>();var animator=actor.GetComponentInChildren<Animator>();
             presenter.Present(actor.Definition.Speed,1,false);animator.Update(.2f);
@@ -81,7 +81,7 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator PartialEndpointRetriesAreBoundedAndOffMeshSpawnFailsOnce()
         {
-            yield return Load("Assets/LastSignal/Scenes/ZombieAcceptance.unity");
+            yield return Load("Assets/LastSignal/Scenes/Validation/ZombieAcceptance.unity");
             var actor=session.GetComponent<ZombieEncounter>().Actor;actor.enabled=false;
             var nav=actor.Navigation;var agent=actor.GetComponent<NavMeshAgent>();
             nav.MoveTo(new Vector3(17,0,4),0,.35f);Assert.That(nav.PathStatus,Is.EqualTo(NavMeshPathStatus.PathPartial));
@@ -99,9 +99,9 @@ namespace LastSignal.Tests
         }
         [Test]public void OffscreenInitializationEvaluatesIdleBeforeFirstVisibleFrame()
         {
-            probe=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/LS_Zombie_Runtime.prefab"));
+            probe=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab"));
             var animator=probe.GetComponentInChildren<Animator>();animator.cullingMode=AnimatorCullingMode.CullCompletely;
-            Assert.That(probe.GetComponent<ZombieAnimationPresenter>().Initialize(AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Assets/Zombie/Enemies/Zombie/Shambler.asset")),Is.True);
+            Assert.That(probe.GetComponent<ZombieAnimationPresenter>().Initialize(AssetDatabase.LoadAssetAtPath<ZombieDefinition>("Assets/LastSignal/Data/Enemies/Zombie/Shambler.asset")),Is.True);
             var hand=animator.GetBoneTransform(HumanBodyBones.RightHand);var initial=hand.position;
             Assert.That(animator.cullingMode,Is.EqualTo(AnimatorCullingMode.CullCompletely));
             animator.cullingMode=AnimatorCullingMode.AlwaysAnimate;animator.Update(0);

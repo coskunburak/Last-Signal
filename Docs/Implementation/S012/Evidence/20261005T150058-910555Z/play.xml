@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 15:01:21Z" end-time="2026-10-05 15:01:26Z" duration="4.9969201">
+  <test-suite type="TestSuite" id="1285" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="238" result="Failed" site="Child" start-time="2026-10-05 15:01:21Z" end-time="2026-10-05 15:01:26Z" duration="4.996920" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1278" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="238" result="Failed" site="Child" start-time="2026-10-05 15:01:21Z" end-time="2026-10-05 15:01:26Z" duration="4.990309" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1279" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="238" result="Failed" site="Child" start-time="2026-10-05 15:01:21Z" end-time="2026-10-05 15:01:26Z" duration="4.987958" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1280" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="238" result="Failed" site="Child" start-time="2026-10-05 15:01:21Z" end-time="2026-10-05 15:01:26Z" duration="4.986972" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1168" name="VehicleOccupancyTests" fullname="LastSignal.Tests.VehicleOccupancyTests" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-05 15:01:21Z" end-time="2026-10-05 15:01:26Z" duration="4.985267" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1170" name="BlockedExitsRetainDriverAndFallbackIsSafe" fullname="LastSignal.Tests.VehicleOccupancyTests.BlockedExitsRetainDriverAndFallbackIsSafe" methodname="BlockedExitsRetainDriverAndFallbackIsSafe" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="858526913" result="Failed" start-time="2026-10-05 15:01:21Z" end-time="2026-10-05 15:01:23Z" duration="2.420122" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  speed=(0.00, 0.00, 0.00) ready=True
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.VehicleOccupancyTests+<BlockedExitsRetainDriverAndFallbackIsSafe>d__7.MoveNext () [0x000af] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/VehicleOccupancyTests.cs:61
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1169" name="EnterExitPreservesPlayerAndGatesOnFootAuthority" fullname="LastSignal.Tests.VehicleOccupancyTests.EnterExitPreservesPlayerAndGatesOnFootAuthority" methodname="EnterExitPreservesPlayerAndGatesOnFootAuthority" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="370679120" result="Passed" start-time="2026-10-05 15:01:23Z" end-time="2026-10-05 15:01:24Z" duration="1.318400" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1171" name="UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" fullname="LastSignal.Tests.VehicleOccupancyTests.UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" methodname="UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="1146315982" result="Passed" start-time="2026-10-05 15:01:24Z" end-time="2026-10-05 15:01:26Z" duration="1.238548" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261005T150058-910555Z/play.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

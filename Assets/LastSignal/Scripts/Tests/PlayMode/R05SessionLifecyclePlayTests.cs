@@ -20,7 +20,7 @@ namespace LastSignal.Tests
         
         [UnitySetUp] public IEnumerator Setup()
         {
-            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/WorldPopulationAcceptance.unity", new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             flow = UnityEngine.Object.FindAnyObjectByType<SessionFlow>();
             flow.Resume();

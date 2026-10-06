@@ -10,7 +10,7 @@ namespace LastSignal.Editor
     {
         public static void BuildDevelopmentMac()
         {
-            const string scene = "Assets/LastSignal/Scenes/RelayExpedition.unity";
+            const string scene = "Assets/LastSignal/Scenes/Production/RelayExpedition.unity";
             const string output = "Builds/S004-NewPunch/LastSignal.app";
             const string evidence = "Docs/Implementation/S004/Evidence/20261001-NewPunch-Manual/build-summary.txt";
             Directory.CreateDirectory(Path.GetDirectoryName(output));
