@@ -16,6 +16,32 @@ namespace LastSignal
         public Camera View => view;
         public float BaseFOV => fieldOfViewDegrees;
 
+        Vehicles.VehicleActor feelVehicle;
+        Vector3 appliedFeelPosition;
+        Quaternion appliedFeelRotation = Quaternion.identity;
+        bool feelApplied;
+        void RemoveVehicleFeel()
+        {
+            if (!feelApplied || !view) return;
+            view.transform.localPosition -= appliedFeelPosition;
+            view.transform.localRotation *= Quaternion.Inverse(appliedFeelRotation);
+            feelApplied = false;
+        }
+        void LateUpdate()
+        {
+            if (!input || !input.DrivingActive || !view) return;
+            if (!feelVehicle) feelVehicle = GetComponentInParent<Vehicles.VehicleActor>();
+            if (!feelVehicle || !feelVehicle.Ready || !feelVehicle.Occupied) return;
+            appliedFeelPosition = view.transform.parent.InverseTransformVector(
+                feelVehicle.transform.TransformVector(feelVehicle.BodyFeelPosition));
+            appliedFeelRotation = Quaternion.Euler(feelVehicle.BodyFeelAngles);
+            view.transform.localPosition += appliedFeelPosition;
+            view.transform.localRotation *= appliedFeelRotation;
+            feelApplied = true;
+        }
+        internal void ResetVehicleBodyFeel() { RemoveVehicleFeel(); feelVehicle = null; }
+        void OnDisable() => ResetVehicleBodyFeel();
+
         float fovOverride = -1; // Negative means no override.
         float sensitivityMultiplier = 1;
 
@@ -28,6 +54,8 @@ namespace LastSignal
 
         void Update()
         {
+            RemoveVehicleFeel();
+            if (!input.DrivingActive) feelVehicle = null;
             float targetFov = fovOverride > 0 ? fovOverride : fieldOfViewDegrees;
             view.fieldOfView = targetFov;
             if (input.DrivingActive) { using (VehicleCameraMarker.Auto()) ApplyLook(input.Look); }

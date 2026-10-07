@@ -15,6 +15,8 @@ namespace LastSignal.Vehicles
         AudioSource loop, events, loadedLoop, rollingLoop;
         IVehiclePresentationState physics;
         IVehiclePhysicsPort physicsPort;
+        readonly AudioSource[] bodyThumps = new AudioSource[3];
+        int nextBodyVoice;
         float loadBlend;
         string hudText = "";
         float nextHudRefresh;
@@ -22,6 +24,16 @@ namespace LastSignal.Vehicles
         {
             actor = GetComponent<VehicleActor>(); loop = gameObject.AddComponent<AudioSource>(); events = gameObject.AddComponent<AudioSource>();
             loadedLoop = gameObject.AddComponent<AudioSource>(); rollingLoop = gameObject.AddComponent<AudioSource>();
+            for (int i = 0; i < bodyThumps.Length; i++)
+            {
+                var emitter = new GameObject("Body traversal audio " + i); emitter.transform.SetParent(transform, false);
+                var source = bodyThumps[i] = emitter.AddComponent<AudioSource>();
+                source.playOnAwake = false; source.spatialBlend = 1;
+                source.minDistance = 3; source.maxDistance = 25;
+                source.rolloffMode = AudioRolloffMode.Linear;
+                source.outputAudioMixerGroup = events.outputAudioMixerGroup;
+                emitter.AddComponent<AudioLowPassFilter>().cutoffFrequency = 550;
+            }
             physics = GetComponent<IVehiclePresentationState>();
             physicsPort = GetComponent<IVehiclePhysicsPort>();
             foreach (var source in new[] { loop, events, loadedLoop, rollingLoop })
@@ -30,8 +42,18 @@ namespace LastSignal.Vehicles
             loadedLoop.loop = rollingLoop.loop = true;
             loadedLoop.clip = loadedEngine; rollingLoop.clip = rolling;
         }
-        void OnEnable() { if (!actor) actor = GetComponent<VehicleActor>(); actor.Presented += Play; actor.ZombieImpactCommitted += PlayInfected; }
-        void OnDisable() { actor.Presented -= Play; actor.ZombieImpactCommitted -= PlayInfected; if (loop) loop.Stop(); if (events) events.Stop(); if (loadedLoop) loadedLoop.Stop(); if (rollingLoop) rollingLoop.Stop(); }
+        void OnEnable() { if (!actor) actor = GetComponent<VehicleActor>(); actor.Presented += Play; actor.ZombieImpactCommitted += PlayInfected; actor.BodyFeelPresented += PlayBody; }
+        void OnDisable() { actor.Presented -= Play; actor.ZombieImpactCommitted -= PlayInfected; actor.BodyFeelPresented -= PlayBody; StopBodyAudio(); if (loop) loop.Stop(); if (events) events.Stop(); if (loadedLoop) loadedLoop.Stop(); if (rollingLoop) rollingLoop.Stop(); }
+        void PlayBody(VehicleBodyCue cue, float strength)
+        {
+            if (!impact) return;
+            var bodyThump = bodyThumps[nextBodyVoice];
+            nextBodyVoice = (nextBodyVoice + 1) % bodyThumps.Length;
+            bodyThump.Stop(); // Bounded voice count; changing pitch never alters another stage.
+            bodyThump.pitch = cue == VehicleBodyCue.Impact ? .8f : cue == VehicleBodyCue.FrontAxle ? .65f : .7f;
+            bodyThump.PlayOneShot(impact, strength * (cue == VehicleBodyCue.Impact ? .3f : .45f));
+        }
+        void StopBodyAudio() { foreach (var source in bodyThumps) if (source) source.Stop(); }
         void PlayInfected(VehicleZombieImpactReceipt receipt)
         { if (impact) events.PlayOneShot(impact, Mathf.Lerp(.25f, 1, receipt.Severity)); }
         void Play(string cue)
@@ -44,6 +66,7 @@ namespace LastSignal.Vehicles
         {
             using (Marker.Auto())
             {
+                if (!actor.Ready) StopBodyAudio();
                 bool running = actor.Ready && actor.Resources != null && actor.Resources.EngineRunning;
                 float wheelSpeed = physics != null ? physics.WheelSpeed01 : 0;
                 float target = running && physics != null ? Mathf.Clamp01(wheelSpeed * .7f + physics.DriveLoad * .3f) : 0;

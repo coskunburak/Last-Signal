@@ -719,6 +719,7 @@ GameObject:
   - component: {fileID: 4677215806897412754}
   - component: {fileID: 1415635397774292760}
   - component: {fileID: 2130993141671388729}
+  - component: {fileID: 7310359430695844618}
   m_Layer: 29
   m_Name: Weapon_AssaultRifle
   m_TagString: Untagged
@@ -851,13 +852,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8095ab641bb7f4d05a42ec87b47f1504, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ScopeOpticPresenter
   weapon: {fileID: 3501217768431337136}
   definition: {fileID: 11400000, guid: dede636e6bdb0422999af033e1c838f7, type: 2}
   lens: {fileID: 4073142472268289204}
   lensCenter: {x: 0.05, y: 0.27, z: -0.120204}
   lensHalfSize: {x: 0.013688214, y: 0.014638051}
+--- !u!114 &7310359430695844618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712404466925461447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f9d55020146841c6b26644bde76398f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.WeaponAudioPresenter
+  weapon: {fileID: 3501217768431337136}
+  audioSource: {fileID: 0}
+  fireClip: {fileID: 0}
+  dryFireClip: {fileID: 0}
+  reloadStartClip: {fileID: 0}
+  reloadEndClip: {fileID: 0}
+  magazineOutClip: {fileID: 0}
+  magazineInClip: {fileID: 0}
+  boltClip: {fileID: 0}
+  equipClip: {fileID: 0}
 --- !u!1 &1773785274122350238
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,8 +1002,8 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -5486265183656495393, guid: a29467c1797214c67ad482857d573617, type: 3}
-  - {fileID: 4274736893436426622, guid: a29467c1797214c67ad482857d573617, type: 3}
+  - {fileID: 2100000, guid: 5e7e5164bbe03440599a7dffcf7bd0a2, type: 2}
+  - {fileID: 2100000, guid: f31cd4609f0da4140bf797b7558b8c4f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3070,7 +3093,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4835078630258379571, guid: a29467c1797214c67ad482857d573617, type: 3}
+  - {fileID: 2100000, guid: 18de92c1742204cafb3fbd076b0e510e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3490,8 +3513,8 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -3160427048719790512, guid: a29467c1797214c67ad482857d573617, type: 3}
-  - {fileID: 9203348177894870178, guid: a29467c1797214c67ad482857d573617, type: 3}
+  - {fileID: 2100000, guid: 5757cb066403a4757906b99f6fe1aa49, type: 2}
+  - {fileID: 2100000, guid: 6437514e3b88e4e3aaf8058201611808, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

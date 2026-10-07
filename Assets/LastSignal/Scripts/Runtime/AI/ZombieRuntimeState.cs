@@ -8,6 +8,7 @@ namespace LastSignal
     // Only ZombieController writes this per-actor domain state. No Transform reference is retained.
     public sealed class ZombieRuntimeState
     {
+        public event Action<ZombieState, ZombieState> Changed;
         public ZombieState State { get; private set; }
         public float Confidence { get; private set; }
         public bool Visible { get; private set; }
@@ -53,6 +54,7 @@ namespace LastSignal
         {
             if (!IsLegal(State, next)) throw new InvalidOperationException("Illegal zombie state transition: " + State + " -> " + next);
             var previous = State; Exit(State, next); State = next; Transitions++; Enter(next, previous);
+            Changed?.Invoke(previous, next);
         }
         void Exit(ZombieState previous, ZombieState next) { if (previous == ZombieState.Searching && next != ZombieState.HitReact) SearchAge = 0; }
         void Enter(ZombieState next, ZombieState previous)

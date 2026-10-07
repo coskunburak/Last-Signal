@@ -61,7 +61,7 @@ namespace LastSignal.Tests
             var origin = car.transform.position;
             adapter.SetControl(new VehicleControlIntent(1, 0, .3f, false), true);
             yield return new WaitForSeconds(2);
-            yield return new WaitForEndOfFrame();
+            yield return null; // Let the presentation LateUpdate finish in batchmode too.
             Assert.Greater(Vector3.Distance(origin, car.transform.position), .5f);
             Assert.Greater(adapter.Wheel(0).steerAngle, 0);
             Assert.AreEqual(0, adapter.Wheel(2).steerAngle);
@@ -77,7 +77,7 @@ namespace LastSignal.Tests
             yield return new WaitForSeconds(2);
             adapter.SetControl(new VehicleControlIntent(0, 0, 0, false, 1), true);
             yield return new WaitForSeconds(3);
-            yield return new WaitForEndOfFrame();
+            yield return null;
             Assert.Less(adapter.ForwardSpeed, -.1f);
             for (int i = 0; i < 4; i++) { Assert.Less(adapter.Wheel(i).rpm, 0, "Reverse spin wheel " + i); AssertPose(i); }
             Assert.AreEqual(0, steering.VisualAngle, .01f);

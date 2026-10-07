@@ -8,6 +8,7 @@ namespace LastSignal
         [SerializeField] Transform origin;
         [SerializeField, Min(.1f)] float rangeMeters = 2.2f;
         [SerializeField] LayerMask visibilityMask = ~(1 << 2);
+        public event System.Action InteractionSucceeded;
         public string Prompt { get; private set; } = "";
         public void Configure(PlayerInputReader reader, Transform view) { input = reader; origin = view; }
         void Awake()
@@ -33,7 +34,9 @@ namespace LastSignal
         public bool TryInteract()
         {
             var target = Resolve(); // Revalidate at commit; never trust last frame's preview.
-            return target != null && target.TryInteract();
+            bool succeeded = target != null && target.TryInteract();
+            if (succeeded) InteractionSucceeded?.Invoke();
+            return succeeded;
         }
         void OnInteract() => TryInteract();
     }

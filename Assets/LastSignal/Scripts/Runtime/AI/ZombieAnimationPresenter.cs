@@ -23,7 +23,8 @@ namespace LastSignal
         AnimatorCullingMode savedCulling;
         Transform reactionBone;
         Vector3 visualBasePosition;
-        bool flyingDeath, vehicleKnockdown;
+        bool flyingDeath, vehicleKnockdown, vehicleDeath;
+        float vehicleDeathStart;
         static readonly int VehicleFall = Animator.StringToHash("VehicleFall");
         static readonly int VehicleGetUp = Animator.StringToHash("VehicleGetUp");
         public bool VehicleKnockdown => vehicleKnockdown;
@@ -34,6 +35,14 @@ namespace LastSignal
             vehicleKnockdown = true; proceduralReaction = false;
             animator.SetLayerWeight(1, 0);
             current = VehicleFall; animator.Play(VehicleFall, 0, 0); animator.Update(0);
+        }
+        public void BeginVehicleDeath(ZombieImpactReaction impact)
+        {
+            if (!HasAnimator || dead) return;
+            float phase = vehicleKnockdown ? Mathf.Clamp01(damageTime / tuning.VehicleFallDuration) : 0;
+            BeginDamage(true, impact);
+            vehicleDeath = true; vehicleDeathStart = phase;
+            current = VehicleFall; animator.Play(current, 0, phase); animator.Update(0);
         }
         ZombieImpactReaction reaction;
 
@@ -60,6 +69,7 @@ namespace LastSignal
             if (!reactionBone) reactionBone = animator.GetBoneTransform(HumanBodyBones.Spine);
             visualBasePosition = animator.transform.localPosition;
             damagePresentation = dead = paused = attacking = proceduralReaction = vehicleKnockdown = CorpseSettled = false;
+            vehicleDeath = false; vehicleDeathStart = 0;
             damageTime = smoothedSpeed = 0; locomotionPlayback = 1; current = Idle;
             animator.enabled = true; animator.applyRootMotion = false;
             var culling = animator.cullingMode; animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
@@ -123,6 +133,14 @@ namespace LastSignal
         public void AdvanceDamage(float seconds)
         {
             if (!animator || !damagePresentation || paused || CorpseSettled || seconds <= 0) return;
+            if (vehicleDeath)
+            {
+                damageTime = Mathf.Min(damageTime + seconds, .55f);
+                animator.Play(VehicleFall, 0, Mathf.Lerp(vehicleDeathStart, 1, damageTime / .55f));
+                animator.Update(0);
+                if (damageTime >= .55f) { CorpseSettled = true; animator.enabled = false; }
+                return;
+            }
             if (vehicleKnockdown && !dead)
             {
                 damageTime = Mathf.Min(damageTime + seconds, tuning.VehicleReactionDuration);

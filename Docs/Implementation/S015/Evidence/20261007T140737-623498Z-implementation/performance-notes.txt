@@ -1,0 +1,6 @@
+Statik authoring bütçesi; runtime ölçümü veya PASS değildir.
+S015 cue source: 16; loop source: 8 (5 ambience + 3 music). Yeni zombi başına AudioSource yok. Mevcut vehicle kaynakları bu sayıya dahil değildir.
+Kısa seçili clip örneklerinin float PCM karşılığı üst tahmini: 12015360 byte (~11.46 MiB); gerçek Unity resident/DSP/import memory ölçümü değil. Sekiz uzun klip streaming; stream buffer maliyeti ölçülmedi.
+Occlusion <=40 ray/s toplam. Footstep yüzey sorgusu yalnız stride olayında NonAlloc. Hot audio döngülerinde yeni liste/dizi/LINQ yok. Caption string yalnız semantic olayda güncellenir.
+Fire concurrency 4 tail sonrası en eski tail değiştirilir; kabul edilen atış sesi sırf tail bütçesi dolu diye düşürülmez. Kritik telegraph için dört slot noncritical cue erişimine kapalıdır.
+Crowd clipping, algısal gain, CPU/GC, mixer DSP ve stream gecikmesi Burak kabulü/ölçümü bekler.

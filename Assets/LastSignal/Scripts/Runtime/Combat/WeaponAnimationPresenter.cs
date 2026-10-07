@@ -128,19 +128,19 @@ namespace LastSignal
         /// <summary>Called by Animation Event: magazine detach visual moment.</summary>
         public void OnMagazineDetach()
         {
-            // Future: hide magazine mesh, spawn dropped magazine visual.
+            GetComponent<WeaponAudioPresenter>()?.OnMagazineDetach();
         }
 
         /// <summary>Called by Animation Event: magazine attach visual moment.</summary>
         public void OnMagazineAttach()
         {
-            // Future: show magazine mesh, snap to well.
+            GetComponent<WeaponAudioPresenter>()?.OnMagazineAttach();
         }
 
         /// <summary>Called by Animation Event: bolt/slide sound moment.</summary>
         public void OnBoltAction()
         {
-            // Future: play bolt sound via WeaponAudioPresenter.
+            GetComponent<WeaponAudioPresenter>()?.OnBoltAction();
         }
     }
 }

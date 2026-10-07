@@ -20,11 +20,15 @@ namespace LastSignal.Tests
         PlayerStance stance;
         Keyboard keyboard;
         Mouse mouse;
+        bool previousRunInBackground;
         readonly System.Collections.Generic.List<GameObject> fixtures = new System.Collections.Generic.List<GameObject>();
         public override void Setup()
         {
             InputFixtureIsolation.DisableLiveActions();
             base.Setup();
+            previousRunInBackground = Application.runInBackground;
+            Application.runInBackground = true;
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
             Time.timeScale = 1;
             keyboard = InputSystem.AddDevice<Keyboard>(); mouse = InputSystem.AddDevice<Mouse>();
             floor = Box("Test ground", new Vector3(0, -.25f, 0), new Vector3(100, .5f, 100));
@@ -45,6 +49,7 @@ namespace LastSignal.Tests
             fixtures.Clear();
             // Only destroy fixture-owned objects; the active scene can also own the test runner.
             Time.timeScale = 1;
+            Application.runInBackground = previousRunInBackground;
             Cursor.lockState = CursorLockMode.None;
             InputFixtureIsolation.DisableLiveActions();
             base.TearDown();
@@ -207,18 +212,43 @@ namespace LastSignal.Tests
         [UnityTest]
         public IEnumerator MouseAndCrouchActionsReachCameraAndCapsule()
         {
+            int crouchRequests = 0;
+            input.CrouchRequested += () => crouchRequests++;
             yield return null; yield return null;
             Set(mouse.delta, new Vector2(100, 50)); yield return null;
             Assert.That(player.GetComponent<FirstPersonLook>().Pitch, Is.EqualTo(-6).Within(.1f));
             Assert.That(player.transform.eulerAngles.y, Is.EqualTo(12).Within(.1f));
-            Press(keyboard.cKey); yield return null;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.C)); InputSystem.Update(); yield return null;
             Assert.That(stance.IsCrouching, Is.True);
             yield return new WaitForSeconds(.2f);
             Assert.That(player.GetComponent<CharacterController>().height, Is.EqualTo(1.2f).Within(.001f));
-            Release(keyboard.cKey); yield return null;
-            Press(keyboard.cKey); yield return null;
-            Assert.That(stance.IsCrouching, Is.False);
-            Release(keyboard.cKey); yield return null;
+            // Record whether this manual update actually runs and consumes the release event.
+            // In a batchmode UnityTest, the Input System may route it to a disabled update type.
+            int updatesBeforeRelease = InputSystem.metrics.totalUpdateCount;
+            int eventsBeforeRelease = InputSystem.metrics.totalEventCount;
+            double deviceTimeBeforeRelease = keyboard.lastUpdateTime;
+            double queueTime = InputState.currentTime;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState()); InputSystem.Update();
+            Assert.That(keyboard.cKey.isPressed, Is.False,
+                $"C immediately after release update: deviceAdded={keyboard.added}, frame={Time.frameCount}, " +
+                $"updateMode={InputSystem.settings.updateMode}, background={InputSystem.settings.backgroundBehavior}, " +
+                $"editorInput={InputSystem.settings.editorInputBehaviorInPlayMode}, runInBackground={Application.runInBackground}, " +
+                $"updates={updatesBeforeRelease}->{InputSystem.metrics.totalUpdateCount}, " +
+                $"events={eventsBeforeRelease}->{InputSystem.metrics.totalEventCount}, " +
+                $"queueTime={queueTime:F6}, deviceTime={deviceTimeBeforeRelease:F6}->{keyboard.lastUpdateTime:F6}");
+            yield return null;
+            Assert.That(keyboard.cKey.isPressed, Is.False,
+                $"C one frame after release: deviceAdded={keyboard.added}, frame={Time.frameCount}, " +
+                $"updateMode={InputSystem.settings.updateMode}, background={InputSystem.settings.backgroundBehavior}, runInBackground={Application.runInBackground}");
+            Assert.That(input.CrouchHeld, Is.False, "Input reader must observe the released C key.");
+            yield return null;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.C)); InputSystem.Update(); yield return null;
+            Assert.That(stance.IsCrouching, Is.False,
+                $"StandBlocked={stance.StandBlocked}, CanStand={stance.CanStand()}, " +
+                $"GameplayActive={input.GameplayActive}, CrouchHeld={input.CrouchHeld}, " +
+                $"requests={crouchRequests}, sliding={motor.IsSliding}, " +
+                $"position={player.transform.position}, scene={SceneManager.GetActiveScene().name}");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState()); InputSystem.Update(); yield return null;
         }
         [UnityTest]
         public IEnumerator PauseFocusAndHeldKeyReturnNeverLeakGameplay()

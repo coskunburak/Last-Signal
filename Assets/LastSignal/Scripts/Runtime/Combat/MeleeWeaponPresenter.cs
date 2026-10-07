@@ -9,6 +9,13 @@ namespace LastSignal
         [SerializeField] AudioSource audioSource;
         [SerializeField] AudioClip swing, impact;
         MeleeState previous;
+        Audio.ProductionAudio director;
+        void PlayAudio(Audio.AudioCue cue, AudioClip fallback, float gain)
+        {
+            if(!director) director=GetComponentInParent<Noise.GameplayNoiseContext>()?.Session?.GetComponent<Audio.ProductionAudio>();
+            if(director) director.Play(cue,transform);
+            else if(audioSource && fallback) audioSource.PlayOneShot(fallback,gain);
+        }
         void OnEnable()
         {
             if(controller) { controller.AttackCommitted += OnSwing; controller.ImpactCommitted += OnImpact; }
@@ -19,6 +26,7 @@ namespace LastSignal
         {
             if(controller) { controller.AttackCommitted -= OnSwing; controller.ImpactCommitted -= OnImpact; }
             if(audioSource) audioSource.Stop();
+            if(director) director.StopOwner(transform);
         }
         void OnSwing()
         {
@@ -26,9 +34,9 @@ namespace LastSignal
             // our next Update; polling alone would miss Windup and leave Swing playing.
             previous = MeleeState.Windup;
             if(animator) animator.Play("Swing",0,0);
-            if(audioSource && swing) audioSource.PlayOneShot(swing,.45f);
+            PlayAudio(Audio.AudioCue.MeleeSwing,swing,.45f);
         }
-        void OnImpact() { if(audioSource && impact) audioSource.PlayOneShot(impact,.6f); }
+        void OnImpact() { PlayAudio(Audio.AudioCue.MeleeImpact,impact,.6f); }
         void Update()
         {
             if(!controller || controller.Simulation==null) return;

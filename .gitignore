@@ -158,6 +158,12 @@ __pycache__/
 /Docs/Implementation/S012/Evidence/**/start.marker
 /Docs/Implementation/S012/Evidence/**/preexisting-current.json*
 
+# S015 verification preserves duplicate historical outputs in each run folder.
+# The source audio packages under Assets/ThirdParty/S15 Sound Pack stay trackable;
+# .gitattributes stores their WAV and other large binary assets in Git LFS.
+/Docs/Implementation/S015/Evidence/**/generated-artifacts/
+!Docs/Implementation/S015/Evidence/**/*.log
+
 # Archives
 *.zip
 *.rar

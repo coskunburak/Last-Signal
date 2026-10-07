@@ -95,6 +95,7 @@ namespace LastSignal
             GetComponent<Shelter.ShelterSite>()?.Begin();
             GetComponent<Objectives.RelayMission>()?.Begin();
             GetComponent<Vehicles.VehicleWorld>()?.Begin(this);
+            GetComponent<Audio.ProductionAudio>()?.BeginSession();
             SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }
@@ -128,6 +129,7 @@ namespace LastSignal
         }
         public void ReturnToMenu()
         {
+            GetComponent<Audio.ProductionAudio>()?.EndSession();
             Generation++; Restoring = false;
             Noise?.End(); Noise = null;
             GetComponent<Objectives.RelayMission>()?.End();

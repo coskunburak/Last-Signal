@@ -28,6 +28,7 @@ namespace LastSignal
         Vector3 slideVelocity;
         float slideElapsedSeconds;
 
+        public event System.Action<Vector3, bool, bool, bool> PresentationMoved;
         public bool IsSliding { get; private set; }
         public float HorizontalMetersPerSecond => measuredHorizontalVelocity.magnitude;
         float verticalSpeed;
@@ -147,6 +148,7 @@ namespace LastSignal
                 displacement, transform.position, capsule.isGrounded,
                 sprint, stance.IsCrouching);
 
+            PresentationMoved?.Invoke(displacement, capsule.isGrounded && !IsSliding, sprint, stance.IsCrouching);
             displacement.y = 0;
             measuredHorizontalVelocity = displacement / dt;
             bool moved = displacement.sqrMagnitude > .0000001f;
