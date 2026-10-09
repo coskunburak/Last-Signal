@@ -273,15 +273,29 @@ namespace LastSignal.Art.Editor
             for(int i=0;i<names.Length;i++){var c=Group(names[i],cameras.transform).AddComponent<Camera>();c.transform.position=Origin+pos[i];c.transform.LookAt(Origin+targets[i]);c.fieldOfView=65;c.nearClipPlane=.05f;c.farClipPlane=250;c.enabled=false;c.gameObject.AddComponent<UniversalAdditionalCameraData>().renderPostProcessing=true;}
             EditorSceneManager.MarkSceneDirty(s);EditorSceneManager.SaveScene(s);AssetDatabase.SaveAssets();
         }
-        public static void Build(string output,bool baseline=false,bool cleanCache=false)
+        // Invoked explicitly by Tools/s017-verify.py; never queued through the Editor poller.
+        public static void BuildS017Windows()
         {
+            string output = Environment.GetEnvironmentVariable("LASTSIGNAL_S017_BUILD_OUTPUT");
+            if (string.IsNullOrWhiteSpace(output)) throw new InvalidOperationException("Use Tools/s017-verify.py windows-build to capture build identity.");
+            Build(output, false, false, BuildTarget.StandaloneWindows64);
+        }
+
+        public static void Build(string output,bool baseline=false,bool cleanCache=false,BuildTarget target=BuildTarget.StandaloneOSX)
+        {
+            if (target != BuildTarget.StandaloneOSX && target != BuildTarget.StandaloneWindows64)
+                throw new ArgumentOutOfRangeException(nameof(target));
+            if (!BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, target))
+                throw new InvalidOperationException("BLOCKED: Build support is unavailable for " + target);
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+                if (SceneManager.GetSceneAt(i).isDirty) throw new InvalidOperationException("Save scene changes before building.");
             if(Directory.Exists(output))throw new IOException("Immutable build path exists");Directory.CreateDirectory(output);
             var options=BuildOptions.Development | (cleanCache ? BuildOptions.CleanBuildCache : BuildOptions.None);
-            var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{baseline?"Assets/LastSignal/Scenes/Production/IntegratedGraybox.unity":ScenePath},locationPathName=Path.Combine(output,"LastSignal.app"),target=BuildTarget.StandaloneOSX,options=options});
+            var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{baseline?"Assets/LastSignal/Scenes/Production/IntegratedGraybox.unity":ScenePath},locationPathName=Path.Combine(output,target == BuildTarget.StandaloneWindows64 ? "LastSignal.exe" : "LastSignal.app"),target=target,options=options});
             var warnings=report.steps?.SelectMany(step=>step.messages ?? Array.Empty<BuildStepMessage>())
                 .Where(message=>message.type==LogType.Warning).Select(message=>message.content).ToArray() ?? Array.Empty<string>();
             File.WriteAllLines(Path.Combine(output,"warnings.txt"),warnings);
-            File.WriteAllText(Path.Combine(output,"build.txt"),$"Result={report.summary.result}\nErrors={report.summary.totalErrors}\nWarnings={report.summary.totalWarnings}\nDuration={report.summary.totalTime}\nUnity={Application.unityVersion}\nScene={(baseline?"S012 baseline":ScenePath)}\nCleanCache={cleanCache}\n");if(report.summary.result!=BuildResult.Succeeded)throw new InvalidOperationException("Build failed");
+            File.WriteAllText(Path.Combine(output,"build.txt"),$"Result={report.summary.result}\nErrors={report.summary.totalErrors}\nWarnings={report.summary.totalWarnings}\nDuration={report.summary.totalTime}\nUnity={Application.unityVersion}\nPlatform={target}\nBuildType=Development\nVersion={Application.version}\nScene={(baseline?"S012 baseline":ScenePath)}\nCleanCache={cleanCache}\n");if(report.summary.result!=BuildResult.Succeeded)throw new InvalidOperationException("Build failed");
         }
     }
 }

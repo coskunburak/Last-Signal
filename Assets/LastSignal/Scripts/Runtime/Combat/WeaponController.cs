@@ -23,9 +23,10 @@ namespace LastSignal
         LastSignal.Inventory.PlayerInventory inventory;
         PlayerInputReader input;
         PlayerHealth health;
+        PlayerSurvival survival;
         public event Action AmmoChanged;
         bool GameplayAllowed => isActiveAndEnabled && instigator && instigator.activeInHierarchy &&
-            Time.timeScale > 0 && (!input || input.GameplayActive) && (!health || health.IsAlive);
+            Time.timeScale > 0 && (!input || input.GameplayActive) && (!health || health.IsAlive) && (!survival || !survival.ApplyingTreatment);
 
         // ── Public state (read-only for presentation) ───────────────────
         public WeaponRuntimeState RuntimeState => runtimeState;
@@ -56,6 +57,7 @@ namespace LastSignal
             inventory = shooter ? shooter.GetComponent<LastSignal.Inventory.PlayerInventory>() : null;
             input = shooter ? shooter.GetComponent<PlayerInputReader>() : null;
             health = shooter ? shooter.GetComponent<PlayerHealth>() : null;
+            survival = shooter ? shooter.GetComponent<PlayerSurvival>() : null;
             if (!inventory)
             { Debug.LogError("WeaponController requires the shooter's PlayerInventory.", this); enabled = false; return; }
             int mag = magazine >= 0 ? magazine : definition.StartingMagazine;

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LastSignal
 {
     public enum DamageRegion { Unspecified, Body, Head }
-    public enum DamageCategory { Unspecified, Bullet, Melee, VehicleImpact }
+    public enum DamageCategory { Unspecified, Bullet, Melee, VehicleImpact, Survival }
     // Anatomical identity is separate from the legacy damage multiplier region.
     // This allows hit attribution without changing existing damage or death authority.
     public enum ZombieBodyPart { Unspecified, Head, Torso, LeftArm, RightArm, LeftHand, RightHand, LeftLeg, RightLeg }

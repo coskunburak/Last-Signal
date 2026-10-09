@@ -15,6 +15,7 @@ namespace LastSignal.Vehicles
         public double Condition { get; private set; }
         public bool EngineRunning { get; private set; }
         internal InventoryContainer Cargo { get; }
+        public long CargoRevision => Cargo.Revision;
         public int CargoCapacity => Cargo.Capacity;
         public event Action CargoChanged { add => Cargo.InventoryChanged += value; remove => Cargo.InventoryChanged -= value; }
         public InventorySlot GetCargoSlot(int index) => Cargo.GetSlot(index);

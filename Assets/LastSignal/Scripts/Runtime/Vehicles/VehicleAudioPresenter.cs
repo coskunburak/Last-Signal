@@ -81,11 +81,12 @@ namespace LastSignal.Vehicles
                 {
                     nextHudRefresh = Time.unscaledTime + .25f;
                     hudText = $"Pickup | Fuel {actor.Resources.FuelLiters:F1} L | Condition {actor.Resources.Condition:P0}\n" +
-                        "W / RT throttle · S / LT brake · R / West reverse · Space / South handbrake\n" +
-                        "I / North ignition · E / East exit · H / LS horn · L / D-pad up lights";
+                        Binding("Throttle") + " Gaz · " + Binding("Brake") + " Fren · " + Binding("Reverse") + " Geri · " + Binding("Handbrake") + " El freni\n" +
+                        Binding("Ignition") + " Kontak · " + Binding("Exit") + " Çık · " + Binding("Horn") + " Korna · " + Binding("Lights") + " Far";
                 }
             }
         }
+        string Binding(string name) => actor.Owner && actor.Owner.Controls ? actor.Owner.Controls.BindingText("Vehicle/" + name) : "—";
         static void SetLoop(AudioSource source, bool play)
         { if (play && source.clip && !source.isPlaying) source.Play(); else if (!play && source.isPlaying) source.Stop(); }
         void OnGUI()

@@ -31,7 +31,13 @@ namespace LastSignal.Tests
                 for(int i=0;i<5;i++) Assert.That(loaded[(AudioBus)i],Is.EqualTo(i*.2f));
                 Assert.That(loaded.Captions,Is.False);
             }
-            finally { foreach(var p in AudioPreferences.Parameters) PlayerPrefs.DeleteKey(prefix+p); PlayerPrefs.DeleteKey(prefix+"Captions"); PlayerPrefs.Save(); }
+            finally
+            {
+                foreach(var p in AudioPreferences.Parameters) PlayerPrefs.DeleteKey(prefix+p);
+                foreach(var p in new[] { "Captions", "FovDegrees", "MouseSensitivity", "UiScale", "ProfileVersion", "GamepadYaw", "GamepadPitch", "GamepadDeadzone", "GamepadInvertX", "GamepadInvertY", "BindingOverrides", "TutorialCompleted", "TutorialSkipped" })
+                    PlayerPrefs.DeleteKey(prefix+p);
+                PlayerPrefs.Save();
+            }
         }
         [Test] public void CorruptPreferenceIsClamped()
         {

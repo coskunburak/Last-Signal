@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 
 namespace LastSignal.Tests
 {
-    public class MovementAcceptanceTests : InputTestFixture
+    public class MovementAcceptanceTests
     {
         GameObject player, floor;
         PlayerInputReader input;
@@ -22,10 +22,26 @@ namespace LastSignal.Tests
         Mouse mouse;
         bool previousRunInBackground;
         readonly System.Collections.Generic.List<GameObject> fixtures = new System.Collections.Generic.List<GameObject>();
-        public override void Setup()
+        readonly System.Collections.Generic.List<InputDevice> suspendedDevices = new System.Collections.Generic.List<InputDevice>();
+        InputSettings settings;
+        InputSettings.BackgroundBehavior previousBackground;
+        InputSettings.EditorInputBehaviorInPlayMode previousEditorInput;
+        InputFixtureIsolation.SceneScope sceneScope;
+        [SetUp] public void Setup()
         {
+            sceneScope = new InputFixtureIsolation.SceneScope();
             InputFixtureIsolation.DisableLiveActions();
-            base.Setup();
+            // Keep the native clock and manager across asynchronous player-loop frames.
+            // A replacement test runtime starts its clock at zero, while Editor transition
+            // timestamps remain on the native timeline and may discard otherwise valid events.
+            settings = InputSystem.settings;
+            previousBackground = settings.backgroundBehavior;
+            previousEditorInput = settings.editorInputBehaviorInPlayMode;
+            suspendedDevices.Clear();
+            foreach (var device in InputSystem.devices)
+                if (device.enabled) suspendedDevices.Add(device);
+            foreach (var device in suspendedDevices) InputSystem.DisableDevice(device);
+            settings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
             previousRunInBackground = Application.runInBackground;
             Application.runInBackground = true;
             InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
@@ -42,7 +58,7 @@ namespace LastSignal.Tests
             Physics.SyncTransforms();
             motor.Simulate(Vector2.zero, false, .2f);
         }
-        public override void TearDown()
+        [TearDown] public void TearDown()
         {
             if (player) Object.DestroyImmediate(player);
             foreach (var obj in fixtures) if (obj) Object.DestroyImmediate(obj);
@@ -52,8 +68,35 @@ namespace LastSignal.Tests
             Application.runInBackground = previousRunInBackground;
             Cursor.lockState = CursorLockMode.None;
             InputFixtureIsolation.DisableLiveActions();
-            base.TearDown();
+            try
+            {
+                if (keyboard != null && keyboard.added) InputSystem.RemoveDevice(keyboard);
+                if (mouse != null && mouse.added) InputSystem.RemoveDevice(mouse);
+            }
+            finally
+            {
+                if (settings)
+                {
+                    settings.backgroundBehavior = previousBackground;
+                    settings.editorInputBehaviorInPlayMode = previousEditorInput;
+                }
+                foreach (var device in suspendedDevices)
+                    if (device.added) InputSystem.EnableDevice(device);
+                suspendedDevices.Clear();
+                sceneScope?.Dispose(); sceneScope = null;
+            }
         }
+        static void Set<TValue>(InputControl<TValue> control, TValue value) where TValue : struct
+        {
+            using (StateEvent.From(control.device, out var eventPtr))
+            {
+                control.WriteValueIntoEvent(value, eventPtr);
+                InputSystem.QueueEvent(eventPtr);
+            }
+        }
+        static void Press(UnityEngine.InputSystem.Controls.ButtonControl control) => Set(control, 1f);
+        static void Release(UnityEngine.InputSystem.Controls.ButtonControl control) => Set(control, 0f);
+
         GameObject Box(string name, Vector3 position, Vector3 scale)
         {
             var obj = GameObject.CreatePrimitive(PrimitiveType.Cube); obj.name = name;
@@ -218,37 +261,26 @@ namespace LastSignal.Tests
             Set(mouse.delta, new Vector2(100, 50)); yield return null;
             Assert.That(player.GetComponent<FirstPersonLook>().Pitch, Is.EqualTo(-6).Within(.1f));
             Assert.That(player.transform.eulerAngles.y, Is.EqualTo(12).Within(.1f));
-            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.C)); InputSystem.Update(); yield return null;
+            Press(keyboard.cKey); yield return null;
             Assert.That(stance.IsCrouching, Is.True);
+            Assert.That(crouchRequests, Is.EqualTo(1));
             yield return new WaitForSeconds(.2f);
             Assert.That(player.GetComponent<CharacterController>().height, Is.EqualTo(1.2f).Within(.001f));
-            // Record whether this manual update actually runs and consumes the release event.
-            // In a batchmode UnityTest, the Input System may route it to a disabled update type.
-            int updatesBeforeRelease = InputSystem.metrics.totalUpdateCount;
-            int eventsBeforeRelease = InputSystem.metrics.totalEventCount;
-            double deviceTimeBeforeRelease = keyboard.lastUpdateTime;
-            double queueTime = InputState.currentTime;
-            InputSystem.QueueStateEvent(keyboard, new KeyboardState()); InputSystem.Update();
-            Assert.That(keyboard.cKey.isPressed, Is.False,
-                $"C immediately after release update: deviceAdded={keyboard.added}, frame={Time.frameCount}, " +
-                $"updateMode={InputSystem.settings.updateMode}, background={InputSystem.settings.backgroundBehavior}, " +
-                $"editorInput={InputSystem.settings.editorInputBehaviorInPlayMode}, runInBackground={Application.runInBackground}, " +
-                $"updates={updatesBeforeRelease}->{InputSystem.metrics.totalUpdateCount}, " +
-                $"events={eventsBeforeRelease}->{InputSystem.metrics.totalEventCount}, " +
-                $"queueTime={queueTime:F6}, deviceTime={deviceTimeBeforeRelease:F6}->{keyboard.lastUpdateTime:F6}");
-            yield return null;
-            Assert.That(keyboard.cKey.isPressed, Is.False,
-                $"C one frame after release: deviceAdded={keyboard.added}, frame={Time.frameCount}, " +
-                $"updateMode={InputSystem.settings.updateMode}, background={InputSystem.settings.backgroundBehavior}, runInBackground={Application.runInBackground}");
+            // Native timestamped events are processed by the player loop, with no mock
+            // runtime clock or manual InputSystem.Update mixed into asynchronous frames.
+            Release(keyboard.cKey); yield return null;
+            Assert.That(keyboard.cKey.isPressed, Is.False, "C must be released before a second toggle.");
             Assert.That(input.CrouchHeld, Is.False, "Input reader must observe the released C key.");
+            Assert.That(crouchRequests, Is.EqualTo(1), "Release must not toggle stance.");
             yield return null;
-            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.C)); InputSystem.Update(); yield return null;
+            Press(keyboard.cKey); yield return null;
+            Assert.That(crouchRequests, Is.EqualTo(2));
             Assert.That(stance.IsCrouching, Is.False,
                 $"StandBlocked={stance.StandBlocked}, CanStand={stance.CanStand()}, " +
                 $"GameplayActive={input.GameplayActive}, CrouchHeld={input.CrouchHeld}, " +
                 $"requests={crouchRequests}, sliding={motor.IsSliding}, " +
                 $"position={player.transform.position}, scene={SceneManager.GetActiveScene().name}");
-            InputSystem.QueueStateEvent(keyboard, new KeyboardState()); InputSystem.Update(); yield return null;
+            Release(keyboard.cKey); yield return null;
         }
         [UnityTest]
         public IEnumerator PauseFocusAndHeldKeyReturnNeverLeakGameplay()

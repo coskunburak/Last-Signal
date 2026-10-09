@@ -179,6 +179,7 @@ namespace LastSignal
             if (slot != CombatSlot.Firearm && slot != CombatSlot.Melee) return false;
             if (slot == CombatSlot.Melee && !melee) return false;
             if (slot == SelectedSlot) return true;
+            GetComponent<PlayerSurvival>()?.CancelTreatment("Ekipman değişti; bandaj tüketilmedi.");
 #if UNITY_EDITOR
             evidenceAimHeld = false;
 #endif

@@ -42,7 +42,7 @@ namespace LastSignal.Vehicles
         public bool LightsOn { get; private set; }
         public bool Ready => flow && !flow.InMenu && !flow.Paused && !flow.Restoring && !flow.PlayerDead;
         public bool Available => Ready && !Occupied && physics != null && physics.SpeedMetersPerSecond <= tuning.exitSpeedMetersPerSecond;
-        public string Prompt => "E — Enter pickup";
+        public string Prompt => "Enter pickup";
         public event System.Action<string> Presented;
         public void Bind(SessionFlow owner)
         {

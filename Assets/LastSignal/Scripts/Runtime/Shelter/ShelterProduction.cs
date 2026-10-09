@@ -10,6 +10,14 @@ namespace LastSignal.Shelter
     public sealed class ShelterProduction : IWorldTimeParticipant
     {
         readonly ShelterRecipe recipe;
+        readonly ShelterRecipe[] recipes;
+        ShelterRecipe JobRecipe => state.job == null ? recipe : FindRecipe(state.job.recipeId);
+        public ShelterRecipe CurrentRecipe => JobRecipe;
+        ShelterRecipe FindRecipe(string id)
+        {
+            foreach (var candidate in recipes) if (candidate.recipeId == id) return candidate;
+            return null;
+        }
         readonly ItemDefinition material, fuel;
         readonly int moduleCost, upgradeCost;
         readonly double fuelUnitSeconds;
@@ -30,10 +38,14 @@ namespace LastSignal.Shelter
         public bool Powered => GeneratorEnabled && FuelSeconds > 0;
         public bool Busy => busy;
         public event Action<double> Generated;
-        public ShelterProduction(string id, ShelterRecipe recipe, ItemDefinition material, ItemDefinition fuel, int moduleCost, int upgradeCost, double fuelUnitSeconds, double now)
+        public ShelterProduction(string id, ShelterRecipe recipe, ItemDefinition material, ItemDefinition fuel, int moduleCost, int upgradeCost, double fuelUnitSeconds, double now, ShelterRecipe[] additionalRecipes = null)
         {
             if (string.IsNullOrWhiteSpace(id) || !recipe || !recipe.Valid || !material || !fuel || moduleCost < 1 || upgradeCost < 1 ||
                 !WorldTimeSettings.Finite(fuelUnitSeconds) || fuelUnitSeconds < 1 || !WorldTimeSettings.ValidTime(now)) throw new ArgumentException("Invalid shelter production definitions.");
+            recipes = new ShelterRecipe[1 + (additionalRecipes?.Length ?? 0)];
+            recipes[0] = recipe;
+            if (additionalRecipes != null) Array.Copy(additionalRecipes, 0, recipes, 1, additionalRecipes.Length);
+            if (!ShelterRecipe.ValidateCatalog(recipes)) throw new ArgumentException("Invalid recipe catalog.");
             this.recipe = recipe; this.material = material; this.fuel = fuel; this.moduleCost = moduleCost; this.upgradeCost = upgradeCost; this.fuelUnitSeconds = fuelUnitSeconds;
             state = new ShelterProductionSnapshot { version = 1, shelterId = id, lastProcessed = now };
         }
@@ -63,8 +75,11 @@ namespace LastSignal.Shelter
         }
         public bool ToggleGenerator()
         { if (busy || !Claimed) return false; state.generatorEnabled = !state.generatorEnabled; return true; }
-        public bool Start(InventoryContainer source)
+        public bool Start(InventoryContainer source) => Start(source, recipe.recipeId);
+        public bool Start(InventoryContainer source, string recipeId)
         {
+            var recipe = FindRecipe(recipeId);
+            if (!recipe) return false;
             if (busy || !state.workbench || state.job != null || !recipe.Valid || source == null || state.sequence == long.MaxValue ||
                 (recipe.tool && source.GetTotalQuantity(recipe.tool) < 1)) return false;
             var job = new CraftSnapshot { id = state.shelterId + ":job:" + (state.sequence + 1), recipeId = recipe.recipeId, revision = recipe.revision,
@@ -81,7 +96,7 @@ namespace LastSignal.Shelter
         {
             if (busy || state.job == null || state.job.status == CraftStatus.Running || destination == null) return false;
             bool refund = state.job.status == CraftStatus.CancelledWaitingRefund;
-            return Mutate(destination, null, 0, refund ? recipe.input : recipe.output, refund ? state.job.inputQuantity : state.job.outputQuantity, () => state.job = null);
+            return Mutate(destination, null, 0, refund ? JobRecipe.input : JobRecipe.output, refund ? state.job.inputQuantity : state.job.outputQuantity, () => state.job = null);
         }
         bool Mutate(InventoryContainer container, ItemDefinition remove, int count, ItemDefinition add, int added, Action commit)
         {
@@ -92,7 +107,7 @@ namespace LastSignal.Shelter
         public double NextBoundary(double now)
         {
             double remaining = Powered ? state.fuelSeconds : double.PositiveInfinity;
-            if (state.job != null && state.job.status == CraftStatus.Running && (!recipe.requiresPower || Powered))
+            if (state.job != null && state.job.status == CraftStatus.Running && (!JobRecipe.requiresPower || Powered))
                 remaining = Math.Min(remaining, state.job.duration - state.job.progress);
             return double.IsPositiveInfinity(remaining) ? remaining : now + Math.Max(.000001, remaining);
         }
@@ -104,7 +119,7 @@ namespace LastSignal.Shelter
             var job = state.job;
             if (job != null && job.status == CraftStatus.Running)
             {
-                job.progress = Math.Min(job.duration, job.progress + (recipe.requiresPower ? powered : dt));
+                job.progress = Math.Min(job.duration, job.progress + (JobRecipe.requiresPower ? powered : dt));
                 if (job.progress >= job.duration) job.status = CraftStatus.CompletedWaitingOutput;
             }
             state.lastProcessed = to;
@@ -115,7 +130,8 @@ namespace LastSignal.Shelter
         {
             if (!ValidSnapshot(value, now) || value.shelterId != state.shelterId) return false;
             var j = value.job;
-            return j == null || (j.recipeId == recipe.recipeId && j.revision == recipe.revision && j.inputId == recipe.input.Id.Value &&
+            var recipe = j == null ? this.recipe : FindRecipe(j.recipeId);
+            return j == null || (recipe && j.recipeId == recipe.recipeId && j.revision == recipe.revision && j.inputId == recipe.input.Id.Value &&
                 j.outputId == recipe.output.Id.Value && j.inputQuantity == recipe.inputQuantity && j.outputQuantity == recipe.outputQuantity &&
                 j.duration == recipe.durationWorldSeconds * (value.upgraded ? .5 : 1));
         }

@@ -17,9 +17,10 @@ namespace LastSignal.Tests
         WeaponController weapon;
         Animator animator;
 
+        InputFixtureIsolation.SceneScope sceneScope;
         public override void Setup()
         {
-            InputFixtureIsolation.DisableLiveActions();
+            sceneScope = new InputFixtureIsolation.SceneScope(); InputFixtureIsolation.DisableLiveActions();
             base.Setup();
             Time.timeScale = 1;
             InputSystem.AddDevice<Keyboard>();
@@ -40,7 +41,7 @@ namespace LastSignal.Tests
             if (player) Object.DestroyImmediate(player);
             Time.timeScale = 1;
             InputFixtureIsolation.DisableLiveActions();
-            base.TearDown();
+            try { base.TearDown(); } finally { sceneScope?.Dispose(); sceneScope = null; }
         }
 
         IEnumerator PrepareReload(bool empty)

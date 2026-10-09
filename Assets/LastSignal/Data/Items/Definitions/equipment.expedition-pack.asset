@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b018fff6a360e4370ad5d1882658436a, type: 3}
+  m_Name: equipment.expedition-pack
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.Inventory.Data.ItemDefinition
+  stableId:
+    id: equipment.expedition-pack
+  displayName: Sefer Çantası
+  description: "Takılınca +12 yuva. Takılıyken dayanıklılık toparlanması %15 azalır. Çıkarmak için envanterde yer gerekir."
+  category: 6
+  maxStack: 1
+  icon: {fileID: 21300000, guid: 3dfca647524a4ee397a755ac546e81d0, type: 3}
+  worldPrefab: {fileID: 407017807146552388, guid: 286c44035cd34599b5fed1859ef23b8e, type: 3}
+  use: 4
+  massGrams: 1400
+  backpackSlots: 12
+  equippedRecoveryMultiplier: 0.85

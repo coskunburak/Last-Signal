@@ -13,7 +13,7 @@ namespace LastSignal.Shelter
         public ShelterAction Action => action;
         public float UseRange => useRange;
         public bool Available => isActiveAndEnabled && loop && loop.CanUse(this);
-        public string Prompt => action == ShelterAction.Prepare ? "E — Prepare / Shelter storage" : action == ShelterAction.Leave ? "E — Leave shelter" : "E — Return to shelter";
+        public string Prompt => action == ShelterAction.Prepare ? "Prepare / Shelter storage" : action == ShelterAction.Leave ? "Leave shelter" : "Return to shelter";
         public bool TryInteract() => Available && loop.TryUse(this);
         void OnDrawGizmosSelected() { Gizmos.color = action == ShelterAction.Return ? Color.green : Color.yellow; Gizmos.DrawWireSphere(transform.position,useRange); }
     }

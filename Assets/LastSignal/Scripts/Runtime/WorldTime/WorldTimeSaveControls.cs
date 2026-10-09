@@ -10,21 +10,40 @@ namespace LastSignal.WorldTime
         [SerializeField] SaveSession saves;
         [SerializeField] SessionFlow flow;
         [SerializeField] Button saveButton, loadButton;
+        public GameObject SaveButtonRoot => saveButton ? saveButton.gameObject : null;
+        public GameObject LoadButtonRoot => loadButton ? loadButton.gameObject : null;
         [SerializeField] Text result;
         bool loading;
-        public void Configure(SaveSession service,Button save,Button load,Text feedback)
-        {saves=service;flow=service.GetComponent<SessionFlow>();saveButton=save;loadButton=load;result=feedback;}
+        float feedbackUntil;
+        string checkpointPath;
+        public void Configure(SaveSession service,Button save,Button load,Text feedback,string path = null)
+        {saves=service;flow=service.GetComponent<SessionFlow>();saveButton=save;loadButton=load;result=feedback;checkpointPath=path;}
         void OnEnable(){if(saveButton)saveButton.onClick.AddListener(Save);if(loadButton)loadButton.onClick.AddListener(Load);}
-        void OnDisable(){if(saveButton)saveButton.onClick.RemoveListener(Save);if(loadButton)loadButton.onClick.RemoveListener(Load);StopAllCoroutines();loading=false;}
+        void OnDisable(){if(saveButton)saveButton.onClick.RemoveListener(Save);if(loadButton)loadButton.onClick.RemoveListener(Load);StopAllCoroutines();loading=false;feedbackUntil=0;if(result)result.text=string.Empty;}
         void Update()
         {
-            if(!flow)return;bool visible=flow.InMenu||(flow.Paused&&!flow.PreparationOpen);
+            if(!flow)return;bool visible=flow.Screen==SessionScreen.MainMenu||flow.Screen==SessionScreen.Pause;
             saveButton.gameObject.SetActive(visible&&!flow.InMenu);loadButton.gameObject.SetActive(visible&&flow.InMenu);
             saveButton.interactable=!loading&&!flow.PlayerDead&&!flow.Restoring;loadButton.interactable=!loading;
-            result.gameObject.SetActive(visible);
+            bool feedbackVisible = Time.unscaledTime < feedbackUntil &&
+                (visible || flow.Screen == SessionScreen.Gameplay);
+            result.gameObject.SetActive(feedbackVisible || loading);
         }
-        void Save(){var outcome=saves.Save();result.text=outcome.Success?"Checkpoint saved.":outcome.Message;}
+        void ShowResult(SaveResult outcome, bool load)
+        {
+            result.text = SaveFeedback.Describe(outcome, load);
+            feedbackUntil = Time.unscaledTime + 8f;
+            result.gameObject.SetActive(true);
+        }
+        void Save(){ShowResult(saves.Save(checkpointPath), false);}
         void Load(){if(!loading&&flow.InMenu)StartCoroutine(LoadCheckpoint());}
-        IEnumerator LoadCheckpoint(){loading=true;try{yield return saves.Load();result.text=saves.LastResult.Success?"Checkpoint loaded.":saves.LastResult.Message;}finally{loading=false;}}
+        IEnumerator LoadCheckpoint()
+        {
+            loading=true;
+            result.text="Kontrol noktası yükleniyor…";
+            result.gameObject.SetActive(true);
+            try{yield return saves.Load(checkpointPath);ShowResult(saves.LastResult, true);}
+            finally{loading=false;}
+        }
     }
 }

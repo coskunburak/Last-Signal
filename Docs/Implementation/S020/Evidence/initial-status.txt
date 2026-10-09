@@ -1,0 +1,262 @@
+ M Assets/LastSignal/Data/Items/Definitions/ItemCatalog.asset
+ M Assets/LastSignal/Data/Items/Definitions/drink.water.asset
+ M Assets/LastSignal/Data/Items/Definitions/food.canned.asset
+ M Assets/LastSignal/Data/Items/Definitions/medical.bandage.asset
+ M Assets/LastSignal/Scenes/Production/S013Cabin.unity
+ M Assets/LastSignal/Scripts/Editor/S013/S013ProductionAuthoring.cs
+ M Assets/LastSignal/Scripts/Runtime/Audio/AudioPreferences.cs
+ M Assets/LastSignal/Scripts/Runtime/Audio/AudioSettingsView.cs
+ M Assets/LastSignal/Scripts/Runtime/Combat/IDamageable.cs
+ M Assets/LastSignal/Scripts/Runtime/Combat/MeleeWeaponController.cs
+ M Assets/LastSignal/Scripts/Runtime/Combat/PlayerCombatController.cs
+ M Assets/LastSignal/Scripts/Runtime/Combat/WeaponController.cs
+ M Assets/LastSignal/Scripts/Runtime/Interaction/DoorInteractable.cs
+ M Assets/LastSignal/Scripts/Runtime/Interaction/InteractionController.cs
+ M Assets/LastSignal/Scripts/Runtime/Inventory/Data/ItemDefinition.cs
+ M Assets/LastSignal/Scripts/Runtime/Inventory/InventoryContainer.cs
+ M Assets/LastSignal/Scripts/Runtime/Inventory/PlayerInventory.cs
+ M Assets/LastSignal/Scripts/Runtime/Inventory/UI/InventorySlotUI.cs
+ M Assets/LastSignal/Scripts/Runtime/Inventory/UI/InventoryUI.cs
+ M Assets/LastSignal/Scripts/Runtime/Inventory/WorldItem.cs
+ M Assets/LastSignal/Scripts/Runtime/Objectives/RelayMission.cs
+ M Assets/LastSignal/Scripts/Runtime/Persistence/SaveCodec.cs
+ M Assets/LastSignal/Scripts/Runtime/Persistence/SaveGame.cs
+ M Assets/LastSignal/Scripts/Runtime/Persistence/SaveSession.cs
+ M Assets/LastSignal/Scripts/Runtime/Persistence/SaveValidation.cs
+ M Assets/LastSignal/Scripts/Runtime/Player/FirstPersonLook.cs
+ M Assets/LastSignal/Scripts/Runtime/Player/PlayerHealth.cs
+ M Assets/LastSignal/Scripts/Runtime/Player/PlayerInputReader.Vehicle.cs
+ M Assets/LastSignal/Scripts/Runtime/Player/PlayerInputReader.cs
+ M Assets/LastSignal/Scripts/Runtime/Player/PlayerStamina.cs
+ M Assets/LastSignal/Scripts/Runtime/Session/AcceptanceHud.cs
+ M Assets/LastSignal/Scripts/Runtime/Session/SessionFlow.cs
+ M Assets/LastSignal/Scripts/Runtime/Shelter/ShelterPoint.cs
+ M Assets/LastSignal/Scripts/Runtime/Shelter/ShelterSite.cs
+ M Assets/LastSignal/Scripts/Runtime/Shelter/ShelterSlotUI.cs
+ M Assets/LastSignal/Scripts/Runtime/Shelter/ShelterSocket.cs
+ M Assets/LastSignal/Scripts/Runtime/Shelter/ShelterStorage.cs
+ M Assets/LastSignal/Scripts/Runtime/Shelter/ShelterStorageUI.cs
+ M Assets/LastSignal/Scripts/Runtime/Vehicles/VehicleActor.cs
+ M Assets/LastSignal/Scripts/Runtime/Vehicles/VehicleAudioPresenter.cs
+ M Assets/LastSignal/Scripts/Runtime/Vehicles/VehicleResources.cs
+ M Assets/LastSignal/Scripts/Runtime/Vehicles/VehicleServicePoint.cs
+ M Assets/LastSignal/Scripts/Runtime/WorldCells/CellPortal.cs
+ M Assets/LastSignal/Scripts/Runtime/WorldTime/RestPoint.cs
+ M Assets/LastSignal/Scripts/Runtime/WorldTime/WorldClock.cs
+ M Assets/LastSignal/Scripts/Runtime/WorldTime/WorldTimeSaveControls.cs
+ M Assets/LastSignal/Scripts/Tests/EditMode/S015AudioTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/CombatAcceptanceTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/InputFixtureIsolation.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/Loot/LootCompatibilityTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/Loot/LootPopulationTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/MovementAcceptanceTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/RuntimeSmokeTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/S014WeaponPresentationTests.cs
+ M Assets/LastSignal/Scripts/Tests/PlayMode/ScopeOpticPlayTests.cs
+ M Assets/LastSignal/Settings/Input/InputSystem_Actions.inputactions
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/backstep-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/death-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-commit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-next-windup-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/hit-start-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/motor-sidestep-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-approach-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/normal-hit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackCommit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/pause-AttackWindup-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/rear-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/restart-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/restart-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/sidestep-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-contact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/regression-P3/visual/wall-recovery-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-peak-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/body-hit-react-start-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-final-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/corpse-inactive-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/death-middle-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/head-shot-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Attack-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-HitReact-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-Locomotion-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/layout-idle-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackCommit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-AttackWindup-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-Recovering-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/lethal-body-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-body-reaction-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-chase-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-complete-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-dodge-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-lethal-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/loop-player-hit-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/new-session-alive-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/new-session-alive-side.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-fps.png
+ M Docs/Implementation/S004/Evidence/20260919-P4/visual/reaction-recovered-side.png
+ M Docs/Implementation/S014/S014_VERIFICATION_HANDOFF.md
+ M Docs/Implementation/S014/S014_WORKING_LEDGER.md
+ M Docs/Implementation/VEH-001/STATUS.md
+ M Docs/Implementation/VEH-001/VEHICLE_INFECTED_IMPACT.md
+ M Docs/Last_Signal_Production_Plan_v1.0_TR/sprints/S018.md
+ M ProjectSettings/ProjectSettings.asset
+?? Assets/LastSignal/Art/S019Import.meta
+?? Assets/LastSignal/Art/S019Import/
+?? Assets/LastSignal/Data/Items/Definitions/equipment.field-pack.asset
+?? Assets/LastSignal/Data/Items/Definitions/equipment.field-pack.asset.meta
+?? Assets/LastSignal/Data/S019.meta
+?? Assets/LastSignal/Data/S019/
+?? Assets/LastSignal/Prefabs/Items/equipment.field-pack.prefab
+?? Assets/LastSignal/Prefabs/Items/equipment.field-pack.prefab.meta
+?? Assets/LastSignal/Prefabs/S019.meta
+?? Assets/LastSignal/Prefabs/S019/
+?? Assets/LastSignal/Resources.meta
+?? Assets/LastSignal/Resources/
+?? Assets/LastSignal/Scenes/S019.meta
+?? Assets/LastSignal/Scenes/S019/
+?? Assets/LastSignal/Scripts/Editor/S019.meta
+?? Assets/LastSignal/Scripts/Editor/S019/
+?? Assets/LastSignal/Scripts/Runtime/Authoring.meta
+?? Assets/LastSignal/Scripts/Runtime/Authoring/
+?? Assets/LastSignal/Scripts/Runtime/Input.meta
+?? Assets/LastSignal/Scripts/Runtime/Input/
+?? Assets/LastSignal/Scripts/Runtime/Inventory/UI/InventoryViewFactory.cs
+?? Assets/LastSignal/Scripts/Runtime/Inventory/UI/InventoryViewFactory.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Persistence/SaveFeedback.cs
+?? Assets/LastSignal/Scripts/Runtime/Persistence/SaveFeedback.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Player/PlayerSurvival.cs
+?? Assets/LastSignal/Scripts/Runtime/Player/PlayerSurvival.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Player/SurvivalState.cs
+?? Assets/LastSignal/Scripts/Runtime/Player/SurvivalState.cs.meta
+?? Assets/LastSignal/Scripts/Runtime/Session/ProductionUiFont.cs
+?? Assets/LastSignal/Scripts/Runtime/Session/ProductionUiFont.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/S016SaveFeedbackTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/S016SaveFeedbackTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/S016SettingsTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/S016SettingsTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/S017InputSettingsTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/S017InputSettingsTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/S017PolicyTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/S017PolicyTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/S018SurvivalTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/S018SurvivalTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/S019ContentToolsTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/S019ContentToolsTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/EditMode/S019ProductionAuthoringTests.cs
+?? Assets/LastSignal/Scripts/Tests/EditMode/S019ProductionAuthoringTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016InteractionTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016InteractionTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016ModalTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016ModalTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016PauseTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016PauseTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016ReadabilityTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016ReadabilityTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016SaveFeedbackPlayTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016SaveFeedbackPlayTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016SettingsPlayTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S016SettingsPlayTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S017InputFlowTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S017InputFlowTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S017ProfileIsolation.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S017ProfileIsolation.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S018SurvivalPlayTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S018SurvivalPlayTests.cs.meta
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S019PilotPlayTests.cs
+?? Assets/LastSignal/Scripts/Tests/PlayMode/S019PilotPlayTests.cs.meta
+?? Assets/LastSignal/Settings/S019Import.meta
+?? Assets/LastSignal/Settings/S019Import/
+?? Assets/Noto_Sans.meta
+?? Assets/Noto_Sans/
+?? Assets/kenney_input-prompts_1.5.meta
+?? Assets/kenney_input-prompts_1.5/
+?? Docs/Implementation/S012/Evidence/20261006T212111-404032Z/
+?? Docs/Implementation/S012/Evidence/20261006T212424-021784Z/
+?? Docs/Implementation/S012/Evidence/20261006T212442-678052Z/
+?? Docs/Implementation/S012/Evidence/20261006T212604-884980Z/
+?? Docs/Implementation/S012/Evidence/20261006T212629-370399Z/
+?? Docs/Implementation/S012/Evidence/20261006T212838-694389Z/
+?? Docs/Implementation/S012/Evidence/20261006T214235-697780Z/
+?? Docs/Implementation/S012/Evidence/20261007T083234-767972Z/
+?? Docs/Implementation/S012/Evidence/20261007T083351-819066Z/
+?? Docs/Implementation/S012/Evidence/20261007T083500-106085Z/
+?? Docs/Implementation/S012/Evidence/20261007T083600-807050Z/
+?? Docs/Implementation/S012/Evidence/20261007T083728-668665Z/
+?? Docs/Implementation/S012/Evidence/20261007T085752-806009Z/
+?? Docs/Implementation/S012/Evidence/20261007T085925-363070Z/
+?? Docs/Implementation/S012/Evidence/20261007T093453-867440Z/
+?? Docs/Implementation/S012/Evidence/20261007T093558-706063Z/
+?? Docs/Implementation/S014/Evidence/20261006T213705-603649Z-closure/
+?? Docs/Implementation/S014/Evidence/20261007T083651-048431Z-art-edit/
+?? Docs/Implementation/S014/Evidence/20261007T085519-615708Z-population-pc/
+?? Docs/Implementation/S014/Evidence/20261007T090154-796032Z-population-pc/
+?? Docs/Implementation/S014/Evidence/20261007T091601-579186Z-population-low/
+?? Docs/Implementation/S014/Evidence/20261007T092326-848447Z-live-weapons/
+?? Docs/Implementation/S014/Evidence/20261007T092418-434573Z-population-summary/
+?? Docs/Implementation/S014/Evidence/20261007T092515-077505Z-live-zombie/
+?? Docs/Implementation/S014/Evidence/20261007T092619-939017Z-live-reload/
+?? Docs/Implementation/S014/Evidence/20261007T093317-349072Z-live-movement-door/
+?? Docs/Implementation/S014/Evidence/20261007T093454-990724Z-final-art/
+?? Docs/Implementation/S014/S014_D139_PERFORMANCE.md
+?? Docs/Implementation/S014/S014_FINAL_CLOSURE.md
+?? Docs/Implementation/S016/
+?? Docs/Implementation/S017/
+?? Docs/Implementation/S018/
+?? Docs/Implementation/S019/
+?? Docs/Implementation/S020/
+?? Docs/Implementation/VEH-001/Evidence/20261006T212111-345894Z-focused/
+?? Docs/Implementation/VEH-001/Evidence/20261006T212423-976690Z-zombie/
+?? Docs/Implementation/VEH-001/VEHICLE_CRUSH_FEEL.md
+?? Tools/s014-population-summary.py
+?? Tools/s014-population.py
+?? Tools/s016-verify.py
+?? Tools/s017-verify.py
+?? Tools/s018-evidence.py
+?? Tools/s019-author.py
+?? Tools/s019-verify.py
+?? Tools/tests/

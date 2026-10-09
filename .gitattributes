@@ -159,6 +159,10 @@ Packages/packages-lock.json linguist-generated
 # Documents
 *.pdf                   lfs
 
+# Unity verification evidence: logs and profiler captures can exceed Git limits.
+Docs/Implementation/**/Evidence/**/*.log lfs
+Docs/Implementation/**/Evidence/**/*.raw lfs
+
 # ETC
 *.a                     lfs
 *.reason                lfs

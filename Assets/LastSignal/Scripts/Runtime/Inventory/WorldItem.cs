@@ -43,6 +43,8 @@ namespace LastSignal.Inventory
             
             var playerInventory = FindObjectOfType<PlayerInventory>();
             if (playerInventory == null) return false;
+            var health = playerInventory.GetComponent<PlayerHealth>();
+            if (health && !health.IsAlive) return false;
 
             LastSignal.Persistence.OwnershipTransaction.Enter();
             try

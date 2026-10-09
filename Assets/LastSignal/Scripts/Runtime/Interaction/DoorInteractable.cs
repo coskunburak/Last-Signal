@@ -17,7 +17,7 @@ namespace LastSignal
         public bool Obstructed { get; private set; }
         public int AcceptedRequests { get; private set; }
         public bool Available => isActiveAndEnabled && !Busy;
-        public string Prompt => IsOpen ? "E — Kapat" : "E — Aç";
+        public string Prompt => IsOpen ? "Kapat" : "Aç";
         public void Configure(Transform pivot, BoxCollider collider) { hinge = pivot; leaf = collider; }
         void Awake()
         {

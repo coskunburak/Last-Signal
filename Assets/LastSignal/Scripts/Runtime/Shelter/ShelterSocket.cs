@@ -21,7 +21,7 @@ namespace LastSignal.Shelter
             }
         }
         public bool Available => isActiveAndEnabled && site && site.CanAccess(transform, false);
-        public string Prompt => "E — " + module + " socket / shelter production";
+        public string Prompt => "" + module + " socket / shelter production";
         public bool TryInteract() => Available && site.Open(this);
     }
 }

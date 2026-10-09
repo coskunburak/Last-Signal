@@ -1,0 +1,426 @@
+{
+  "revision": "s020-rc1",
+  "implementation": "PARTIAL",
+  "verification": "PARTIAL: targeted and full EditMode/PlayMode plus Development build PASS with unchanged sources; manual gameplay and production world art pending",
+  "releaseAcceptance": "NOT_RUN; D197 production world art incomplete",
+  "headBefore": "7f5ffb783f396f9675c28da18be7021d90a02eb7",
+  "unity": "6000.5.0f1",
+  "existingDefinitions": 10,
+  "newDefinitions": 7,
+  "runtimeDefinitions": 17,
+  "selectedRecipes": 4,
+  "newRecipes": 3,
+  "modifiedLootProfiles": 3,
+  "newLootProfiles": 3,
+  "candidateDecisions": {
+    "EXISTING": 8,
+    "NEW": 6,
+    "DEFERRED": 55,
+    "REJECTED": 3
+  },
+  "fingerprintFormat": 2,
+  "saveSchemaConstant": 2,
+  "productionSceneSaveSchema": 4,
+  "survivalExtension": 1,
+  "craftExtension": 1,
+  "saveContentVersion": "UNCHANGED; see scene",
+  "items": [
+    {
+      "id": "weapon.crowbar",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/Crowbar.asset",
+      "guid": "50964231c97194d2d978cdbb8c4b6623",
+      "massGrams": 1800,
+      "maxStack": 1,
+      "new": false
+    },
+    {
+      "id": "ammo.rifle",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/ammo.rifle.asset",
+      "guid": "0f5e06eb56ca44fab8bbe72a5a6f347c",
+      "massGrams": 12,
+      "maxStack": 60,
+      "new": false
+    },
+    {
+      "id": "drink.soda",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/drink.soda.asset",
+      "guid": "c42af561b7424cd781b24f915b956d11",
+      "massGrams": 350,
+      "maxStack": 3,
+      "new": true
+    },
+    {
+      "id": "drink.water",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/drink.water.asset",
+      "guid": "9137df922140843a78a7367b0fc5bcac",
+      "massGrams": 530,
+      "maxStack": 3,
+      "new": false
+    },
+    {
+      "id": "equipment.expedition-pack",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/equipment.expedition-pack.asset",
+      "guid": "3cdc33bf3c4446d6868d67c5c034893c",
+      "massGrams": 1400,
+      "maxStack": 1,
+      "new": true
+    },
+    {
+      "id": "equipment.field-pack",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/equipment.field-pack.asset",
+      "guid": "533e4fa492e64a359799a24d1673f160",
+      "massGrams": 700,
+      "maxStack": 1,
+      "new": false
+    },
+    {
+      "id": "food.canned",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/food.canned.asset",
+      "guid": "df8d36b41cfba49839fdc8c0071ecbbe",
+      "massGrams": 450,
+      "maxStack": 3,
+      "new": false
+    },
+    {
+      "id": "food.crackers",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/food.crackers.asset",
+      "guid": "ce726d6c069e4fd0b557dee5bc8a4ff4",
+      "massGrams": 180,
+      "maxStack": 4,
+      "new": true
+    },
+    {
+      "id": "fuel.generator",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/fuel.generator.asset",
+      "guid": "efd510ea267684b2d83e700232a4bb0e",
+      "massGrams": 1600,
+      "maxStack": 4,
+      "new": false
+    },
+    {
+      "id": "material.cloth",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/material.cloth.asset",
+      "guid": "bf15cd6bf4b847d8aadef9db304f39f9",
+      "massGrams": 50,
+      "maxStack": 10,
+      "new": true
+    },
+    {
+      "id": "material.scrap",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/material.scrap.asset",
+      "guid": "01f501e27c7804c5690b989fc75727d1",
+      "massGrams": 250,
+      "maxStack": 20,
+      "new": false
+    },
+    {
+      "id": "medical.bandage",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/medical.bandage.asset",
+      "guid": "fd04ab48c416d4f51bb5ea172ce3f968",
+      "massGrams": 50,
+      "maxStack": 5,
+      "new": false
+    },
+    {
+      "id": "medical.pressure-dressing",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/medical.pressure-dressing.asset",
+      "guid": "fe5aee4fcd404e788c1e22862869fb2a",
+      "massGrams": 90,
+      "maxStack": 3,
+      "new": true
+    },
+    {
+      "id": "medical.rag",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/medical.rag.asset",
+      "guid": "74f807afa9e541758f66ba57fcba16a7",
+      "massGrams": 60,
+      "maxStack": 5,
+      "new": true
+    },
+    {
+      "id": "quest.relay-fuse",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/quest.relay-fuse.asset",
+      "guid": "514f16480354543ab924b92f15597b4e",
+      "massGrams": 150,
+      "maxStack": 1,
+      "new": false
+    },
+    {
+      "id": "tool.sewing-kit",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/tool.sewing-kit.asset",
+      "guid": "2c35279dcf014bd4b50dd0fc3a13c05a",
+      "massGrams": 100,
+      "maxStack": 1,
+      "new": true
+    },
+    {
+      "id": "tool.wrench",
+      "asset": "Assets/LastSignal/Data/Items/Definitions/tool.wrench.asset",
+      "guid": "312c836bde3c844d393bfc00573b739c",
+      "massGrams": 450,
+      "maxStack": 1,
+      "new": false
+    }
+  ],
+  "recipes": [
+    {
+      "id": "recipe.bench.expedition-pack",
+      "asset": "Assets/LastSignal/Data/Shelter/ExpeditionPack.asset",
+      "revision": 1
+    },
+    {
+      "id": "recipe.bench.rag",
+      "asset": "Assets/LastSignal/Data/Shelter/Rag.asset",
+      "revision": 1
+    },
+    {
+      "id": "recipe.rifle-ammunition",
+      "asset": "Assets/LastSignal/Data/Shelter/RifleAmmunition.asset",
+      "revision": 1
+    },
+    {
+      "id": "recipe.bench.sewing-kit",
+      "asset": "Assets/LastSignal/Data/Shelter/SewingKit.asset",
+      "revision": 1
+    }
+  ],
+  "lootProfiles": [
+    {
+      "name": "Kitchen",
+      "asset": "Assets/LastSignal/Data/Loot/Profiles/Kitchen.asset",
+      "emptyBasisPoints": 2850,
+      "entries": [
+        {
+          "id": "drink.water",
+          "weight": 40,
+          "min": 1,
+          "max": 2,
+          "probability": 0.26
+        },
+        {
+          "id": "food.canned",
+          "weight": 30,
+          "min": 1,
+          "max": 2,
+          "probability": 0.19500000000000003
+        },
+        {
+          "id": "food.crackers",
+          "weight": 20,
+          "min": 1,
+          "max": 2,
+          "probability": 0.13
+        },
+        {
+          "id": "drink.soda",
+          "weight": 10,
+          "min": 1,
+          "max": 2,
+          "probability": 0.065
+        },
+        {
+          "id": "medical.bandage",
+          "weight": 10,
+          "min": 1,
+          "max": 1,
+          "probability": 0.065
+        }
+      ]
+    },
+    {
+      "name": "Clinic",
+      "asset": "Assets/LastSignal/Data/Loot/Profiles/Clinic.asset",
+      "emptyBasisPoints": 2000,
+      "entries": [
+        {
+          "id": "medical.bandage",
+          "weight": 135,
+          "min": 1,
+          "max": 2,
+          "probability": 0.675
+        },
+        {
+          "id": "drink.water",
+          "weight": 15,
+          "min": 1,
+          "max": 1,
+          "probability": 0.075
+        },
+        {
+          "id": "medical.pressure-dressing",
+          "weight": 10,
+          "min": 1,
+          "max": 1,
+          "probability": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Workshop",
+      "asset": "Assets/LastSignal/Data/Loot/Profiles/Workshop.asset",
+      "emptyBasisPoints": 3500,
+      "entries": [
+        {
+          "id": "material.scrap",
+          "weight": 80,
+          "min": 1,
+          "max": 4,
+          "probability": 0.52
+        },
+        {
+          "id": "tool.wrench",
+          "weight": 10,
+          "min": 1,
+          "max": 1,
+          "probability": 0.065
+        },
+        {
+          "id": "material.cloth",
+          "weight": 7,
+          "min": 2,
+          "max": 4,
+          "probability": 0.0455
+        },
+        {
+          "id": "tool.sewing-kit",
+          "weight": 3,
+          "min": 1,
+          "max": 1,
+          "probability": 0.019500000000000003
+        }
+      ]
+    },
+    {
+      "name": "S020-StartingWater",
+      "asset": "Assets/LastSignal/Data/Loot/Profiles/S020-StartingWater.asset",
+      "emptyBasisPoints": 0,
+      "entries": [
+        {
+          "id": "drink.water",
+          "weight": 1,
+          "min": 1,
+          "max": 1,
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "name": "S020-StartingBandage",
+      "asset": "Assets/LastSignal/Data/Loot/Profiles/S020-StartingBandage.asset",
+      "emptyBasisPoints": 0,
+      "entries": [
+        {
+          "id": "medical.bandage",
+          "weight": 1,
+          "min": 1,
+          "max": 1,
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "name": "S020-WorkshopCloth",
+      "asset": "Assets/LastSignal/Data/Loot/Profiles/S020-WorkshopCloth.asset",
+      "emptyBasisPoints": 0,
+      "entries": [
+        {
+          "id": "material.cloth",
+          "weight": 1,
+          "min": 32,
+          "max": 32,
+          "probability": 1.0
+        }
+      ]
+    }
+  ],
+  "missingExternalDependencies": [],
+  "provisionalWorldArt": [
+    "food.crackers",
+    "drink.soda",
+    "medical.rag",
+    "medical.pressure-dressing",
+    "material.cloth",
+    "tool.sewing-kit",
+    "equipment.expedition-pack"
+  ],
+  "limitations": [
+    "Capacity is slot-based. Gram totals are informational, including equipped pack; no generic mass pickup limit or movement bands.",
+    "Condition repair, clothing protection, contamination, liquid-volume/charges deferred.",
+    "Consumed legacy loot remains consumed. New essentials do not refill already-generated legacy worlds.",
+    "No Unity import, compilation, test, build or gameplay acceptance has been run by agent."
+  ],
+  "testEvidence": {
+    "editModeE01": {
+      "path": "Evidence/Manual-20261009-153811-s020-edit-kcro6v0m",
+      "tests": "32/32 PASS",
+      "unityExitCode": 0,
+      "gate": "FAIL",
+      "reason": "ProjectSettings scripting define SENTIS_ANALYTICS_ENABLED removed during Unity run",
+      "next": "User rerun s020-edit without reopening Editor"
+    },
+    "playMode": {
+      "path": "Evidence/Manual-20261009-155404-s020-play-bf9ev5qk",
+      "tests": "9/9 PASS",
+      "unityExitCode": 0,
+      "gate": "PASS",
+      "changed": []
+    },
+    "regression": {
+      "editMode": {
+        "path": "Evidence/Manual-20261009-163835-regression-edit-ry5mgy5g",
+        "tests": "636/636 PASS",
+        "assemblies": {
+          "LastSignal.EditModeTests": 626,
+          "LastSignal.Art.EditorTests": 10
+        },
+        "unityExitCode": 0,
+        "gate": "PASS",
+        "changed": []
+      },
+      "playMode": {
+        "path": "Evidence/Manual-20261009-164315-regression-play-7esoa_ph",
+        "tests": "324/324 PASS",
+        "assembly": "LastSignal.PlayModeTests",
+        "unityExitCode": 0,
+        "gate": "PASS",
+        "changed": [],
+        "durationSeconds": 850.8179145
+      }
+    },
+    "build": {
+      "path": "Evidence/Manual-20261009-170502-development-build-tx15ul32",
+      "output": "Builds/S020/Manual-20261009-170502-development-build-tx15ul32",
+      "technicalResult": "Succeeded",
+      "errors": 0,
+      "warnings": 347,
+      "unityExitCode": 0,
+      "gate": "PASS",
+      "changed": [],
+      "cleanCache": false,
+      "durationSeconds": 12.292244,
+      "runtime": "NOT_RUN"
+    },
+    "editModeE02": {
+      "path": "Evidence/Manual-20261009-155328-s020-edit-r1k8ag56",
+      "tests": "32/32 PASS",
+      "unityExitCode": 0,
+      "gate": "PASS",
+      "changed": []
+    },
+    "next": "User manual gameplay acceptance in S013Cabin; D197 production world art remains incomplete",
+    "buildB01": {
+      "path": "Evidence/Manual-20261009-170215-development-build-8gr_4xou",
+      "output": "Builds/S020/Manual-20261009-170215-development-build-8gr_4xou",
+      "technicalResult": "Succeeded",
+      "errors": 0,
+      "warnings": 381,
+      "unityExitCode": 0,
+      "gate": "FAIL",
+      "changed": [
+        "ProjectSettings/ProjectSettings.asset"
+      ],
+      "reason": "SENTIS_ANALYTICS_ENABLED added during run",
+      "runtime": "NOT_RUN"
+    }
+  }
+}

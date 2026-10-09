@@ -1,0 +1,41 @@
+RUN=/Users/burakcoskun/Last Signal/Docs/Implementation/S017/Evidence/20261008T092103-722355Z-regression-play
+FAIL: Koşu sırasında kaynak değişti: ProjectSettings/ProjectSettings.asset
+LastSignal.Tests.R01CombatPlayTests.RealInputSwitchCancelSoakAndSaveLoad Failed TearDown : Unhandled log message: '[Exception] IndexOutOfRangeException: Index was outside the bounds of the array.'. Use UnityEngine.TestTools.LogAssert.Expect
+UnityEngine.InputSystem.InputManager.AddStateChangeMonitor (UnityEngine.InputSystem.InputControl control, UnityEngine.InputSystem.LowLevel.IInputStateChangeMonitor monitor, System.Int64 monitorIndex, System.UInt32 groupIndex) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/InputManagerStateMonitors.cs:31)
+UnityEngine.InputSystem.InputActionState.EnableControls (System.Int32 mapIndex, System.Int32 controlStartIndex, System.Int32 numControls) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1169)
+UnityEngine.InputSystem.InputActionState.EnableControls (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:1031)
+UnityEngine.InputSystem.InputActionState.EnableSingleAction (UnityEngine.InputSystem.InputAction action) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputActionState.cs:984)
+UnityEngine.InputSystem.InputAction.Enable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs:922)
+UnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableInputAction (UnityEngine.InputSystem.InputActionReference inputActionReference) (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1749)
+UnityEngine.InputSystem.UI.InputSystemUIInputModule.EnableAllActions () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1704)
+UnityEngine.InputSystem.UI.InputSystemUIInputModule.OnEnable () (at ./Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/UI/InputSystemUIInputModule.cs:1652)
+UnityEngine.Behaviour:set_enabled(Boolean)
+LastSignal.SessionInput:OnDisable() (at Assets/LastSignal/Scripts/Runtime/Input/SessionInput.cs:271)
+UnityEngine.Object:DestroyImmediate(Object)
+LastSignal.Tests.R01CombatPlayTests:TearDown() (at Assets/LastSignal/Scripts/Tests/PlayMode/R01CombatPlayTests.cs:25)
+System.Reflection.MethodBase:Invoke(Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object)
+UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr) (at /Users/bokken/build/output/unity/unity/Runtime/Export/Scripting/Coroutines.cs:17)
+
+
+LastSignal.Tests.ScopeOpticPlayTests.AdsAllocatesOnceAndDoesNotChangeAmmo Failed   Expected: True
+  But was:  False
+
+at LastSignal.Tests.ScopeOpticPlayTests+<AdsAllocatesOnceAndDoesNotChangeAmmo>d__4.MoveNext () [0x000c7] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/ScopeOpticPlayTests.cs:32
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+
+LastSignal.Tests.ScopeOpticPlayTests.HeldAimResumesWhenCombatControllerReenables Failed   Expected: greater than 0.899999976f
+  But was:  0.0f
+
+at LastSignal.Tests.ScopeOpticPlayTests+<HeldAimResumesWhenCombatControllerReenables>d__5.MoveNext () [0x000c5] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/ScopeOpticPlayTests.cs:59
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+
+LastSignal.Tests.ScopeOpticPlayTests.UnequipReleasesScopeCameraAndRenderTexture Failed   Expected: True
+  But was:  False
+
+at LastSignal.Tests.ScopeOpticPlayTests+<UnequipReleasesScopeCameraAndRenderTexture>d__6.MoveNext () [0x00096] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/ScopeOpticPlayTests.cs:72
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+
+{"id": "2", "testcasecount": "306", "result": "Failed(Child)", "total": "306", "passed": "302", "failed": "4", "inconclusive": "0", "skipped": "0", "asserts": "0", "engine-version": "3.5.0.0", "clr-version": "4.0.30319.42000", "start-time": "2026-10-08 09:21:44Z", "end-time": "2026-10-08 09:35:06Z", "duration": "802.0024662"}
+FAIL — test keşfi ve unity.log dahil sonucu paylaş.

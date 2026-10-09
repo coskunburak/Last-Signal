@@ -8,6 +8,7 @@ namespace LastSignal
         [SerializeField] MeleeWeaponDefinition definition;
         [SerializeField] Transform meleeOrigin;
         PlayerInputReader input; PlayerHealth health; PlayerStamina stamina;
+        PlayerSurvival survival;
         Transform eye; GameObject player;
         readonly MeleeAttackResolver resolver = new MeleeAttackResolver();
         public MeleeAttackState Simulation { get; private set; }
@@ -23,11 +24,12 @@ namespace LastSignal
         public event Action AttackCommitted;
         public event Action ImpactCommitted;
         public bool Allowed => isActiveAndEnabled && player && player.activeInHierarchy && Time.timeScale > 0 &&
-            (!input || input.GameplayActive) && (!health || health.IsAlive);
+            (!input || input.GameplayActive) && (!health || health.IsAlive) && (!survival || !survival.ApplyingTreatment);
         public void Initialize(GameObject owner, Transform camera)
         {
             player=owner; eye=camera;
             stamina=owner.GetComponent<PlayerStamina>(); input=owner.GetComponent<PlayerInputReader>(); health=owner.GetComponent<PlayerHealth>();
+            survival=owner.GetComponent<PlayerSurvival>();
             Simulation=new MeleeAttackState(definition);
             Simulation.ActiveWindow += Resolve;
         }

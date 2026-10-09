@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-09 06:27:33Z" end-time="2026-10-09 06:27:35Z" duration="1.9204729">
+  <test-suite type="TestSuite" id="1378" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="315" result="Failed" site="Child" start-time="2026-10-09 06:27:33Z" end-time="2026-10-09 06:27:35Z" duration="1.920473" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1371" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="315" result="Failed" site="Child" start-time="2026-10-09 06:27:33Z" end-time="2026-10-09 06:27:35Z" duration="1.911420" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="38120" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1372" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="315" result="Failed" site="Child" start-time="2026-10-09 06:27:33Z" end-time="2026-10-09 06:27:35Z" duration="1.907182" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="SetUpFixture" id="1191" name="Tests" fullname="LastSignal.Tests.S017ProfileIsolation" classname="LastSignal.Tests.S017ProfileIsolation" runstate="Runnable" testcasecount="315" result="Failed" site="Child" start-time="2026-10-09 06:27:33Z" end-time="2026-10-09 06:27:35Z" duration="1.904930" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1201" name="S019PilotPlayTests" fullname="LastSignal.Tests.S019PilotPlayTests" classname="LastSignal.Tests.S019PilotPlayTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-09 06:27:33Z" end-time="2026-10-09 06:27:35Z" duration="1.895104" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1202" name="PilotLootConsumptionAndInventorySurviveSaveLoad" fullname="LastSignal.Tests.S019PilotPlayTests.PilotLootConsumptionAndInventorySurviveSaveLoad" methodname="PilotLootConsumptionAndInventorySurviveSaveLoad" classname="LastSignal.Tests.S019PilotPlayTests" runstate="Runnable" seed="1445921457" result="Failed" start-time="2026-10-09 06:27:33Z" end-time="2026-10-09 06:27:35Z" duration="1.886126" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Workshop loot
+  Expected: Spawned
+  But was:  Blocked
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.S019PilotPlayTests+<PilotLootConsumptionAndInventorySurviveSaveLoad>d__7.MoveNext () [0x000d2] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/S019PilotPlayTests.cs:46
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot '1bfca022fd234cc5a5c0c82883021d3e': Missing flat support at authored height (2 cm tolerance).
+S006 loot 'b002936525194447be015115fdcbf627': Missing flat support at authored height (2 cm tolerance).
+S006 loot seed=12345 resolved=22 generated=14
+S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

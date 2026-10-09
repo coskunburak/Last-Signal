@@ -13,9 +13,10 @@ namespace LastSignal.Tests
         Mouse mouse;
         Keyboard keyboard;
 
+        InputFixtureIsolation.SceneScope sceneScope;
         public override void Setup()
         {
-            InputFixtureIsolation.DisableLiveActions();
+            sceneScope = new InputFixtureIsolation.SceneScope(); InputFixtureIsolation.DisableLiveActions();
             base.Setup();
             Time.timeScale = 1;
             mouse = InputSystem.AddDevice<Mouse>();
@@ -26,7 +27,7 @@ namespace LastSignal.Tests
         {
             InputFixtureIsolation.DisableLiveActions();
             Time.timeScale = 1;
-            base.TearDown();
+            try { base.TearDown(); } finally { sceneScope?.Dispose(); sceneScope = null; }
         }
 
         [UnityTest]

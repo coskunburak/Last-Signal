@@ -13,6 +13,8 @@ namespace LastSignal
         public bool Exhausted { get; private set; }
         public bool CanSprint => !Exhausted && CurrentStamina > 0;
         public float RegenDelayRemaining { get; private set; }
+        float recoveryMultiplier = 1;
+        public void SetRecoveryMultiplier(float value) => recoveryMultiplier = float.IsFinite(value) ? Mathf.Clamp(value, .1f, 1) : 1;
         public bool CanSpend(float amount) => float.IsFinite(amount) && amount >= 0 && CurrentStamina >= amount;
         public bool TrySpend(float amount)
         {
@@ -34,7 +36,7 @@ namespace LastSignal
             }
             float delayed = Mathf.Min(seconds, RegenDelayRemaining);
             RegenDelayRemaining -= delayed;
-            CurrentStamina = Mathf.Min(Maximum, CurrentStamina + RegenRate * (seconds - delayed));
+            CurrentStamina = Mathf.Min(Maximum, CurrentStamina + RegenRate * recoveryMultiplier * (seconds - delayed));
             if (CurrentStamina >= ResumeThreshold) Exhausted = false;
         }
         public void Restore(float value, bool exhausted = false, float delay = RegenDelay)

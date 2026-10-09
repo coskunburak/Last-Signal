@@ -11,6 +11,8 @@ namespace LastSignal.Inventory
         internal InventoryContainer Container => container ?? (container = new InventoryContainer(capacity));
         public event Action InventoryChanged { add => Container.InventoryChanged += value; remove => Container.InventoryChanged -= value; }
         public int Capacity => Container.Capacity;
+        public long TotalMassGrams => Container.TotalMassGrams;
+        public long Revision => Container.Revision;
         void Awake() { var initialized = Container; }
         public void Initialize(int newCapacity) { Container.Initialize(newCapacity); capacity = Container.Capacity; }
         public InventorySlot GetSlot(int index) => Container.GetSlot(index);
