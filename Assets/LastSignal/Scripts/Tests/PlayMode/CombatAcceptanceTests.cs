@@ -7,7 +7,7 @@ using UnityEngine.TestTools;
 
 namespace LastSignal.Tests
 {
-    public class CombatAcceptanceTests : InputTestFixture
+    public class CombatAcceptanceTests
     {
         Mouse mouse;
         Keyboard keyboard;
@@ -17,13 +17,17 @@ namespace LastSignal.Tests
         DamageableTarget target10m;
         readonly System.Collections.Generic.List<GameObject> sceneFixtures = new System.Collections.Generic.List<GameObject>();
 
-        public override void Setup()
+        InputFixtureIsolation.SceneScope sceneScope;
+        InputFixtureIsolation.NativeInputScope inputScope;
+        public void Press(UnityEngine.InputSystem.Controls.ButtonControl button) => InputFixtureIsolation.QueueButton(button, true);
+        public void Release(UnityEngine.InputSystem.Controls.ButtonControl button) => InputFixtureIsolation.QueueButton(button, false);
+        [SetUp] public void Setup()
         {
-            InputFixtureIsolation.DisableLiveActions();
-            base.Setup();
+            sceneScope = new InputFixtureIsolation.SceneScope(); InputFixtureIsolation.DisableLiveActions();
+            inputScope = new InputFixtureIsolation.NativeInputScope();
             Time.timeScale = 1;
-            mouse = InputSystem.AddDevice<Mouse>();
-            keyboard = InputSystem.AddDevice<Keyboard>();
+            mouse = inputScope.Mouse;
+            keyboard = inputScope.Keyboard;
         }
 
         public IEnumerator LoadCombatScene()
@@ -43,20 +47,6 @@ namespace LastSignal.Tests
             var session = Object.FindAnyObjectByType<SessionFlow>();
             session.BeginSession();
             session.Resume(); 
-            var myPi = Object.FindAnyObjectByType<PlayerInputReader>();
-            if (myPi) {
-                var myF = typeof(PlayerInputReader).GetField("instance", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                var myA = (UnityEngine.InputSystem.InputActionAsset)myF.GetValue(myPi);
-                if (myA != null) {
-                    myA.Disable();
-                    var devs = new System.Collections.Generic.List<UnityEngine.InputSystem.InputDevice>();
-                    if (mouse != null) devs.Add(mouse);
-                    if (keyboard != null) devs.Add(keyboard);
-                    myA.devices = new UnityEngine.InputSystem.Utilities.ReadOnlyArray<UnityEngine.InputSystem.InputDevice>(devs.ToArray());
-                    myA.Enable();
-                }
-                myPi.SetGameplay(true);
-            }
 
             yield return null;
 
@@ -92,20 +82,21 @@ namespace LastSignal.Tests
             }
         }
 
-        public override void TearDown()
+        [TearDown] public void TearDown()
         {
             try
             {
                 var session = Object.FindAnyObjectByType<SessionFlow>();
                 if (session) session.ReturnToMenu();
+                foreach (var root in sceneFixtures) if (root) Object.DestroyImmediate(root);
+                sceneFixtures.Clear();
             }
-            catch (System.Exception) { /* Ensure cleanup continues even if InputSystem state is corrupted. */ }
-            // Dispose scene UI actions before InputTestFixture restores the real device state.
-            foreach (var root in sceneFixtures) if (root) Object.DestroyImmediate(root);
-            sceneFixtures.Clear();
-            Time.timeScale = 1;
-            InputFixtureIsolation.DisableLiveActions();
-            base.TearDown();
+            finally
+            {
+                Time.timeScale = 1;
+                try { inputScope?.Dispose(); inputScope = null; }
+                finally { sceneScope?.Dispose(); sceneScope = null; }
+            }
         }
 
         [UnityTest]

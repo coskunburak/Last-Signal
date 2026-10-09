@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using System.Collections;
-using System.Reflection;
 using LastSignal.Inventory;
 using LastSignal.Inventory.Data;
 using LastSignal.Inventory.UI;
@@ -22,15 +21,31 @@ namespace LastSignal.Tests
         [UnityTest] public IEnumerator RebindingSlotDoesNotDoubleInvokeClick()
         {
             var go=new GameObject("UI",typeof(InventoryUI));var slot=new GameObject("Slot",typeof(RectTransform),typeof(Button),typeof(InventorySlotUI));
+            var panel=new GameObject("Inventory panel",typeof(RectTransform));
+            slot.transform.SetParent(panel.transform,false);
             try
             {
                 var ui=go.GetComponent<InventoryUI>();var s=slot.GetComponent<InventorySlotUI>();
                 var player=new GameObject("Inventory",typeof(PlayerInventory));
                 try
-                {ui.Bind(player.GetComponent<PlayerInventory>(),null,null);s.Configure(0,ui);s.Configure(0,ui);slot.GetComponent<Button>().onClick.Invoke();Assert.AreEqual(0,typeof(InventoryUI).GetField("selectedSlot",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(ui));}
+                {
+                    var inventory=player.GetComponent<PlayerInventory>();
+                    inventory.Initialize(2);
+                    var item=AssetDatabase.LoadAssetAtPath<ItemDefinition>("Assets/LastSignal/Data/Items/Definitions/medical.bandage.asset");
+                    Assert.AreEqual(1,inventory.TryAdd(item,1));
+                    ui.ConfigureView(panel,new[]{s},null);
+                    ui.Bind(inventory,null,null);
+                    panel.SetActive(true); // Slot routing fixture: a visible, populated view.
+                    s.Configure(0,ui);s.Configure(0,ui);
+                    slot.GetComponent<Button>().onClick.Invoke();
+                    Assert.AreEqual(0,ui.SelectedSlot,"One click selects; duplicate callbacks would toggle it off.");
+                    slot.GetComponent<Button>().onClick.Invoke();
+                    Assert.AreEqual(-1,ui.SelectedSlot,"The next click cancels exactly once.");
+                    Assert.AreEqual(1,inventory.GetSlot(0).Quantity);
+                }
                 finally{Object.DestroyImmediate(player);}
             }
-            finally{Object.DestroyImmediate(go);Object.DestroyImmediate(slot);}
+            finally{Object.DestroyImmediate(go);Object.DestroyImmediate(panel);}
             yield return null;
         }
     }

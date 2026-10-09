@@ -10,8 +10,8 @@ namespace LastSignal.WorldCells
         float nextCheck;
         public void Bind(WorldCellManager owner) => manager = owner;
         public bool Available => manager && isActiveAndEnabled;
-        public string Prompt => destination == "resident" ? "E — Return to shelter approach" :
-            manager && manager.State(destination) == CellState.Ready ? "E — Enter " + destination : "Loading " + destination + "…";
+        public string Prompt => destination == "resident" ? "Return to shelter approach" :
+            manager && manager.State(destination) == CellState.Ready ? "Enter " + destination : "Loading " + destination + "…";
         void Start() { if (!manager) manager = FindAnyObjectByType<WorldCellManager>(); }
         void Update()
         {

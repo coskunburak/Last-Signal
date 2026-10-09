@@ -12,6 +12,15 @@ namespace LastSignal.Shelter
     {
         public string shelterId = "shelter.cabin", cellId = "resident";
         public ShelterRecipe recipe;
+        public ShelterRecipe[] additionalRecipes = Array.Empty<ShelterRecipe>();
+        int recipeIndex;
+        public ShelterRecipe SelectedRecipe => recipeIndex == 0 ? recipe : additionalRecipes[recipeIndex - 1];
+        ShelterRecipe[] Recipes()
+        {
+            var all = new ShelterRecipe[1 + (additionalRecipes?.Length ?? 0)]; all[0] = recipe;
+            if (additionalRecipes != null) Array.Copy(additionalRecipes, 0, all, 1, additionalRecipes.Length);
+            return all;
+        }
         public ItemDefinition material, fuel;
         public int moduleCost = 2, upgradeCost = 6;
         public double fuelUnitSeconds = 1800;
@@ -30,10 +39,11 @@ namespace LastSignal.Shelter
         float nextRefresh;
         public ShelterProduction Production { get; private set; }
         public string Feedback { get; private set; } = "";
+        public GameObject Root => panel;
         public bool IsOpen => panel && panel.activeSelf;
         public bool Validate()
         {
-            if (string.IsNullOrWhiteSpace(shelterId) || cellId != "resident" || !ShelterRecipe.ValidateCatalog(new[] { recipe }) || !material || !fuel ||
+            if (string.IsNullOrWhiteSpace(shelterId) || cellId != "resident" || !ShelterRecipe.ValidateCatalog(Recipes()) || !material || !fuel ||
                 moduleCost < 1 || upgradeCost < 1 || !WorldTimeSettings.Finite(fuelUnitSeconds) || fuelUnitSeconds < 1 || fuelUnitSeconds > 86400 ||
                 generatorNoise == null || !generatorNoise.profile.Valid || !WorldTimeSettings.Finite(generatorNoise.interval) || generatorNoise.interval < 1 ||
                 sockets == null || sockets.Length != 3) return false;
@@ -46,10 +56,10 @@ namespace LastSignal.Shelter
             }
             return types == 7;
         }
-        ShelterProduction Create(double now) => new ShelterProduction(shelterId, recipe, material, fuel, moduleCost, upgradeCost, fuelUnitSeconds, now);
+        ShelterProduction Create(double now) => new ShelterProduction(shelterId, recipe, material, fuel, moduleCost, upgradeCost, fuelUnitSeconds, now, additionalRecipes);
         public void Begin()
         {
-            End(); if (!Validate()) throw new InvalidOperationException("Invalid authored S010 shelter.");
+            End(); recipeIndex = 0; if (!Validate()) throw new InvalidOperationException("Invalid authored S010 shelter.");
             flow = GetComponent<SessionFlow>(); loop = GetComponent<ShelterLoop>(); clock = GetComponent<WorldClock>();
             Production = Create(clock.Simulation.Seconds); Production.Generated += Generated; BindClock();
             if (!panel) CreatePanel(); Feedback = "Claim this cabin, then install modules using expedition scrap.";
@@ -105,12 +115,16 @@ namespace LastSignal.Shelter
             var source = loop.Storage.Container;
             switch (action)
             {
-                case 2: ok = Production.Start(source); break;
+                case 2: ok = Production.Start(source, SelectedRecipe.recipeId); break;
                 case 3: ok = Production.Cancel(); break;
                 case 4: ok = Production.Collect(source); break;
                 case 5: ok = Production.Refuel(source); break;
                 case 6: ok = Production.ToggleGenerator(); break;
                 case 7: ok = Production.Upgrade(source); break;
+                case 9:
+                    if (Production.Status != null) return "Collect the current job before selecting another recipe.";
+                    recipeIndex = (recipeIndex + 1) % (1 + (additionalRecipes?.Length ?? 0));
+                    return "Selected: " + SelectedRecipe.output.DisplayName;
                 default: return "Unknown action.";
             }
             return ok ? "Done. " + (action == 3 ? "Progress discarded; collect your full input refund." : "") :
@@ -150,10 +164,11 @@ namespace LastSignal.Shelter
         void Refresh()
         {
             if (!status || Production == null) return;
+            var recipe = Production.Status != null ? Production.CurrentRecipe : SelectedRecipe;
             status.text = "SHELTER / " + (Production.Claimed ? "CLAIMED" : "UNCLAIMED") + " / " + (selected ? selected.module.ToString() : "") +
                 "\nModule: " + moduleCost + " scrap | Bench upgrade: " + upgradeCost + " scrap, twice as fast" +
                 "\n" + recipe.inputQuantity + " " + recipe.input.DisplayName + " -> " + recipe.outputQuantity + " " + recipe.output.DisplayName +
-                " | tool: " + (recipe.tool ? recipe.tool.DisplayName : "none") + " | " + recipe.durationWorldSeconds + " world seconds (base)" +
+                " | power: " + (recipe.requiresPower ? "required" : "not required") + " | tool: " + (recipe.tool ? recipe.tool.DisplayName : "none") + " | " + recipe.durationWorldSeconds + " world seconds (base)" +
                 "\nJob: " + (Production.Status?.ToString() ?? "Idle") + " " + (Production.Progress * 100).ToString("F0") + "% | Fuel: " + Production.FuelSeconds.ToString("F0") + " world seconds" +
                 " | Generator " + (Production.GeneratorEnabled ? "ON (auto resumes on refuel)" : "OFF") +
                 "\nAll production uses shelter storage. Close panel to advance time.\n" + Feedback;
@@ -166,7 +181,7 @@ namespace LastSignal.Shelter
             panel = new GameObject("Production panel", typeof(RectTransform), typeof(Image)); panel.transform.SetParent(canvas.transform, false);
             panel.GetComponent<RectTransform>().sizeDelta = new Vector2(1180, 760); panel.GetComponent<Image>().color = new Color(.025f, .035f, .045f, .99f);
             status = Label(panel.transform, new Vector2(0, 230), new Vector2(1100, 260), 22);
-            string[] labels = { "Claim cabin", "Install this socket", "Start craft", "Cancel / reserve refund", "Collect output / refund", "Add 1 fuel can", "Toggle generator", "Upgrade workbench", "Close" };
+            string[] labels = { "Claim cabin", "Install this socket", "Start craft", "Cancel / reserve refund", "Collect output / refund", "Add 1 fuel can", "Toggle generator", "Upgrade workbench", "Close", "Next recipe" };
             for (int i = 0; i < labels.Length; i++)
             {
                 int action = i;
@@ -182,7 +197,7 @@ namespace LastSignal.Shelter
         {
             var go = new GameObject("Label", typeof(RectTransform), typeof(Text)); go.transform.SetParent(parent, false);
             var r = go.GetComponent<RectTransform>(); r.sizeDelta = size; r.anchoredPosition = position;
-            var t = go.GetComponent<Text>(); t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"); t.fontSize = fontSize; t.color = Color.white; t.alignment = TextAnchor.MiddleCenter; t.raycastTarget = false; return t;
+            var t = go.GetComponent<Text>(); t.font = ProductionUiFont.Resolve(); t.fontSize = fontSize; t.color = Color.white; t.alignment = TextAnchor.MiddleCenter; t.raycastTarget = false; return t;
         }
     }
 }

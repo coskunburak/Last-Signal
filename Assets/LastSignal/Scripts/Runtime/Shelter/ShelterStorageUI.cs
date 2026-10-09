@@ -1,4 +1,5 @@
 using LastSignal.Inventory;
+using LastSignal.Inventory.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,8 +17,11 @@ namespace LastSignal.Shelter
         PlayerCombatController combat;
         WeaponController weapon;
         int carriedSelection = -1, storedSelection = -1;
+        ItemDefinition carriedItem, storedItem;
+        long carriedRevision, storedRevision;
         public int RefreshCount { get; private set; }
         public long PresentationAllocatedBytes { get; private set; }
+        public GameObject Root => panel;
         public bool IsOpen => isActiveAndEnabled && panel && panel.activeInHierarchy;
         public Button DepositOneButton => depositOne;
         public Button DepositStackButton => depositStack;
@@ -65,12 +69,34 @@ namespace LastSignal.Shelter
             if(combat)combat.WeaponChanged-=BindWeapon;if(weapon)weapon.AmmoChanged-=Refresh;
             loop=null;inventory=null;storage=null;combat=null;weapon=null;
         }
-        public void Show() { if(!loop)return;SizeSlots(ref carriedSlots,inventory.Capacity,true);SizeSlots(ref storedSlots,storage.Capacity,false);carriedSelection=storedSelection=-1;feedback.text="Select an item, then transfer one or its stack.";panel.SetActive(true);Refresh(); }
-        public void Hide() { if(panel)panel.SetActive(false);carriedSelection=storedSelection=-1; }
+        public void Show()
+        {
+            if(!loop)return;
+            SizeSlots(ref carriedSlots,inventory.Capacity,true);SizeSlots(ref storedSlots,storage.Capacity,false);
+            carriedSelection=storedSelection=-1;carriedItem=storedItem=null;
+            Label(depositOne,"Birini depola");Label(withdrawOne,"Birini al");
+            Label(depositStack,"Sığanı depola");Label(withdrawStack,"Sığanı al");
+            feedback.text="SOL: TAŞINAN  |  SAĞ: DEPO. Türü seç; birini veya sığan miktarı aktar.";
+            panel.SetActive(true);Refresh();
+        }
+        static void Label(Button button,string value)
+        { if(!button)return;var label=button.GetComponentInChildren<Text>(true);if(label)label.text=value; }
+        public void Hide() { if(panel)panel.SetActive(false);carriedSelection=storedSelection=-1;carriedItem=storedItem=null; }
         public void Select(bool carried,int slot)
         {
             if(!IsOpen)return;
-            if(carried)carriedSelection=slot;else storedSelection=slot;
+            if(carried)
+            {
+                if(slot<0||slot>=inventory.Capacity)return;
+                var value=inventory.GetSlot(slot);
+                carriedSelection=value.IsEmpty?-1:slot;carriedItem=value.Item;carriedRevision=inventory.Revision;
+            }
+            else
+            {
+                if(slot<0||slot>=storage.Capacity)return;
+                var value=storage.GetSlot(slot);
+                storedSelection=value.IsEmpty?-1:slot;storedItem=value.Item;storedRevision=storage.Revision;
+            }
             Refresh();
         }
         void DepositOne()=>Transfer(true,false);
@@ -83,14 +109,34 @@ namespace LastSignal.Shelter
             if(!IsOpen||!loop)return;
             int selection=deposit?carriedSelection:storedSelection;
             var slot=deposit?inventory.GetSlot(selection):storage.GetSlot(selection);
-            if(slot.IsEmpty)return;
+            if((deposit ? inventory.Revision != carriedRevision : storage.Revision != storedRevision)||slot.IsEmpty||slot.Item!=(deposit?carriedItem:storedItem))
+            { feedback.text="Seçili eşya değişti. Yeniden seç.";Refresh();return; }
             var result=loop.Transfer(deposit,slot.Item,wholeStack?slot.Quantity:1);
-            feedback.text=(deposit?"Stored ":"Took ")+result.Moved+" / "+result.Requested+" "+slot.Item.DisplayName+" — "+result.Remaining+" unmoved ("+result.Reason+")";
+            feedback.text=DescribeTransfer(deposit,slot.Item.DisplayName,result);
             Refresh();
+        }
+        public static string DescribeTransfer(bool deposit,string item,TransferResult result)
+        {
+            string verb=deposit?"depoya aktarıldı":"alındı";
+            if(result.Moved>0)
+                return item+": "+result.Moved+" / "+result.Requested+" "+verb+
+                    (result.Remaining>0?"; "+result.Remaining+" sığmadı veya kaynakta yok.":".");
+            switch(result.Reason)
+            {
+                case TransferReason.DestinationFull: return item+": hedef dolu; kaynak değişmedi.";
+                case TransferReason.SourceEmpty: return item+": kaynakta kalmadı; işlem yapılmadı.";
+                case TransferReason.Busy: return "Başka eşya işlemi sürüyor; tekrar dene.";
+                case TransferReason.Unavailable: return "Depo şu anda kullanılamıyor; işlem yapılmadı.";
+                default: return "Aktarım reddedildi; kaynak değişmedi.";
+            }
         }
         void Refresh()
         {
             if(!IsOpen||!loop||!inventory||storage==null)return;
+            if(carriedSelection>=0 && (carriedRevision!=inventory.Revision || carriedSelection>=inventory.Capacity || inventory.GetSlot(carriedSelection).Item!=carriedItem))
+            {carriedSelection=-1;carriedItem=null;feedback.text="Taşınan seçim değişti. Yeniden seç.";}
+            if(storedSelection>=0 && (storedRevision!=storage.Revision || storedSelection>=storage.Capacity || storage.GetSlot(storedSelection).Item!=storedItem))
+            {storedSelection=-1;storedItem=null;feedback.text="Depo seçimi değişti. Yeniden seç.";}
             long allocationStart=System.GC.GetAllocatedBytesForCurrentThread();
             RefreshCount++;
             for(int i=0;i<carriedSlots.Length;i++)carriedSlots[i].Present(inventory.GetSlot(i),i==carriedSelection);

@@ -14,6 +14,18 @@ namespace LastSignal.Inventory
         public event Action InventoryChanged;
 
         public int Capacity => capacity;
+        // Derived in integer grams; do not persist a second mass source. Capacity remains slot-based.
+        public long TotalMassGrams
+        {
+            get
+            {
+                long grams = 0;
+                foreach (var slot in slots)
+                    if (!slot.IsEmpty) grams = checked(grams + (long)slot.Item.MassGrams * slot.Quantity);
+                return grams;
+            }
+        }
+        public long Revision { get; private set; }
 
         public InventoryContainer(int capacity) { Initialize(capacity); }
 
@@ -217,12 +229,13 @@ namespace LastSignal.Inventory
             {
                 slots = replacement;
                 capacity = replacement.Length;
+                Revision++;
                 InventoryChanged?.Invoke();
             }
             finally { IsBusy = false; }
         }
 
-        void Notify() { if (!silent) InventoryChanged?.Invoke(); }
+        void Notify() { Revision++; if (!silent) InventoryChanged?.Invoke(); }
 
         // Cross-owner world operations stage this owner silently, then let the caller commit
         // the world quantity before any observer runs. Existing normal/reload notifications
@@ -303,17 +316,40 @@ namespace LastSignal.Inventory
         }
         // Stage on a detached copy, then commit inventory and its associated domain receipt
         // before publishing. Reentrant observers cannot spend or save intermediate ownership.
-        internal bool Exchange(ItemDefinition remove, int removeCount, ItemDefinition add, int addCount, Action commit)
+        internal bool Exchange(ItemDefinition remove, int removeCount, ItemDefinition add, int addCount, Action commit, int sourceIndex = -1)
         {
             if (IsBusy || Persistence.OwnershipTransaction.Active || removeCount < 0 || addCount < 0 ||
                 (removeCount > 0 && (!remove || !remove.Id.IsValid)) ||
                 (addCount > 0 && (!add || !add.Id.IsValid))) return false;
             var staged = new InventoryContainer(capacity);
             staged.slots = (InventorySlot[])slots.Clone();
-            if (removeCount > 0 && !staged.TryRemove(remove, removeCount)) return false;
+            if (removeCount > 0 && (sourceIndex >= 0
+                ? staged.GetSlot(sourceIndex).Item != remove || !staged.TryRemove(sourceIndex, removeCount)
+                : !staged.TryRemove(remove, removeCount))) return false;
             if (addCount > 0 && staged.TryAdd(add, addCount) != addCount) return false;
             IsBusy = true; Persistence.OwnershipTransaction.Enter();
-            try { slots = staged.slots; commit(); PublishTransfer(); }
+            try { Revision++; slots = staged.slots; commit(); PublishTransfer(); }
+            finally { Persistence.OwnershipTransaction.Exit(); IsBusy = false; }
+            return true;
+        }
+        internal bool ExchangeCapacity(ItemDefinition incoming, ItemDefinition outgoing, int nextCapacity, Action commit, int sourceIndex = -1)
+        {
+            if (IsBusy || Persistence.OwnershipTransaction.Active || nextCapacity < 1 || nextCapacity > 256) return false;
+            var staged = new InventoryContainer(Math.Max(capacity, nextCapacity));
+            Array.Copy(slots, staged.slots, slots.Length);
+            if (incoming && (sourceIndex >= 0 ? staged.GetSlot(sourceIndex).Item != incoming || !staged.TryRemove(sourceIndex, 1) : !staged.TryRemove(incoming, 1))) return false;
+            if (outgoing && staged.TryAdd(outgoing, 1) != 1) return false;
+            // Shrinking packs occupied slots; refusal cannot discard high-index contents.
+            var replacement = new InventorySlot[nextCapacity];
+            if (nextCapacity < capacity)
+            {
+                int used = 0;
+                foreach (var slot in staged.slots)
+                    if (!slot.IsEmpty) { if (used == nextCapacity) return false; replacement[used++] = slot; }
+            }
+            else Array.Copy(staged.slots, replacement, nextCapacity);
+            IsBusy = true; Persistence.OwnershipTransaction.Enter();
+            try { slots = replacement; capacity = nextCapacity; Revision++; commit(); PublishTransfer(); }
             finally { Persistence.OwnershipTransaction.Exit(); IsBusy = false; }
             return true;
         }

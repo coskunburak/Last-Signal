@@ -11,7 +11,7 @@ namespace LastSignal.WorldTime
         public double SleepSeconds => sleepSeconds;
         public void Configure(WorldClock owner) => clock = owner;
         public bool Available => isActiveAndEnabled && clock && clock.Flow && clock.Flow.Player && !clock.Flow.Paused && !clock.Sleeping;
-        public string Prompt => "E — Sleep 6 hours / recover under shelter";
+        public string Prompt => "Sleep 6 hours / recover under shelter";
         public bool TryInteract() => Available && clock.RequestSleep(this, sleepSeconds).Accepted;
     }
 }

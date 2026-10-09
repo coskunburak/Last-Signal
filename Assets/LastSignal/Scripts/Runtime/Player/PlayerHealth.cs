@@ -14,6 +14,7 @@ namespace LastSignal
         public DamageInfo LastDamage { get; private set; }
         public event Action HealthChanged;
         public event Action Died;
+        public event Action<DamageInfo> DamageAccepted;
 
         void Awake() => ResetForSession();
         public void ResetForSession()
@@ -49,6 +50,7 @@ namespace LastSignal
             LastDamage = info;
             DamageTransactions++;
             bool died = !IsAlive;
+            DamageAccepted?.Invoke(info);
             HealthChanged?.Invoke();
             if (died) Died?.Invoke();
         }

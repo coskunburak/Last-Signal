@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 
 namespace LastSignal.Tests
 {
-    public class MovementAcceptanceTests : InputTestFixture
+    public class MovementAcceptanceTests
     {
         GameObject player, floor;
         PlayerInputReader input;
@@ -20,11 +20,31 @@ namespace LastSignal.Tests
         PlayerStance stance;
         Keyboard keyboard;
         Mouse mouse;
+        bool previousRunInBackground;
         readonly System.Collections.Generic.List<GameObject> fixtures = new System.Collections.Generic.List<GameObject>();
-        public override void Setup()
+        readonly System.Collections.Generic.List<InputDevice> suspendedDevices = new System.Collections.Generic.List<InputDevice>();
+        InputSettings settings;
+        InputSettings.BackgroundBehavior previousBackground;
+        InputSettings.EditorInputBehaviorInPlayMode previousEditorInput;
+        InputFixtureIsolation.SceneScope sceneScope;
+        [SetUp] public void Setup()
         {
+            sceneScope = new InputFixtureIsolation.SceneScope();
             InputFixtureIsolation.DisableLiveActions();
-            base.Setup();
+            // Keep the native clock and manager across asynchronous player-loop frames.
+            // A replacement test runtime starts its clock at zero, while Editor transition
+            // timestamps remain on the native timeline and may discard otherwise valid events.
+            settings = InputSystem.settings;
+            previousBackground = settings.backgroundBehavior;
+            previousEditorInput = settings.editorInputBehaviorInPlayMode;
+            suspendedDevices.Clear();
+            foreach (var device in InputSystem.devices)
+                if (device.enabled) suspendedDevices.Add(device);
+            foreach (var device in suspendedDevices) InputSystem.DisableDevice(device);
+            settings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
+            previousRunInBackground = Application.runInBackground;
+            Application.runInBackground = true;
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
             Time.timeScale = 1;
             keyboard = InputSystem.AddDevice<Keyboard>(); mouse = InputSystem.AddDevice<Mouse>();
             floor = Box("Test ground", new Vector3(0, -.25f, 0), new Vector3(100, .5f, 100));
@@ -38,17 +58,45 @@ namespace LastSignal.Tests
             Physics.SyncTransforms();
             motor.Simulate(Vector2.zero, false, .2f);
         }
-        public override void TearDown()
+        [TearDown] public void TearDown()
         {
             if (player) Object.DestroyImmediate(player);
             foreach (var obj in fixtures) if (obj) Object.DestroyImmediate(obj);
             fixtures.Clear();
             // Only destroy fixture-owned objects; the active scene can also own the test runner.
             Time.timeScale = 1;
+            Application.runInBackground = previousRunInBackground;
             Cursor.lockState = CursorLockMode.None;
             InputFixtureIsolation.DisableLiveActions();
-            base.TearDown();
+            try
+            {
+                if (keyboard != null && keyboard.added) InputSystem.RemoveDevice(keyboard);
+                if (mouse != null && mouse.added) InputSystem.RemoveDevice(mouse);
+            }
+            finally
+            {
+                if (settings)
+                {
+                    settings.backgroundBehavior = previousBackground;
+                    settings.editorInputBehaviorInPlayMode = previousEditorInput;
+                }
+                foreach (var device in suspendedDevices)
+                    if (device.added) InputSystem.EnableDevice(device);
+                suspendedDevices.Clear();
+                sceneScope?.Dispose(); sceneScope = null;
+            }
         }
+        static void Set<TValue>(InputControl<TValue> control, TValue value) where TValue : struct
+        {
+            using (StateEvent.From(control.device, out var eventPtr))
+            {
+                control.WriteValueIntoEvent(value, eventPtr);
+                InputSystem.QueueEvent(eventPtr);
+            }
+        }
+        static void Press(UnityEngine.InputSystem.Controls.ButtonControl control) => Set(control, 1f);
+        static void Release(UnityEngine.InputSystem.Controls.ButtonControl control) => Set(control, 0f);
+
         GameObject Box(string name, Vector3 position, Vector3 scale)
         {
             var obj = GameObject.CreatePrimitive(PrimitiveType.Cube); obj.name = name;
@@ -207,17 +255,31 @@ namespace LastSignal.Tests
         [UnityTest]
         public IEnumerator MouseAndCrouchActionsReachCameraAndCapsule()
         {
+            int crouchRequests = 0;
+            input.CrouchRequested += () => crouchRequests++;
             yield return null; yield return null;
             Set(mouse.delta, new Vector2(100, 50)); yield return null;
             Assert.That(player.GetComponent<FirstPersonLook>().Pitch, Is.EqualTo(-6).Within(.1f));
             Assert.That(player.transform.eulerAngles.y, Is.EqualTo(12).Within(.1f));
             Press(keyboard.cKey); yield return null;
             Assert.That(stance.IsCrouching, Is.True);
+            Assert.That(crouchRequests, Is.EqualTo(1));
             yield return new WaitForSeconds(.2f);
             Assert.That(player.GetComponent<CharacterController>().height, Is.EqualTo(1.2f).Within(.001f));
+            // Native timestamped events are processed by the player loop, with no mock
+            // runtime clock or manual InputSystem.Update mixed into asynchronous frames.
             Release(keyboard.cKey); yield return null;
+            Assert.That(keyboard.cKey.isPressed, Is.False, "C must be released before a second toggle.");
+            Assert.That(input.CrouchHeld, Is.False, "Input reader must observe the released C key.");
+            Assert.That(crouchRequests, Is.EqualTo(1), "Release must not toggle stance.");
+            yield return null;
             Press(keyboard.cKey); yield return null;
-            Assert.That(stance.IsCrouching, Is.False);
+            Assert.That(crouchRequests, Is.EqualTo(2));
+            Assert.That(stance.IsCrouching, Is.False,
+                $"StandBlocked={stance.StandBlocked}, CanStand={stance.CanStand()}, " +
+                $"GameplayActive={input.GameplayActive}, CrouchHeld={input.CrouchHeld}, " +
+                $"requests={crouchRequests}, sliding={motor.IsSliding}, " +
+                $"position={player.transform.position}, scene={SceneManager.GetActiveScene().name}");
             Release(keyboard.cKey); yield return null;
         }
         [UnityTest]

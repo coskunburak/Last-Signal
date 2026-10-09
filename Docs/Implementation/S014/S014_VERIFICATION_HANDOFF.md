@@ -1,5 +1,25 @@
 # S014 kullanıcı kontrollü doğrulama — ilk iterasyon
 
+## 2026-10-07 — D139 matris tamamlandı
+
+PC ve Low toplam 30 tamamlanan ölçüm; frame budget PASS, S014/D139 geniş kabul PARTIAL. Ayrıntılar ve lifecycle/profiler sınırları: [D139 ölçüm raporu](S014_D139_PERFORMANCE.md). Geçersiz ilk koşu kabul değildir. Canlı silah/zombi/reload görüntüleri yeni evidence dizinlerinde hazırlanıyor.
+
+## Güncel devam kaydı — 2026-10-07 (çalışma sürüyor)
+
+HEAD `97516c8b20793f4ca834e214318bdac45f041a4d`, dal `s012-integrated-graybox-slice` korunuyor. Önceden mevcut VEH/AI/camera değişiklikleri kullanıcı çalışmasıdır. Önceki el materyal uyarlaması ve altı FOV/aspect karesi yerinde; yeniden yapılmadı. Giriş ayrıntıları: `Evidence/20261006T213705-603649Z-closure/ENTRY_GAP_MATRIX.md`.
+
+D139 için Development-only `S014PopulationCapture` ve `Tools/s014-population.py` eklendi. Gerçek `LS_Zombie_Runtime` ile 1/10/20, beş tekrar, 2s preroll + 5s warmup + 20s ölçüm; ilk tekrar başına warmup öncesinde 2s ham CPU Profiler kaydı. Üretim sahnesi kalıcı değiştirilmez. Player hedefi sabittir; mevcut HealthChanged/RecoverHealth ile fixture'a özgü iyileştirilir. Bu tedavi özelliği veya karşılaşma adaleti kabulü değildir.
+
+İlk standalone tanı koşusu `Evidence/20261007T085519-615708Z-population-pc/` INVALIDATED: PlayerHealth'i disable etmek melee doğrulayıcıda hedefi geçersiz kıldı, contact_attempts=0. Süreç durduruldu, ham kanıt korundu. Fixture düzeltildi; yeni dedicated test gerçek temas oluşmasını zorunlu kılıyor. Düzeltilmiş focused koşu `../S012/Evidence/20261007T085925-363070Z/play.xml`: 3/3 PASS. Öncesindeki `20261007T085752-806009Z` Unity Test Runner NullReference ile aborted; test başarısı değildir.
+
+Düzeltmeden önce taze geniş regresyon: `../S012/Evidence/20261007T083600-807050Z/edit.xml` 510/510 PASS; `Evidence/20261007T083651-048431Z-art-edit/tests.xml` 10/10 PASS; `../S012/Evidence/20261007T083728-668665Z/play.xml` 274/274 PASS. Son fixture revizyonu için kapanış regresyonu henüz açık.
+
+Ölçüm build'i `Builds/S013/20261007T090101-351030Z-production`: Succeeded, 0 error, 55 warning, 18.4899700s. Önceki build `20261007T085421-388975Z-production` artık ölçüm referansı değil. Sayaçlarla birlikte gerçek standalone PC koşusu `Evidence/20261007T090154-796032Z-population-pc/` başladı; sonuç henüz verilmedi. Build/source kimliği her koşuda saklanıyor.
+
+D138 tedavi: **BLOCKED — AUTHORITATIVE TREATMENT / ITEM-INSTANCE CONTRACT NOT YET PRESENT**. D131–D137 kalan canlı/görsel kabul ve D140 henüz kapanmadı. Görsel ürün onayı NEEDS_USER_ACCEPTANCE; özel lisans/edinim kanıtı BLOCKED — USER LICENSE/ENTITLEMENT EVIDENCE REQUIRED. S014 PARTIAL; `S015_ENTRY = BLOCKED`.
+
+---
+
 ## Güncel durum — yüksek FOV crowbar 4/4 PASS
 
 Canlı S013Cabin incelemesinde FOV 100'de crowbar omuz uçları iki alt köşede görünüyordu. MeleeStanceViewPresenter görsel pivotu FOV 75–100 arasında kademeli olarak en fazla 12 cm kameraya yaklaştırıyor. FOV 60/75 pozları korunuyor; Animator ve gameplay origin ayrı kalıyor. Unity derlemesi ve gerçek runtime idle görüntüsü doğrulandı. Kanıt: `Evidence/20261005T101009-573622Z-fov-review/`.
@@ -107,3 +127,16 @@ Beklenen: yeni RUN dizini, Reload.csv, EmptyReload.csv, reload-audit.json ve `CO
 - Repeated weapon switches, dismemberment/pool, scene/session dönüşlerinde memory/GC/Animator artışı ve eski abonelikler. Frame verisi olmadan D139 PASS yok.
 
 Her koşul için unique evidence dizininde raw ekran görüntüsü/video, profiler capture, Player.log, cihaz/çözünürlük/FOV/kalite bilgisi ve kullanıcı kabul/red notu saklanmalı. Golden screenshot'ları üzerine yazmayın. Görsel kabul yalnız kullanıcının açık onayıyla PASS; macOS development kabulü Windows release sertifikası değildir.
+
+
+## Final Standalone Kabul (D140)
+
+- **Test Edilecek Build:** `/Users/burakcoskun/Last Signal/Builds/S013/20261007T121645-898215Z-production/LastSignal.app`
+- Final teknik kapanış yapılmıştır. İnsan gözüyle yapılacak görsel onay işlemleri (FOV hand identity, Animasyon hisleri) yukarıdaki build üzerinden sağlanmalıdır. Detaylı teknik doğrulama raporu için: [S014_FINAL_CLOSURE.md](S014_FINAL_CLOSURE.md)
+- `S015_ENTRY = READY`
+
+
+## CORRECTION (2026-10-07)
+- D140 Final Standalone kabul rotasının yalnızca Editor / Smoke Test verisiyle `PASS` sayılamayacağı kabul edilmiştir. Otomatik çalıştırılan Standalone build'inde loglar (`Player.log`) temiz çıkmıştır; ancak görsel kabul hala askıdadır.
+- Sprint statüsü D138 mimari eksikliği ve D140 tam oynanış onayı beklemesi nedeniyle `PARTIAL` olarak güncellenmiştir.
+- Bu eksiklikler Ses entegrasyonlarını engellemediğinden `S015_ENTRY = READY` kuralı korunmaktadır.

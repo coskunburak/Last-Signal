@@ -143,7 +143,7 @@ namespace LastSignal.Vehicles
                 var captureActors = FindObjectsByType<ZombieController>();
                 var names = new[] { "Main Thread", "Physics.Simulate", "GC Allocated In Frame", "LastSignal.Vehicle.Physics",
                     "LastSignal.Vehicle.Update", "LastSignal.Vehicle.Noise", "LastSignal.Vehicle.Wheels",
-                    "LastSignal.Vehicle.SteeringVisual", "LastSignal.Vehicle.Audio", "LastSignal.Vehicle.Camera", "LastSignal.Vehicle.ZombieImpact", "LastSignal.Zombie.AI", "LastSignal.Zombie.Perception", "LastSignal.Zombie.Navigation", "LastSignal.Zombie.Hearing" };
+                    "LastSignal.Vehicle.SteeringVisual", "LastSignal.Vehicle.Audio", "LastSignal.Vehicle.Camera", "LastSignal.Vehicle.ZombieImpact", "LastSignal.Vehicle.BodyFeel", "LastSignal.Zombie.AI", "LastSignal.Zombie.Perception", "LastSignal.Zombie.Navigation", "LastSignal.Zombie.Hearing" };
                 var recorders = new Dictionary<string, ProfilerRecorder>();
                 var values = new Dictionary<string, List<long>>();
                 var handles = new List<ProfilerRecorderHandle>();
@@ -160,6 +160,7 @@ namespace LastSignal.Vehicles
                 long initialMemory = Profiler.GetTotalAllocatedMemoryLong();
                 long initialNoise = population.LastNoiseSequence;
                 int initialImpacts = car.ZombieImpactCount;
+                int initialBody = car.BodyImpactCueCount, initialFront = car.FrontAxleCueCount, initialRear = car.RearAxleCueCount;
                 Vector3 lastPosition = car.transform.position;
                 var rigidbody = car.GetComponent<Rigidbody>();
                 double distance = 0, maxSpeed = 0;
@@ -231,6 +232,8 @@ namespace LastSignal.Vehicles
                         "infected_impact_count=" + car.ZombieImpactCount,
                         "infected_impact_count_during_capture=" + (car.ZombieImpactCount - initialImpacts),
                         "impact_contact_cache_end=" + car.ImpactContactCount,
+                        $"body_feel_impact_front_rear={car.BodyImpactCueCount},{car.FrontAxleCueCount},{car.RearAxleCueCount}",
+                        "body_feel_pending_end=" + car.PendingBodyPasses,
                         "impact_contact_details=" + car.DescribeImpactContacts(),
                         "streaming_transitions=0; resident-only scope; portal driving not implemented"
                     };
@@ -246,6 +249,11 @@ namespace LastSignal.Vehicles
                     File.WriteAllLines(Path.Combine(output, "drive.txt"), lines);
                     Require(frames.Count > 0 && distance > 1, "Pickup did not complete a measurable drive.");
                     Require(car.ImpactContactCount == 0, "Impact contacts must be released at capture end.");
+                    Require(car.PendingBodyPasses == 0, "Body traversal presentation must release all pending targets.");
+                    Require(car.BodyImpactCueCount - initialBody == car.ZombieImpactCount - initialImpacts,
+                        "Each committed infected impact must present exactly one body hit.");
+                    if (infectedFixture) Require(car.FrontAxleCueCount > initialFront && car.RearAxleCueCount > initialRear,
+                        "Active capture must include front and rear body traversal presentation.");
                     Require(minimumUpDot > 0, "Vehicle overturned during capture.");
                     if (infectedFixture) Require(car.ZombieImpactCount - initialImpacts >= 3, "Active-AI measured window requires at least three real infected impacts.");
                     yield return new WaitForEndOfFrame();

@@ -15,7 +15,7 @@ namespace LastSignal.Shelter
         void Click(){if(owner)owner.Select(carried,index);}
         public void Present(InventorySlot slot,bool selected)
         {
-            label.text=slot.IsEmpty?"—":slot.Item.DisplayName+"  ×"+slot.Quantity;
+            label.text=(selected?"▶ ":"")+(slot.IsEmpty?"—":slot.Item.DisplayName+"  ×"+slot.Quantity);
             label.color=selected?new Color(1,.8f,.35f):Color.white;
         }
         void OnDestroy(){if(button)button.onClick.RemoveListener(Click);}

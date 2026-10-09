@@ -15,9 +15,13 @@ namespace LastSignal.Persistence
     public sealed class SaveSession : MonoBehaviour
     {
         [SerializeField] ItemCatalog catalog;
+        public ItemCatalog Catalog => catalog;
         [SerializeField] WeaponDefinition rifle;
         [SerializeField] string worldId;
         [SerializeField] string contentVersion = "shelter-v1";
+        [Tooltip("Isolated save slot filename, without extension. Existing scenes retain current.json.")]
+        [SerializeField] string saveSlot = "current";
+        public string SaveSlot => saveSlot;
         const string WeaponId = "weapon.rifle";
         SessionFlow flow;
         SaveFileStore store;
@@ -29,18 +33,31 @@ namespace LastSignal.Persistence
         public double WriteMilliseconds { get; private set; }
         public double ReadMilliseconds { get; private set; }
         public double HydrateMilliseconds { get; private set; }
-        public string DefaultPath => System.IO.Path.Combine(Application.persistentDataPath, "saves", "current.json");
+        public string DefaultPath => PathForSlot(Application.persistentDataPath, saveSlot);
+        public static string PathForSlot(string root, string slot)
+        {
+            if (!ValidSlot(slot)) throw new ArgumentException("Save slot requires 1..64 ASCII letters, digits, hyphens or underscores.", nameof(slot));
+            return System.IO.Path.Combine(root, "saves", slot + ".json");
+        }
+        static bool ValidSlot(string slot)
+        {
+            if (string.IsNullOrEmpty(slot) || slot.Length > 64) return false;
+            foreach (char c in slot)
+                if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '-' || c == '_')) return false;
+            return true;
+        }
         public void Configure(ItemCatalog itemCatalog, WeaponDefinition weapon, string stableWorldId)
         { catalog = itemCatalog; rifle = weapon; worldId = stableWorldId; store = null; storePath = null; }
         SessionFlow Flow => flow ? flow : flow = GetComponent<SessionFlow>();
         public SaveResult ValidateAuthoring()
         {
+            if (!ValidSlot(saveSlot)) return Invalid("Invalid save slot filename.");
             if (!catalog || !rifle || !rifle.HasValidAmmunitionConfiguration || string.IsNullOrWhiteSpace(worldId)) return Invalid("Save world/catalog/rifle not configured.");
             var mission = GetComponent<LastSignal.Objectives.RelayMission>();
             if (mission && !mission.Validate()) return Invalid("Invalid relay authoring.");
             var definitions = new HashSet<string>(StringComparer.Ordinal);
             foreach (var item in catalog.EditorItems)
-                if (!item || !item.Id.IsValid || !definitions.Add(item.Id.Value) || item.MaxStack < 1 ||
+                if (!item || !item.Id.IsValid || !definitions.Add(item.Id.Value) || item.MaxStack < 1 || !item.HasValidUse ||
                     (!item.WorldPrefab && item.Category != LastSignal.Inventory.Data.ItemCategory.Tool) ||
                     (item.WorldPrefab && !item.WorldPrefab.GetComponent<WorldItem>()))
                     return Invalid("Invalid or duplicate catalog identity/prefab.");
@@ -58,8 +75,13 @@ namespace LastSignal.Persistence
         SaveCodec Codec()
         {
             var limits = new Dictionary<string,int>(StringComparer.Ordinal);
-            foreach (var item in catalog.EditorItems) limits.Add(item.Id.Value,item.MaxStack);
-            return new SaveCodec(new SaveValidation(worldId, contentVersion, limits, WeaponId, rifle.MagazineCapacity));
+            var backpacks = new Dictionary<string, int>(StringComparer.Ordinal);
+            foreach (var item in catalog.EditorItems)
+            {
+                limits.Add(item.Id.Value,item.MaxStack);
+                if (item.Use == ItemUse.Backpack) backpacks.Add(item.Id.Value, item.BackpackSlotBonus);
+            }
+            return new SaveCodec(new SaveValidation(worldId, contentVersion, limits, WeaponId, rifle.MagazineCapacity, backpackBonuses: backpacks));
         }
         SaveFileStore Store(string path)
         {
@@ -78,6 +100,8 @@ namespace LastSignal.Persistence
             var watch = System.Diagnostics.Stopwatch.StartNew();
             var result = ValidateAuthoring(); if (!result.Success) return result;
             var player = Flow.Player; var inv = player.GetComponent<PlayerInventory>(); var shelter = GetComponent<ShelterLoop>();
+            var survival = player.GetComponent<PlayerSurvival>();
+            if (survival && survival.ApplyingTreatment) return Busy();
             result = InventorySnapshots.Capture(inv,"player.inventory",out var carried); if (!result.Success) return result;
             result = InventorySnapshots.Capture(shelter.Storage,"shelter.storage",out var stash); if (!result.Success) return result;
             var weapon = player.GetComponent<PlayerCombatController>().Firearm;
@@ -134,10 +158,11 @@ namespace LastSignal.Persistence
             if (!actor) return Invalid("Missing persistent encounter actor.");
             var look=player.GetComponent<FirstPersonLook>();
             snapshot = new SaveGame {
+                survival=survival ? survival.Capture() : null,
                 combat=CaptureCombat(player),
                 progression=GetComponent<LastSignal.Objectives.RelayMission>()?.Progress?.Capture(),
                 worldTime=clock ? clock.Capture() : null,
-                header=new SaveHeader { progressionVersion=GetComponent<LastSignal.Objectives.RelayMission>() ? 1 : 0, schemaVersion=cells ? (GetComponent<LastSignal.AI.WorldPopulationManager>() ? 4 : 3) : clock ? SaveValidation.SchemaVersion : 1,contentVersion=contentVersion,worldId=worldId,seed=loot.Seed,generation=1,
+                header=new SaveHeader { survivalVersion=survival ? 1 : 0, progressionVersion=GetComponent<LastSignal.Objectives.RelayMission>() ? 1 : 0, schemaVersion=cells ? (GetComponent<LastSignal.AI.WorldPopulationManager>() ? 4 : 3) : clock ? SaveValidation.SchemaVersion : 1,contentVersion=contentVersion,worldId=worldId,seed=loot.Seed,generation=1,
                     buildId=string.IsNullOrEmpty(Application.buildGUID)?"editor-"+Application.unityVersion:Application.buildGUID,timestampUtc=DateTimeOffset.UtcNow.ToString("O") },
                 player=new PlayerSnapshot { id="player.local",transform=Pose(player.transform),health=player.GetComponent<PlayerHealth>().CurrentHealth,
                     pitch=look.Pitch,crouching=player.GetComponent<PlayerStance>().IsCrouching },
@@ -271,6 +296,7 @@ namespace LastSignal.Persistence
         }
         SaveResult ValidateTopology(SaveGame state)
         {
+            if (state.survival != null && !Flow.SurvivalEnabled) return Invalid("This scene cannot restore survival equipment.");
             var vehicles = GetComponent<Vehicles.VehicleWorld>();
             if (state.population?.residentPressure != null && !vehicles) return Invalid("Scene has no resident pressure region.");
             if (state.vehicles != null && (!vehicles || !vehicles.Prefab || !vehicles.Prefab.Definition ||
@@ -321,6 +347,9 @@ namespace LastSignal.Persistence
             if(string.IsNullOrEmpty(state.vehicles?.occupiedVehicleId) && !player.GetComponent<PlayerStance>().TrySetCrouching(state.player.crouching)) throw new InvalidOperationException("Saved stance is obstructed.");
             player.GetComponent<FirstPersonLook>().RestorePitch(state.player.pitch);
             player.GetComponent<PlayerHealth>().RestoreHealth(state.player.health);
+            var survival = player.GetComponent<PlayerSurvival>();
+            if (state.survival != null && !survival) throw new InvalidOperationException("Missing survival composition.");
+            if (survival) survival.Restore(state.survival, catalog);
             var weapon=player.GetComponent<PlayerCombatController>().Firearm;
             if(!weapon || weapon.Definition!=rifle) throw new InvalidOperationException("Missing production rifle.");
             weapon.Initialize(player.GetComponent<FirstPersonLook>().View.transform,player,state.weapon.magazine); weapon.RequestEquip();

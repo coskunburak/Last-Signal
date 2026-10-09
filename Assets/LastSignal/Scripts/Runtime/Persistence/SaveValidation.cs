@@ -13,14 +13,20 @@ namespace LastSignal.Persistence
         readonly int magazineCapacity;
         readonly float maximumHealth, maximumEnemyHealth;
         readonly Dictionary<string, int> stackLimits;
+        readonly Dictionary<string, int> backpackBonuses;
         public SaveValidation(string worldId, string contentVersion, IDictionary<string, int> stackLimits,
-            string weaponId, int magazineCapacity, float maximumHealth = 100, float maximumEnemyHealth = 100)
+            string weaponId, int magazineCapacity, float maximumHealth = 100, float maximumEnemyHealth = 100, IDictionary<string, int> backpackBonuses = null)
         {
             if (!Id(worldId) || !Id(contentVersion) || !Id(weaponId) || stackLimits == null ||
                 magazineCapacity < 1 || !Finite(maximumHealth) || maximumHealth <= 0 ||
                 !Finite(maximumEnemyHealth) || maximumEnemyHealth <= 0) throw new ArgumentException("Invalid save compatibility context.");
             this.worldId = worldId; this.contentVersion = contentVersion; this.weaponId = weaponId;
             this.magazineCapacity = magazineCapacity; this.maximumHealth = maximumHealth; this.maximumEnemyHealth = maximumEnemyHealth;
+            this.backpackBonuses = backpackBonuses == null
+                ? new Dictionary<string, int> { [PlayerSurvival.BackpackId] = PlayerSurvival.BackpackSlots }
+                : new Dictionary<string, int>(backpackBonuses, StringComparer.Ordinal);
+            foreach (var pair in this.backpackBonuses)
+                if (!Id(pair.Key) || pair.Value < 1 || pair.Value > 16) throw new ArgumentException("Invalid backpack definition.");
             this.stackLimits = new Dictionary<string, int>(StringComparer.Ordinal);
             foreach (var pair in stackLimits)
             {
@@ -56,6 +62,18 @@ namespace LastSignal.Persistence
             if (!Pose(p.transform) || !Finite(p.health) || p.health <= 0 || p.health > maximumHealth || !Finite(p.pitch) || Math.Abs(p.pitch) > 85)
                 return Invalid("Invalid player state. Schema v1 accepts living-player checkpoints only.");
             var result = Container(save.inventory, ids); if (!result.Success) return result;
+            if (h.survivalVersion < 0 || h.survivalVersion > 1 ||
+                (h.survivalVersion == 0 && save.survival != null) || (h.survivalVersion == 1 && !SurvivalState.Valid(save.survival)))
+                return Invalid("Invalid survival extension marker/state.");
+            if (save.survival != null)
+            {
+                var survival = save.survival;
+                bool equipped = !string.IsNullOrEmpty(survival.backpackId);
+                int bonus = 0;
+                if ((equipped && (!backpackBonuses.TryGetValue(survival.backpackId, out bonus) || !stackLimits.ContainsKey(survival.backpackId))) ||
+                    save.inventory.capacity != survival.baseCapacity + bonus)
+                    return Invalid("Invalid equipment or backpack capacity.");
+            }
             result = Container(save.shelter.storage, ids); if (!result.Success) return result;
             if (h.vehicleVersion < 0 || h.vehicleVersion > 1 || (h.vehicleVersion == 0 && save.vehicles != null) ||
                 (h.vehicleVersion == 1 && save.vehicles == null)) return Invalid("Invalid vehicle extension marker.");

@@ -29,6 +29,7 @@ namespace LastSignal.Tests
             int ammo = weapon.RuntimeState.TotalAmmo;
             SetAim(true);
             yield return CombatAcceptanceTests.WaitForGameplaySeconds(.6f);
+            Assert.That(combat.GetComponent<PlayerInputReader>().AimHeld, Is.True, "Native mouse aim must reach the reader before optic assertions.");
             Assert.That(optic.HasAllocatedResources, Is.True);
             Assert.That(optic.ScopeCamera.enabled, Is.True);
             Assert.That(optic.Target.IsCreated(), Is.True);
@@ -56,6 +57,7 @@ namespace LastSignal.Tests
             yield return null;
             combat.enabled = true;
             yield return CombatAcceptanceTests.WaitForGameplaySeconds(.6f);
+            Assert.That(combat.GetComponent<PlayerInputReader>().AimHeld, Is.True, "Native mouse aim must reach the reader before optic assertions.");
             Assert.That(optic.Visibility, Is.GreaterThan(.9f));
             Assert.That(optic.ScopeCamera.enabled, Is.True);
             SetAim(false);
@@ -69,6 +71,7 @@ namespace LastSignal.Tests
             var optic = combat.ActiveWeapon.GetComponent<ScopeOpticPresenter>();
             SetAim(true);
             yield return CombatAcceptanceTests.WaitForGameplaySeconds(.6f);
+            Assert.That(combat.GetComponent<PlayerInputReader>().AimHeld, Is.True, "Native mouse aim must reach the reader before optic assertions.");
             Assert.That(optic.HasAllocatedResources, Is.True);
             var camera = optic.ScopeCamera;
             var rt = optic.Target;
@@ -93,6 +96,7 @@ namespace LastSignal.Tests
             Assert.That(weapon.RuntimeState.ReserveAmmo, Is.GreaterThan(0));
             SetAim(true);
             yield return CombatAcceptanceTests.WaitForGameplaySeconds(.6f);
+            Assert.That(combat.GetComponent<PlayerInputReader>().AimHeld, Is.True, "Native mouse aim must reach the reader before optic assertions.");
             int magazine = weapon.RuntimeState.CurrentMagazine;
             int total = weapon.RuntimeState.TotalAmmo;
             weapon.OnFirePressed();

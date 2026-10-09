@@ -9,6 +9,7 @@ namespace LastSignal.Shelter
     {
         internal InventoryContainer Container { get; }
         public ShelterStorage(int capacity) { Container = new InventoryContainer(capacity); }
+        public long Revision => Container.Revision;
         public int Capacity => Container.Capacity;
         public event Action Changed { add => Container.InventoryChanged += value; remove => Container.InventoryChanged -= value; }
         public InventorySlot GetSlot(int index) => Container.GetSlot(index);

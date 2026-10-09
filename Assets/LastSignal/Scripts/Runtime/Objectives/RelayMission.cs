@@ -19,7 +19,7 @@ namespace LastSignal.Objectives
         public string MaintenanceClue => string.IsNullOrWhiteSpace(maintenanceClue) ? Clue : maintenanceClue;
         public const string Intel = "CONTACT — Maintenance channel restored. A northern route is mentioned; its exact location remains unconfirmed.";
         public RelayProgression Progress { get; private set; }
-        public string Feedback { get; private set; } = "Explore the cabin. J: journal";
+        public string Feedback { get; private set; } = "Kulübeyi keşfet.";
         public bool JournalOpen { get; private set; }
         public long Pending => pending;
         SessionFlow flow;
@@ -135,17 +135,17 @@ namespace LastSignal.Objectives
             if (cells && cells.RecallDroppedItem(fuse, recoveryPoint.position)) { Feedback = "Existing fuse recalled from unloaded region."; return true; }
             Feedback = "No lost drop: the original fuse remains at its source. Death restores the last living checkpoint."; return false;
         }
+        public void ToggleJournal()
+        { if (!Ready) return; if (JournalOpen) CloseJournal(); else if (!flow.Paused) { JournalOpen = true; CancelRepair(); flow.Pause(); } }
         void Update()
         {
             if (Progress == null) return;
-            if (Keyboard.current != null && Keyboard.current.jKey.wasPressedThisFrame && Ready)
-            { if (JournalOpen) CloseJournal(); else if (!flow.Paused) { JournalOpen = true; CancelRepair(); flow.Pause(); } }
             if (pending != 0) FinishRepair(pending);
         }
         GUIStyle journalText, feedbackText;
         void OnGUI()
         {
-            if (!Ready) return;
+            if (!Ready || (flow.UserInterface && flow.UserInterface.Ready)) return;
             if (journalText == null)
             {
                 journalText = new GUIStyle(GUI.skin.label) { wordWrap = true, fontSize = 16 };

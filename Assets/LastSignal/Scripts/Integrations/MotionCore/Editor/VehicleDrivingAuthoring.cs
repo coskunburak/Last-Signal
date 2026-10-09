@@ -13,7 +13,7 @@ namespace LastSignal.VehicleAuthoring
     public static class VehicleDrivingAuthoring
     {
         const string Prefab = "Assets/LastSignal/_Game/Vehicles/Prefabs/LS_Vehicle_UtilityPickup_01.prefab";
-        const string Audio = "Assets/ThirdParty/Vehicle Entegrations/Essentials_Series_NOX_SOUND/Vehicle_Essentials_NOX_SOUND/Vehicle_Essential_Car/";
+        const string Audio = "Assets/ThirdParty/S15 Sound Pack/Essentials_Series_NOX_SOUND/Vehicle_Essentials_NOX_SOUND/Vehicle_Essential_Car/";
         [MenuItem("Last Signal/VEH-001/Update Driving Presentation")]
         public static void UpdatePresentation()
         {

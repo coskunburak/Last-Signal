@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 21:38:53Z" end-time="2026-10-08 21:39:09Z" duration="16.3599742">
+  <test-suite type="TestSuite" id="1376" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="314" result="Passed" start-time="2026-10-08 21:38:53Z" end-time="2026-10-08 21:39:09Z" duration="16.359974" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1369" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="314" result="Passed" start-time="2026-10-08 21:38:53Z" end-time="2026-10-08 21:39:09Z" duration="16.350490" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="33918" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1370" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="314" result="Passed" start-time="2026-10-08 21:38:53Z" end-time="2026-10-08 21:39:09Z" duration="16.346333" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="SetUpFixture" id="1191" name="Tests" fullname="LastSignal.Tests.S017ProfileIsolation" classname="LastSignal.Tests.S017ProfileIsolation" runstate="Runnable" testcasecount="314" result="Passed" start-time="2026-10-08 21:38:53Z" end-time="2026-10-08 21:39:09Z" duration="16.343063" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1192" name="S018SurvivalPlayTests" fullname="LastSignal.Tests.S018SurvivalPlayTests" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-08 21:38:53Z" end-time="2026-10-08 21:39:09Z" duration="16.334879" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1194" name="BandageCommitsOnceAndBlocksCombatDuringApplication" fullname="LastSignal.Tests.S018SurvivalPlayTests.BandageCommitsOnceAndBlocksCombatDuringApplication" methodname="BandageCommitsOnceAndBlocksCombatDuringApplication" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="400133373" result="Passed" start-time="2026-10-08 21:38:53Z" end-time="2026-10-08 21:38:55Z" duration="2.596345" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1198" name="ChosenStackIsConsumedAndNutritionUsesItsOwnResource" fullname="LastSignal.Tests.S018SurvivalPlayTests.ChosenStackIsConsumedAndNutritionUsesItsOwnResource" methodname="ChosenStackIsConsumedAndNutritionUsesItsOwnResource" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="1762713771" result="Passed" start-time="2026-10-08 21:38:55Z" end-time="2026-10-08 21:38:57Z" duration="1.889234" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1193" name="ConsumeIsAtomicAndStaleOrFullRequestsCostNothing" fullname="LastSignal.Tests.S018SurvivalPlayTests.ConsumeIsAtomicAndStaleOrFullRequestsCostNothing" methodname="ConsumeIsAtomicAndStaleOrFullRequestsCostNothing" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="2118381963" result="Passed" start-time="2026-10-08 21:38:57Z" end-time="2026-10-08 21:38:59Z" duration="1.894196" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1195" name="DamageAndPauseCancelBandageWithoutConsumption" fullname="LastSignal.Tests.S018SurvivalPlayTests.DamageAndPauseCancelBandageWithoutConsumption" methodname="DamageAndPauseCancelBandageWithoutConsumption" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="1796580487" result="Passed" start-time="2026-10-08 21:38:59Z" end-time="2026-10-08 21:39:01Z" duration="2.184537" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1200" name="DeadPlayerCannotConsumeOrEquip" fullname="LastSignal.Tests.S018SurvivalPlayTests.DeadPlayerCannotConsumeOrEquip" methodname="DeadPlayerCannotConsumeOrEquip" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="390327272" result="Passed" start-time="2026-10-08 21:39:01Z" end-time="2026-10-08 21:39:03Z" duration="1.872017" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1196" name="PackOwnsOneItemAndFullShrinkRefusesWithoutLoss" fullname="LastSignal.Tests.S018SurvivalPlayTests.PackOwnsOneItemAndFullShrinkRefusesWithoutLoss" methodname="PackOwnsOneItemAndFullShrinkRefusesWithoutLoss" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="1900053659" result="Passed" start-time="2026-10-08 21:39:03Z" end-time="2026-10-08 21:39:05Z" duration="1.910638" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1199" name="PauseFreezesWorldResourcesAndStaleTreatmentCannotCommit" fullname="LastSignal.Tests.S018SurvivalPlayTests.PauseFreezesWorldResourcesAndStaleTreatmentCannotCommit" methodname="PauseFreezesWorldResourcesAndStaleTreatmentCannotCommit" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="470623440" result="Passed" start-time="2026-10-08 21:39:05Z" end-time="2026-10-08 21:39:07Z" duration="1.981701" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1197" name="SaveReloadKeepsResourcesWoundAndEquipmentWithoutStarterDuplication" fullname="LastSignal.Tests.S018SurvivalPlayTests.SaveReloadKeepsResourcesWoundAndEquipmentWithoutStarterDuplication" methodname="SaveReloadKeepsResourcesWoundAndEquipmentWithoutStarterDuplication" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="722408583" result="Passed" start-time="2026-10-08 21:39:07Z" end-time="2026-10-08 21:39:09Z" duration="1.992487" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

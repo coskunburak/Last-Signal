@@ -11,6 +11,7 @@ namespace LastSignal.Persistence
         public LastSignal.WorldCells.CellWorldSnapshot cells;
         public SaveHeader header;
         public PlayerSnapshot player;
+        public LastSignal.SurvivalSnapshot survival;
         public CombatEquipmentSnapshot combat;
         public ContainerSnapshot inventory;
         public WeaponSnapshot weapon;
@@ -33,6 +34,7 @@ namespace LastSignal.Persistence
         public int schemaVersion;
         public int progressionVersion;
         public int vehicleVersion;
+        public int survivalVersion;
         public string contentVersion, buildId, worldId, timestampUtc;
         public int seed;
         public long generation;

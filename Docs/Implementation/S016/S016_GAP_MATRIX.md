@@ -1,0 +1,18 @@
+# S016 fark matrisi
+
+Durum: PARTIAL. D151–D153 modal/envanter 9/9, D154 interaction 3/3, D155 ayar EditMode 3/3 + PlayMode 1/1 ve D156 font 1/1 kullanıcı tarafından doğrulandı. D158 pause 1/1 kullanıcı tarafından doğrulandı. D159 kayıt mesajları EditMode 3/3 ve gerçek UI PlayMode 2/2 PASS. Persistence regresyon 9/9 PASS (`20261007T233413-676690Z`); tam EditMode 530/530 PASS (`20261007T233607-435838Z`); tam PlayMode son koşu 296/297 FAIL (`20261007T235356-149532Z`); slot-rebind geçti, crouch release sıra bağımlı hata. Movement native input fixture düzeltmesi sonrası 17 testlik kapı NOT_RUN.
+
+| Kart | Gerçek durum / kalan iş |
+|---|---|
+| D151 | IMPLEMENTED (ilk kapı): Inventory/Storage/Journal/Pause/Menu/Death/Loading görünüm önceliği, envanter Back ve lifecycle. Mevcut sahne Start ile oyuna giriyor; ilk ana menü ve ayrı Settings geri dönüş akışı henüz tamamlanmadı. Kayıt silme UI'sı yok. |
+| D152 | PARTIAL: move/merge/drop sonucu ve split-half UX eklendi; başarısız işlem seçimi korur. Tam miktar girişi, keyboard odak kabulü, gerçek instance kimliği ve bazı hata nedenleri açık. Generic equip/consume BLOCKED_BY_PREREQUISITE: gerçek genel komut yok; rifle/crowbar slot seçimi ayrı mevcut sistem. |
+| D153 | PARTIAL: gerçek carried/storage iki panel, kısmi transfer metni ve renk dışı seçim işareti var. Slot/item tanımı değişiminde seçim temizlenir. Transfer otoritesi item türü bazında çalışır; aynı türde farklı stack instance ayrımı yok. Revision/mass sistemi yok; sunum uydurulmayacak. |
+| D154 | PARTIAL: first-blocker, fresh validation ve bounded non-alloc deterministik tie-break var; küçük kenar kaçırmasında yalnız doğrulanmış görünür hedef korunur. Odaklı 3/3 PlayMode PASS (`20261007T173622-391489Z`); gerçek rota/human okunurluk ve corpse container önkoşulu açık. |
+| D155 | PARTIAL: S015 AudioPreferences genişletildi; mevcut ses/caption anahtarları korunarak v1 FOV, fare duyarlılığı ve UI ölçeği aynı PlayerPrefs profilinde. Oturum başında look uygulanıyor, pause/menu ayar paneli canlı değerleri değiştiriyor ve 0,5 sn sonra kaydediyor. Profil EditMode 3/3 (`20261007T231555-055262Z`) ve gerçek sahne PlayMode 1/1 (`20261007T231815-285388Z`) PASS; görsel kabul ve ayrı Settings geri dönüş akışı açık. |
+| D156 | PARTIAL: yerel Noto Sans üretim sahnesindeki 130 uGUI Text'e bağlandı; runtime etiketler aynı fontu seçiyor. UI ölçeği CanvasScaler referans çözünürlüğüne uygulanıyor. Odaklı font/glyph PlayMode 1/1 PASS (`20261007T232322-562652Z`); 1080p/%130/pseudo-long görsel kabulü açık. |
+| D157 | PARTIAL: envanter kapama SessionFlow'a bağlı, mevcut neutralRequired korunuyor. Mouse close/held fire, focus loss ve tekrar oturum lifecycle S016ModalTests 9/9 içinde PASS (`20261007T172837-898184Z`); ayrı Settings geri dönüşü/drag yok, ilgili insan kabulü açık. |
+| D158 | PARTIAL: tek SessionFlow pause otoritesi korundu; gerçek WorldClock davranışı önceki testte doğrulandı. Üretim sahnesi player/zombi/araç/UI bütünsel pause testi kullanıcı 1/1 PASS; insan kabulü açık. |
+| D159 | PARTIAL: ölüm ekranında Resume/ESC gameplay açamaz; mevcut SaveError kategorileri Türkçe oyuncu metnine bağlandı; EditMode 3/3 kullanıcı PASS (`20261007T232953-777420Z`); gerçek UI save/load ve sonuç görünürlüğü PlayMode 2/2 kullanıcı PASS (`20261007T233209-747098Z`); insan kabulü açık. |
+| D160 | NOT_RUN: manuel rota taslağı var; yeni oyuncu adım/hatalı click ölçümü ve build kullanıcıya ait. |
+
+Sonraki sıra: ilk modal kapısı → inventory/container → prompt → settings/readability → geniş input/pause → save feedback → regresyon/build → insan kabulü. Bir sonraki uygulama mevcut odaklı kapının kullanıcı sonucu sonrasında.

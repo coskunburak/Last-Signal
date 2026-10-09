@@ -19,6 +19,7 @@ namespace LastSignal.Vehicles
         void OnEnable()
         {
             responseColliders = GetComponents<Collider>();
+            feelWheels = GetComponentsInChildren<WheelCollider>(true);
             VehicleInfectedContactResponse.Register(responseColliders, true);
         }
         Vector3 stepVelocity, stepAngularVelocity, stepCenter;
@@ -42,6 +43,7 @@ namespace LastSignal.Vehicles
         void FixedUpdate()
         {
             VehicleInfectedContactResponse.SetStep(Time.fixedDeltaTime);
+            AdvanceBodyFeel(Time.fixedDeltaTime);
             if (body)
             {
                 stepVelocity = body.linearVelocity; stepAngularVelocity = body.angularVelocity;
@@ -148,6 +150,7 @@ namespace LastSignal.Vehicles
                     LastZombieImpact = new VehicleZombieImpactReceipt(transaction, identity, contact.point,
                         direction, speed, severity, damage, condition - Resources.Condition);
                     ZombieImpactCount++;
+                    BeginBodyFeel(target, LastZombieImpact);
                     ZombieImpactCommitted?.Invoke(LastZombieImpact);
                 }
             }

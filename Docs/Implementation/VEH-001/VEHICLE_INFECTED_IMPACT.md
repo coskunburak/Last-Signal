@@ -234,3 +234,10 @@ open -n "/Users/burakcoskun/Last Signal/Builds/S013/20261006T204143-881929Z-prod
 Check parked pickup dominance, interruption/fall/get-up, death override, momentum through one infected and the small group, corpse run-over without launch/duplicate kills, canonical hearing, and camera keys 8/9.
 
 Repository housekeeping: added local IDE, Python environment/cache, root .env, scratch and historical-backup ignore rules; Assets, Packages, ProjectSettings and canonical Docs evidence remain eligible for versioning. Validated 22 representative ignored/retained paths with git check-ignore --no-index. Existing tracked scratch/backup files require a separate index-only removal; no staging, commit, push or deletion of their local contents was performed by the assistant.
+
+
+## VEH-ZMB-003 crush / run-over feel — 2026-10-07 Europe/Istanbul
+
+**IN_PROGRESS / PARTIAL pending broader regression, fresh build/performance and manual feel acceptance.** Added presentation-only impact and spatial front/rear axle/undercarriage pass cues, bounded cockpit/exterior impulse, three low-pass audio voices, and decisive 0.55 s lethal full-body collapse. No new physical corpse obstacle, force, damage/noise/condition/save authority. Explicit camera cleanup on exit/disable; bounded target queue cancels on expiry, invalidation, recovery and session suspension.
+
+Affected suite **40/40 PASS**: `Evidence/20261006T212423-976690Z-zombie`; final strengthened 20 s course **1/1 PASS**: `../S012/Evidence/20261006T212838-694389Z/play.xml`, impact/front/rear=4/4/4, pending=0, living AI=1, contacts=0. Existing 100-impact isolated soak passes with cache_end=0/listeners=1/1; real single-body momentum remains 12→10.77898 m/s. Full VEH focused/EditMode/PlayMode, new clean build, player cost and manual quality are not yet verified for this revision. Complete audit, tuning, evidence boundaries and manual checklist: [VEHICLE_CRUSH_FEEL.md](VEHICLE_CRUSH_FEEL.md). VEH-ZMB-002 manual acceptance is also still unconfirmed; prior player results must not be relabeled as VEH-ZMB-003 evidence.

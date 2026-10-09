@@ -340,7 +340,12 @@ namespace LastSignal
             if (perception) { perception.Clear(); perception.enabled = false; }
             if (navigation) { navigation.Stop(); navigation.enabled = false; }
             if (ownedColliders != null) foreach (var collider in ownedColliders) if (collider) collider.enabled = false;
-            if (presentation) presentation.BeginDamage(true, LastImpact);
+            if (presentation)
+            {
+                if (health && health.LastDamage.Category == DamageCategory.VehicleImpact || presentation.VehicleKnockdown)
+                    presentation.BeginVehicleDeath(LastImpact);
+                else presentation.BeginDamage(true, LastImpact);
+            }
         }
         void OnDestroy()
         {

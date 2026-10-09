@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 08:34:14Z" end-time="2026-10-07 08:34:16Z" duration="1.8137077">
+  <test-suite type="TestSuite" id="1326" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="274" result="Failed" site="Child" start-time="2026-10-07 08:34:14Z" end-time="2026-10-07 08:34:16Z" duration="1.813708" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1319" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="274" result="Failed" site="Child" start-time="2026-10-07 08:34:14Z" end-time="2026-10-07 08:34:16Z" duration="1.764405" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87474" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1320" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="274" result="Failed" site="Child" start-time="2026-10-07 08:34:14Z" end-time="2026-10-07 08:34:16Z" duration="1.761480" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1321" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="274" result="Failed" site="Child" start-time="2026-10-07 08:34:14Z" end-time="2026-10-07 08:34:16Z" duration="1.760253" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1137" name="S014PopulationCaptureTests" fullname="LastSignal.Tests.S014PopulationCaptureTests" classname="LastSignal.Tests.S014PopulationCaptureTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-07 08:34:14Z" end-time="2026-10-07 08:34:16Z" duration="1.758788" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1138" name="OneProductionActorHasCleanLifecycle" fullname="LastSignal.Tests.S014PopulationCaptureTests.OneProductionActorHasCleanLifecycle" methodname="OneProductionActorHasCleanLifecycle" classname="LastSignal.Tests.S014PopulationCaptureTests" runstate="Runnable" seed="1895263145" result="Failed" label="Error" start-time="2026-10-07 08:34:14Z" end-time="2026-10-07 08:34:16Z" duration="1.727866" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.InvalidOperationException : Spawn overlaps scene collider: 0 at (-293.00, 0.02, -121.80): Gravel contact zone (Center: (-300.00, 0.04, -125.00), Extents: (10.00, 0.02, 5.00)) ]]></message>
+                <stack-trace><![CDATA[  at LastSignal.Slice.S014PopulationCapture.PrepareFixture (LastSignal.SessionFlow owner, System.Int32 count) [0x0032e] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Slice/S014PopulationCapture.cs:199 
+  at LastSignal.Tests.S014PopulationCaptureTests+<CheckFixture>d__5.MoveNext () [0x000b8] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/S014PopulationCaptureTests.cs:25 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+Saving results to: /Users/burakcoskun/Last Signal/Docs/Implementation/S012/Evidence/20261007T083351-819066Z/play.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

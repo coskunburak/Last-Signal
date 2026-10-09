@@ -42,7 +42,7 @@ namespace LastSignal.Vehicles
         public bool LightsOn { get; private set; }
         public bool Ready => flow && !flow.InMenu && !flow.Paused && !flow.Restoring && !flow.PlayerDead;
         public bool Available => Ready && !Occupied && physics != null && physics.SpeedMetersPerSecond <= tuning.exitSpeedMetersPerSecond;
-        public string Prompt => "E — Enter pickup";
+        public string Prompt => "Enter pickup";
         public event System.Action<string> Presented;
         public void Bind(SessionFlow owner)
         {
@@ -71,6 +71,7 @@ namespace LastSignal.Vehicles
             var combat = player.GetComponent<PlayerCombatController>();
             combat?.SetVehicleHolstered(true);
             motor.enabled = false; stance.enabled = false; capsule.enabled = false;
+            player.GetComponent<FirstPersonLook>().ResetVehicleBodyFeel();
             var view = player.GetComponent<FirstPersonLook>().View.transform;
             oldParent = player.transform.parent; oldCameraPosition = view.localPosition;
             var camera = player.GetComponent<FirstPersonLook>().View;
@@ -99,6 +100,7 @@ namespace LastSignal.Vehicles
             physics.ResetTransientInput();
             driver.transform.SetParent(oldParent, true); driver.transform.position = feet;
             driver.transform.rotation = Quaternion.Euler(0, driver.transform.eulerAngles.y, 0);
+            driver.GetComponent<FirstPersonLook>().ResetVehicleBodyFeel();
             driver.GetComponent<FirstPersonLook>().View.transform.localPosition = oldCameraPosition;
             driver.GetComponent<FirstPersonLook>().View.nearClipPlane = oldNearClip;
             capsule.enabled = true; motor.enabled = true; stance.enabled = true;
@@ -108,7 +110,7 @@ namespace LastSignal.Vehicles
             driver = null; input = null;
         }
         public void Suspend()
-        { physics?.ResetTransientInput(); noise?.Reset(); }
+        { physics?.ResetTransientInput(); noise?.Reset(); ClearBodyFeel(); }
         public bool TryRefuel()
         {
             if (!CanService() || !Resources.TryRefuel(flow.Player.GetComponent<PlayerInventory>())) return false;

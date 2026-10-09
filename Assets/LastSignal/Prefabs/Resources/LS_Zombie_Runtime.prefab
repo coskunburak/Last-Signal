@@ -640,6 +640,7 @@ GameObject:
   - component: {fileID: 20195784001815277}
   - component: {fileID: 5116920362945077609}
   - component: {fileID: 2911674039645898360}
+  - component: {fileID: 92225620465150063}
   m_Layer: 2
   m_Name: LS_Zombie_Runtime
   m_TagString: Untagged
@@ -774,6 +775,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieHealth
   maxHealth: 100
+  vehicleEffectiveMass: 80
 --- !u!114 &20195784001815277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -888,6 +890,18 @@ MonoBehaviour:
     anchor: {fileID: 1867712556946703919}
   - part: 6
     anchor: {fileID: 2485369615499577984}
+--- !u!114 &92225620465150063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3282210821492457384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fd50207d4fc14f6d97f9c4ca51fe7bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.Audio.ZombieAudioPresenter
 --- !u!1 &4683363329136021628
 GameObject:
   m_ObjectHideFlags: 0

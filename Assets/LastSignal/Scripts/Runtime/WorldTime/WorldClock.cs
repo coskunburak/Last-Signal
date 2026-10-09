@@ -120,6 +120,8 @@ namespace LastSignal.WorldTime
             var site = GetComponent<ShelterSite>();
             if (site && (site.Production == null || !site.Production.Installed(ShelterModule.Bed))) return SleepRejection.UnsafeState;
             if (ThreatNearby()) return SleepRejection.ThreatNearby;
+            var survival = Flow.Player.GetComponent<PlayerSurvival>();
+            if (survival && (survival.ApplyingTreatment || survival.State.Bleeding > 0)) return SleepRejection.UnsafeState;
             return SleepRejection.None;
         }
         public SleepRequest RequestSleep(RestPoint point, double seconds)
@@ -161,12 +163,18 @@ namespace LastSignal.WorldTime
                 (Flow.Player.transform.position - sleepingAt.transform.position).sqrMagnitude > sleepingAt.UseRange * sleepingAt.UseRange) return AdvanceReason.Cancelled;
             return ThreatNearby() ? AdvanceReason.ThreatNearby : AdvanceReason.Completed;
         }
-        void Recover(double amount) { if (health && health.IsAlive) health.RecoverHealth((float)amount); }
+        void Recover(double amount)
+        {
+            var survival = Flow.Player ? Flow.Player.GetComponent<PlayerSurvival>() : null;
+            if (health && health.IsAlive && (!survival || survival.State.Nutrition > 0))
+                health.RecoverHealth((float)amount * (survival ? survival.State.RecoveryMultiplier : 1));
+        }
         public WorldTimeSnapshot Capture() => Simulation.Capture();
         public void Restore(WorldTimeSnapshot snapshot)
         {
             if (Sleeping) throw new InvalidOperationException("Cannot hydrate during sleep.");
             var restored = new WorldSimulation(snapshot); restored.Register(this); Simulation = restored;
+            Flow.Player?.GetComponent<PlayerSurvival>()?.BindClock();
             GetComponent<LastSignal.AI.WorldPopulationManager>()?.BindClock();
             GetComponent<ShelterSite>()?.BindClock();
             protectedFromRain = pendingProtection = QueryRoof(); pendingElapsed = pollElapsed = 0;

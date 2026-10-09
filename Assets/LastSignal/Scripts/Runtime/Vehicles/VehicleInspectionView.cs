@@ -47,6 +47,8 @@ namespace LastSignal.Vehicles
             original.enabled = false; inspection.enabled = true;
             inspection.transform.position = actor.transform.TransformPoint(Positions[angle]);
             inspection.transform.LookAt(actor.transform.position + actor.transform.up);
+            inspection.transform.position += actor.transform.TransformVector(actor.BodyFeelPosition) * .4f;
+            inspection.transform.rotation *= Quaternion.Euler(actor.BodyFeelAngles * .4f);
         }
         void Restore()
         {

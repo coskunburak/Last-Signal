@@ -1,5 +1,25 @@
 # S014 — ilk üretim uygulaması ve doğrulama devri
 
+## 2026-10-07 — D139 matris tamamlandı
+
+PC ve Low toplam 30 tamamlanan ölçüm; frame budget PASS, S014/D139 geniş kabul PARTIAL. Ayrıntılar ve lifecycle/profiler sınırları: [D139 ölçüm raporu](S014_D139_PERFORMANCE.md). Geçersiz ilk koşu kabul değildir. Canlı silah/zombi/reload görüntüleri yeni evidence dizinlerinde hazırlanıyor.
+
+## Güncel devam kaydı — 2026-10-07 (çalışma sürüyor)
+
+HEAD `97516c8b20793f4ca834e214318bdac45f041a4d`, dal `s012-integrated-graybox-slice` korunuyor. Önceden mevcut VEH/AI/camera değişiklikleri kullanıcı çalışmasıdır. Önceki el materyal uyarlaması ve altı FOV/aspect karesi yerinde; yeniden yapılmadı. Giriş ayrıntıları: `Evidence/20261006T213705-603649Z-closure/ENTRY_GAP_MATRIX.md`.
+
+D139 için Development-only `S014PopulationCapture` ve `Tools/s014-population.py` eklendi. Gerçek `LS_Zombie_Runtime` ile 1/10/20, beş tekrar, 2s preroll + 5s warmup + 20s ölçüm; ilk tekrar başına warmup öncesinde 2s ham CPU Profiler kaydı. Üretim sahnesi kalıcı değiştirilmez. Player hedefi sabittir; mevcut HealthChanged/RecoverHealth ile fixture'a özgü iyileştirilir. Bu tedavi özelliği veya karşılaşma adaleti kabulü değildir.
+
+İlk standalone tanı koşusu `Evidence/20261007T085519-615708Z-population-pc/` INVALIDATED: PlayerHealth'i disable etmek melee doğrulayıcıda hedefi geçersiz kıldı, contact_attempts=0. Süreç durduruldu, ham kanıt korundu. Fixture düzeltildi; yeni dedicated test gerçek temas oluşmasını zorunlu kılıyor. Düzeltilmiş focused koşu `../S012/Evidence/20261007T085925-363070Z/play.xml`: 3/3 PASS. Öncesindeki `20261007T085752-806009Z` Unity Test Runner NullReference ile aborted; test başarısı değildir.
+
+Düzeltmeden önce taze geniş regresyon: `../S012/Evidence/20261007T083600-807050Z/edit.xml` 510/510 PASS; `Evidence/20261007T083651-048431Z-art-edit/tests.xml` 10/10 PASS; `../S012/Evidence/20261007T083728-668665Z/play.xml` 274/274 PASS. Son fixture revizyonu için kapanış regresyonu henüz açık.
+
+Ölçüm build'i `Builds/S013/20261007T090101-351030Z-production`: Succeeded, 0 error, 55 warning, 18.4899700s. Önceki build `20261007T085421-388975Z-production` artık ölçüm referansı değil. Sayaçlarla birlikte gerçek standalone PC koşusu `Evidence/20261007T090154-796032Z-population-pc/` başladı; sonuç henüz verilmedi. Build/source kimliği her koşuda saklanıyor.
+
+D138 tedavi: **BLOCKED — AUTHORITATIVE TREATMENT / ITEM-INSTANCE CONTRACT NOT YET PRESENT**. D131–D137 kalan canlı/görsel kabul ve D140 henüz kapanmadı. Görsel ürün onayı NEEDS_USER_ACCEPTANCE; özel lisans/edinim kanıtı BLOCKED — USER LICENSE/ENTITLEMENT EVIDENCE REQUIRED. S014 PARTIAL; `S015_ENTRY = BLOCKED`.
+
+---
+
 ## Son doğrulama — 2026-10-05 yüksek FOV crowbar 4/4 PASS
 
 `Evidence/20261005T101512-630643Z-focused-melee/`: XML 4/4 Passed, failed=0, skipped=0, exitCode=0, 1,1503823 saniye. Sekiz kaynak SHA-256 güncel dosyalarla eşleşti. Genişletilmiş stance testi FOV60/100/75 sırasında authored swing ve gameplay origin korunmasını, standart poza dönüşü doğruladı; üç iptal/slot testi de geçti. Runtime/test bu sonuç sonrası değiştirilmedi. Aşağıdaki NOT_RUN kayıtları tarihsel durumdur. Sonraki açık kontrol hareket/crouch/slide/aspect görsel incelemesi; tekrar test istenmiyor. D132 ve S014 hâlâ PARTIAL.
@@ -189,3 +209,20 @@ D136/D139 için mevcut ZombiePresentationTests'e iki saldırı × iki culling po
 Kullanıcı koşusu `Evidence/20261005T095944-429298Z-focused-zombie/`: XML 10/10 Passed, failed=0, skipped=0, exitCode=0, 0,1927819 saniye. Dokuz kayıtlı kaynak SHA-256 çalışma ağacıyla eşleşti. Dört saldırı/pause/culling vakası ve altı mevcut locomotion/hit/death sunum testi geçti. Bu manual Animator stepping kanıtıdır; kısa süre gerçek gameplay/performance benchmark olarak yorumlanmaz. Runtime/test/asset değişmedi.
 
 D136/D139 sunum saati ve culling restorasyonu için odaklı otomatik kanıt eklendi; gerçek AI damage/dodge, düşük kalite render, foot sliding ve görsel temas kabulü açık. D137 mevcut ölüm son poz/zemin ve kök sabitliği testleri geçti; save/corpse tüm kabulü bu gruptan çıkarılmaz. S014 PARTIAL; sıradaki görsel rota handoff'ta. Yeni test/full-suite/build koşusu istenmedi.
+
+
+## 2026-10-07 — S014 Teknik Kapanış
+
+S014 sprinti `TECHNICAL_COMPLETE_AWAITING_USER_ACCEPTANCE` statüsünde teknik olarak kapatılmıştır. 
+- D136 Zombie Fairness testleri, D137 Corpse testleri PlayMode'da başarıyla bulunmuş ve PASS olarak güncellenmiştir. 
+- Final macOS Development Build başarıyla alınmış ve smoke testten geçmiştir. 
+- D138 Treatment için gerekli backend sistemi bulunmadığından "PARTIAL/BLOCKED" kalmıştır.
+Tüm S014 detayları ve kanıt dökümleri şu belgede toplanmıştır:
+[S014 Final Closure Report](S014_FINAL_CLOSURE.md)
+
+
+## CORRECTION (2026-10-07)
+Önceki kapanış denemesinde belirtilen "TECHNICAL_COMPLETE" kararı iptal edilmiştir.
+- **Neden:** D138 Treatment domain'i eksik olduğu halde sprintin tamamlandığı iddia edilmiş, ve D140 Standalone kabul rotası yalnızca bir "smoke test" yapılarak PASS varsayılmıştır.
+- **Yeni Durum:** `PARTIAL`. D138'in eksikliği gelecekteki Medical/Inventory sprintlerine ertelenmiş (deferred) olarak işaretlenmiştir. D140'ın görsel oynanış kabulü (FOV, his, okunabilirlik) `NEEDS_USER_ACCEPTANCE` olarak Burak'a devredilmiştir.
+- S014 için nihai doğru değerlendirme ve D140 Standalone batchmode analiz kanıtları [S014_FINAL_CLOSURE.md](S014_FINAL_CLOSURE.md) belgesinde toplanmıştır.

@@ -35,6 +35,11 @@ namespace LastSignal.Persistence
                 if (!string.Equals(Hash(envelope.payload), envelope.checksum, StringComparison.Ordinal))
                     return new SaveResult(SaveError.ChecksumMismatch, "Save payload checksum mismatch.");
                 var candidate = JsonUtility.FromJson<SaveGame>(envelope.payload);
+                var survival = candidate?.survival;
+                if (candidate?.header != null && candidate.header.survivalVersion == 0 && survival != null &&
+                    survival.version == 0 && survival.hydration == 0 && survival.nutrition == 0 && survival.bleeding == 0 &&
+                    survival.woundRevision == 0 && survival.baseCapacity == 0 && string.IsNullOrEmpty(survival.backpackId))
+                    candidate.survival = null;
                 // JsonUtility materializes absent optional serializable objects as empty instances.
                 // Keep old enemy/population saves semantically intact while rejecting partial anatomy data.
                 if (candidate?.world?.enemies != null)

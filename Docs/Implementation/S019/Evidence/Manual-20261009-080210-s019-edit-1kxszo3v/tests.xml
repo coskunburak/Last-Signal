@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-09 05:02:30Z" end-time="2026-10-09 05:02:30Z" duration="0.0669377">
+  <test-suite type="TestSuite" id="1000" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="592" result="Failed" site="Child" start-time="2026-10-09 05:02:30Z" end-time="2026-10-09 05:02:30Z" duration="0.066938" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1702" name="LastSignal.EditModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.EditModeTests.dll" runstate="Runnable" testcasecount="582" result="Failed" site="Child" start-time="2026-10-09 05:02:30Z" end-time="2026-10-09 05:02:30Z" duration="0.060443" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1273" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1703" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="582" result="Failed" site="Child" start-time="2026-10-09 05:02:30Z" end-time="2026-10-09 05:02:30Z" duration="0.057290" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1704" name="Tests" fullname="LastSignal.Tests" runstate="Runnable" testcasecount="582" result="Failed" site="Child" start-time="2026-10-09 05:02:30Z" end-time="2026-10-09 05:02:30Z" duration="0.054722" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1314" name="S019ContentToolsTests" fullname="LastSignal.Tests.S019ContentToolsTests" classname="LastSignal.Tests.S019ContentToolsTests" runstate="Runnable" testcasecount="28" result="Failed" site="Child" start-time="2026-10-09 05:02:30Z" end-time="2026-10-09 05:02:30Z" duration="0.048167" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1344" name="PilotTemplateCreatesUniqueInstancesAndUndoRemovesOnlyNewInstance" fullname="LastSignal.Tests.S019ContentToolsTests.PilotTemplateCreatesUniqueInstancesAndUndoRemovesOnlyNewInstance" methodname="PilotTemplateCreatesUniqueInstancesAndUndoRemovesOnlyNewInstance" classname="LastSignal.Tests.S019ContentToolsTests" runstate="Runnable" seed="287886601" result="Failed" label="Error" start-time="2026-10-09 05:02:30Z" end-time="2026-10-09 05:02:30Z" duration="0.039576" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.InvalidOperationException : Cannot create a new scene additively with an untitled scene unsaved.]]></message>
+                <stack-trace><![CDATA[  at (wrapper managed-to-native) UnityEditor.SceneManagement.EditorSceneManager.NewScene_Injected(UnityEditor.SceneManagement.NewSceneSetup,UnityEditor.SceneManagement.NewSceneMode,UnityEngine.SceneManagement.Scene&)
+  at UnityEditor.SceneManagement.EditorSceneManager.NewScene (UnityEditor.SceneManagement.NewSceneSetup setup, UnityEditor.SceneManagement.NewSceneMode mode) [0x00000] in <97178b65578e450f9867b3c4687644bc>:0 
+  at LastSignal.Tests.S019ContentToolsTests.PilotTemplateCreatesUniqueInstancesAndUndoRemovesOnlyNewInstance () [0x000ed] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/S019ContentToolsTests.cs:145 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <299d5c9ae27b4d27af003e5f456f4b13>:0 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

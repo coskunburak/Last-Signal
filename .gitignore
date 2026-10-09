@@ -158,6 +158,30 @@ __pycache__/
 /Docs/Implementation/S012/Evidence/**/start.marker
 /Docs/Implementation/S012/Evidence/**/preexisting-current.json*
 
+# S015 verification preserves duplicate historical outputs in each run folder.
+# The source audio packages under Assets/ThirdParty/S15 Sound Pack stay trackable;
+# .gitattributes stores their WAV and other large binary assets in Git LFS.
+/Docs/Implementation/S015/Evidence/**/generated-artifacts/
+!Docs/Implementation/S015/Evidence/**/*.log
+
+# Canonical sprint evidence stays versioned, including Unity build/test logs.
+# Preserve XML, JSON, CSV, screenshots and before/after settings snapshots.
+!Docs/Implementation/**/Evidence/**/*.log
+
+# Verification runners copy historical evidence here for local recovery.
+# These duplicates are not the canonical results of the current run.
+/Docs/Implementation/**/Evidence/**/generated-artifacts/
+/Docs/Implementation/**/Evidence/**/start.marker
+/Docs/Implementation/**/Evidence/**/preexisting-current.json*
+
+# Ad-hoc root test outputs; canonical results belong under Docs/Implementation.
+# Already tracked files remain tracked until explicitly removed from the index.
+/*.xml
+/test_log.txt
+/pgrep.txt
+/TestResults/
+/CodeCoverage/
+
 # Archives
 *.zip
 *.rar

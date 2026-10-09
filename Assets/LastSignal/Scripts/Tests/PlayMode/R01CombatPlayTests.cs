@@ -14,15 +14,34 @@ using UnityEngine.TestTools;
 using Object=UnityEngine.Object;
 namespace LastSignal.Tests
 {
-    public sealed class R01CombatPlayTests : InputTestFixture
+    public sealed class R01CombatPlayTests
     {
         readonly List<GameObject> owned=new List<GameObject>();
         SessionFlow flow; Keyboard keyboard; Mouse mouse;
-        public override void Setup() {InputFixtureIsolation.DisableLiveActions();base.Setup();Time.timeScale=1;keyboard=InputSystem.AddDevice<Keyboard>();mouse=InputSystem.AddDevice<Mouse>();}
-        public override void TearDown()
+        InputFixtureIsolation.SceneScope sceneScope;
+        InputFixtureIsolation.NativeInputScope inputScope;
+        static void Press(UnityEngine.InputSystem.Controls.ButtonControl button) => InputFixtureIsolation.QueueButton(button, true);
+        static void Release(UnityEngine.InputSystem.Controls.ButtonControl button) => InputFixtureIsolation.QueueButton(button, false);
+        [SetUp] public void Setup()
         {
-            if(flow)flow.ReturnToMenu();foreach(var go in owned)if(go)Object.DestroyImmediate(go);owned.Clear();
-            Time.timeScale=1;InputFixtureIsolation.DisableLiveActions();base.TearDown();
+            sceneScope = new InputFixtureIsolation.SceneScope();
+            inputScope = new InputFixtureIsolation.NativeInputScope();
+            Time.timeScale = 1; keyboard = inputScope.Keyboard; mouse = inputScope.Mouse;
+        }
+        [TearDown] public void TearDown()
+        {
+            try
+            {
+                if (flow) flow.ReturnToMenu();
+                foreach (var go in owned) if (go) Object.DestroyImmediate(go);
+                owned.Clear();
+            }
+            finally
+            {
+                Time.timeScale = 1;
+                try { inputScope?.Dispose(); inputScope = null; }
+                finally { sceneScope?.Dispose(); sceneScope = null; }
+            }
         }
         GameObject Go(string name) {var g=new GameObject(name);owned.Add(g);return g;}
         [UnityTest] public IEnumerator PhysicsDeduplicatesAndRejectsWallsRangeRearDeadAndEmbeddedOrigin()
@@ -50,22 +69,16 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator RealInputSwitchCancelSoakAndSaveLoad()
         {
-            UnityEngine.TestTools.LogAssert.ignoreFailingMessages = true;
             yield return Load();var player=flow.Player;var combat=player.GetComponent<PlayerCombatController>();var stamina=player.GetComponent<PlayerStamina>();
             Assert.IsNotNull(stamina);Assert.IsNotNull(combat.Melee);
-            // Extra yield: ensure InputSystem fully resolves bindings and neutralRequired is cleared.
+            // Allow the native player loop to observe a neutral input frame before pressing.
             yield return null;
             var inputReader=player.GetComponent<PlayerInputReader>();
             Assert.IsTrue(inputReader.GameplayActive,"GameplayActive must be true before input test");
             Press(keyboard.digit3Key);yield return null;yield return null;Release(keyboard.digit3Key);yield return null;
-            // If the InputTestFixture synthetic key could not route through the instantiated InputActionAsset
-            // (known Unity 6 PlayMode InputTestFixture limitation with cloned assets), verify wiring then select directly.
-            if(combat.SelectedSlot!=PlayerCombatController.CombatSlot.Melee) combat.SelectSlot(PlayerCombatController.CombatSlot.Melee);
             Assert.AreEqual(PlayerCombatController.CombatSlot.Melee,combat.SelectedSlot);Assert.IsNull(combat.ActiveWeapon);Assert.IsFalse(combat.Firearm.isActiveAndEnabled);
             int magazine=combat.Firearm.RuntimeState.CurrentMagazine;
             Press(mouse.leftButton);yield return null;yield return null;Release(mouse.leftButton);
-            // Same InputTestFixture routing caveat: if synthetic mouse didn't fire Attack, drive directly.
-            if(combat.Melee.Simulation.State==MeleeState.Ready) { stamina.ResetSession(); combat.Melee.TryAttack(); }
             Assert.AreEqual(MeleeState.Windup,combat.Melee.Simulation.State);Assert.Less(stamina.CurrentStamina,100);
             Assert.IsFalse(combat.Melee.TryAttack());combat.SelectSlot(PlayerCombatController.CombatSlot.Firearm);yield return new WaitForSeconds(.4f);Assert.AreEqual(MeleeState.Ready,combat.Melee.Simulation.State);
             for(int i=0;i<50;i++) {Assert.IsTrue(combat.SelectSlot(PlayerCombatController.CombatSlot.Melee));stamina.ResetSession();Assert.IsTrue(combat.Melee.TryAttack());combat.Melee.Simulation.Tick(1);Assert.IsTrue(combat.SelectSlot(PlayerCombatController.CombatSlot.Firearm));}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 08:19:30Z" end-time="2026-10-08 08:19:32Z" duration="1.5597732">
+  <test-suite type="TestSuite" id="1367" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="306" result="Failed" site="Child" start-time="2026-10-08 08:19:30Z" end-time="2026-10-08 08:19:32Z" duration="1.559773" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1360" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="306" result="Failed" site="Child" start-time="2026-10-08 08:19:30Z" end-time="2026-10-08 08:19:32Z" duration="1.552014" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="60300" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1361" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="306" result="Failed" site="Child" start-time="2026-10-08 08:19:30Z" end-time="2026-10-08 08:19:32Z" duration="1.549198" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="SetUpFixture" id="1191" name="Tests" fullname="LastSignal.Tests.S017ProfileIsolation" classname="LastSignal.Tests.S017ProfileIsolation" runstate="Runnable" testcasecount="306" result="Failed" site="Child" start-time="2026-10-08 08:19:30Z" end-time="2026-10-08 08:19:32Z" duration="1.545785" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1181" name="S017InputFlowTests" fullname="LastSignal.Tests.S017InputFlowTests" classname="LastSignal.Tests.S017InputFlowTests" runstate="Runnable" testcasecount="9" result="Failed" site="Child" start-time="2026-10-08 08:19:30Z" end-time="2026-10-08 08:19:32Z" duration="1.537111" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1190" name="JournalAndInventoryAreReachableByControllerWithSafeBack" fullname="LastSignal.Tests.S017InputFlowTests.JournalAndInventoryAreReachableByControllerWithSafeBack" methodname="JournalAndInventoryAreReachableByControllerWithSafeBack" classname="LastSignal.Tests.S017InputFlowTests" runstate="Runnable" seed="210696171" result="Failed" start-time="2026-10-08 08:19:30Z" end-time="2026-10-08 08:19:32Z" duration="1.528710" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  One shoulder press must emit one Journal request. GameplayActive=True, Screen=Gameplay, Binding=RB; Before: enabled=False, neutral=False, controls=3; Held: device=1, action=0, enabled=False, neutral=False, performed=0
+  Expected: 1
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at LastSignal.Tests.S017InputFlowTests+<JournalAndInventoryAreReachableByControllerWithSafeBack>d__25.MoveNext () [0x00383] in /Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/S017InputFlowTests.cs:288
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in ./Library/PackageCache/com.unity.test-framework@f3e6c9a02477/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

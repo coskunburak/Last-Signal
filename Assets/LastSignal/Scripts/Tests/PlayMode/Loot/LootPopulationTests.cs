@@ -25,8 +25,10 @@ namespace LastSignal.Tests
         static void Set(object target,string field,object value) => target.GetType().GetField(field,BindingFlags.Instance|BindingFlags.NonPublic).SetValue(target,value);
         GameObject Go(string name,Vector3 position)
         {var go=new GameObject(name);SceneManager.MoveGameObjectToScene(go,scene);go.transform.position=position;owned.Add(go);return go;}
+        InputFixtureIsolation.SceneScope sceneScope;
         [SetUp] public void Setup()
         {
+            sceneScope = new InputFixtureIsolation.SceneScope();
             scene=SceneManager.CreateScene("LootIsolatedTest");SceneManager.SetActiveScene(scene);
             var ground=Go("Ground",Vector3.down*.5f);ground.AddComponent<BoxCollider>().size=new Vector3(300,1,300);
             prefab=Go("Prefab",new Vector3(120,10,120));prefab.AddComponent<BoxCollider>().size=Vector3.one*.2f;prefab.AddComponent<WorldItem>();
@@ -43,6 +45,7 @@ namespace LastSignal.Tests
             if(service)service.End();yield return null;
             foreach(var o in owned)if(o)Object.DestroyImmediate(o);owned.Clear();
             if(scene.IsValid()&&scene.isLoaded)yield return SceneManager.UnloadSceneAsync(scene);
+            sceneScope?.Dispose(); sceneScope = null;
             Time.timeScale=1;
         }
         WorldItem Generated()

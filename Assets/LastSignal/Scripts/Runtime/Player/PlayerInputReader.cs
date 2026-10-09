@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Processors;
 
 namespace LastSignal
 {
@@ -18,6 +20,29 @@ namespace LastSignal
         public bool GameplayActive { get; private set; }
         public Vector2 Move { get; private set; }
         public Vector2 Look { get; private set; }
+        // Describes this sample, not the current presentation device family.
+        public bool LookUsesGamepad { get; private set; }
+        readonly StickDeadzoneProcessor lookDeadzone = new StickDeadzoneProcessor { min = Audio.AudioPreferences.DefaultGamepadDeadzone, max = .95f };
+        public void SetGamepadLookDeadzone(float value) => lookDeadzone.min =
+            float.IsFinite(value) ? Mathf.Clamp(value, .15f, .4f) : Audio.AudioPreferences.DefaultGamepadDeadzone;
+
+        Vector2 ReadLook(InputAction action)
+        {
+            LookUsesGamepad = action.activeControl?.device is Gamepad;
+            // Read the selected control before its layout deadzone so the configured
+            // radial deadzone is applied exactly once. Mouse keeps action delta semantics.
+            if (LookUsesGamepad && action.activeControl is StickControl stick)
+                return lookDeadzone.Process(stick.ReadUnprocessedValue(), stick);
+            return action.ReadValue<Vector2>();
+        }
+
+        bool GamepadLookHeld(InputAction action)
+        {
+            foreach (var control in action.controls)
+                if (control is StickControl stick && stick.device is Gamepad &&
+                    lookDeadzone.Process(stick.ReadUnprocessedValue(), stick).sqrMagnitude > .001f) return true;
+            return false;
+        }
         public bool SprintHeld { get; private set; }
         public bool FireHeld { get; private set; }
         public bool AimHeld { get; private set; }
@@ -34,6 +59,20 @@ namespace LastSignal
         public event Action AimReleased;
         public event Action ReloadRequested;
 
+        public InputActionAsset SourceAsset => actions;
+        public bool ExternalUiOwner { get; set; }
+        public event Action JournalRequested;
+        public event Action SkipTutorialRequested;
+        [NonSerialized] InputAction skipTutorial;
+        [NonSerialized] InputAction journal;
+        public void LoadBindingOverrides(string json)
+        {
+            if (!instance) return;
+            bool active = GameplayActive || DrivingActive;
+            instance.Disable();
+            InputBindingPolicy.LoadSafely(instance, json, out _);
+            SetGameplay(active);
+        }
         public void Configure(InputActionAsset source) => actions = source;
 
         void Awake() => InitializeInput();
@@ -56,6 +95,8 @@ namespace LastSignal
             aim = gameplay.FindAction("Aim", false); // May not exist in older asset versions
             reload = gameplay.FindAction("Reload", false);
             inventory = gameplay.FindAction("Inventory", false);
+            skipTutorial = gameplay.FindAction("SkipTutorial", false);
+            journal = gameplay.FindAction("Journal", false);
             meleeSlot = gameplay.FindAction("MeleeSlot", false);
             firearmSlot = gameplay.FindAction("FirearmSlot", false);
         }
@@ -66,6 +107,8 @@ namespace LastSignal
             // to a fresh clone, never to the Input System state from the old domain.
             if (!instance) InitializeInput();
             if (!instance) return;
+            if (skipTutorial != null) skipTutorial.performed += OnSkipTutorial;
+            if (journal != null) journal.performed += OnJournal;
             interact.performed += OnInteract;
             crouch.performed += OnCrouch;
             pause.performed += OnPause;
@@ -83,6 +126,10 @@ namespace LastSignal
         void OnDisable()
         {
             if (!instance) return;
+            if (skipTutorial != null) skipTutorial.performed -= OnSkipTutorial;
+            skipTutorial = null;
+            if (journal != null) journal.performed -= OnJournal;
+            journal = null;
             interact.performed -= OnInteract;
             crouch.performed -= OnCrouch;
             pause.performed -= OnPause;
@@ -121,6 +168,7 @@ namespace LastSignal
         void Clear()
         {
             Move = Look = Vector2.zero;
+            LookUsesGamepad = false;
             SprintHeld = CrouchHeld = FireHeld = AimHeld = false;
         }
         void Update()
@@ -131,6 +179,7 @@ namespace LastSignal
             if (neutralRequired)
             {
                 neutralRequired = move.ReadValue<Vector2>().sqrMagnitude > .001f ||
+                    GamepadLookHeld(look) || (journal != null && journal.IsPressed()) || pause.IsPressed() || (reload != null && reload.IsPressed()) ||
                     sprint.IsPressed() || crouch.IsPressed() || interact.IsPressed() ||
                     attack.IsPressed() || (aim != null && aim.IsPressed()) || (inventory != null && inventory.IsPressed()) ||
                     (meleeSlot != null && meleeSlot.IsPressed()) || (firearmSlot != null && firearmSlot.IsPressed());
@@ -138,7 +187,7 @@ namespace LastSignal
                 return;
             }
             Move = Vector2.ClampMagnitude(move.ReadValue<Vector2>(), 1f);
-            Look = look.ReadValue<Vector2>();
+            Look = ReadLook(look);
             SprintHeld = sprint.IsPressed();
             CrouchHeld = crouch.IsPressed();
             FireHeld = attack.IsPressed();
@@ -149,7 +198,10 @@ namespace LastSignal
         void OnFirearmSlot(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) FirearmSlotRequested?.Invoke(); }
         void OnInteract(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) InteractRequested?.Invoke(); }
         void OnCrouch(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) CrouchRequested?.Invoke(); }
-        void OnPause(InputAction.CallbackContext _) => PauseRequested?.Invoke();
+        void OnSkipTutorial(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) SkipTutorialRequested?.Invoke(); }
+        void OnJournal(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) JournalRequested?.Invoke(); }
+        void OnPause(InputAction.CallbackContext context)
+        { if (!(ExternalUiOwner && context.action == cancel)) PauseRequested?.Invoke(); }
         void OnInventory(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) InventoryRequested?.Invoke(); }
         void OnFirePressed(InputAction.CallbackContext _) { if (GameplayActive && !neutralRequired) FirePressed?.Invoke(); }
         void OnFireReleased(InputAction.CallbackContext _) { if (GameplayActive) FireReleased?.Invoke(); }

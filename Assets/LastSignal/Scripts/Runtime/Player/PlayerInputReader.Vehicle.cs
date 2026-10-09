@@ -45,11 +45,9 @@ namespace LastSignal
             bool ready = vehicleGate.ActionsAllowed;
             VehicleIntent = vehicleGate.Sample(new VehicleControlIntent(vehicleThrottle.ReadValue<float>(), vehicleBrake.ReadValue<float>(),
                 vehicleSteer.ReadValue<float>(), vehicleHandbrake.IsPressed(), vehicleReverse.ReadValue<float>()), true,
-                vehicleExit.IsPressed() || vehicleHorn.IsPressed() || vehicleLights.IsPressed() || vehicleIgnition.IsPressed());
+                vehicleExit.IsPressed() || vehicleHorn.IsPressed() || vehicleLights.IsPressed() || vehicleIgnition.IsPressed() || GamepadLookHeld(vehicleLook));
             if (!ready) return;
-            Look = vehicleLook.ReadValue<Vector2>();
-            // Match the existing mouse sensitivity/FOV policy; gamepad is angular rate rather than per-frame delta.
-            if (vehicleLook.activeControl?.device is Gamepad) Look *= 1000 * Time.deltaTime;
+            Look = ReadLook(vehicleLook);
             VehicleExitPressed = vehicleExit.WasPressedThisFrame(); VehicleHornPressed = vehicleHorn.WasPressedThisFrame();
             VehicleLightsPressed = vehicleLights.WasPressedThisFrame(); VehicleIgnitionPressed = vehicleIgnition.WasPressedThisFrame();
         }
