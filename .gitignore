@@ -85,6 +85,15 @@ mono_crash.*
 *.unitypackage.meta
 *.app
 
+# Unity Development Build sidecars (including character verification exports).
+# Keep source FBX, Avatar, clips, prefabs and their .meta files versioned.
+*_BackUpThisFolder_ButDontShipItWithYourGame/
+*_BackUpThisFolder_ButDontShipItWithYourGame.meta
+*_BurstDebugInformation_DoNotShip/
+*_BurstDebugInformation_DoNotShip.meta
+*.dSYM/
+*.dSYM.meta
+
 # Crashlytics generated file
 crashlytics-build.properties
 
@@ -166,6 +175,8 @@ __pycache__/
 
 # Canonical sprint evidence stays versioned, including Unity build/test logs.
 # Preserve XML, JSON, CSV, screenshots and before/after settings snapshots.
+# CharacterIntegration gate-result.json, invocation.json, results.xml and
+# build-summary.txt are evidence too; never ignore that Evidence directory.
 !Docs/Implementation/**/Evidence/**/*.log
 
 # Verification runners copy historical evidence here for local recovery.

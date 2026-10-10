@@ -9,6 +9,18 @@ namespace LastSignal
         readonly MeleeWeaponDefinition definition;
         float remaining;
         public MeleeState State { get; private set; }
+        // Read-only timeline for animation sampling, never an animation completion authority.
+        public float PresentationProgress
+        {
+            get
+            {
+                if (!definition || State == MeleeState.Ready) return 0;
+                float total = definition.WindupSeconds + definition.ActiveSeconds + definition.RecoverySeconds;
+                float after = State == MeleeState.Windup ? definition.ActiveSeconds + definition.RecoverySeconds :
+                    State == MeleeState.Active ? definition.RecoverySeconds : 0;
+                return UnityEngine.Mathf.Clamp01(1 - (remaining + after) / total);
+            }
+        }
         public ulong SwingId { get; private set; }
         public event Action<MeleeState> Changed;
         public event Action ActiveWindow;

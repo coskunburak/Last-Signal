@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="51" result="Passed" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-10 01:10:38Z" end-time="2026-10-10 01:12:14Z" duration="95.6153854">
+  <test-suite type="TestSuite" id="1399" name="Last Signal" fullname="Last Signal" runstate="Runnable" testcasecount="334" result="Passed" start-time="2026-10-10 01:10:38Z" end-time="2026-10-10 01:12:14Z" duration="95.615385" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1392" name="LastSignal.PlayModeTests.dll" fullname="/Users/burakcoskun/Last Signal/Library/ScriptAssemblies/LastSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="334" result="Passed" start-time="2026-10-10 01:10:38Z" end-time="2026-10-10 01:12:14Z" duration="95.607698" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="63806" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1393" name="LastSignal" fullname="LastSignal" runstate="Runnable" testcasecount="334" result="Passed" start-time="2026-10-10 01:10:38Z" end-time="2026-10-10 01:12:14Z" duration="95.605864" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="SetUpFixture" id="1199" name="Tests" fullname="LastSignal.Tests.S017ProfileIsolation" classname="LastSignal.Tests.S017ProfileIsolation" runstate="Runnable" testcasecount="334" result="Passed" start-time="2026-10-10 01:10:38Z" end-time="2026-10-10 01:12:14Z" duration="95.604933" total="51" passed="51" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1018" name="CombatAcceptanceTests" fullname="LastSignal.Tests.CombatAcceptanceTests" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-10 01:10:38Z" end-time="2026-10-10 01:10:47Z" duration="9.146476" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1022" name="ADS_ReducesFOVAndSensitivity" fullname="LastSignal.Tests.CombatAcceptanceTests.ADS_ReducesFOVAndSensitivity" methodname="ADS_ReducesFOVAndSensitivity" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="944028393" result="Passed" start-time="2026-10-10 01:10:38Z" end-time="2026-10-10 01:10:40Z" duration="2.158775" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=5 active=True mouse=Mouse:/Mouse1
+B0A_ORDER ADS devices=5 active=True mouse=Mouse:/Mouse1
+]]></output>
+            </test-case>
+            <test-case id="1021" name="AutoFire_FiresContinuouslyWhileHeld" fullname="LastSignal.Tests.CombatAcceptanceTests.AutoFire_FiresContinuouslyWhileHeld" methodname="AutoFire_FiresContinuouslyWhileHeld" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="536715619" result="Passed" start-time="2026-10-10 01:10:40Z" end-time="2026-10-10 01:10:42Z" duration="1.428755" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=5 active=True mouse=Mouse:/Mouse1
+]]></output>
+            </test-case>
+            <test-case id="1019" name="Fire_ConsumesAmmoAndDamagesTarget" fullname="LastSignal.Tests.CombatAcceptanceTests.Fire_ConsumesAmmoAndDamagesTarget" methodname="Fire_ConsumesAmmoAndDamagesTarget" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="1074124042" result="Passed" start-time="2026-10-10 01:10:42Z" end-time="2026-10-10 01:10:43Z" duration="0.957298" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=5 active=True mouse=Mouse:/Mouse1
+]]></output>
+            </test-case>
+            <test-case id="1020" name="Reload_TransfersAmmoAfterDuration" fullname="LastSignal.Tests.CombatAcceptanceTests.Reload_TransfersAmmoAfterDuration" methodname="Reload_TransfersAmmoAfterDuration" classname="LastSignal.Tests.CombatAcceptanceTests" runstate="Runnable" seed="359650295" result="Passed" start-time="2026-10-10 01:10:43Z" end-time="2026-10-10 01:10:47Z" duration="4.593790" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=5 active=True mouse=Mouse:/Mouse1
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1036" name="MovementAcceptanceTests" fullname="LastSignal.Tests.MovementAcceptanceTests" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-10-10 01:10:47Z" end-time="2026-10-10 01:11:17Z" duration="29.957466" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1044" name="CeilingRejectsStandThenAllowsNewRequestWithoutFootDrift" fullname="LastSignal.Tests.MovementAcceptanceTests.CeilingRejectsStandThenAllowsNewRequestWithoutFootDrift" methodname="CeilingRejectsStandThenAllowsNewRequestWithoutFootDrift" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="1827440275" result="Passed" start-time="2026-10-10 01:10:47Z" end-time="2026-10-10 01:10:48Z" duration="0.409794" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1050" name="DoorOpensClosesAndStopsForObstruction" fullname="LastSignal.Tests.MovementAcceptanceTests.DoorOpensClosesAndStopsForObstruction" methodname="DoorOpensClosesAndStopsForObstruction" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="263904484" result="Passed" start-time="2026-10-10 01:10:48Z" end-time="2026-10-10 01:10:52Z" duration="4.008054" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1049" name="InteractionRevalidatesRangeOcclusionDisabledAndDestroyedTargets" fullname="LastSignal.Tests.MovementAcceptanceTests.InteractionRevalidatesRangeOcclusionDisabledAndDestroyedTargets" methodname="InteractionRevalidatesRangeOcclusionDisabledAndDestroyedTargets" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="501600430" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:52Z" duration="0.010201" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1051" name="MouseAndCrouchActionsReachCameraAndCapsule" fullname="LastSignal.Tests.MovementAcceptanceTests.MouseAndCrouchActionsReachCameraAndCapsule" methodname="MouseAndCrouchActionsReachCameraAndCapsule" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="934343052" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:52Z" duration="0.211499" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1052" name="PauseFocusAndHeldKeyReturnNeverLeakGameplay" fullname="LastSignal.Tests.MovementAcceptanceTests.PauseFocusAndHeldKeyReturnNeverLeakGameplay" methodname="PauseFocusAndHeldKeyReturnNeverLeakGameplay" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="1172579697" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:52Z" duration="0.013839" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1043" name="PitchClampsInBothDirections" fullname="LastSignal.Tests.MovementAcceptanceTests.PitchClampsInBothDirections" methodname="PitchClampsInBothDirections" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="1065385587" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:52Z" duration="0.005478" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1048" name="SlopeLimitAcceptsGentleAndRejectsSteep" fullname="LastSignal.Tests.MovementAcceptanceTests.SlopeLimitAcceptsGentleAndRejectsSteep" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:52Z" duration="0.009791" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1046" name="SlopeLimitAcceptsGentleAndRejectsSteep(30,True)" fullname="LastSignal.Tests.MovementAcceptanceTests.SlopeLimitAcceptsGentleAndRejectsSteep(30,True)" methodname="SlopeLimitAcceptsGentleAndRejectsSteep" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="632386167" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:52Z" duration="0.004391" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1047" name="SlopeLimitAcceptsGentleAndRejectsSteep(60,False)" fullname="LastSignal.Tests.MovementAcceptanceTests.SlopeLimitAcceptsGentleAndRejectsSteep(60,False)" methodname="SlopeLimitAcceptsGentleAndRejectsSteep" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="1343310786" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:52Z" duration="0.004327" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1045" name="StepsThresholdWallAndDropUseRealCollision" fullname="LastSignal.Tests.MovementAcceptanceTests.StepsThresholdWallAndDropUseRealCollision" methodname="StepsThresholdWallAndDropUseRealCollision" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="2099350924" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:52Z" duration="0.006650" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1053" name="TenEnableDisableCyclesHaveOneInputRequest" fullname="LastSignal.Tests.MovementAcceptanceTests.TenEnableDisableCyclesHaveOneInputRequest" methodname="TenEnableDisableCyclesHaveOneInputRequest" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="345690680" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:52Z" duration="0.024260" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1042" name="ValViewmodelUsesSprintClipOnlyWhileActuallySprinting" fullname="LastSignal.Tests.MovementAcceptanceTests.ValViewmodelUsesSprintClipOnlyWhileActuallySprinting" methodname="ValViewmodelUsesSprintClipOnlyWhileActuallySprinting" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="1314642790" result="Passed" start-time="2026-10-10 01:10:52Z" end-time="2026-10-10 01:10:53Z" duration="0.941886" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1040" name="WalkingDistanceAndDiagonalCapAreFrameIndependent" fullname="LastSignal.Tests.MovementAcceptanceTests.WalkingDistanceAndDiagonalCapAreFrameIndependent" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-10 01:10:53Z" end-time="2026-10-10 01:10:53Z" duration="0.017082" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1037" name="WalkingDistanceAndDiagonalCapAreFrameIndependent(30)" fullname="LastSignal.Tests.MovementAcceptanceTests.WalkingDistanceAndDiagonalCapAreFrameIndependent(30)" methodname="WalkingDistanceAndDiagonalCapAreFrameIndependent" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="1134057079" result="Passed" start-time="2026-10-10 01:10:53Z" end-time="2026-10-10 01:10:53Z" duration="0.004224" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1038" name="WalkingDistanceAndDiagonalCapAreFrameIndependent(60)" fullname="LastSignal.Tests.MovementAcceptanceTests.WalkingDistanceAndDiagonalCapAreFrameIndependent(60)" methodname="WalkingDistanceAndDiagonalCapAreFrameIndependent" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="1202022907" result="Passed" start-time="2026-10-10 01:10:53Z" end-time="2026-10-10 01:10:53Z" duration="0.004978" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1039" name="WalkingDistanceAndDiagonalCapAreFrameIndependent(120)" fullname="LastSignal.Tests.MovementAcceptanceTests.WalkingDistanceAndDiagonalCapAreFrameIndependent(120)" methodname="WalkingDistanceAndDiagonalCapAreFrameIndependent" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="830180818" result="Passed" start-time="2026-10-10 01:10:53Z" end-time="2026-10-10 01:10:53Z" duration="0.007086" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1041" name="YawSprintAndCrouchSpeedUseConfiguredPolicy" fullname="LastSignal.Tests.MovementAcceptanceTests.YawSprintAndCrouchSpeedUseConfiguredPolicy" methodname="YawSprintAndCrouchSpeedUseConfiguredPolicy" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="2024786233" result="Passed" start-time="2026-10-10 01:10:53Z" end-time="2026-10-10 01:10:53Z" duration="0.005744" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1054" name="YIntegratedParkourUsesAuthoredGeometry" fullname="LastSignal.Tests.MovementAcceptanceTests.YIntegratedParkourUsesAuthoredGeometry" methodname="YIntegratedParkourUsesAuthoredGeometry" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="1944082560" result="Passed" start-time="2026-10-10 01:10:53Z" end-time="2026-10-10 01:10:55Z" duration="1.859150" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+S001_AUTHORED_PARKOUR PASS: steps, 30/60 slopes, corridor, tunnel/stand, deck/drop, threshold, occlusion.
+]]></output>
+            </test-case>
+            <test-case id="1055" name="ZIntegratedSceneTenMenuSessionsDoNotRetainPlayerOrCallbacks" fullname="LastSignal.Tests.MovementAcceptanceTests.ZIntegratedSceneTenMenuSessionsDoNotRetainPlayerOrCallbacks" methodname="ZIntegratedSceneTenMenuSessionsDoNotRetainPlayerOrCallbacks" classname="LastSignal.Tests.MovementAcceptanceTests" runstate="Runnable" seed="244241668" result="Passed" start-time="2026-10-10 01:10:55Z" end-time="2026-10-10 01:11:17Z" duration="22.430644" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+SESSION_INPUT cycle=0 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.02, -0.64)
+S001 session started: one player, local input.
+SESSION_INPUT cycle=1 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.02, -0.64)
+S001 session started: one player, local input.
+SESSION_INPUT cycle=2 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.02, -0.64)
+S001 session started: one player, local input.
+SESSION_INPUT cycle=3 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.03, -0.64)
+S001 session started: one player, local input.
+SESSION_INPUT cycle=4 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.02, -0.64)
+S001 session started: one player, local input.
+SESSION_INPUT cycle=5 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.02, -0.64)
+S001 session started: one player, local input.
+SESSION_INPUT cycle=6 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.02, -0.64)
+S001 session started: one player, local input.
+SESSION_INPUT cycle=7 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.02, -0.64)
+S001 session started: one player, local input.
+SESSION_INPUT cycle=8 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.02, -0.64)
+S001 session started: one player, local input.
+SESSION_INPUT cycle=9 key=True active=True move=(0.00, -1.00) before=(0.00, 0.02, 0.00) after=(0.00, 0.02, -0.64)
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1149" name="S014WeaponPresentationTests" fullname="LastSignal.Tests.S014WeaponPresentationTests" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-10 01:11:17Z" end-time="2026-10-10 01:11:32Z" duration="15.094462" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1156" name="CrowbarSameFrameCancelClearsSwing" fullname="LastSignal.Tests.S014WeaponPresentationTests.CrowbarSameFrameCancelClearsSwing" methodname="CrowbarSameFrameCancelClearsSwing" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="403460876" result="Passed" start-time="2026-10-10 01:11:17Z" end-time="2026-10-10 01:11:18Z" duration="0.378022" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1157" name="CrowbarSameFrameInputLockClearsSwing" fullname="LastSignal.Tests.S014WeaponPresentationTests.CrowbarSameFrameInputLockClearsSwing" methodname="CrowbarSameFrameInputLockClearsSwing" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="2510271" result="Passed" start-time="2026-10-10 01:11:18Z" end-time="2026-10-10 01:11:18Z" duration="0.347160" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1155" name="CrowbarStancePreservesAuthoredSwingAndGameplayOrigin" fullname="LastSignal.Tests.S014WeaponPresentationTests.CrowbarStancePreservesAuthoredSwingAndGameplayOrigin" methodname="CrowbarStancePreservesAuthoredSwingAndGameplayOrigin" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="1146962245" result="Passed" start-time="2026-10-10 01:11:18Z" end-time="2026-10-10 01:11:18Z" duration="0.009534" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1158" name="CrowbarSwitchDuringWindupReequipsWithoutStaleSwing" fullname="LastSignal.Tests.S014WeaponPresentationTests.CrowbarSwitchDuringWindupReequipsWithoutStaleSwing" methodname="CrowbarSwitchDuringWindupReequipsWithoutStaleSwing" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="1720940167" result="Passed" start-time="2026-10-10 01:11:18Z" end-time="2026-10-10 01:11:18Z" duration="0.256453" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1151" name="EmptyReloadPausesWithGameplayInput" fullname="LastSignal.Tests.S014WeaponPresentationTests.EmptyReloadPausesWithGameplayInput" methodname="EmptyReloadPausesWithGameplayInput" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="1828927639" result="Passed" start-time="2026-10-10 01:11:18Z" end-time="2026-10-10 01:11:22Z" duration="4.209764" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1152" name="SwitchingBeforeReloadCommitClearsPendingPresentation" fullname="LastSignal.Tests.S014WeaponPresentationTests.SwitchingBeforeReloadCommitClearsPendingPresentation" methodname="SwitchingBeforeReloadCommitClearsPendingPresentation" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="1674000184" result="Passed" start-time="2026-10-10 01:11:22Z" end-time="2026-10-10 01:11:24Z" duration="1.376554" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1150" name="TacticalReloadPausesWithGameplayInput" fullname="LastSignal.Tests.S014WeaponPresentationTests.TacticalReloadPausesWithGameplayInput" methodname="TacticalReloadPausesWithGameplayInput" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="1524558149" result="Passed" start-time="2026-10-10 01:11:24Z" end-time="2026-10-10 01:11:27Z" duration="3.377595" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1154" name="UnequipAfterCommitPreservesTransferredAmmo" fullname="LastSignal.Tests.S014WeaponPresentationTests.UnequipAfterCommitPreservesTransferredAmmo" methodname="UnequipAfterCommitPreservesTransferredAmmo" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="844376403" result="Passed" start-time="2026-10-10 01:11:27Z" end-time="2026-10-10 01:11:31Z" duration="3.409896" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1153" name="UnequipBeforeCommitPreservesMagazine" fullname="LastSignal.Tests.S014WeaponPresentationTests.UnequipBeforeCommitPreservesMagazine" methodname="UnequipBeforeCommitPreservesMagazine" classname="LastSignal.Tests.S014WeaponPresentationTests" runstate="Runnable" seed="602684963" result="Passed" start-time="2026-10-10 01:11:31Z" end-time="2026-10-10 01:11:32Z" duration="1.726232" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1200" name="S018SurvivalPlayTests" fullname="LastSignal.Tests.S018SurvivalPlayTests" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-10 01:11:32Z" end-time="2026-10-10 01:11:51Z" duration="18.338654" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1203" name="BandageCommitsOnceAndBlocksCombatDuringApplication" fullname="LastSignal.Tests.S018SurvivalPlayTests.BandageCommitsOnceAndBlocksCombatDuringApplication" methodname="BandageCommitsOnceAndBlocksCombatDuringApplication" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="32683754" result="Passed" start-time="2026-10-10 01:11:32Z" end-time="2026-10-10 01:11:35Z" duration="2.462326" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1201" name="CharacterPresentationBindsLateSurvivalAndUnsubscribesWhenDisabled" fullname="LastSignal.Tests.S018SurvivalPlayTests.CharacterPresentationBindsLateSurvivalAndUnsubscribesWhenDisabled" methodname="CharacterPresentationBindsLateSurvivalAndUnsubscribesWhenDisabled" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="896473353" result="Passed" start-time="2026-10-10 01:11:35Z" end-time="2026-10-10 01:11:38Z" duration="2.711463" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1207" name="ChosenStackIsConsumedAndNutritionUsesItsOwnResource" fullname="LastSignal.Tests.S018SurvivalPlayTests.ChosenStackIsConsumedAndNutritionUsesItsOwnResource" methodname="ChosenStackIsConsumedAndNutritionUsesItsOwnResource" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="1172776085" result="Passed" start-time="2026-10-10 01:11:38Z" end-time="2026-10-10 01:11:39Z" duration="1.876910" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1202" name="ConsumeIsAtomicAndStaleOrFullRequestsCostNothing" fullname="LastSignal.Tests.S018SurvivalPlayTests.ConsumeIsAtomicAndStaleOrFullRequestsCostNothing" methodname="ConsumeIsAtomicAndStaleOrFullRequestsCostNothing" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="1697490461" result="Passed" start-time="2026-10-10 01:11:39Z" end-time="2026-10-10 01:11:41Z" duration="1.869387" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1204" name="DamageAndPauseCancelBandageWithoutConsumption" fullname="LastSignal.Tests.S018SurvivalPlayTests.DamageAndPauseCancelBandageWithoutConsumption" methodname="DamageAndPauseCancelBandageWithoutConsumption" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="1778364477" result="Passed" start-time="2026-10-10 01:11:41Z" end-time="2026-10-10 01:11:43Z" duration="1.870139" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1209" name="DeadPlayerCannotConsumeOrEquip" fullname="LastSignal.Tests.S018SurvivalPlayTests.DeadPlayerCannotConsumeOrEquip" methodname="DeadPlayerCannotConsumeOrEquip" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="969035872" result="Passed" start-time="2026-10-10 01:11:43Z" end-time="2026-10-10 01:11:45Z" duration="1.869308" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1205" name="PackOwnsOneItemAndFullShrinkRefusesWithoutLoss" fullname="LastSignal.Tests.S018SurvivalPlayTests.PackOwnsOneItemAndFullShrinkRefusesWithoutLoss" methodname="PackOwnsOneItemAndFullShrinkRefusesWithoutLoss" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="1776833275" result="Passed" start-time="2026-10-10 01:11:45Z" end-time="2026-10-10 01:11:47Z" duration="1.882124" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1208" name="PauseFreezesWorldResourcesAndStaleTreatmentCannotCommit" fullname="LastSignal.Tests.S018SurvivalPlayTests.PauseFreezesWorldResourcesAndStaleTreatmentCannotCommit" methodname="PauseFreezesWorldResourcesAndStaleTreatmentCannotCommit" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="597648009" result="Passed" start-time="2026-10-10 01:11:47Z" end-time="2026-10-10 01:11:49Z" duration="1.868404" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1206" name="SaveReloadKeepsResourcesWoundAndEquipmentWithoutStarterDuplication" fullname="LastSignal.Tests.S018SurvivalPlayTests.SaveReloadKeepsResourcesWoundAndEquipmentWithoutStarterDuplication" methodname="SaveReloadKeepsResourcesWoundAndEquipmentWithoutStarterDuplication" classname="LastSignal.Tests.S018SurvivalPlayTests" runstate="Runnable" seed="1979809866" result="Passed" start-time="2026-10-10 01:11:49Z" end-time="2026-10-10 01:11:51Z" duration="1.924551" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1222" name="ScopeOpticPlayTests" fullname="LastSignal.Tests.ScopeOpticPlayTests" classname="LastSignal.Tests.ScopeOpticPlayTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-10 01:11:51Z" end-time="2026-10-10 01:12:02Z" duration="10.969276" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1226" name="AcceptedShotConsumesOneRoundAndReloadHidesScope" fullname="LastSignal.Tests.ScopeOpticPlayTests.AcceptedShotConsumesOneRoundAndReloadHidesScope" methodname="AcceptedShotConsumesOneRoundAndReloadHidesScope" classname="LastSignal.Tests.ScopeOpticPlayTests" runstate="Runnable" seed="57660506" result="Passed" start-time="2026-10-10 01:11:51Z" end-time="2026-10-10 01:11:56Z" duration="5.118188" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="30000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=5 active=True mouse=Mouse:/Mouse1
+]]></output>
+            </test-case>
+            <test-case id="1223" name="AdsAllocatesOnceAndDoesNotChangeAmmo" fullname="LastSignal.Tests.ScopeOpticPlayTests.AdsAllocatesOnceAndDoesNotChangeAmmo" methodname="AdsAllocatesOnceAndDoesNotChangeAmmo" classname="LastSignal.Tests.ScopeOpticPlayTests" runstate="Runnable" seed="1848641189" result="Passed" start-time="2026-10-10 01:11:56Z" end-time="2026-10-10 01:11:59Z" duration="2.754231" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="30000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=5 active=True mouse=Mouse:/Mouse1
+]]></output>
+            </test-case>
+            <test-case id="1224" name="HeldAimResumesWhenCombatControllerReenables" fullname="LastSignal.Tests.ScopeOpticPlayTests.HeldAimResumesWhenCombatControllerReenables" methodname="HeldAimResumesWhenCombatControllerReenables" classname="LastSignal.Tests.ScopeOpticPlayTests" runstate="Runnable" seed="898954878" result="Passed" start-time="2026-10-10 01:11:59Z" end-time="2026-10-10 01:12:00Z" duration="1.542001" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="30000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=5 active=True mouse=Mouse:/Mouse1
+]]></output>
+            </test-case>
+            <test-case id="1225" name="UnequipReleasesScopeCameraAndRenderTexture" fullname="LastSignal.Tests.ScopeOpticPlayTests.UnequipReleasesScopeCameraAndRenderTexture" methodname="UnequipReleasesScopeCameraAndRenderTexture" classname="LastSignal.Tests.ScopeOpticPlayTests" runstate="Runnable" seed="1713652731" result="Passed" start-time="2026-10-10 01:12:00Z" end-time="2026-10-10 01:12:02Z" duration="1.553151" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="Timeout" value="30000" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S001 session started: one player, local input.
+B0A_ORDER UnitySetUp ready devices=5 active=True mouse=Mouse:/Mouse1
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1243" name="VehicleOccupancyTests" fullname="LastSignal.Tests.VehicleOccupancyTests" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-10 01:12:02Z" end-time="2026-10-10 01:12:14Z" duration="12.069920" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1247" name="BlockedExitsRetainDriverAndFallbackIsSafe" fullname="LastSignal.Tests.VehicleOccupancyTests.BlockedExitsRetainDriverAndFallbackIsSafe" methodname="BlockedExitsRetainDriverAndFallbackIsSafe" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="667905257" result="Passed" start-time="2026-10-10 01:12:02Z" end-time="2026-10-10 01:12:03Z" duration="1.394773" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1251" name="CabinRainProtectionAndResidentPressureUseExistingAuthorities" fullname="LastSignal.Tests.VehicleOccupancyTests.CabinRainProtectionAndResidentPressureUseExistingAuthorities" methodname="CabinRainProtectionAndResidentPressureUseExistingAuthorities" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="267389463" result="Passed" start-time="2026-10-10 01:12:03Z" end-time="2026-10-10 01:12:04Z" duration="1.199210" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1246" name="CharacterAndVehicleInspectionHaveExclusiveCameraOwnership" fullname="LastSignal.Tests.VehicleOccupancyTests.CharacterAndVehicleInspectionHaveExclusiveCameraOwnership" methodname="CharacterAndVehicleInspectionHaveExclusiveCameraOwnership" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="1645790384" result="Passed" start-time="2026-10-10 01:12:04Z" end-time="2026-10-10 01:12:05Z" duration="1.173814" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1245" name="CharacterVisualFollowsCommittedSeatAndRestoresOnExit" fullname="LastSignal.Tests.VehicleOccupancyTests.CharacterVisualFollowsCommittedSeatAndRestoresOnExit" methodname="CharacterVisualFollowsCommittedSeatAndRestoresOnExit" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="1550792162" result="Passed" start-time="2026-10-10 01:12:05Z" end-time="2026-10-10 01:12:07Z" duration="1.169514" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1244" name="EnterExitPreservesPlayerAndGatesOnFootAuthority" fullname="LastSignal.Tests.VehicleOccupancyTests.EnterExitPreservesPlayerAndGatesOnFootAuthority" methodname="EnterExitPreservesPlayerAndGatesOnFootAuthority" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="516517206" result="Passed" start-time="2026-10-10 01:12:07Z" end-time="2026-10-10 01:12:08Z" duration="1.273726" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1249" name="OccupiedDiskSaveRestoresSamePickupResourcesPoseAndDriverWithEngineOff" fullname="LastSignal.Tests.VehicleOccupancyTests.OccupiedDiskSaveRestoresSamePickupResourcesPoseAndDriverWithEngineOff" methodname="OccupiedDiskSaveRestoresSamePickupResourcesPoseAndDriverWithEngineOff" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="1622989627" result="Passed" start-time="2026-10-10 01:12:08Z" end-time="2026-10-10 01:12:09Z" duration="1.295624" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1250" name="PhysicalKeyboardDrivesAndHeldThrottleCannotResumeAfterPause" fullname="LastSignal.Tests.VehicleOccupancyTests.PhysicalKeyboardDrivesAndHeldThrottleCannotResumeAfterPause" methodname="PhysicalKeyboardDrivesAndHeldThrottleCannotResumeAfterPause" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="886109276" result="Passed" start-time="2026-10-10 01:12:09Z" end-time="2026-10-10 01:12:13Z" duration="3.329672" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+]]></output>
+            </test-case>
+            <test-case id="1248" name="UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" fullname="LastSignal.Tests.VehicleOccupancyTests.UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" methodname="UnsafeSpeedRejectsExitAndSessionEndRemovesVehicle" classname="LastSignal.Tests.VehicleOccupancyTests" runstate="Runnable" seed="843297883" result="Passed" start-time="2026-10-10 01:12:13Z" end-time="2026-10-10 01:12:14Z" duration="1.230495" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[S006 loot seed=12345 resolved=21 generated=16
+S001 session started: one player, local input.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /Users/burakcoskun/Library/Application Support/DefaultCompany/Last Signal/TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -44,6 +44,28 @@ namespace LastSignal.Tests
             yield return null; Time.timeScale = 1;
             if (Directory.Exists(directory)) Directory.Delete(directory, true);
         }
+        [UnityTest] public IEnumerator CharacterPresentationBindsLateSurvivalAndUnsubscribesWhenDisabled()
+        {
+            yield return new WaitForSeconds(.8f);
+            var presenter=flow.Player.GetComponentInChildren<PlayerLocomotionPresenter>();
+            var animator=presenter.GetComponent<Animator>();
+            presenter.BindSurvival(survival);presenter.BindSurvival(survival);
+            var water=Item("drink.water");inventory.TryAdd(water,3);survival.State.Advance(21600);
+            Assert.That(survival.Use(Slot(water),inventory.Revision),Is.True);
+            yield return null;animator.Update(.3f);
+            Assert.That(animator.GetCurrentAnimatorStateInfo(1).IsName("Consume")||animator.GetNextAnimatorStateInfo(1).IsName("Consume"),Is.True);
+            presenter.enabled=false;animator.Play("Character Actions.No Action",1,0);animator.Update(0);
+            survival.State.Advance(21600);
+            Assert.That(survival.Use(Slot(water),inventory.Revision),Is.True);
+            animator.Update(.3f);Assert.That(animator.GetCurrentAnimatorStateInfo(1).IsName("No Action"),Is.True);
+            presenter.enabled=true;
+            var bandage=Item("medical.bandage");inventory.TryAdd(bandage,1);
+            flow.Player.GetComponent<PlayerHealth>().TakeDamage(new DamageInfo{Amount=1,Category=DamageCategory.Melee});
+            Assert.That(survival.Use(Slot(bandage),inventory.Revision),Is.True);
+            presenter.Present(.1f);Assert.That(animator.GetBool("Treating"),Is.True);
+            survival.CancelTreatment("Character lifecycle fixture");presenter.Present(.1f);
+            Assert.That(animator.GetBool("Treating"),Is.False);
+        }
         [UnityTest] public IEnumerator ConsumeIsAtomicAndStaleOrFullRequestsCostNothing()
         {
             var water = Item("drink.water"); inventory.TryAdd(water, 2); survival.State.Drink(100);
