@@ -31,6 +31,9 @@ namespace LastSignal
         public event System.Action<Vector3, bool, bool, bool> PresentationMoved;
         public bool IsSliding { get; private set; }
         public float HorizontalMetersPerSecond => measuredHorizontalVelocity.magnitude;
+        // Read-only telemetry. The motor remains the movement authority.
+        public Vector3 HorizontalVelocity => isActiveAndEnabled ? measuredHorizontalVelocity : Vector3.zero;
+        public float VerticalVelocity => isActiveAndEnabled ? verticalSpeed : 0f;
         float verticalSpeed;
         Noise.FootstepNoiseProducer footsteps;
         public void BindNoise(Noise.GameplayNoiseSystem authority, Noise.GameplayNoiseTuning tuning, ulong source)
@@ -44,7 +47,7 @@ namespace LastSignal
         }        
         PlayerStamina stamina;
         PlayerHealth health;
-        public bool Grounded => capsule.isGrounded;
+        public bool Grounded => capsule && capsule.enabled && capsule.isGrounded;
         public bool IsSprinting { get; private set; }
         public void Configure(PlayerInputReader reader, CharacterController controller, PlayerStance playerStance)
         { input = reader; capsule = controller; stance = playerStance; }

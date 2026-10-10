@@ -15,6 +15,7 @@ namespace LastSignal
         IInteractable retainedTarget;
         Collider retainedCollider;
         public event System.Action InteractionSucceeded;
+        public event System.Action<IInteractable> InteractionPresented;
         public string Prompt { get; private set; } = "";
         public void Configure(PlayerInputReader reader, Transform view) { input = reader; origin = view; }
         void Awake()
@@ -86,7 +87,11 @@ namespace LastSignal
         {
             var target = Resolve(); // Revalidate at commit; never trust last frame's preview.
             bool succeeded = target != null && target.TryInteract();
-            if (succeeded) InteractionSucceeded?.Invoke();
+            if (succeeded)
+            {
+                InteractionSucceeded?.Invoke();
+                InteractionPresented?.Invoke(target);
+            }
             return succeeded;
         }
         void OnInteract() => TryInteract();

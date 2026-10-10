@@ -17,6 +17,7 @@ namespace LastSignal
         public ItemDefinition Backpack { get; private set; }
         public int BaseCapacity { get; private set; }
         public bool ApplyingTreatment => treatment != null;
+        public event Action<ItemUse> ItemConsumed;
         public float TreatmentRemaining => ApplyingTreatment ? Mathf.Max(0, treatment.TreatmentSeconds - elapsed) : 0;
         public string Feedback { get; private set; } = "";
         SessionFlow flow;
@@ -35,6 +36,7 @@ namespace LastSignal
         {
             if (health) health.DamageAccepted -= OnDamage;
             flow = owner; inventory = carried; BaseCapacity = carried.Capacity;
+            GetComponentInChildren<PlayerLocomotionPresenter>(true)?.BindSurvival(this);
             health = GetComponent<PlayerHealth>(); input = GetComponent<PlayerInputReader>();
             stamina = GetComponent<PlayerStamina>(); motor = GetComponent<FirstPersonMotor>();
             if (health) health.DamageAccepted += OnDamage;
@@ -114,7 +116,9 @@ namespace LastSignal
         {
             if (!inventory.Container.Exchange(item, 1, null, 0, () => { effect(); SyncRecovery(); }, slot))
                 return Reject("Eşya değişti veya işlem meşgul.");
-            Feedback = message; return true;
+            Feedback = message;
+            ItemConsumed?.Invoke(item.Use);
+            return true;
         }
         public bool UnequipBackpack()
         {

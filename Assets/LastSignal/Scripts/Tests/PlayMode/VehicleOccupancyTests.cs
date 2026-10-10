@@ -50,6 +50,50 @@ namespace LastSignal.Tests
             Assert.IsTrue(player.GetComponent<FirstPersonMotor>().enabled);
             Assert.IsTrue(player.GetComponent<PlayerInputReader>().GameplayActive);
         }
+        [UnityTest] public IEnumerator CharacterVisualFollowsCommittedSeatAndRestoresOnExit()
+        {
+            var player=flow.Player;
+            var presenter=player.GetComponentInChildren<PlayerLocomotionPresenter>();
+            Assert.That(presenter,Is.Not.Null);
+            var animator=presenter.GetComponent<Animator>();
+            Assert.That(car.TryEnter(),Is.True);
+            yield return null;yield return null;
+            Assert.That(animator.GetBool("Seated"),Is.True);
+            Assert.That(Vector3.Distance(animator.GetBoneTransform(HumanBodyBones.Hips).position,player.transform.position),Is.LessThan(.12f));
+            var rig=presenter.GetComponent<CharacterWeaponRig>();
+            Assert.That(!rig.WeaponVisual||!rig.WeaponVisual.activeSelf,Is.True,"Vehicle holsters the world weapon too.");
+            flow.Pause();yield return null;
+            Assert.That(animator.GetBool("Seated"),Is.True,"Input pause is not a seat exit.");
+            flow.Resume();Assert.That(car.TryExit(),Is.True);
+            yield return null;yield return null;
+            Assert.That(animator.GetBool("Seated"),Is.False);
+            Assert.That(presenter.transform.localPosition.sqrMagnitude,Is.LessThan(.0001f));
+            Assert.That(player.GetComponent<CharacterController>().enabled,Is.True);
+            Assert.That(player.GetComponent<FirstPersonMotor>().enabled,Is.True);
+        }
+        [UnityTest] public IEnumerator CharacterAndVehicleInspectionHaveExclusiveCameraOwnership()
+        {
+            Assert.That(car.TryEnter(),Is.True);yield return null;
+            var diagnostic=new GameObject("Vehicle camera ownership fixture");
+            var vehicleView=diagnostic.AddComponent<VehicleInspectionView>();
+            try
+            {
+                yield return null;
+                var characterView=flow.Player.GetComponent<CharacterInspectionCamera>();
+                var firstPerson=flow.Player.GetComponent<FirstPersonLook>().View;
+                Assert.That(vehicleView.SetInspection(true),Is.True);yield return null;
+                Assert.That(vehicleView.Inspecting,Is.True);Assert.That(firstPerson.enabled,Is.False);
+                Assert.That(vehicleView.Inspection.cullingMask&((1<<2)|(1<<29)),Is.Zero);
+                characterView.SetInspection(true);Assert.That(characterView.Inspecting,Is.False);
+                vehicleView.SetInspection(false);Assert.That(firstPerson.enabled,Is.True);
+                characterView.SetInspection(true);Assert.That(characterView.Inspecting,Is.True);
+                Assert.That(vehicleView.SetInspection(true),Is.False);yield return null;
+                Assert.That(vehicleView.Inspecting,Is.False);Assert.That(firstPerson.enabled,Is.False);
+                characterView.SetInspection(false);Assert.That(firstPerson.enabled,Is.True);
+                Assert.That(car.TryExit(),Is.True);
+            }
+            finally{Object.Destroy(diagnostic);}
+        }
         GameObject Wall(string anchor)
         {
             var go = new GameObject("Vehicle blocked exit fixture"); go.transform.position = car.transform.Find(anchor).position + Vector3.up;

@@ -11,6 +11,7 @@ namespace LastSignal
         InputAction vehicleHandbrake, vehicleExit, vehicleHorn, vehicleLights, vehicleIgnition, vehiclePause;
         readonly VehicleInputGate vehicleGate = new VehicleInputGate();
         bool drivingContext;
+        public bool InVehicle => drivingContext;
         public bool DrivingActive { get; private set; }
         public VehicleControlIntent VehicleIntent { get; private set; } = VehicleControlIntent.Parked;
         public bool VehicleExitPressed { get; private set; }
