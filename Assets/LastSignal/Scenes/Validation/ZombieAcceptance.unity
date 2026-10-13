@@ -1114,6 +1114,8 @@ GameObject:
   - component: {fileID: 1680481943}
   - component: {fileID: 1680481942}
   - component: {fileID: 1680481944}
+  - component: {fileID: 1680481945}
+  - component: {fileID: 1680481946}
   m_Layer: 0
   m_Name: Session
   m_TagString: Untagged
@@ -1208,3 +1210,29 @@ SceneRoots:
   - {fileID: 1680481943}
   - {fileID: 2076596028}
   - {fileID: 1229160674}
+--- !u!114 &1680481945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680481941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 240c9beb04af4c4e96958e4b2653582d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.CombatFeedbackManualRoute
+--- !u!114 &1680481946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680481941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9a6c2cecf09e43f7a759669076a59d3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.Audio.ProductionAudio
+  catalog: {fileID: 11400000, guid: 8c652acd48f3b452ba5a67c3c83a3670, type: 2}
+  groundAreas: []

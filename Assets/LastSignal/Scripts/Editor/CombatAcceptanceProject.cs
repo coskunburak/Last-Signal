@@ -73,7 +73,7 @@ namespace LastSignal.Editor
             var rootStateMachine = controller.layers[0].stateMachine;
 
             // Load clips
-            var valAssets = AssetDatabase.LoadAllAssetsAtPath("Assets/ThirdParty/Characters/VAL.fbx");
+            var valAssets = AssetDatabase.LoadAllAssetsAtPath("Assets/ThirdParty/Characters/VAL/VAL.fbx");
             AnimationClip GetClip(string name) => valAssets.OfType<AnimationClip>().FirstOrDefault(c => c.name == "LVA4_Armature|" + name);
 
             var clipIdle = GetClip("wpn_val_idle");
@@ -142,7 +142,7 @@ namespace LastSignal.Editor
             string path = "Assets/LastSignal/Prefabs/Combat/FPSArms.prefab";
             if (AssetDatabase.LoadAssetAtPath<GameObject>(path)) return;
 
-            var valModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ThirdParty/Characters/VAL.fbx");
+            var valModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ThirdParty/Characters/VAL/VAL.fbx");
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(valModel);
             instance.name = "FPSArms";
             

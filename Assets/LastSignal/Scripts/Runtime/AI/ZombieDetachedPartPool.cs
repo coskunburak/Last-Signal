@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Unity.Profiling;
 
 namespace LastSignal
 {
@@ -6,6 +8,7 @@ namespace LastSignal
     // The source meshes are baked only on a sever event; no runtime mesh cutting occurs.
     public sealed class ZombieDetachedPartPool : MonoBehaviour
     {
+        static readonly ProfilerMarker BakeMarker = new ProfilerMarker("LastSignal.Combat.DetachedBake");
         const int Capacity = 24;
         const int RenderersPerPart = 3;
         const float Lifetime = 8;
@@ -17,6 +20,8 @@ namespace LastSignal
             public Mesh[] meshes = new Mesh[RenderersPerPart];
             public MeshRenderer[] renderers = new MeshRenderer[RenderersPerPart];
             public float expires;
+            public Transform owner;
+            public bool owned;
         }
 
         static ZombieDetachedPartPool instance;
@@ -29,8 +34,14 @@ namespace LastSignal
                 if (slot != null) slot.root.SetActive(false);
         }
 
+        public static void ReleaseOwner(Transform owner)
+        {
+            if (!instance) return;
+            foreach (var slot in instance.slots)
+                if (slot != null && slot.owner == owner) { slot.root.SetActive(false); slot.owner = null; }
+        }
         public static void Spawn(SkinnedMeshRenderer[] source, Transform anchor, Vector3 colliderCenter,
-            Vector3 colliderSize, Vector3 direction, float impulse)
+            Vector3 colliderSize, Vector3 direction, float impulse, Transform owner = null)
         {
             if (!Application.isPlaying || source == null || source.Length == 0 || !anchor) return;
             if (!instance)
@@ -38,13 +49,13 @@ namespace LastSignal
                 var root = new GameObject("Zombie Detached Parts Pool");
                 instance = root.AddComponent<ZombieDetachedPartPool>();
             }
-            instance.SpawnInternal(source, anchor, colliderCenter, colliderSize, direction, impulse);
+            instance.SpawnInternal(source, anchor, colliderCenter, colliderSize, direction, impulse, owner);
         }
 
         void SpawnInternal(SkinnedMeshRenderer[] source, Transform anchor, Vector3 colliderCenter,
-            Vector3 colliderSize, Vector3 direction, float impulse)
+            Vector3 colliderSize, Vector3 direction, float impulse, Transform owner = null)
         {
-            int index = next++ % Capacity;
+            int index = next; next = (next + 1) % Capacity;
             var slot = slots[index] ?? (slots[index] = CreateSlot(index));
             slot.root.SetActive(false);
             slot.root.transform.SetPositionAndRotation(anchor.position, anchor.rotation);
@@ -55,7 +66,7 @@ namespace LastSignal
                 if (!skin || !skin.enabled || !skin.sharedMesh) continue;
                 var target = slot.renderers[used];
                 var mesh = slot.meshes[used];
-                mesh.Clear(); skin.BakeMesh(mesh);
+                mesh.Clear(); using (BakeMarker.Auto()) skin.BakeMesh(mesh);
                 target.GetComponent<MeshFilter>().sharedMesh = mesh;
                 target.sharedMaterials = skin.sharedMaterials;
                 target.transform.SetPositionAndRotation(skin.transform.position, skin.transform.rotation);
@@ -65,9 +76,11 @@ namespace LastSignal
             }
             for (int i = used; i < RenderersPerPart; i++) slot.renderers[i].gameObject.SetActive(false);
             if (used == 0) return;
+            slot.body.mass = Mathf.Clamp(colliderSize.x * colliderSize.y * colliderSize.z * 150, .5f, 4f);
             slot.collider.center = colliderCenter;
             slot.collider.size = new Vector3(Mathf.Max(.05f, colliderSize.x),
                 Mathf.Max(.05f, colliderSize.y), Mathf.Max(.05f, colliderSize.z));
+            slot.owner = owner; slot.owned = owner;
             slot.expires = Time.time + Lifetime;
             slot.root.SetActive(true);
             slot.body.linearVelocity = Vector3.zero;
@@ -85,8 +98,12 @@ namespace LastSignal
             slot.root.layer = 2; // Ignore Raycast; detached gore is never a damage or AI target.
             slot.body = slot.root.AddComponent<Rigidbody>();
             slot.body.mass = 2;
+            slot.body.linearDamping = .2f; slot.body.angularDamping = 1.8f;
+            slot.body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            slot.body.interpolation = RigidbodyInterpolation.Interpolate;
             slot.body.maxAngularVelocity = 8;
             slot.collider = slot.root.AddComponent<BoxCollider>();
+            slot.collider.excludeLayers = ~1; // Contact Default world geometry only; never actors/vehicles.
             for (int i = 0; i < RenderersPerPart; i++)
             {
                 var child = new GameObject("Body Mesh " + i);
@@ -108,7 +125,7 @@ namespace LastSignal
             for (int i = 0; i < slots.Length; i++)
             {
                 var slot = slots[i];
-                if (slot != null && slot.root.activeSelf && now >= slot.expires)
+                if (slot != null && slot.root.activeSelf && (now >= slot.expires || slot.owned && (!slot.owner || !slot.owner.gameObject.activeInHierarchy)))
                 {
                     slot.root.SetActive(false);
                     slot.body.linearVelocity = Vector3.zero;
@@ -116,6 +133,10 @@ namespace LastSignal
                 }
             }
         }
+
+        void OnEnable() => SceneManager.activeSceneChanged += SceneChanged;
+        void SceneChanged(Scene previous, Scene current) => HideAll();
+        void OnDisable() { SceneManager.activeSceneChanged -= SceneChanged; HideAll(); }
 
         void OnDestroy()
         {

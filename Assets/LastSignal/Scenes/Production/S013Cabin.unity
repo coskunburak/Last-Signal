@@ -37678,6 +37678,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1229160674}
   - component: {fileID: 1229160673}
+  - component: {fileID: 1229160675}
   m_Layer: 0
   m_Name: EvidenceCamera
   m_TagString: Untagged
@@ -37751,6 +37752,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1229160675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229160672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1001 &1231687518
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -48064,6 +48109,8 @@ MonoBehaviour:
   - {fileID: 1743373465}
   selectedSlot: -1
   dropButton: {fileID: 75202900}
+  splitButton: {fileID: 0}
+  feedbackText: {fileID: 0}
 --- !u!114 &1621244937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49397,6 +49444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.SessionFlow
   playerPrefab: {fileID: 2211443619515615061, guid: 4d6c3a48de2254f649eb37e0d4ec9e14, type: 3}
+  enableSurvival: 1
   noiseTuning:
     Walk:
       RadiusMeters: 6
@@ -49423,7 +49471,6 @@ MonoBehaviour:
   doors:
   - {fileID: 962969765}
   zombieEncounter: {fileID: 1680481944}
-  enableSurvival: 1
 --- !u!4 &1680481943
 Transform:
   m_ObjectHideFlags: 0
@@ -49514,8 +49561,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.Persistence.SaveSession
   catalog: {fileID: 11400000, guid: 28f950edceb2843c1b2b24da4a03fd51, type: 2}
   rifle: {fileID: 11400000, guid: dc5a4a66208a04ecba27a4324b96d2ad, type: 2}
+  secondaryFirearm: {fileID: 11400000, guid: 97b6798bbcc9c4542860b1fcb885e614, type: 2}
   worldId: world.s012.graybox
   contentVersion: s012-graybox-v1
+  saveSlot: current
 --- !u!114 &1680481949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49648,6 +49697,7 @@ MonoBehaviour:
   MaxReceipts: 10
   zombiePrefab: {fileID: 5794958581719810030, guid: 7e78ee50c1a054c279d584ebee556b1d, type: 3}
   materializationEnabled: 1
+  compositionSeed: 22
   initialPopulationPerCell: 15
   showDebug: 0
 --- !u!114 &1680481953

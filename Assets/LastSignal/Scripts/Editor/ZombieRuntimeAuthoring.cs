@@ -40,7 +40,7 @@ namespace LastSignal.Editor
             Integrate(ZombieAcceptanceAuthoring.ScenePath, new Vector3(-5,0,-4), false);
             AssetDatabase.SaveAssets();
         }
-        public static void IntegrateNormal() => Integrate("Assets/ThirdParty/UnityURPTemplate/Scenes/SampleScene.unity", new Vector3(-5,0,7), true);
+        public static void IntegrateNormal() => Integrate("Assets/ThirdParty/Samples/UnityURPTemplate/Scenes/SampleScene.unity", new Vector3(-5,0,7), true);
         static void Integrate(string path, Vector3 position, bool bake)
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play Mode before authoring.");

@@ -22,6 +22,12 @@ namespace LastSignal.Tests
             actor = Object.Instantiate(prefab);
             health = actor.GetComponent<ZombieHealth>();
             sever = actor.GetComponent<ZombieDismemberment>();
+            // Production cuts are art-gated. These tests exercise the existing approved-cut path
+            // on this disposable fixture only; production gate behavior has its own focused test.
+            var bindings = new SerializedObject(sever);
+            var parts = bindings.FindProperty("parts");
+            for (int i = 0; i < parts.arraySize; i++) parts.GetArrayElementAtIndex(i).FindPropertyRelative("visualSeverApproved").boolValue = true;
+            bindings.ApplyModifiedPropertiesWithoutUndo();
             Assert.That(sever, Is.Not.Null);
         }
 

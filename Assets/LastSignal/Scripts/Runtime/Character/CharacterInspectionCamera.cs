@@ -4,13 +4,14 @@ using UnityEngine.Rendering.Universal;
 
 namespace LastSignal
 {
-    /// <summary>F6 toggle, F7 angle. Observes the real entity without changing input or aim authority.</summary>
+    /// <summary>6 toggles inspection, 7 cycles angles. Observes the real entity without changing input or aim authority.</summary>
     [DisallowMultipleComponent, DefaultExecutionOrder(500)]
     public sealed class CharacterInspectionCamera : MonoBehaviour
     {
         static readonly Vector3[] Angles = { new Vector3(0, .3f, 1), new Vector3(0, .3f, -1),
-            new Vector3(-1, .3f, 0), new Vector3(1, .3f, 0), new Vector3(.8f, .3f, .8f) };
-        static readonly string[] Names = { "Front", "Back", "Left", "Right", "Three-quarter" };
+            new Vector3(-1, .3f, 0), new Vector3(1, .3f, 0), new Vector3(-.8f, .3f, .8f),
+            new Vector3(.8f, .3f, .8f), new Vector3(.6f, 1.1f, .8f), new Vector3(.6f, -.22f, .8f) };
+        static readonly string[] Names = { "Front", "Back", "Left", "Right", "Front-left three-quarter", "Front-right three-quarter", "Elevated", "Low" };
         [SerializeField] Camera firstPerson;
         [SerializeField] CharacterBodyVisibility body;
         [SerializeField, Min(1)] float distance = 3.2f;
@@ -21,7 +22,11 @@ namespace LastSignal
         int angle;
         public bool Inspecting { get; private set; }
         public Camera Inspection => inspection;
-        public void Configure(Camera view, CharacterBodyVisibility visibility) { firstPerson = view; body = visibility; }
+        public void Configure(Camera view, CharacterBodyVisibility visibility)
+        {
+            firstPerson = view; body = visibility;
+            state = body ? body.GetComponent<PlayerLocomotionPresenter>() : null;
+        }
         void Awake()
         {
             input = GetComponent<PlayerInputReader>();
@@ -31,8 +36,8 @@ namespace LastSignal
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             if (Keyboard.current == null || !body || !body.LocalOwner) return;
-            if (Keyboard.current.f6Key.wasPressedThisFrame) SetInspection(!Inspecting);
-            if (Inspecting && Keyboard.current.f7Key.wasPressedThisFrame) angle = (angle + 1) % Angles.Length;
+            if (Keyboard.current.digit6Key.wasPressedThisFrame) SetInspection(!Inspecting);
+            if (Inspecting && Keyboard.current.digit7Key.wasPressedThisFrame) angle = (angle + 1) % Angles.Length;
 #endif
         }
         public void SetInspection(bool value)
@@ -84,7 +89,7 @@ namespace LastSignal
         void OnGUI()
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (Inspecting) GUI.Label(new Rect(16, 16, 650, 26), "CHARACTER: F6 FPS / inspection · F7 angle: " + Names[angle] + " · movement/aim still use FPS authority");
+            if (Inspecting) GUI.Label(new Rect(16, 16, 650, 26), "CHARACTER: 6 FPS / inspection · 7 angle: " + Names[angle] + " · movement/aim still use FPS authority");
 #endif
         }
     }

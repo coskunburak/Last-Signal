@@ -70,6 +70,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 7
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 2930247106202898842}
 --- !u!1 &56022184089702717
 GameObject:
@@ -203,6 +204,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 8
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 6431774224050421084}
 --- !u!1 &849659342745287090
 GameObject:
@@ -274,6 +276,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 6
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 5772920464941845003}
 --- !u!1 &1493611921598151316
 GameObject:
@@ -345,6 +348,7 @@ MonoBehaviour:
   region: 2
   bodyPart: 1
   damageMultiplier: 2
+  protectionFraction: 0
   hitCollider: {fileID: 6123041909560597501}
 --- !u!1 &1676900955815904315
 GameObject:
@@ -416,6 +420,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 7
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 5288331499850396209}
 --- !u!1 &1781542785529769085
 GameObject:
@@ -549,6 +554,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 2
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 5341006703563512854}
 --- !u!1 &2411730097683112903
 GameObject:
@@ -620,6 +626,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 4
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 8633890404679623602}
 --- !u!1 &3282210821492457384
 GameObject:
@@ -641,6 +648,8 @@ GameObject:
   - component: {fileID: 5116920362945077609}
   - component: {fileID: 2911674039645898360}
   - component: {fileID: 92225620465150063}
+  - component: {fileID: 767974046985685232}
+  - component: {fileID: 4923471945855678503}
   m_Layer: 2
   m_Name: LS_Zombie_Runtime
   m_TagString: Untagged
@@ -812,6 +821,7 @@ MonoBehaviour:
     detachedColliderCenter: {x: 0, y: 0, z: 0}
     detachedColliderSize: {x: 0.24, y: 0.28, z: 0.24}
     impulse: 2
+    visualSeverApproved: 0
   - part: 3
     severThreshold: 50
     fatalOnSever: 0
@@ -827,6 +837,7 @@ MonoBehaviour:
     detachedColliderCenter: {x: 0, y: -0.25, z: 0}
     detachedColliderSize: {x: 0.22, y: 0.65, z: 0.22}
     impulse: 2.5
+    visualSeverApproved: 0
   - part: 4
     severThreshold: 50
     fatalOnSever: 0
@@ -842,6 +853,7 @@ MonoBehaviour:
     detachedColliderCenter: {x: 0, y: -0.25, z: 0}
     detachedColliderSize: {x: 0.22, y: 0.65, z: 0.22}
     impulse: 2.5
+    visualSeverApproved: 0
   - part: 5
     severThreshold: 35
     fatalOnSever: 0
@@ -853,6 +865,7 @@ MonoBehaviour:
     detachedColliderCenter: {x: 0, y: 0, z: 0}
     detachedColliderSize: {x: 0.13, y: 0.16, z: 0.13}
     impulse: 1
+    visualSeverApproved: 0
   - part: 6
     severThreshold: 35
     fatalOnSever: 0
@@ -864,6 +877,7 @@ MonoBehaviour:
     detachedColliderCenter: {x: 0, y: 0, z: 0}
     detachedColliderSize: {x: 0.13, y: 0.16, z: 0.13}
     impulse: 1
+    visualSeverApproved: 0
   torsoDamageThreshold: 40
   torsoWoundVisual: {fileID: 8370877116486168067}
 --- !u!114 &2911674039645898360
@@ -902,6 +916,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd50207d4fc14f6d97f9c4ca51fe7bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.Audio.ZombieAudioPresenter
+--- !u!114 &767974046985685232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3282210821492457384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 007ceaebf06e45b2a08ce0514f4f18f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieLocalizedWounds
+--- !u!114 &4923471945855678503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3282210821492457384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef240c4ad40d4ca4b6e9e928b30549ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.ZombieCorpseImpactReceiver
 --- !u!1 &4683363329136021628
 GameObject:
   m_ObjectHideFlags: 0
@@ -972,6 +1010,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 8
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 3568896061477707763}
 --- !u!1 &5624250186669236320
 GameObject:
@@ -1043,6 +1082,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 5
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 3673090986053672405}
 --- !u!1 &6696854261653919400
 GameObject:
@@ -1114,6 +1154,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 2
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 5628618760813282701}
 --- !u!1 &7094232080296060768
 GameObject:
@@ -1216,6 +1257,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 4
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 7550905664805634676}
 --- !u!1 &7339038726728446672
 GameObject:
@@ -1287,6 +1329,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 3
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 8665434974594813848}
 --- !u!1 &7499720477930222313
 GameObject:
@@ -1400,7 +1443,7 @@ SkinnedMeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   serializedVersion: 2
-  m_Quality: 0
+  m_Quality: 4
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
   m_Mesh: {fileID: 4300000, guid: 71a18cf93f80d4eb88247c275b176c58, type: 2}
@@ -1545,6 +1588,7 @@ MonoBehaviour:
   region: 1
   bodyPart: 3
   damageMultiplier: 1
+  protectionFraction: 0
   hitCollider: {fileID: 3707977853017016975}
 --- !u!1001 &5844492285483122320
 PrefabInstance:
@@ -1554,10 +1598,114 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2599735282879440275}
     m_Modifications:
+    - target: {fileID: 664668598854602013, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 4c7262211149243ec8366fb78aa8e486, type: 2}
+    - target: {fileID: 664668598854602013, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 709262927574956364, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 9219c4c22518344d8b1e26cb98aec8e5, type: 2}
+    - target: {fileID: 709262927574956364, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1575201763283204752, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: e78d5851c95ce464ea4054cb2efeeed6, type: 2}
+    - target: {fileID: 1575201763283204752, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1689712728635451563, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: c3054f94a319c4cd094863b793601996, type: 2}
+    - target: {fileID: 1689712728635451563, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2129825294132527147, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 49713d41a86bd4143a04fd07adf0ade3, type: 2}
+    - target: {fileID: 2129825294132527147, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2608544833669514913, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 478f8d240fa8f4bdd9d6ca2a98904303, type: 2}
+    - target: {fileID: 2688059444682405594, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 58ed6ab1cfe854b4caf706255b8d28d5, type: 2}
+    - target: {fileID: 2688059444682405594, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3564964322173630610, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 50ab4187dd6bd4f0baf4c6de94ba318e, type: 2}
+    - target: {fileID: 3564964322173630610, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4762053443621074300, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: b49a93e0d41554410a13093e91b2bc5d, type: 2}
+    - target: {fileID: 4762053443621074300, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6553135971093033364, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 9a3ae7d8e20384977878614c5e456fab, type: 2}
+    - target: {fileID: 6553135971093033364, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065639049667049332, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 089be4079f28847b182186188c2a38d8, type: 2}
+    - target: {fileID: 7065639049667049332, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7394675242618188007, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 9f4fa610d43d34f50bc031bafb03a5a5, type: 2}
+    - target: {fileID: 7394675242618188007, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7681359996573053852, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 090ef4e11ebb84010ae27c31d91e5c8f, type: 2}
+    - target: {fileID: 7681359996573053852, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7720697029613610563, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 81190c0fa7dbc42b6af4087db8a46eac, type: 2}
+    - target: {fileID: 7720697029613610563, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8274033219480886491, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1601,6 +1749,22 @@ PrefabInstance:
     - target: {fileID: 8761917780606895713, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
       propertyPath: m_Name
       value: LS_Zombie_Shirtless_Visual
+      objectReference: {fileID: 0}
+    - target: {fileID: 8845708853136664941, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 050e6f81ef39a43e383c5fc4b407b47a, type: 2}
+    - target: {fileID: 8845708853136664941, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8959726201407393982, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 4245251920a374d1698adf43937d9b05, type: 2}
+    - target: {fileID: 8959726201407393982, guid: 18002201022604e06aacfb311fc3b60e, type: 3}
+      propertyPath: m_Quality
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

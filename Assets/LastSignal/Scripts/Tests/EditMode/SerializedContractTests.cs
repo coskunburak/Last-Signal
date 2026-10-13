@@ -17,12 +17,36 @@ namespace LastSignal.Tests
             Assert.That(capsule.height, Is.EqualTo(1.8f));
             Assert.That(capsule.stepOffset, Is.LessThan(capsule.height - capsule.radius * 2));
             Assert.That(prefab.GetComponent<FirstPersonMotor>(), Is.Not.Null);
-            foreach (var component in prefab.GetComponentsInChildren<MonoBehaviour>())
+            // Required gameplay references are an explicit contract. URP VolumeTrigger (and
+            // many other package fields) may legitimately be null and fall back to the camera.
+            RequireReferences(prefab.GetComponent<PlayerInputReader>(), "actions");
+            RequireReferences(prefab.GetComponent<FirstPersonLook>(), "input", "view");
+            RequireReferences(prefab.GetComponent<FirstPersonMotor>(), "input", "capsule", "stance");
+            RequireReferences(prefab.GetComponent<PlayerStance>(), "input", "capsule", "view");
+            RequireReferences(prefab.GetComponent<InteractionController>(), "input", "origin");
+            RequireReferences(prefab.GetComponent<PlayerCombatController>(), "input", "look", "weaponParent", "startingWeapon", "startingMelee");
+            RequireReferences(prefab.GetComponent<CharacterInspectionCamera>(), "firstPerson", "body");
+            RequireReferences(prefab.GetComponent<CharacterFirstPersonActions>(), "weaponParent", "character");
+            foreach (var component in prefab.GetComponentsInChildren<MonoBehaviour>(true))
             {
+                Assert.That(component, Is.Not.Null, "Missing MonoBehaviour script on player hierarchy.");
                 var property = new SerializedObject(component).GetIterator();
                 while (property.NextVisible(true))
-                    if (property.propertyType == SerializedPropertyType.ObjectReference)
-                        Assert.That(property.objectReferenceValue, Is.Not.Null, component.GetType().Name + "." + property.propertyPath);
+                    if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue == null)
+                        Assert.That(property.objectReferenceEntityIdValue, Is.EqualTo(EntityId.None),
+                            "Broken serialized reference: " + component.GetType().Name + "." + property.propertyPath);
+            }
+        }
+        static void RequireReferences(Component component, params string[] names)
+        {
+            Assert.That(component, Is.Not.Null);
+            var serialized = new SerializedObject(component);
+            foreach (string name in names)
+            {
+                var property = serialized.FindProperty(name);
+                Assert.That(property, Is.Not.Null, component.GetType().Name + "." + name + " contract field was renamed/removed.");
+                Assert.That(property.propertyType, Is.EqualTo(SerializedPropertyType.ObjectReference));
+                Assert.That(property.objectReferenceValue, Is.Not.Null, component.GetType().Name + "." + name);
             }
         }
         [Test]

@@ -27,7 +27,8 @@ namespace LastSignal
         public MeleeAttackState(MeleeWeaponDefinition value) { definition = value; }
         public bool TryBegin(PlayerStamina stamina)
         {
-            if (State != MeleeState.Ready || !definition || !definition.Valid || !stamina || !stamina.TrySpend(PlayerStamina.MeleeAttackCost)) return false;
+            if (State != MeleeState.Ready || !definition || !definition.Valid || !stamina ||
+                (definition.Heavy && stamina.Exhausted) || !stamina.TrySpend(definition.StaminaCost)) return false;
             SwingId = ++nextSwing;
             Enter(MeleeState.Windup, definition.WindupSeconds);
             return true;

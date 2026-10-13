@@ -19,6 +19,8 @@ namespace LastSignal.Inventory
         public int TryAdd(ItemDefinition item, int quantity) => Container.TryAdd(item, quantity);
         public bool TryRemove(int index, int quantity) => Container.TryRemove(index, quantity);
         public bool TryRemove(ItemDefinition item, int quantity) => Container.TryRemove(item, quantity);
+        internal bool TryTransferAmmo(ItemDefinition item, int quantity, Action commitMagazine, Action rollbackMagazine) =>
+            Container.TryTransferAmmo(item, quantity, commitMagazine, rollbackMagazine);
         public bool TryMove(int sourceIndex, int destIndex) => Container.TryMove(sourceIndex, destIndex);
         public bool TryMerge(int sourceIndex, int destIndex) => Container.TryMerge(sourceIndex, destIndex);
         public bool TrySplit(int sourceIndex, int destIndex, int amount) => Container.TrySplit(sourceIndex, destIndex, amount);

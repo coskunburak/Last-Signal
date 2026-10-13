@@ -11,10 +11,11 @@ using UnityEngine.TestTools;
 
 namespace LastSignal.Tests
 {
-    public sealed class CharacterIntegrationPlayTests : InputTestFixture
+    public sealed partial class CharacterIntegrationPlayTests
     {
         GameObject player, floor;
         InputFixtureIsolation.SceneScope scene;
+        InputFixtureIsolation.NativeInputScope nativeInput;
         PlayerInputReader input;
         FirstPersonMotor motor;
         PlayerStance stance;
@@ -22,10 +23,12 @@ namespace LastSignal.Tests
         Animator animator;
         CharacterBodyVisibility visibility;
         CharacterInspectionCamera inspection;
-        public override void Setup()
+        [SetUp] public void Setup()
         {
-            scene=new InputFixtureIsolation.SceneScope();InputFixtureIsolation.DisableLiveActions();base.Setup();
-            InputSystem.AddDevice<Keyboard>();InputSystem.AddDevice<Mouse>();Time.timeScale=1;
+            // Keep the native manager and clock: scene-owned/shared UI actions can survive across fixtures.
+            // Swapping managers here leaves those actions pointing at devices with discarded state buffers.
+            scene=new InputFixtureIsolation.SceneScope();
+            nativeInput=new InputFixtureIsolation.NativeInputScope();Time.timeScale=1;
             floor=new GameObject("Character fixture floor");floor.transform.position=new Vector3(500,99.75f,500);floor.AddComponent<BoxCollider>().size=new Vector3(50,.5f,50);
             player=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Player/Player.prefab"),new Vector3(500,100.04f,500),Quaternion.identity);
             player.AddComponent<PlayerInventory>().Initialize(24);
@@ -35,11 +38,14 @@ namespace LastSignal.Tests
             visibility=presenter.GetComponent<CharacterBodyVisibility>();inspection=player.GetComponent<CharacterInspectionCamera>();
             Physics.SyncTransforms();motor.Simulate(Vector2.zero,false,.2f);
         }
-        public override void TearDown()
+        [TearDown] public void TearDown()
         {
             if(player)Object.DestroyImmediate(player);if(floor)Object.DestroyImmediate(floor);Time.timeScale=1;
-            InputFixtureIsolation.DisableLiveActions();try{base.TearDown();}finally{scene?.Dispose();scene=null;}
+            try { nativeInput?.Dispose(); }
+            finally { nativeInput=null;scene?.Dispose();scene=null; }
         }
+        static void Press(UnityEngine.InputSystem.Controls.ButtonControl button) => InputFixtureIsolation.QueueButton(button, true);
+        static void Release(UnityEngine.InputSystem.Controls.ButtonControl button) => InputFixtureIsolation.QueueButton(button, false);
         [Test] public void LocomotionUsesDisplacementAndAuthoritativeStance()
         {
             motor.Simulate(Vector2.right,false,.15f);presenter.Present(.15f);
@@ -287,6 +293,73 @@ namespace LastSignal.Tests
             Assert.That(animator.speed,Is.Zero);
             input.SetDrivingContext(false,true);motor.enabled=true;stance.enabled=true;player.GetComponent<CharacterController>().enabled=true;
             presenter.Present(.1f);Assert.That(animator.GetBool("Seated"),Is.False);
+        }
+        [UnityTest] public IEnumerator SurvivalBindingUpdatesTreatmentAnimation()
+        {
+            var survival = player.AddComponent<PlayerSurvival>();
+            survival.Initialize(null, player.GetComponent<PlayerInventory>());
+            yield return null;
+            Assert.That(animator.GetBool("Treating"), Is.False);
+
+            // Simulate treatment start by injecting a mock item definition via reflection
+            var itemDef = ScriptableObject.CreateInstance<LastSignal.Inventory.Data.ItemDefinition>();
+            var field = typeof(PlayerSurvival).GetField("treatment", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            field.SetValue(survival, itemDef);
+
+            presenter.Present(.1f);
+            Assert.That(animator.GetBool("Treating"), Is.True);
+            Assert.That(presenter.UpperActionBusy, Is.False, "Treatment doesn't use the transient action layer");
+
+            survival.CancelTreatment("Test");
+            presenter.Present(.1f);
+            Assert.That(animator.GetBool("Treating"), Is.False);
+            Object.DestroyImmediate(itemDef);
+        }
+
+        [UnityTest] public IEnumerator VehicleIKBindsToSteeringWheel()
+        {
+            UnityEngine.TestTools.LogAssert.Expect(LogType.Error, "Invalid cockpit steering-wheel binding.");
+            var vehicleObj = new GameObject("TestVehicle");
+            var wheel = vehicleObj.AddComponent<LastSignal.Vehicles.VehicleSteeringWheelPresenter>();
+            var wheelPivot = new GameObject("Pivot").transform;
+            wheelPivot.SetParent(vehicleObj.transform);
+            wheel.GetType().GetField("pivot", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(wheel, wheelPivot);
+
+            player.transform.SetParent(vehicleObj.transform);
+            yield return null;
+
+            // Simulate entering vehicle context
+            input.SetDrivingContext(true, true);
+            presenter.Present(.1f);
+            Assert.That(animator.GetBool("Seated"), Is.True);
+
+            // Wait for LateUpdate and IK to process
+            yield return null;
+
+            // The CharacterSeatPresentation should have found the wheel and constrained to it.
+            // We can check if it successfully captured the wheel by looking at its private field.
+            var seatRig = presenter.GetComponent<CharacterSeatPresentation>();
+            var capturedWheel = seatRig.GetType().GetField("wheel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(seatRig);
+            Assert.That(capturedWheel, Is.Not.Null, "Seat presentation must bind to the steering wheel in parent");
+
+            Object.Destroy(vehicleObj);
+        }
+
+        [UnityTest] public IEnumerator HolsteredWeaponStateTurnsOffRigIK()
+        {
+            yield return null; yield return new WaitForSeconds(.8f);
+            var combat = player.GetComponent<PlayerCombatController>();
+            var rig = presenter.GetComponent<CharacterWeaponRig>();
+
+            Assert.That(rig.WeaponVisual, Is.Not.Null);
+            Assert.That(rig.WeaponVisual.activeSelf, Is.True);
+
+            combat.UnequipWeapon();
+            yield return null;
+
+            Assert.That(rig.WeaponVisual == null || !rig.WeaponVisual.activeSelf, Is.True, "Visual hidden or destroyed");
+            yield return null;
+            Assert.That(rig.ActiveProfile, Is.Null, "Rig profile cleared");
         }
     }
 }

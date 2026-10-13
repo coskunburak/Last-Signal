@@ -9,6 +9,25 @@ namespace LastSignal
         static readonly ProfilerMarker Marker = new ProfilerMarker("LastSignal.Zombie.AI");
         [SerializeField] ZombieDefinition definition;
         [SerializeField] Transform meleeOrigin;
+        [SerializeField, Tooltip("Authored low-visibility ambush context; never inferred from player position.")] bool ambushContext;
+        readonly ZombieArchetypeCycle archetype = new ZombieArchetypeCycle();
+        public ZombieArchetypeCycle Archetype => archetype;
+        public event System.Action<ZombieArchetypePhase> ArchetypeChanged;
+        void InterruptArchetype()
+        {
+            var before = archetype.Phase; archetype.Interrupt(definition);
+            if (before != archetype.Phase) ArchetypeChanged?.Invoke(archetype.Phase);
+        }
+        ZombieMeleeSpacing meleeSpacing;
+        void ResetArchetype() => archetype.Reset(ambushContext && definition && definition.ArchetypeId == ZombieArchetypes.Lurker);
+        public void ConfigureAmbush(bool lowVisibilityContext) { ambushContext = lowVisibilityContext; ResetArchetype(); }
+        public bool RestoreArchetype(string id)
+        {
+            var profile = ZombieArchetypes.Load(id);
+            if (!profile) return false;
+            var player = target; Configure(profile);
+            return Initialize() && Bind(player);
+        }
         ZombieHealth health;
         ZombieDismemberment dismemberment;
         Collider[] ownedColliders;
@@ -117,7 +136,7 @@ namespace LastSignal
         {
             if (IsDead) return false;
             if (!definition || !definition.IsValid(out _))
-            { Debug.LogError("Zombie requires a valid Shambler definition.", this); enabled = false; return false; }
+            { Debug.LogError("Zombie requires a valid zombie definition.", this); enabled = false; return false; }
             navigation = GetComponent<ZombieNavigation>(); perception = GetComponent<ZombiePerception>();
             noiseListener = GetComponent<ZombieNoiseListener>();
             if (GetComponents<ZombieNoiseListener>().Length != 1)
@@ -135,8 +154,9 @@ namespace LastSignal
             dismemberment = GetComponent<ZombieDismemberment>();
             if (health)
             {
-                health.Damaged -= OnDamaged; health.Died -= OnDeath;
-                health.Damaged += OnDamaged; health.Died += OnDeath;
+                health.ApplyArchetypeHealth(definition.ArchetypeHealth);
+                health.Damaged -= OnDamaged; health.Died -= OnDeath; health.StateRestored -= OnHealthRestored;
+                health.Damaged += OnDamaged; health.Died += OnDeath; health.StateRestored += OnHealthRestored;
                 ownedColliders = GetComponentsInChildren<Collider>(true);
                 if (!presentation || !presentation.HasDamagePresentation() || !health.IsAlive) initialized = false;
                 health.SetDamageEnabled(initialized);
@@ -155,13 +175,16 @@ namespace LastSignal
             reactionRemaining = reactionReadyAt = 0; reactionPriority = ZombieImpactSeverity.Light;
             LastImpact = ZombieImpactReaction.Legacy;
             noiseListener?.Release(); ClearAuditory();
-            ClearAttack(); runtime.Reset(); search.Clear(); holding = false;
+            ClearAttack(); runtime.Reset(); search.Clear(); holding = false; ResetArchetype();
             target = null; targetHealth = null; targetCapsule = null;
             if (navigation) navigation.Stop();
             if (!initialized || !perception.Bind(player))
             { Debug.LogError("Zombie target requires the active player capsule and FirstPersonLook camera.", this); return false; }
             target = player;
-            targetHealth = player.GetComponent<PlayerHealth>(); targetCapsule = player.GetComponent<CharacterController>();
+            targetHealth = player.GetComponent<PlayerHealth>();
+            meleeSpacing = player.GetComponent<ZombieMeleeSpacing>();
+            if (!meleeSpacing) meleeSpacing = player.AddComponent<ZombieMeleeSpacing>();
+            targetCapsule = player.GetComponent<CharacterController>();
             if (combatReady && !targetHealth)
                 Debug.LogWarning("Zombie target has no PlayerHealth; melee is disabled for this binding.", this);
             var noiseContext = player.GetComponent<Noise.GameplayNoiseContext>();
@@ -186,7 +209,8 @@ namespace LastSignal
             LastImpact = ZombieImpactReaction.Legacy;
             target = null; targetHealth = null; targetCapsule = null;
             ClearAttack(); sequence = 0; ContactAttempts = SuccessfulHits = 0; LastContactSequence = 0;
-            initialized = false; runtime.Reset(); search.Clear(); holding = false;
+            initialized = false; runtime.Reset(); search.Clear(); holding = false; ResetArchetype();
+            meleeSpacing = null; if (navigation) navigation.SetBurst(false);
             clock = perceptionDue = observationAge = failureCooldown = 0; paused = searchLostSight = false;
             if (perception) perception.Clear(); if (navigation) navigation.Stop();
         }
@@ -253,6 +277,15 @@ namespace LastSignal
                     observation.Visible ? evidenceTime * observation.Evidence : evidenceTime, definition);
                 observationAge = 0; perceptionDue = clock + definition.PerceptionInterval;
             }
+            bool mobilityDisabled = dismemberment && (dismemberment.IsSevered(ZombieBodyPart.LeftLeg) || dismemberment.IsSevered(ZombieBodyPart.RightLeg));
+            var phaseBefore = archetype.Phase;
+            if (mobilityDisabled) archetype.Interrupt(definition);
+            if (!Attacking && !mobilityDisabled)
+                archetype.Advance(definition, seconds, runtime.Visible, runtime.Confidence >= 1,
+                    runtime.State == ZombieState.Chasing, auditory.HasStimulus,
+                    runtime.HasMemory ? Vector3.Distance(transform.position, runtime.LastKnownPosition) : float.PositiveInfinity);
+            if (phaseBefore != archetype.Phase) ArchetypeChanged?.Invoke(archetype.Phase);
+            navigation.SetBurst(archetype.Phase == ZombieArchetypePhase.Burst);
             switch (runtime.State)
             {
                 case ZombieState.Idle:
@@ -263,6 +296,7 @@ namespace LastSignal
                 case ZombieState.Chasing:
                     if (navigation.Exhausted || runtime.MemoryAge >= definition.LossGrace)
                         ChangeState(auditory.HasStimulus && !runtime.Visible ? ZombieState.Investigating : ZombieState.Searching);
+                    else if (archetype.Hold) navigation.Stop();
                     else if (!TryBeginAttack()) Chase(seconds);
                     break;
                 case ZombieState.Searching:
@@ -278,7 +312,7 @@ namespace LastSignal
                     TickAttack(seconds);
                     break;
             }
-            navigation.SetRunning(runtime.State == ZombieState.Chasing);
+            navigation.SetRunning(runtime.State == ZombieState.Chasing && !archetype.Hold);
             navigation.Tick(seconds, clock);
             if (presentation && !Attacking)
                 presentation.Present(navigation.Velocity.magnitude, navigation.Running, seconds, false);
@@ -286,6 +320,7 @@ namespace LastSignal
         void OnDamaged(DamageInfo info)
         {
             if (!initialized || paused || IsDead) return;
+            InterruptArchetype(); navigation.SetBurst(false);
             bool severed = dismemberment && dismemberment.IsSevered(info.BodyPart);
             var impact = ZombieImpactReaction.Select(info, transform.rotation, health.MaxHealth, severed,
                 definition.HeavyImpactHealthFraction, definition.MinimumHeavyImpact);
@@ -302,7 +337,8 @@ namespace LastSignal
             }
             bool reacting = runtime.State == ZombieState.HitReact;
             if (!vehicleHit && (reacting && impact.Severity <= reactionPriority ||
-                !reacting && clock < reactionReadyAt && impact.Severity == ZombieImpactSeverity.Light)) return;
+                !reacting && clock < reactionReadyAt && impact.Severity == ZombieImpactSeverity.Light))
+            { if (reacting && presentation) presentation.CoalesceImpact(); return; }
             if (reacting)
             {
                 reactionPriority = impact.Severity;
@@ -324,6 +360,7 @@ namespace LastSignal
             if (vehicleHit) { presentation.BeginVehicleKnockdown(impact); navigation.Suspend(true); }
             else presentation.BeginDamage(false, impact);
         }
+        void OnHealthRestored() { if (health && !health.IsAlive) OnDeath(); }
         void OnDeath()
         {
             if (IsDead) return;
@@ -349,15 +386,16 @@ namespace LastSignal
         }
         void OnDestroy()
         {
-            if (health) { health.Damaged -= OnDamaged; health.Died -= OnDeath; }
+            if (health) { health.Damaged -= OnDamaged; health.Died -= OnDeath; health.StateRestored -= OnHealthRestored; }
         }
         bool TryBeginAttack()
         {
-            if (!combatReady || (dismemberment && !dismemberment.CanUseRightArmAttack) ||
+            if (!archetype.CanAttack || !combatReady || (dismemberment && !dismemberment.CanUseRightArmAttack) ||
                 !meleeOrigin || !presentation || !presentation.HasAnimator || !targetHealth || !targetHealth.IsAlive ||
                 !runtime.Visible || !navigation.Ready || navigation.Exhausted) return false;
             if (ZombieMeleeValidator.Validate(MeleeOrigin, transform.forward, targetCapsule, targetHealth,
                 definition.AttackEnterRange, definition.AttackHalfAngle, definition.OcclusionMask, out _, out _, out _) != MeleeResult.Hit) return false;
+            navigation.SetBurst(false);
             sequence++; alternateAttack = (sequence & 1) == 0;
             attackTime = 0; contactConsumed = false; lockedForward = Vector3.zero;
             LastMeleeResult = MeleeResult.None;
@@ -405,6 +443,8 @@ namespace LastSignal
                         definition.AttackReach, definition.AttackHalfAngle, definition.OcclusionMask,
                         out var point, out var distance, out var angle);
                     LastContactDistance = distance; LastContactAngle = angle;
+                    if (LastMeleeResult == MeleeResult.Hit && meleeSpacing && !meleeSpacing.TryContact(Time.time, this))
+                        LastMeleeResult = MeleeResult.CrowdSpacing;
                     if (LastMeleeResult == MeleeResult.Hit)
                     {
                         SuccessfulHits++;
@@ -424,6 +464,7 @@ namespace LastSignal
         }
         void ClearAttack()
         {
+            if (Attacking && definition) InterruptArchetype();
             attackTime = 0; contactConsumed = false; lockedForward = Vector3.zero;
             if (presentation) presentation.EndAttack();
         }

@@ -28,7 +28,7 @@ namespace LastSignal.Editor.S019
         public static readonly string[] Exemplars = {
             "Assets/LastSignal/Art/S013/Production/Textures/Wood.png",
             "Assets/LastSignal/Models/Weapons/Crowbar/Source/Crowbar.obj",
-            "Assets/ThirdParty/S15 Sound Pack/FreeWeaponSFX_v1.1/AssaultRifle/Foley/sfx_wpn_ar_foley_aim_02.wav"
+            "Assets/ThirdParty/Audio/FreeWeaponSFX_v1.1/AssaultRifle/Foley/sfx_wpn_ar_foley_aim_02.wav"
         };
         public static string CopyPath(int index) => ContentImportPolicy.Root + Families[index] + "/S019Exemplar" + Path.GetExtension(Exemplars[index]);
         public static string PresetPath(int index) => ContentImportPolicy.Presets + Families[index] + ".preset";

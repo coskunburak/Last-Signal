@@ -21,7 +21,7 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator NormalRouteTenSessionsClearTargetsTimersAndPausePresentation()
         {
-            yield return Load("Assets/ThirdParty/UnityURPTemplate/Scenes/SampleScene.unity");
+            yield return Load("Assets/ThirdParty/Samples/UnityURPTemplate/Scenes/SampleScene.unity");
             var encounter=session.GetComponent<ZombieEncounter>(); Assert.That(encounter,Is.Not.Null);
             for(int cycle=0;cycle<10;cycle++)
             {

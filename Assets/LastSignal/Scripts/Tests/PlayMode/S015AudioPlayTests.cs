@@ -88,9 +88,12 @@ namespace LastSignal.Tests
             float deadline=Time.realtimeSinceStartup+5;
             while(weapon.RuntimeState.State!=WeaponState.Ready) { Assert.That(Time.realtimeSinceStartup,Is.LessThan(deadline)); yield return null; }
             var presenter=weapon.GetComponentInChildren<WeaponAudioPresenter>(); Assert.That(presenter,Is.Not.Null);
-            int cues=audio.CueCount, ammo=weapon.RuntimeState.CurrentMagazine;
+            int cues=audio.CueCount, ammo=weapon.RuntimeState.CurrentMagazine, presented=presenter.PresentedCueCount;
             weapon.OnFirePressed(); weapon.OnFireReleased();
-            Assert.That(weapon.RuntimeState.CurrentMagazine,Is.EqualTo(ammo-1)); Assert.That(audio.LastCue,Is.EqualTo(AudioCue.Fire)); Assert.That(audio.CueCount,Is.EqualTo(cues+1));
+            Assert.That(weapon.RuntimeState.CurrentMagazine,Is.EqualTo(ammo-1));
+            Assert.That(presenter.PresentedCueCount,Is.GreaterThan(presented));
+            Assert.That(audio.CueCount,Is.GreaterThan(cues));
+            Assert.That(audio.LastCue==AudioCue.Fire || audio.LastCue>=AudioCue.ImpactDefault && audio.LastCue<=AudioCue.ImpactSever,Is.True);
             var inventory=flow.Player.GetComponent<LastSignal.Inventory.PlayerInventory>(); inventory.TryAdd(weapon.Definition.Ammunition,60);
             weapon.OnReloadRequested(); Assert.That(weapon.RuntimeState.State,Is.EqualTo(WeaponState.Reloading));
             cues=audio.CueCount; presenter.OnMagazineDetach(); presenter.OnMagazineDetach(); Assert.That(audio.CueCount,Is.EqualTo(cues+1));

@@ -1,3 +1,5 @@
+> Superseded calibration — 2026-10-10: the 35° single-Chest stance and socket/offset table below describe the preceding implementation. See [WEAPON_STANCE_HANDOFF.md](WEAPON_STANCE_HANDOFF.md) for the current measured contacts, distributed torso pose, bounded shoulder/arm solver, lifecycle changes and manual commands. New tests/build/visual acceptance remain NOT_RUN.
+
 # Shoulder and weapon integration — revised after 12:00 feedback
 
 Implementation changed; compilation, focused tests and visual acceptance for this revision are **NOT_RUN**. Earlier PASS results do not validate this revision. No package, second skeleton, vendor asset change or gameplay authority was added.

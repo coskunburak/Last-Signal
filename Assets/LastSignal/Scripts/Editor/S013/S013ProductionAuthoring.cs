@@ -20,7 +20,7 @@ namespace LastSignal.Art.Editor
     {
         public const string ScenePath="Assets/LastSignal/Scenes/Production/S013Cabin.unity";
         public const string Root="Assets/LastSignal/Art/S013/Production";
-        const string Source="Assets/ThirdParty/EnvironmentAsset/FantasyEnvironments/Environments/";
+        const string Source="Assets/ThirdParty/Environments/FantasyEnvironments/Environments/";
         static readonly Vector3 Origin=new Vector3(-360,0,-140);
         static Dictionary<string,Material> materials=new Dictionary<string,Material>();
         static Dictionary<string,GameObject> prefabs=new Dictionary<string,GameObject>();

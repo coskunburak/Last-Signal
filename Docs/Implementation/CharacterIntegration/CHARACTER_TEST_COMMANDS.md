@@ -72,7 +72,7 @@ Invokes `LastSignal.Editor.CharacterVerification.DevelopmentMac` for StandaloneO
 
 ## 8 — Manual visual acceptance
 
-After batch Unity exits, reopen the project in Unity 6000.5.0f1 and open `Assets/LastSignal/Scenes/Production/S013Cabin.unity`. Start Play Mode yourself, enter the existing session flow and follow `CHARACTER_MANUAL_QA.md`. Alternatively launch the newly built app yourself. Use F6/F7 with the Game view focused; macOS may require Fn with function keys. Do not use an asset-preview character as acceptance evidence.
+After batch Unity exits, reopen the project in Unity 6000.5.0f1 and open `Assets/LastSignal/Scenes/Production/S013Cabin.unity`. Start Play Mode yourself, enter the existing session flow and follow `CHARACTER_MANUAL_QA.md`. Alternatively launch the newly built app yourself. Use the top-row 6/7 keys with the Game view focused; no Fn key is needed. Do not use an asset-preview character as acceptance evidence.
 
 ## Evidence and result interpretation
 

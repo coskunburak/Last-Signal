@@ -25,6 +25,13 @@ namespace LastSignal
             [Range(0, 4)] public int surfaceMarks = 3;
             [Min(.01f)] public float markSize = .3f;
         }
+        [Header("Committed bullet impacts (separate from stump bleeding)")]
+        [Range(1, 16)] public int hitCapacity = 12;
+        [Range(1, 12)] public int hitParticles = 5;
+        [Range(.1f, 1)] public float hitScale = .35f;
+        [Range(5, 80)] public float hitDistance = 35;
+        public Material woundMaterial;
+        public ZombieWoundProfile woundProfile;
         public GameObject burstPrefab, spurtPrefab, dripPrefab, surfacePrefab;
         public Region head = new Region { scale = 1.1f, burstCount = 32, burstSpeed = 4.6f,
             spurtSpeed = 3.1f, spurtConeAngle = 24, pulseFrequency = 3.2f, pulseFloor = .28f,
@@ -42,7 +49,9 @@ namespace LastSignal
         public Region ForPart(ZombieBodyPart part) => part == ZombieBodyPart.Head ? head :
             part == ZombieBodyPart.LeftArm || part == ZombieBodyPart.RightArm ? arm :
             part == ZombieBodyPart.LeftHand || part == ZombieBodyPart.RightHand ? hand : null;
-        public bool IsValid => burstPrefab && spurtPrefab && dripPrefab && surfacePrefab &&
+        public bool IsValid => (!woundProfile || woundProfile.IsValid) && burstPrefab && spurtPrefab && dripPrefab && surfacePrefab &&
+            hitCapacity > 0 && hitCapacity <= 16 && hitParticles > 0 && hitParticles <= 12 &&
+            Within(hitScale, .1f, 1) && Within(hitDistance, 5, 80) &&
             effectCapacity > 0 && effectCapacity <= 32 && markCapacity > 0 && markCapacity <= 64 &&
             float.IsFinite(markLifetime) && markLifetime > 0 && float.IsFinite(probeDistance) && probeDistance > 0 &&
             poolGrowthDuration > 0 && pressure != null && Valid(head) && Valid(arm) && Valid(hand);

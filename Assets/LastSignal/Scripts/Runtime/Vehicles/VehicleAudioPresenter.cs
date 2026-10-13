@@ -81,7 +81,7 @@ namespace LastSignal.Vehicles
                 {
                     nextHudRefresh = Time.unscaledTime + .25f;
                     hudText = $"Pickup | Fuel {actor.Resources.FuelLiters:F1} L | Condition {actor.Resources.Condition:P0}\n" +
-                        Binding("Throttle") + " Gaz · " + Binding("Brake") + " Fren · " + Binding("Reverse") + " Geri · " + Binding("Handbrake") + " El freni\n" +
+                        Binding("Throttle") + " Gaz · " + Binding("Reverse") + " Fren / durunca geri · " + Binding("Handbrake") + " El freni\n" +
                         Binding("Ignition") + " Kontak · " + Binding("Exit") + " Çık · " + Binding("Horn") + " Korna · " + Binding("Lights") + " Far";
                 }
             }

@@ -24,6 +24,8 @@ namespace LastSignal.Tests
         PlayerInventory inventory;
         Camera camera;
         Text ammoText;
+        InputFixtureIsolation.NativeInputScope inputScope;
+        [SetUp] public void SetupInput() => inputScope = new InputFixtureIsolation.NativeInputScope();
         readonly System.Collections.Generic.List<GameObject> owned = new System.Collections.Generic.List<GameObject>();
         IEnumerator Load(int magazine = 30)
         {
@@ -34,9 +36,11 @@ namespace LastSignal.Tests
             session.ReturnToMenu(); yield return null;
             var loot = session.GetComponent<LootPopulationService>();
             var so = new SerializedObject(loot); so.FindProperty("overrideSeed").boolValue = true; so.FindProperty("explicitSeed").intValue = 12345; so.ApplyModifiedPropertiesWithoutUndo();
-            session.BeginSession(); session.Resume(); yield return null;
+            session.BeginSession(); session.Resume();
             // Editor focus/authentication prompts must not pause an automated fixture.
             session.Player.GetComponent<PlayerInputReader>().FocusLost -= session.Pause;
+            yield return null;
+            session.Resume();
             Bind();
             foreach (var zombie in Object.FindObjectsByType<ZombieController>()) zombie.SetPaused(true); // Isolate weapon assertions; existing full regression covers active combat.
             weapon.Initialize(camera.transform, session.Player, magazine); weapon.RequestEquip();
@@ -47,6 +51,7 @@ namespace LastSignal.Tests
         }
         void Bind()
         {
+            session.Player.GetComponent<PlayerInputReader>().FocusLost -= session.Pause;
             weapon = session.Player.GetComponent<PlayerCombatController>().ActiveWeapon;
             inventory = session.Player.GetComponent<PlayerInventory>();
             camera = session.Player.GetComponent<FirstPersonLook>().View;
@@ -72,7 +77,13 @@ namespace LastSignal.Tests
             }
         }
         void AssertHud()
-        { Assert.IsNotNull(ammoText); Assert.That(ammoText.text, Does.EndWith(weapon.RuntimeState.CurrentMagazine + " / " + weapon.RuntimeState.ReserveAmmo)); }
+        {
+            Assert.IsNotNull(ammoText);
+            Assert.That(ammoText.text, Does.Contain(weapon.Definition.WeaponName + " " +
+                weapon.RuntimeState.CurrentMagazine + " / " + weapon.RuntimeState.ReserveAmmo + "    |    "));
+            Assert.That(ammoText.text, Does.EndWith(weapon.RuntimeState.Condition == 0 ? "BROKEN" :
+                "DUR " + (weapon.RuntimeState.Condition / 10) + "%"));
+        }
         [UnityTest] public IEnumerator ActualShotsMissWallEmptyAndRejectedRequests()
         {
             yield return Load(2); int shots = 0, dry = 0; WeaponFireResolver.ShotResult last = default;
@@ -98,19 +109,25 @@ namespace LastSignal.Tests
         [UnityTest] public IEnumerator SecurityPickupPartialReloadAndDropRePickupConserve()
         {
             yield return Load(0); var state = weapon.RuntimeState; var item = AmmoPickup(); int picked = item.Quantity;
+            // Seed 12345 guarantees the first Security pickup, not two rifle-ammo stacks.
+            // Supply the second transaction through the same real WorldItem prefab, without
+            // changing production loot probabilities or inserting ammunition into inventory.
+            var secondObject = Object.Instantiate(item.Definition.WorldPrefab, item.transform.position + Vector3.up * 2, Quaternion.identity);
+            owned.Add(secondObject);
+            var second = secondObject.GetComponent<WorldItem>(); second.Configure(item.Definition, picked);
             Assert.That(picked, Is.InRange(5, 20)); Assert.IsTrue(((IInteractable)item).TryInteract()); Assert.AreEqual(picked, state.ReserveAmmo); AssertHud();
             weapon.OnReloadRequested(); for (int i=0;i<20;i++) weapon.OnReloadRequested();
             yield return new WaitForSeconds(1.5f); Assert.AreEqual(0, state.CurrentMagazine); Assert.AreEqual(picked, state.ReserveAmmo);
             yield return new WaitForSeconds(.5f); Assert.IsTrue(state.ReloadCommitted); Assert.AreEqual(picked, state.CurrentMagazine); Assert.AreEqual(0, state.ReserveAmmo); AssertHud();
             yield return new WaitForSeconds(1.5f); FireUp(); Assert.AreEqual(picked-1, state.CurrentMagazine);
-            var second = AmmoPickup(); int added = second.Quantity; Assert.IsTrue(second.TryInteract()); yield return null;
+            int added = second.Quantity; Assert.IsTrue(second.TryInteract()); yield return null;
             int slot = -1; for(int i=0;i<inventory.Capacity;i++) if(!inventory.GetSlot(i).IsEmpty && inventory.GetSlot(i).Item == weapon.Definition.Ammunition){slot=i;break;}
             camera.transform.rotation = Quaternion.LookRotation(Vector3.up); Assert.IsTrue(inventory.TryDrop(slot, added)); Assert.AreEqual(0, state.ReserveAmmo); AssertHud();
             WorldItem dropped = null; foreach(var w in Object.FindObjectsByType<WorldItem>()) if(w.Definition == weapon.Definition.Ammunition && w.transform.root.name != "Session Loot") dropped=w;
             Assert.IsNotNull(dropped); Assert.IsTrue(dropped.TryInteract()); Assert.AreEqual(added, state.ReserveAmmo); AssertHud();
             weapon.OnReloadRequested(); yield return new WaitForSeconds(2.7f);
             Assert.AreEqual(picked+added-1,state.TotalAmmo); AssertHud();
-            File.WriteAllText(Evidence+"/pickup-to-reload.txt", "Actual Security seed 12345 -> WorldItem -> Inventory -> empty partial reload -> miss -> second pickup -> drop/re-pick -> tactical reload. picked="+picked+"+"+added+" shots=1 finalTotal="+state.TotalAmmo+"; conserved.\n");
+            File.WriteAllText(Evidence+"/pickup-to-reload.txt", "Actual Security seed 12345 -> WorldItem -> Inventory -> empty partial reload -> miss -> fixture-owned second WorldItem of the selected ammo -> drop/re-pick -> tactical reload. picked="+picked+"+"+added+" shots=1 finalTotal="+state.TotalAmmo+"; conserved.\n");
         }
         IEnumerator Death(bool afterCommit)
         {
@@ -165,7 +182,12 @@ namespace LastSignal.Tests
             File.WriteAllText(Evidence+"/allocation-profile.txt","Editor synchronous warmed samples; excludes test/engine frame overhead. HUD Update 1000 calls="+idle+" B. Actual miss fire incl presentation+changing HUD, 20 shots="+shots+" B ("+(shots/20.0)+" B/shot). Reload+HUD one transaction (includes NUnit assertion overhead)="+reload+" B. These are not whole-process GC measurements.\n");
         }
         [UnityTearDown] public IEnumerator Cleanup()
-        { if(session)session.ReturnToMenu();foreach(var go in owned)if(go)Object.Destroy(go);owned.Clear();Time.timeScale=1;yield return null; }
+        {
+            if(session)session.ReturnToMenu();
+            foreach(var go in owned)if(go)Object.Destroy(go);
+            owned.Clear();Time.timeScale=1;yield return null;
+            inputScope?.Dispose();inputScope=null;
+        }
     }
 }
 #endif

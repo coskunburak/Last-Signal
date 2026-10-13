@@ -8,26 +8,35 @@ using UnityEngine.SceneManagement;
 
 namespace LastSignal.Tests
 {
-    public class RuntimeSmokeTests : InputTestFixture
+    public class RuntimeSmokeTests
     {
         Mouse mouse;
-        Keyboard keyboard;
-
         InputFixtureIsolation.SceneScope sceneScope;
-        public override void Setup()
+        InputFixtureIsolation.NativeInputScope inputScope;
+        static void Press(UnityEngine.InputSystem.Controls.ButtonControl button) => InputFixtureIsolation.QueueButton(button, true);
+        static void Release(UnityEngine.InputSystem.Controls.ButtonControl button) => InputFixtureIsolation.QueueButton(button, false);
+
+        [SetUp] public void Setup()
         {
-            sceneScope = new InputFixtureIsolation.SceneScope(); InputFixtureIsolation.DisableLiveActions();
-            base.Setup();
+            sceneScope = new InputFixtureIsolation.SceneScope();
+            inputScope = new InputFixtureIsolation.NativeInputScope();
             Time.timeScale = 1;
-            mouse = InputSystem.AddDevice<Mouse>();
-            keyboard = InputSystem.AddDevice<Keyboard>();
+            mouse = inputScope.Mouse;
         }
 
-        public override void TearDown()
+        [TearDown] public void TearDown()
         {
-            InputFixtureIsolation.DisableLiveActions();
-            Time.timeScale = 1;
-            try { base.TearDown(); } finally { sceneScope?.Dispose(); sceneScope = null; }
+            try
+            {
+                var session = Object.FindAnyObjectByType<SessionFlow>();
+                if (session) session.ReturnToMenu();
+            }
+            finally
+            {
+                Time.timeScale = 1;
+                try { inputScope?.Dispose(); inputScope = null; }
+                finally { sceneScope?.Dispose(); sceneScope = null; }
+            }
         }
 
         [UnityTest]
@@ -43,22 +52,6 @@ namespace LastSignal.Tests
                 yield return null;
                 
                 
-                var myPi = Object.FindAnyObjectByType<PlayerInputReader>();
-                if (myPi) {
-                    var myF = typeof(PlayerInputReader).GetField("instance", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    var myA = (UnityEngine.InputSystem.InputActionAsset)myF.GetValue(myPi);
-                    if (myA != null) {
-                        myA.Disable();
-                        var devs = new System.Collections.Generic.List<UnityEngine.InputSystem.InputDevice>();
-                        if (mouse != null) devs.Add(mouse);
-                        if (keyboard != null) devs.Add(keyboard);
-                        myA.devices = new UnityEngine.InputSystem.Utilities.ReadOnlyArray<UnityEngine.InputSystem.InputDevice>(devs.ToArray());
-                        myA.Enable();
-                    }
-                    myPi.SetGameplay(true);
-                }
-
-
                 // 1. One Player, One Camera
                 var players = Object.FindObjectsByType<PlayerStance>(FindObjectsSortMode.None);
                 var cameras = Object.FindObjectsByType<FirstPersonLook>(FindObjectsSortMode.None);
@@ -72,6 +65,8 @@ namespace LastSignal.Tests
                 // 2. Rifle ready
                 Assert.That(combat.ActiveWeapon, Is.Not.Null, "Rifle should be ready");
                 yield return new WaitForSeconds(combat.ActiveWeapon.Definition.EquipSeconds + 0.1f);
+                Assert.That(combat.ActiveWeapon.RuntimeState.State, Is.EqualTo(WeaponState.Ready));
+                Assert.That(player.GetComponent<PlayerInputReader>().GameplayActive, Is.True);
 
                 // 3. Fire consumes one round, target damaged
                 int initialAmmo = combat.ActiveWeapon.RuntimeState.CurrentMagazine;

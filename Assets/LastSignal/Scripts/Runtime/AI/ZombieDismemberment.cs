@@ -33,6 +33,8 @@ namespace LastSignal
             public Vector3 detachedColliderCenter;
             public Vector3 detachedColliderSize = new Vector3(.25f, .4f, .25f);
             [Min(.1f)] public float impulse = 2;
+            // Keep logical anatomy active while unapproved cut surfaces are visually gated.
+            public bool visualSeverApproved = true;
         }
 
         [SerializeField] PartBinding[] parts;
@@ -42,14 +44,17 @@ namespace LastSignal
         public event Action<ZombieSeverPresentation> SeverPresented;
         public event Action PresentationReset;
         int severedMask;
+        PartBinding pendingSever;
         float torsoDamage;
+        bool suppressLegacyTorsoWound;
         public int SeveredPartsMask => severedMask;
         public bool TorsoDamaged => torsoDamage >= torsoDamageThreshold;
         public bool CanUseRightArmAttack => !IsSevered(ZombieBodyPart.RightArm) && !IsSevered(ZombieBodyPart.RightHand);
         public ZombieAnatomySnapshot CaptureState() => new ZombieAnatomySnapshot
         {
             severedMask = severedMask, torsoDamage = torsoDamage,
-            regionalDamage = (float[])regionalDamage.Clone()
+            suppressLegacyTorsoWound = suppressLegacyTorsoWound,
+            regionalDamage = (float[])regionalDamage.Clone(), wounds = GetComponent<ZombieLocalizedWounds>()?.CaptureState()
         };
 
         public void Configure(PartBinding[] bindings, float torsoThreshold, GameObject woundVisual = null)
@@ -60,16 +65,17 @@ namespace LastSignal
             ZombieGorePreference.Changed += OnGoreChanged;
             ResetState();
         }
-        void OnDisable() => ZombieGorePreference.Changed -= OnGoreChanged;
+        void OnDisable() { ZombieGorePreference.Changed -= OnGoreChanged; ZombieDetachedPartPool.ReleaseOwner(transform); }
         void OnGoreChanged(bool enabled)
         {
-            if (torsoWoundVisual) torsoWoundVisual.SetActive(enabled && TorsoDamaged);
+            if (torsoWoundVisual) torsoWoundVisual.SetActive(enabled && TorsoDamaged && !suppressLegacyTorsoWound);
         }
 
         public void ResetState()
         {
             try { PresentationReset?.Invoke(); } catch (Exception e) { Debug.LogException(e, this); }
-            severedMask = 0; torsoDamage = 0;
+            ZombieDetachedPartPool.ReleaseOwner(transform);
+            severedMask = 0; torsoDamage = 0; pendingSever = null; suppressLegacyTorsoWound = false;
             Array.Clear(regionalDamage, 0, regionalDamage.Length);
             if (parts != null)
                 foreach (var binding in parts)
@@ -90,7 +96,10 @@ namespace LastSignal
             if (hit.BodyPart == ZombieBodyPart.Torso)
             {
                 torsoDamage = Mathf.Min(torsoDamageThreshold, torsoDamage + hit.Amount);
-                if (TorsoDamaged && torsoWoundVisual && ZombieGorePreference.GraphicGoreEnabled)
+                // Bullet presentation is now local. A back/abdomen shot must not also open the old fixed chest patch.
+                if (hit.Category == DamageCategory.Bullet && GetComponent<ZombieLocalizedWounds>())
+                { suppressLegacyTorsoWound = true; if (torsoWoundVisual) torsoWoundVisual.SetActive(false); }
+                if (TorsoDamaged && !suppressLegacyTorsoWound && torsoWoundVisual && ZombieGorePreference.GraphicGoreEnabled)
                     torsoWoundVisual.SetActive(true);
                 return false;
             }
@@ -101,26 +110,36 @@ namespace LastSignal
             regionalDamage[index] = Mathf.Min(binding.severThreshold, regionalDamage[index] + hit.Amount);
             if (regionalDamage[index] < binding.severThreshold) return false;
             severedMask |= 1 << index;
-            if (ZombieGorePreference.GraphicGoreEnabled)
-                ZombieDetachedPartPool.Spawn(binding.attachedRenderers, binding.detachAnchor,
-                    binding.detachedColliderCenter, binding.detachedColliderSize,
-                    hit.Direction, binding.impulse);
-            SetVisible(binding, false);
+            pendingSever = binding;
+            // Collider authority changes now; renderer/detached presentation follows the commit.
+            SetColliders(binding, false);
             if (hit.BodyPart == ZombieBodyPart.LeftArm) MarkDependentHand(ZombieBodyPart.LeftHand);
             if (hit.BodyPart == ZombieBodyPart.RightArm) MarkDependentHand(ZombieBodyPart.RightHand);
-            // Presentation failure cannot interrupt the health transaction. RestoreState never emits this event.
-            if (ZombieGorePreference.GraphicGoreEnabled)
-                try { SeverPresented?.Invoke(new ZombieSeverPresentation(hit.BodyPart,
-                    binding.detachAnchor ? binding.detachAnchor.position : hit.HitPoint, hit.Direction)); }
-                catch (Exception e) { Debug.LogException(e, this); }
             return binding.fatalOnSever;
+        }
+
+        internal void PresentCommittedSever(DamageInfo hit)
+        {
+            var binding = pendingSever; pendingSever = null;
+            if (binding == null) return;
+            try
+            {
+                if (binding.visualSeverApproved && ZombieGorePreference.GraphicGoreEnabled)
+                    ZombieDetachedPartPool.Spawn(binding.attachedRenderers, binding.detachAnchor,
+                        binding.detachedColliderCenter, binding.detachedColliderSize, hit.Direction, binding.impulse, transform);
+                SetVisible(binding, false);
+                if (binding.visualSeverApproved && ZombieGorePreference.GraphicGoreEnabled)
+                    SeverPresented?.Invoke(new ZombieSeverPresentation(hit.BodyPart,
+                        binding.detachAnchor ? binding.detachAnchor.position : hit.HitPoint, hit.Direction));
+            }
+            catch (Exception e) { Debug.LogException(e, this); }
         }
 
         void MarkDependentHand(ZombieBodyPart hand)
         {
             severedMask |= 1 << (int)hand;
             var binding = Find(hand);
-            if (binding != null) SetVisible(binding, false);
+            if (binding != null) SetColliders(binding, false);
         }
 
         public void RestoreState(ZombieAnatomySnapshot state)
@@ -129,18 +148,20 @@ namespace LastSignal
             if (state == null) return;
             if (!SaveValidation.ValidZombieAnatomy(state))
                 throw new ArgumentException("Invalid zombie anatomy snapshot.", nameof(state));
-            torsoDamage = state.torsoDamage;
+            torsoDamage = state.torsoDamage; suppressLegacyTorsoWound = state.suppressLegacyTorsoWound;
             Array.Copy(state.regionalDamage, regionalDamage, regionalDamage.Length);
-            if (TorsoDamaged && torsoWoundVisual && ZombieGorePreference.GraphicGoreEnabled)
+            if (TorsoDamaged && !suppressLegacyTorsoWound && torsoWoundVisual && ZombieGorePreference.GraphicGoreEnabled)
                 torsoWoundVisual.SetActive(true);
-            if (parts == null) return;
-            foreach (var binding in parts)
+            if (parts != null) foreach (var binding in parts)
             {
                 if (binding == null || (state.severedMask & (1 << (int)binding.part)) == 0) continue;
                 severedMask |= 1 << (int)binding.part;
                 SetVisible(binding, false);
             }
+            GetComponent<ZombieLocalizedWounds>()?.RestoreState(state.wounds);
         }
+
+        public bool IsVisualSeverApproved(ZombieBodyPart part) => Find(part)?.visualSeverApproved == true;
 
         PartBinding Find(ZombieBodyPart id)
         {
@@ -153,11 +174,24 @@ namespace LastSignal
         static void SetVisible(PartBinding binding, bool visible)
         {
             if (binding.attachedRenderers != null)
-                foreach (var renderer in binding.attachedRenderers) if (renderer) renderer.enabled = visible;
+                foreach (var renderer in binding.attachedRenderers)
+                    if (renderer && (visible || binding.visualSeverApproved)) renderer.enabled = visible;
+            SetColliders(binding, visible);
+        }
+        static void SetColliders(PartBinding binding, bool visible)
+        {
             if (binding.hitColliders != null)
                 foreach (var collider in binding.hitColliders) if (collider) collider.enabled = visible;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // Disposable manual-route actors only. Never saves approval to the production prefab.
+        public void PreviewUnapprovedCuts()
+        {
+            if (!Application.isPlaying || parts == null) return;
+            foreach (var binding in parts) if (binding != null) binding.visualSeverApproved = true;
+        }
+#endif
 #if UNITY_EDITOR
         [ContextMenu("Validate Dismemberment Bindings")]
         void ValidateBindings()

@@ -1,0 +1,18 @@
+# User-operated handoff
+Status: implementation candidate; compilation verification, EditMode, PlayMode, gameplay acceptance, build and benchmarks NOT_RUN. Editor MCP was used for read-only scene/skin inspection, necessary asset imports and persistent prefab/animation authoring. Incidental authoring compilation is not gate evidence.
+
+2026-10-12 user-run update: compile, grip-edit, character-edit/play, combat-edit/play, regression-edit and development-build PASS. Grip-play failed three tests; regression-play repeated those three and failed the second-pickup assumption in AmmunitionIntegrationTests. Evidence: `Evidence/20261012T064648Z-grip-play-f33949fd` and `Evidence/20261012T065310Z-regression-play-9257878e`. The original NOT_RUN status above describes the initial handoff, not these user-provided results. Visual acceptance remains pending.
+
+Follow-up candidate (not run): sample silhouette and wrist diagnostics in the final LateUpdate probe, matching contact measurements; send combined sprint/move keyboard state instead of two mutually overwriting full-state events; prepare the second ammo transaction using a fixture-owned real WorldItem from the first Security pickup's definition and quantity (the scene seed does not guarantee two stacks); retract the heavy strike/follow-through contact arc in both the saved profile and authoring source. Keep the 3.5 cm reach threshold, all contact/framing thresholds and combat timings unchanged. Additional failure messages identify weapon/FOV/aspect and attack phase. These changes require a new user-operated compile and affected test runs; earlier PASS results do not validate the changes.
+
+Save and close Unity normally. Run only the first command, return gate-result.json plus any failure-excerpt.txt, and wait before the next gate:
+
+`python3 "/Users/burakcoskun/Last Signal/Tools/weapon-grip-verify.py" compile`
+
+The same runner now writes unique evidence under WeaponGripOverhaul/Evidence and includes WeaponGripOverhaulTests in grip-edit. It retains existing Unity version resolution, lock protection, actual process exit codes, nonempty NUnit result requirements and source-preservation records. Zero tests/skipped/inconclusive are failures. No competing Editor is launched while Unity remains open.
+
+Subsequent gate arguments (one independent invocation each, only after prior results are reviewed): grip-edit; grip-play; character-edit; character-play; combat-edit; combat-play; regression-edit; regression-play; development-build. Full standalone commands and runner behavior are documented in ../WeaponGripCorrection/VERIFICATION_HANDOFF.md; the executable path is unchanged. Development build currently targets macOS via the existing S021 builder; PC release validation is a separate release responsibility.
+
+Then follow REFERENCE_ACCEPTANCE.md and provide its nine requested views/clips. Remaining risks: real finger/thumb surface contact, wrist/sleeve deformation, geometric framing at the intended display, procedural reload quality, clamp effects at fast swing/pitch extremes, camera/vehicle regressions. Three VEIN target images were supplied on 2026-10-12 and their visible evidence is recorded there. They do not show the current implementation; no live Player existed in the stopped Editor, and no Play session was started. These constraints prohibit a reference-quality or production-PASS claim. The user's one-handed requirement takes precedence over the secondary hands visible in references 1 and 2; reference 2 is an action frame, not a fixed idle prescription.
+
+No commit/push, vendor edit, external package, destructive reset or broad scene regeneration. Existing dirty changes are preserved. Follow-up is the smallest evidence-led repair and one focused retest command.

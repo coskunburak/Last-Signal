@@ -33,6 +33,14 @@ namespace LastSignal
         public WeaponDefinition Definition => definition;
         public Transform Muzzle => muzzle;
         public Transform AimReference => aimReference;
+        public CharacterWeaponPoseProfile PresentationProfile { get; private set; }
+        public PistolVariantPresenter PistolVariants { get; private set; }
+        public string PresentationName => PistolVariants && PistolVariants.Selected ? PistolVariants.Selected.DisplayName : definition.WeaponName;
+        public void BindPistolPresentation(PistolVariantPresenter variants, CharacterWeaponPoseProfile profile, CharacterWeaponSockets sockets)
+        {
+            PistolVariants = variants; PresentationProfile = profile;
+            muzzle = sockets.Muzzle; aimReference = sockets.AimReference;
+        }
         // Presentation pauses with the same gate as the authoritative action clock.
         public bool IsSimulationActive => runtimeState != null && GameplayAllowed;
 
@@ -45,11 +53,11 @@ namespace LastSignal
 
         // ── Initialization ──────────────────────────────────────────────
 
-        public void Initialize(Transform camera, GameObject shooter, int magazine = -1)
+        public void Initialize(Transform camera, GameObject shooter, int magazine = -1, int condition = 1000)
         {
             if (!definition) { Debug.LogError("WeaponController requires a WeaponDefinition.", this); enabled = false; return; }
-            if (!definition.HasValidAmmunitionConfiguration)
-            { Debug.LogError("WeaponController requires valid ammunition configuration.", this); enabled = false; return; }
+            if (!definition.HasValidCombatConfiguration)
+            { Debug.LogError("WeaponController requires valid combat and ammunition configuration.", this); enabled = false; return; }
             UnsubscribeAmmo();
             runtimeState?.ForceHolster();
             cameraTransform = camera;
@@ -62,6 +70,7 @@ namespace LastSignal
             { Debug.LogError("WeaponController requires the shooter's PlayerInventory.", this); enabled = false; return; }
             int mag = magazine >= 0 ? magazine : definition.StartingMagazine;
             runtimeState = new WeaponRuntimeState(definition, mag, inventory);
+            runtimeState.RestoreCondition(condition);
             fireInputHeld = dryFireReported = false;
             SubscribeAmmo();
             NotifyAmmoChanged();
@@ -105,6 +114,14 @@ namespace LastSignal
             }
         }
 
+        public void RequestPresentationChange()
+        {
+            if (runtimeState == null) return;
+            bool equipped = runtimeState.State != WeaponState.Holstered;
+            OnFireReleased(); RequestUnequip(); runtimeState.ForceHolster(); runtimeState.AimAmount = 0;
+            if (equipped && isActiveAndEnabled) RequestEquip();
+        }
+
         public void RequestEquip()
         {
             if (runtimeState == null) return;
@@ -142,7 +159,7 @@ namespace LastSignal
 
             if (!runtimeState.CanFire)
             {
-                if (runtimeState.CurrentMagazine == 0 && !dryFireReported)
+                if ((runtimeState.CurrentMagazine == 0 || runtimeState.Condition == 0) && !dryFireReported)
                 {
                     dryFireReported = true;
                     ShotRejected?.Invoke(); // At most once until trigger release.
@@ -150,6 +167,7 @@ namespace LastSignal
                 return;
             }
 
+            float damageFactor = runtimeState.ConditionDamageFactor;
             if (!runtimeState.TryConsumeShot()) return;
 
             // Resolve accepted shots once; misses and wall impacts still cost a round.
@@ -157,9 +175,11 @@ namespace LastSignal
                 cameraTransform.position, cameraTransform.forward,
                 muzzle.position,
                 definition.MaxRange, definition.MuzzleObstructionRange,
-                definition.BaseDamage, instigator,
+                definition.BaseDamage * damageFactor, instigator,
                 hitMask);
 
+            result.WeaponCategory = definition.Category;
+            result.FireMode = definition.FireMode;
             ShotFired?.Invoke(result);
         }
 

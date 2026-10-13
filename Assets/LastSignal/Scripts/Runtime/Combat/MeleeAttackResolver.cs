@@ -26,7 +26,7 @@ namespace LastSignal
             {
                 var c = candidates[i];
                 if (Self(c,player)) continue;
-                var damageable = c.GetComponentInParent<IDamageable>();
+                var damageable = Damageable(c);
                 if (damageable == null || !damageable.IsAlive) continue;
                 Vector3 p = c.ClosestPoint(eye.position), delta = p - eye.position;
                 float distance = delta.magnitude;
@@ -36,10 +36,15 @@ namespace LastSignal
             }
             if (!chosen) return false;
             // Single dispatch guarantees multi-collider dedupe without a per-frame target collection.
-            LastTarget = Canonical(target); LastImpactPosition = point; LastResult = "Hit";
-            target.TakeDamage(new DamageInfo { Amount=definition.Damage, BaseAmount=definition.Damage, Multiplier=1, ShotId=swing,
+            var hit = new DamageInfo { Amount=definition.Damage, BaseAmount=definition.Damage, Multiplier=1, ShotId=swing,
                 HitCollider=chosen, Direction=eye.forward, Category=DamageCategory.Melee, SourcePosition=origin.position,
-                HitPoint=point, HitNormal=-eye.forward, Instigator=player });
+                HitPoint=point, HitNormal=-eye.forward, Instigator=player };
+            if (target is IDamageReceiptReceiver receiver)
+            {
+                if (!receiver.ReceiveDamage(hit).Committed) { LastResult = "Rejected"; return false; }
+            }
+            else target.TakeDamage(hit); // Legacy targets have no receipt contract.
+            LastTarget = Canonical(target); LastImpactPosition = point; LastResult = "Hit";
             return true;
         }
         bool Blocked(Vector3 from, Vector3 to, GameObject player, IDamageable target)
@@ -52,13 +57,19 @@ namespace LastSignal
             {
                 var c=blockers[i].collider;
                 if(Self(c,player)) continue;
-                var d=c.GetComponentInParent<IDamageable>();
+                var d=Damageable(c);
                 if(target != null && Canonical(d)==target) continue;
                 return true;
             }
             return false;
         }
         static bool Self(Collider c,GameObject player) => c.transform.IsChildOf(player.transform);
+        static IDamageable Damageable(Collider c)
+        {
+            // Anatomical surfaces take precedence even when health shares their GameObject.
+            var region = c.GetComponent<ZombieHitRegion>();
+            return region ? region : c.GetComponentInParent<IDamageable>();
+        }
         static IDamageable Canonical(IDamageable d) => d is ZombieHitRegion r ? r.Owner : d;
     }
 }

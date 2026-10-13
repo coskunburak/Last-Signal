@@ -10,20 +10,34 @@ namespace LastSignal.Audio
         Vector3 lastPosition;
         float distance, nextIdle, nextHeartbeat, nextApproach;
         void Awake() => zombie=GetComponent<ZombieController>();
-        void OnEnable() { zombie.Runtime.Changed+=Changed; lastPosition=transform.position; nextIdle=Time.time+8+(GetEntityId().GetHashCode()&7); }
-        void OnDisable() { zombie.Runtime.Changed-=Changed; if(director) director.StopOwner(transform); director=null; boundTarget=null; distance=0; }
+        void OnEnable() { zombie.Runtime.Changed+=Changed; zombie.ArchetypeChanged+=ArchetypeChanged; lastPosition=transform.position; nextIdle=Time.time+8+(GetEntityId().GetHashCode()&7); }
+        void OnDisable() { zombie.Runtime.Changed-=Changed; zombie.ArchetypeChanged-=ArchetypeChanged; if(director) director.StopOwner(transform); director=null; boundTarget=null; distance=0; }
         void Bind()
         {
+            if (zombie.IsDead && director) return; // Retain the terminal cue until owner/session teardown.
             if(boundTarget==zombie.Target && director) return;
+            if (director) director.StopOwner(transform);
             boundTarget=zombie.Target;
             director=boundTarget?boundTarget.GetComponent<Noise.GameplayNoiseContext>()?.Session?.GetComponent<ProductionAudio>():null;
+        }
+        AudioCue Telegraph => zombie.Definition.ArchetypeId == ZombieArchetypes.Lurker ? AudioCue.LurkerTelegraph :
+            zombie.Definition.ArchetypeId == ZombieArchetypes.Runner ? AudioCue.RunnerTelegraph : AudioCue.ZombieTelegraph;
+        void ArchetypeChanged(ZombieArchetypePhase phase)
+        {
+            Bind(); if (!director || zombie.Paused || zombie.IsDead) return;
+            if (phase == ZombieArchetypePhase.Preparation)
+            { director.StopOwner(transform); director.Play(zombie.Definition.ArchetypeId == ZombieArchetypes.Runner ? AudioCue.RunnerPreparation : AudioCue.LurkerTelegraph, transform); }
+            else if (phase == ZombieArchetypePhase.Suspicious) director.Play(AudioCue.LurkerSuspicion, transform);
+            else if (phase == ZombieArchetypePhase.Recovery && zombie.Definition.ArchetypeId == ZombieArchetypes.Runner)
+                director.Play(AudioCue.RunnerRecovery, transform);
         }
         void Changed(ZombieState from,ZombieState to)
         {
             Bind(); if(!director || zombie.Paused) return;
-            if(to==ZombieState.Chasing && from!=ZombieState.Recovering && from!=ZombieState.AttackWindup)
+            if(to==ZombieState.Chasing && from!=ZombieState.Recovering && from!=ZombieState.AttackWindup &&
+                zombie.Definition.ArchetypeId != ZombieArchetypes.Lurker && zombie.Archetype.Phase != ZombieArchetypePhase.Preparation)
             { director.StopOwner(transform); nextApproach=Time.time+4; director.Play(AudioCue.ZombieAlert,transform); director.Threat(transform); }
-            else if(to==ZombieState.AttackWindup) { director.StopOwner(transform); director.Play(AudioCue.ZombieTelegraph,transform); director.Threat(transform); }
+            else if(to==ZombieState.AttackWindup) { director.StopOwner(transform); director.Play(Telegraph,transform); director.Threat(transform); }
             else if(to==ZombieState.AttackCommit) director.Play(AudioCue.ZombieAttack,transform);
             else if(to==ZombieState.HitReact) director.Play(AudioCue.ZombieHurt,transform);
             else if(to==ZombieState.Dead) { director.StopOwner(transform); director.Play(AudioCue.ZombieDeath,transform); }
@@ -39,8 +53,8 @@ namespace LastSignal.Audio
                 if(zombie.Runtime.Visible && (zombie.Runtime.State==ZombieState.Chasing || zombie.Attacking)) director.Threat(transform);
             }
             if(zombie.Runtime.State==ZombieState.Idle && now>=nextIdle)
-            { nextIdle=now+10+(GetEntityId().GetHashCode()&7); director.Play(AudioCue.ZombieIdle,transform); }
-            if(zombie.Runtime.State==ZombieState.Chasing && now>=nextApproach)
+            { nextIdle=now+10+(GetEntityId().GetHashCode()&7); director.Play(zombie.Definition.ArchetypeId == ZombieArchetypes.Lurker ? AudioCue.LurkerSuspicion : AudioCue.ZombieIdle,transform); }
+            if(zombie.Runtime.State==ZombieState.Chasing && !zombie.Archetype.Hold && now>=nextApproach)
             { nextApproach=now+6; director.Play(AudioCue.ZombieApproach,transform); }
             float moved=delta.magnitude;
             if(moved>1.5f || zombie.Attacking) { distance=0; return; }

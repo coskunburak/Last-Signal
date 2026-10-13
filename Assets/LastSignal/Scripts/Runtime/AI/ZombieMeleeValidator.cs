@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LastSignal
 {
-    public enum MeleeResult { None, Hit, OutOfRange, OutsideArc, Occluded, TargetDead, InvalidTarget, InvalidWorld, Aborted }
+    public enum MeleeResult { None, Hit, OutOfRange, OutsideArc, Occluded, TargetDead, InvalidTarget, InvalidWorld, Aborted, CrowdSpacing }
 
     public static class ZombieMeleeValidator
     {

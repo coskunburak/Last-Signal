@@ -13,13 +13,13 @@ namespace LastSignal.Editor
     public static class DieselCharacterAuthoring
     {
         public const string Root = "Assets/LastSignal/Art/CharacterIntegration";
-        public const string DieselPath = "Assets/ThirdParty/Diesel.fbx";
+        public const string DieselPath = "Assets/ThirdParty/Characters/Diesel/Diesel.fbx";
         public const string BodyPath = Root + "/Diesel_WorldBody.prefab";
         public const string PlayerPath = "Assets/LastSignal/Prefabs/Player/Player.prefab";
         public const string ControllerPath = "Assets/LastSignal/Animations/WorldBody.controller";
         public const string Library1 = "Assets/ThirdParty/Animation/AnimationLibraries/Universal Animation Library[Standard] 2/Unity/UAL1_Standard.fbx";
         public const string Library2 = "Assets/ThirdParty/Animation/AnimationLibraries/Universal Animation Library 2[Standard] 2/Unity/UAL2_Standard.fbx";
-        public const string HumanRoot = "Assets/ThirdParty/Zombies/ZOMBİE ATTACK ANIMATION/Human Animations/Animations/Male/";
+        public const string HumanRoot = "Assets/ThirdParty/Animation/ZOMBİE ATTACK ANIMATION/Human Animations/Animations/Male/";
 
         [MenuItem("Last Signal/Character/Author Diesel integration")]
         public static void Author()
@@ -170,21 +170,39 @@ namespace LastSignal.Editor
                 foreach(var collider in rifle.GetComponentsInChildren<Collider>(true))Object.DestroyImmediate(collider);
                 foreach(var t in rifle.GetComponentsInChildren<Transform>(true))t.gameObject.layer=30;
                 var sockets=rifle.AddComponent<CharacterWeaponSockets>();
-                sockets.RightGrip=Socket(rifle.transform,"RightHandGrip",new Vector3(.079f,.092f,-.14f),new Vector3(12,0,90));
-                sockets.LeftGrip=Socket(rifle.transform,"LeftHandSupport",new Vector3(.032f,.105f,.10f),new Vector3(0,0,-90));
-                sockets.StockContact=Socket(rifle.transform,"StockContact",new Vector3(.06f,.19f,-.374f),Vector3.zero);
-                sockets.AimReference=Socket(rifle.transform,"ADSReference",new Vector3(.057f,.25f,.02f),Vector3.zero);
-                sockets.Muzzle=Socket(rifle.transform,"Muzzle",new Vector3(.055f,.21f,.48f),Vector3.zero);
-                sockets.ReloadReference=Socket(rifle.transform,"ReloadReference",new Vector3(.035f,.045f,-.008f),new Vector3(0,0,-90));
+                ConfigureRifleSockets(sockets);
                 sockets.Magazine=rifle.transform.Find("Magazine.001");
                 PrefabUtility.SaveAsPrefabAsset(rifle,Root+"/Diesel_WorldRifle.prefab");
             }
             finally { Object.DestroyImmediate(rifle); }
-            var profile=ScriptableObject.CreateInstance<CharacterWeaponPoseProfile>();
+            // Retain calibrated profile values and the existing GUID on every regeneration.
+            var profile=AssetDatabase.LoadAssetAtPath<CharacterWeaponPoseProfile>(Root+"/RiflePose.asset");
+            bool create=!profile;
+            if(create) profile=ScriptableObject.CreateInstance<CharacterWeaponPoseProfile>();
             profile.Firearm=AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Data/Combat/WeaponDefinition_AssaultRifle.asset");
             profile.WorldPrefab=AssetDatabase.LoadAssetAtPath<GameObject>(Root+"/Diesel_WorldRifle.prefab");
-            Save(profile,Root+"/RiflePose.asset");
+            if(create) AssetDatabase.CreateAsset(profile,Root+"/RiflePose.asset");
+            else EditorUtility.SetDirty(profile);
             CreateMelee();
+        }
+        /// <summary>Owned MRPoly mesh contacts. Repeatable; reuses existing socket objects and references.</summary>
+        public static void ConfigureRifleSockets(CharacterWeaponSockets sockets)
+        {
+            var root=sockets.transform;
+            // X surfaces measured by intersecting the actual rifle triangles at the grip Y/Z coordinates.
+            sockets.RightGrip=Contact(root,"RightHandGrip",new Vector3(.0643f,.092f,-.14f),new Vector3(12,0,90));
+            sockets.LeftGrip=Contact(root,"LeftHandSupport",new Vector3(.0397f,.105f,.10f),new Vector3(0,0,-90));
+            sockets.StockContact=Contact(root,"StockContact",new Vector3(.0492f,.19f,-.374f),Vector3.zero);
+            sockets.AimReference=Contact(root,"ADSReference",new Vector3(.057f,.25f,.02f),Vector3.zero);
+            sockets.Muzzle=Contact(root,"Muzzle",new Vector3(.055f,.21f,.48f),Vector3.zero);
+            sockets.ReloadReference=Contact(root,"ReloadReference",new Vector3(.035f,.045f,-.008f),new Vector3(0,0,-90));
+        }
+        static Transform Contact(Transform parent, string name, Vector3 position, Vector3 euler)
+        {
+            var socket=parent.Find(name);
+            if(!socket) socket=Socket(parent,name,position,euler);
+            socket.SetLocalPositionAndRotation(position,Quaternion.Euler(euler));
+            return socket;
         }
         static void CreateMelee()
         {

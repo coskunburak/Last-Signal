@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LastSignal
 {
     [CreateAssetMenu(menuName = "Last Signal/Zombie Definition", fileName = "Shambler")]
-    public sealed class ZombieDefinition : ScriptableObject
+    public sealed partial class ZombieDefinition : ScriptableObject
     {
         [Header("Perception")]
         [SerializeField, Min(.1f)] float sightDistance = 15;
@@ -165,6 +165,8 @@ namespace LastSignal
                 attackHalfAngle >= 90 || attackPlaybackSpeed < .5f || attackPlaybackSpeed > 1.25f ||
                 stopDistance > attackEnterRange + .3f)
             { reason = "Melee requires a non-looping clip, ordered commit/contact/recovery, bounded arc and reachable stop distance."; return false; }
+            if (ArchetypeId != ZombieArchetypes.Shambler && (AttackContactTimeFor(false) < .5f || AttackContactTimeFor(true) < .5f))
+            { reason = "S022 archetypes require at least 0.5 simulation seconds of attack warning on both clips."; return false; }
             reason = null; return true;
         }
         public float SightDistance => sightDistance;
@@ -199,6 +201,7 @@ namespace LastSignal
 
         public bool IsValid(out string reason)
         {
+            if (!IsArchetypeValid(out reason)) return false;
             if (!IsHearingValid) { reason = "Invalid hearing threshold, duration, arrival, sensitivity or transmission."; return false; }
             // Validation runs once at activation, never in the hot path.
             float[] positive = { sightDistance, horizontalFov, verticalHalfAngle, perceptionInterval,

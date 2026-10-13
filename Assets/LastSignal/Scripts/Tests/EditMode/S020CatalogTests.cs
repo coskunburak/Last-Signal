@@ -29,9 +29,9 @@ namespace LastSignal.Tests
             source.TryAdd(Item("material.cloth"), 40); source.TryAdd(Item("tool.sewing-kit"), 1);
             return source;
         }
-        [Test] public void ReleaseCatalogHasSeventeenDistinctResolvableDefinitionsAndMetadata()
+        [Test] public void ReleaseCatalogHasDistinctResolvableDefinitionsAndMetadata()
         {
-            Assert.AreEqual(17, Catalog.EditorItems.Count);
+            Assert.AreEqual(21, Catalog.EditorItems.Count);
             var ids = new HashSet<string>();
             foreach (var item in Catalog.EditorItems)
             {
@@ -42,6 +42,12 @@ namespace LastSignal.Tests
                 Assert.IsNotNull(item.Icon, item.name);
                 if (item.WorldPrefab) Assert.IsNotNull(item.WorldPrefab.GetComponent<WorldItem>());
             }
+            CollectionAssert.AreEquivalent(new[] {
+                "ammo.rifle", "weapon.crowbar", "food.canned", "drink.water", "medical.bandage",
+                "material.scrap", "tool.wrench", "equipment.field-pack", "quest.relay-fuse", "fuel.generator",
+                "food.crackers", "drink.soda", "medical.pressure-dressing", "medical.rag", "material.cloth",
+                "tool.sewing-kit", "equipment.expedition-pack", "ammo.9mm", "weapon.pistol", "weapon.blade", "weapon.axe"
+            }, ids);
         }
         [TestCase("food.crackers", 4)] [TestCase("drink.soda", 3)] [TestCase("medical.pressure-dressing", 3)]
         [TestCase("medical.rag", 5)] [TestCase("material.cloth", 10)] [TestCase("tool.sewing-kit", 1)] [TestCase("equipment.expedition-pack", 1)]

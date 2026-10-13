@@ -365,7 +365,7 @@ namespace LastSignal.Editor
             if (!anchor) throw new InvalidOperationException("Missing detach anchor for " + part);
             return new ZombieDismemberment.PartBinding
             {
-                part = part, severThreshold = threshold, fatalOnSever = fatal,
+                part = part, severThreshold = threshold, fatalOnSever = fatal, visualSeverApproved = false,
                 detachAnchor = anchor, detachedColliderCenter = center,
                 detachedColliderSize = size, impulse = impulse,
                 attachedRenderers = renderers, hitColliders = colliders

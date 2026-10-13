@@ -11,7 +11,7 @@ namespace LastSignal.Audio
         public Slider[] sliders;
         public Toggle captions;
         public Text captionText;
-        GameObject controlsPanel;
+        GameObject controlsPanel, combatPanel;
         public GameObject ControlsPanel => controlsPanel;
         readonly Dictionary<CanvasScaler, Vector2> baseResolutions = new Dictionary<CanvasScaler, Vector2>();
         bool dirty;
@@ -26,6 +26,7 @@ namespace LastSignal.Audio
             captions.SetIsOnWithoutNotify(audioOwner.Preferences.Captions);
             captions.onValueChanged.AddListener(SetCaptions);
             CreateControlPanel();
+            CreateCombatPanel();
             ApplyUiScale();
         }
         void SetLevel(int bus,float value)
@@ -159,6 +160,28 @@ namespace LastSignal.Audio
             Label("Kayıt bilgi", rect, font, new Vector2(28, -600), new Vector2(364, 34), 16).text =
                 "Tercihler otomatik kaydedilir.";
         }
+        void CreateCombatPanel()
+        {
+            if (!settingsPanel) return;
+            combatPanel = new GameObject("Çatışma görünümü", typeof(RectTransform));
+            var rect = combatPanel.GetComponent<RectTransform>(); rect.SetParent(settingsPanel.transform.parent, false);
+            rect.anchorMin = rect.anchorMax = new Vector2(0, .5f); rect.pivot = new Vector2(.5f, .5f);
+            rect.anchoredPosition = new Vector2(690, 0); rect.sizeDelta = new Vector2(420, 320);
+            combatPanel.AddComponent<Image>().color = new Color(.025f, .035f, .045f, .96f);
+            var font = ProductionUiFont.Resolve();
+            Label("Başlık", rect, font, new Vector2(28, -13), new Vector2(364, 40), 23).text = "Çatışma görünümü";
+            Control("Grafik kan", rect, font, 0, 0, 1, ZombieGorePreference.GraphicGoreEnabled ? 1 : 0,
+                v => "Grafik kan: " + (v >= .5f ? "Açık" : "Kapalı"),
+                v => { ZombieGorePreference.SetGraphicGoreEnabled(v >= .5f); Changed(); }).wholeNumbers = true;
+            Control("Kan yoğunluğu", rect, font, 1, .35f, 1, CombatPresentationPreference.BloodIntensity,
+                v => "Kan yoğunluğu: %" + Mathf.RoundToInt(v * 100),
+                v => { CombatPresentationPreference.SetBloodIntensity(v); Changed(); });
+            Control("Azaltılmış efektler", rect, font, 2, 0, 1, CombatPresentationPreference.ReducedEffects ? 1 : 0,
+                v => "Azaltılmış efektler: " + (v >= .5f ? "Açık" : "Kapalı"),
+                v => { CombatPresentationPreference.SetReducedEffects(v >= .5f); Changed(); }).wholeNumbers = true;
+            Label("Bilgi", rect, font, new Vector2(28, -264), new Vector2(364, 48), 16).text =
+                "Görünüm tercihleri hasarı ve zombi davranışını değiştirmez.";
+        }
         void Changed() { dirty=true; saveAt=Time.unscaledTime+.5f; }
         void Flush() { if(dirty && audioOwner) { audioOwner.Preferences.Save(); dirty=false; } }
         void OnDisable() => Flush();
@@ -170,6 +193,7 @@ namespace LastSignal.Audio
             settingsPanel.SetActive(managed ? flow.SettingsOpen && flow.UserInterface.SettingsPage == 0 :
                 flow && (flow.Screen == SessionScreen.MainMenu || flow.Screen == SessionScreen.Pause));
             if (controlsPanel) controlsPanel.SetActive(managed ? flow.SettingsOpen && flow.UserInterface.SettingsPage == 1 : settingsPanel.activeSelf);
+            if (combatPanel) combatPanel.SetActive(controlsPanel && controlsPanel.activeSelf);
             captionText.text=audioOwner.Preferences.Captions && audioOwner.Active?audioOwner.Caption:"";
             if(dirty && Time.unscaledTime>=saveAt) Flush();
         }

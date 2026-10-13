@@ -8,10 +8,16 @@ namespace LastSignal
         [SerializeField] Animator animator;
         [SerializeField] AudioSource audioSource;
         [SerializeField] AudioClip swing, impact;
+        [SerializeField] CharacterWeaponPoseProfile gripProfile;
+        public CharacterWeaponPoseProfile PoseProfile => gripProfile;
+        bool ProfileOwnsAttack => gripProfile && gripProfile.AttackOwnership == WeaponPoseOwnership.ProfileArmTargets;
         MeleeState previous;
         Audio.ProductionAudio director;
         void PlayAudio(Audio.AudioCue cue, AudioClip fallback, float gain)
         {
+            if (controller && controller.Definition && controller.Definition.WeaponId != MeleeWeaponDefinition.CrowbarId &&
+                audioSource && fallback)
+            { audioSource.PlayOneShot(fallback, gain); return; }
             if(!director) director=GetComponentInParent<Noise.GameplayNoiseContext>()?.Session?.GetComponent<Audio.ProductionAudio>();
             if(director) director.Play(cue,transform);
             else if(audioSource && fallback) audioSource.PlayOneShot(fallback,gain);
@@ -20,11 +26,12 @@ namespace LastSignal
         {
             if(controller) { controller.AttackCommitted += OnSwing; controller.ImpactCommitted += OnImpact; }
             previous=MeleeState.Ready;
-            if(animator) animator.Play("Equip",0,0);
+            if(animator) { animator.speed = 1; animator.Play(ProfileOwnsAttack ? "Idle" : "Equip",0,0); }
         }
         void OnDisable()
         {
             if(controller) { controller.AttackCommitted -= OnSwing; controller.ImpactCommitted -= OnImpact; }
+            if(animator) animator.speed = 1;
             if(audioSource) audioSource.Stop();
             if(director) director.StopOwner(transform);
         }
@@ -33,7 +40,17 @@ namespace LastSignal
             // Record the accepted attack synchronously. It can be cancelled before
             // our next Update; polling alone would miss Windup and leave Swing playing.
             previous = MeleeState.Windup;
-            if(animator) animator.Play("Swing",0,0);
+            if(animator && !ProfileOwnsAttack)
+            {
+                animator.Play("Swing",0,0);
+                if (controller.Definition && controller.Definition.WeaponId != MeleeWeaponDefinition.CrowbarId)
+                {
+                    animator.Update(0);
+                    float total = controller.Definition.WindupSeconds + controller.Definition.ActiveSeconds + controller.Definition.RecoverySeconds;
+                    float clip = animator.GetCurrentAnimatorStateInfo(0).length;
+                    if (clip > .01f) animator.speed = Mathf.Clamp(clip / total, .35f, 2.5f);
+                }
+            }
             PlayAudio(Audio.AudioCue.MeleeSwing,swing,.45f);
         }
         void OnImpact() { PlayAudio(Audio.AudioCue.MeleeImpact,impact,.6f); }
@@ -41,7 +58,8 @@ namespace LastSignal
         {
             if(!controller || controller.Simulation==null) return;
             var state=controller.Simulation.State;
-            if(state==MeleeState.Ready && previous!=state && animator) animator.Play("Idle",0,0);
+            if(state==MeleeState.Ready && previous!=state && animator)
+            { animator.speed = 1; animator.Play("Idle",0,0); }
             previous=state;
         }
     }

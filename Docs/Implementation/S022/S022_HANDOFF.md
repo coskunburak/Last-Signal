@@ -1,0 +1,15 @@
+# S022 handoff
+
+**IMPLEMENTATION FINISHED — USER VERIFICATION REQUIRED**
+
+Sprint status: **PENDING_USER_VERIFICATION**. User evidence: Gate 1 focused EditMode **PASS 53/53**; Gate 2 focused PlayMode **PASS 28/28**; Gate 3 full EditMode **PASS 773/773** with unchanged source before the latest pistol pose correction. The focused pistol PlayMode rerun **FAILED 0/1** during DXT reload after the first pose correction; the prior full Gate 4 PlayMode run **FAILED 426/427** on the same test. The DXT, Glock17 and Custom9mm finger poses now have more frame clearance while retaining bone lengths and distal contact. This latest repair has not run in Unity. Gates 3–5 require user reruns; Gates 6–7 are **NOT_RUN**, and Gate 0 has no reported outcome.
+
+Branch `s012-integrated-graybox-slice`; HEAD `c41dcf1a0e0942377556227e938ef847391623bb`; Unity `6000.5.0f1`, URP `17.5.0`. Existing dirty work was retained; no commit/push/merge, vendor download, purchase, publication, source cleanup or production-scene replacement occurred.
+
+D211–D220 implementation and acceptance preparation are recorded separately in S022_WORKING_RECORD.md. Shared AI now supports authored Lurker ambush and bounded Runner burst/recovery; existing damage/animation/LOS authority remains. Typed population, migrations, resident/cell hydration and tombstones preserve identity. Stable catalog/assets, archetype prefabs, spatial warning cues, crowd spacing, risk authoring, dedicated route and tests are provided.
+
+Actionable limitations: the two archetype prefabs deliberately use labeled temporary shared-model posture treatments and are complete copies of the production prefab; future hierarchy changes require synchronization. Alternate-model retarget/scale/grounding/low-quality acceptance needs Unity evidence. ZombieHorrorPackageFree commercial license evidence remains unresolved. Final attack/burst tuning, auditory distinction, doorway fairness and 10/20/30-agent performance are unmeasured. Shambler remains at local production 100 HP; GDD 90 is a tuning hypothesis. Legacy aggregate tombstones retain counts but cannot recover identities old saves never stored.
+
+Next: rerun the single pistol case with Gate 4's `--filter` first. If it passes, rerun **Gate 3 regression-edit**, **Gate 4 regression-play**, and **Gate 5 development-build**. The latest Gate 3 PASS evidence is `Evidence/Manual-20261013-094735-regression-edit-8re8azd3/` (773/773; unchanged source); it predates the latest pose change. The latest focused pistol FAIL evidence is `Evidence/Manual-20261013-094811-regression-play-9z2k66ce/` (0/1; DXT finger 6 during Reloading; unchanged source). Earlier failed evidence is preserved. S022's runner reports the installed Unity Inference package's exact `SENTIS_ANALYTICS_ENABLED` Standalone define toggle as an expected source change and still rejects all other source mutations. Gate 1/2 PASS evidence paths are in S022_TEST_MATRIX.md.
+
+Files: S022_GAP_AUDIT.md, S022_ARCHETYPE_DESIGN.md, S022_WORKING_RECORD.md, S022_CHANGED_FILES.md, S022_TEST_MATRIX.md, S022_RUN_COMMANDS.md, S022_MANUAL_QA.md. All verification commands remain user-operated.

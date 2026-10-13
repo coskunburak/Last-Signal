@@ -65,11 +65,28 @@ namespace LastSignal
 
         void Play(Audio.AudioCue cue, AudioClip fallback, float gain=1)
         {
+            // A handgun must not inherit the global rifle transient or magazine foley.
+            if (weapon && weapon.Definition && weapon.Definition.Category == WeaponCategory.Pistol && fallback && audioSource)
+            { audioSource.PlayOneShot(fallback, gain); PresentedCueCount++; return; }
             if(!director) director=GetComponentInParent<Noise.GameplayNoiseContext>()?.Session?.GetComponent<Audio.ProductionAudio>();
             if(director) { if(director.Play(cue,transform,gain)) PresentedCueCount++; }
             else if(fallback && audioSource) { audioSource.PlayOneShot(fallback,gain); PresentedCueCount++; }
         }
-        void OnShotFired(WeaponFireResolver.ShotResult result) => Play(Audio.AudioCue.Fire,fireClip);
+        void OnShotFired(WeaponFireResolver.ShotResult result)
+        {
+            Play(Audio.AudioCue.Fire, fireClip);
+            if (!director) director=GetComponentInParent<Noise.GameplayNoiseContext>()?.Session?.GetComponent<Audio.ProductionAudio>();
+            if (!director || !result.Hit) return;
+            bool organic = ImpactSurface.Organic(result.Surface);
+            if (organic && !result.ImpactAccepted) return;
+            var cue = organic ? result.Receipt.Severed && ZombieGorePreference.GraphicGoreEnabled ? Audio.AudioCue.ImpactSever :
+                result.Surface == ImpactSurfaceKind.Bone ? Audio.AudioCue.ImpactBone : Audio.AudioCue.ImpactFlesh :
+                result.Surface == ImpactSurfaceKind.Metal ? Audio.AudioCue.ImpactMetal :
+                result.Surface == ImpactSurfaceKind.Stone ? Audio.AudioCue.ImpactStone :
+                result.Surface == ImpactSurfaceKind.Wood ? Audio.AudioCue.ImpactWood :
+                result.Surface == ImpactSurfaceKind.Soil ? Audio.AudioCue.ImpactSoil : Audio.AudioCue.ImpactDefault;
+            if (director.PlayAt(cue, transform, result.HitPoint, result.Receipt.Terminal ? 1.1f : 1)) PresentedCueCount++;
+        }
         void OnShotRejected()
         {
             if(Time.time-lastDryFire<.2f) return;

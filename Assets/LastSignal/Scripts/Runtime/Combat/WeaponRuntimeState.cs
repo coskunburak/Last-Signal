@@ -21,6 +21,7 @@ namespace LastSignal
 
         public WeaponState State { get; private set; } = WeaponState.Holstered;
         public int CurrentMagazine { get; private set; }
+        public int Condition { get; private set; } = 1000;
         public int ReserveAmmo => inventory ? inventory.GetTotalQuantity(definition.Ammunition) : 0;
         public float FireCooldownRemaining { get; private set; }
         public float StateTimer { get; private set; }
@@ -41,6 +42,8 @@ namespace LastSignal
         }
 
         public WeaponDefinition Definition => definition;
+        public float ConditionDamageFactor => Mathf.Lerp(.8f, 1f, Condition / 1000f);
+        public void RestoreCondition(int value) => Condition = Mathf.Clamp(value, 0, 1000);
 
         /// <summary>Advance cooldown and state timers. Call every frame.</summary>
         public void Tick(float deltaTime)
@@ -87,7 +90,7 @@ namespace LastSignal
 
         public bool CanFire => State == WeaponState.Ready &&
                                FireCooldownRemaining <= 0 &&
-                               CurrentMagazine > 0;
+                               CurrentMagazine > 0 && Condition > 0;
 
         /// <summary>
         /// Consume one round. Returns true if the shot is valid.
@@ -97,6 +100,7 @@ namespace LastSignal
         {
             if (!CanFire) return false;
             CurrentMagazine--;
+            Condition = Mathf.Max(0, Condition - 1);
             FireCooldownRemaining = definition.FireCooldownSeconds;
             FireRequestConsumed = true;
             MagazineChanged?.Invoke();
@@ -129,17 +133,20 @@ namespace LastSignal
             if (StateTimer < duration * commit) return false;
             int need = definition.MagazineCapacity - CurrentMagazine;
             int transfer = Mathf.Min(need, ReserveAmmo);
-            // Publish only after both owners agree. Inventory removal validates before mutation,
-            // then synchronously notifies observers; stage the magazine and guard first so even
-            // reentrant observers see conserved totals and cannot commit twice.
             ReloadCommitted = true;
             if (transfer <= 0) return true;
-            CurrentMagazine += transfer;
-            if (!inventory.TryRemove(definition.Ammunition, transfer))
+            bool transferred = false;
+            try
             {
-                CurrentMagazine -= transfer;
-                return false;
+                if (!inventory.TryTransferAmmo(definition.Ammunition, transfer,
+                    () => { CurrentMagazine += transfer; transferred = true; },
+                    () => { CurrentMagazine -= transfer; transferred = false; }))
+                {
+                    ReloadCommitted = false;
+                    return false;
+                }
             }
+            catch { if (!transferred) ReloadCommitted = false; throw; }
             MagazineChanged?.Invoke();
             return true;
         }
@@ -150,7 +157,7 @@ namespace LastSignal
             float duration = IsEmptyReload ? definition.EmptyReloadSeconds : definition.TacticalReloadSeconds;
             if (StateTimer < duration) return false;
             // Auto-commit if not yet committed (safety net — should not normally happen).
-            if (!ReloadCommitted) TryCommitReload();
+            if (!ReloadCommitted && !TryCommitReload()) return false;
             if (State != WeaponState.Reloading) return false; // A commit observer may cancel/holster.
             TransitionTo(WeaponState.Ready);
             return true;

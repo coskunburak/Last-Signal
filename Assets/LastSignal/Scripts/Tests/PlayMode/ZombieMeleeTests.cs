@@ -189,7 +189,7 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator NormalGameplayRouteApproachesAndAttacksProductionPlayer()
         {
-            yield return Load("Assets/ThirdParty/UnityURPTemplate/Scenes/SampleScene.unity");
+            yield return Load("Assets/ThirdParty/Samples/UnityURPTemplate/Scenes/SampleScene.unity");
             Place(zombie.transform.position + zombie.transform.forward * 3);
             yield return Until(() => zombie.Runtime.State == ZombieState.Chasing); Capture("normal-approach");
             yield return Until(() => health.DamageTransactions > 0, 10); Capture("normal-hit");
@@ -262,8 +262,10 @@ namespace LastSignal.Tests
                     {
                         bytes += actor.ManagedTickBytes; ticks += actor.MeasuredTicks; hits += actor.SuccessfulHits;
                         Assert.That(actor.ContactAttempts, Is.LessThanOrEqualTo((int)actor.AttackSequence));
-                        Assert.That(actor.SuccessfulHits, Is.GreaterThan(1));
                     }
+                    // A shared target now spaces accepted contacts; ten actors cannot each land
+                    // multiple hits in this short window, but the group must remain dangerous.
+                    Assert.That(hits, Is.GreaterThan(1));
                     Assert.That(health.DamageTransactions, Is.EqualTo(hits));
                     report.AppendLine("actors=" + count + " frames=" + frames + " seconds=" + elapsed + " AI_ms=" + a / (frames * 1e6) +
                         " attack_ms=" + b / (frames * 1e6) + " validation_ms=" + c / (frames * 1e6) + " animator_ms=" + d / (frames * 1e6) +

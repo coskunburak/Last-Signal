@@ -8,7 +8,7 @@ namespace LastSignal.Tests
     public class ProductionAssetTests
     {
         const string Rifle = "Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Models/Assault Rifle.fbx";
-        const string Val = "Assets/ThirdParty/Characters/VAL.fbx";
+        const string Val = "Assets/ThirdParty/Characters/VAL/VAL.fbx";
         [Test]
         public void ProductionPrefabUsesSourceMeshesAndOneAnimatedMagazine()
         {

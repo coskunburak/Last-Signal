@@ -18,7 +18,7 @@ namespace LastSignal.VehicleAuthoring
         const string Root = "Assets/LastSignal/_Game/Vehicles";
         public const string PrefabPath = Root + "/Prefabs/LS_Vehicle_UtilityPickup_01.prefab";
         public const string ScenePath = "Assets/LastSignal/Scenes/Validation/VehicleBenchmark.unity";
-        const string Vendor = "Assets/ThirdParty/Vehicle Entegrations/Pack_Pickup/Prefabs/Pickup.prefab";
+        const string Vendor = "Assets/ThirdParty/Vehicles/Pack_Pickup/Prefabs/Pickup.prefab";
         [MenuItem("Last Signal/VEH-001/Create Benchmark Candidate")]
         public static void Create()
         {
