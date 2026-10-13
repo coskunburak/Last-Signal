@@ -29,6 +29,27 @@ namespace LastSignal.Tests
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/LastSignal/Scenes/Validation/ShelterAcceptance.unity",new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             session=Object.FindAnyObjectByType<SessionFlow>();loop=session.GetComponent<ShelterLoop>();
+            // S021 added 9 mm to Security loot. Choose a reproducible seed that still
+            // gives this two-expedition rifle-reserve scenario two actual rifle pickups.
+            var security = Object.FindObjectsByType<LootSpawnPoint>(FindObjectsSortMode.None);
+            var rifleAmmo = session.Player ? session.Player.GetComponent<PlayerCombatController>().Rifle.Definition.Ammunition :
+                UnityEditor.AssetDatabase.LoadAssetAtPath<WeaponDefinition>("Assets/LastSignal/Data/Combat/WeaponDefinition_AssaultRifle.asset").Ammunition;
+            int seed = -1;
+            for (int candidate = 0; candidate < 10000 && seed < 0; candidate++)
+            {
+                int riflePickups = 0;
+                foreach (var point in security)
+                    if (point.Profile && point.Profile.Select(candidate, point.StableId).Item == rifleAmmo) riflePickups++;
+                if (riflePickups >= 2) seed = candidate;
+            }
+            Assert.That(seed, Is.GreaterThanOrEqualTo(0), "No seed supplies two rifle pickups in the authored loot points.");
+            var loot = session.GetComponent<LootPopulationService>();
+            var settings = new UnityEditor.SerializedObject(loot);
+            settings.FindProperty("overrideSeed").boolValue = true;
+            settings.FindProperty("explicitSeed").intValue = seed;
+            settings.ApplyModifiedPropertiesWithoutUndo();
+            session.ReturnToMenu();
+            session.BeginSession();
             session.Resume();yield return new WaitForSeconds(.8f);
             inv=loop.Inventory;weapon=session.Player.GetComponent<PlayerCombatController>().ActiveWeapon;camera=session.Player.GetComponent<FirstPersonLook>().View;
             Assert.AreEqual(ExpeditionState.Shelter,loop.State);Assert.AreEqual(0,loop.ExpeditionIndex);

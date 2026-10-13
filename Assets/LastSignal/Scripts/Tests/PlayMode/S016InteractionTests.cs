@@ -16,7 +16,7 @@ namespace LastSignal.Tests
         public bool TryInteract() { if (!Available) return false; Accepted++; return true; }
     }
 
-    public sealed class S016InteractionTests : InputTestFixture
+    public sealed class S016InteractionTests
     {
         GameObject player;
         PlayerInputReader input;
@@ -25,11 +25,11 @@ namespace LastSignal.Tests
         readonly System.Collections.Generic.List<GameObject> owned = new System.Collections.Generic.List<GameObject>();
 
         InputFixtureIsolation.SceneScope sceneScope;
-        public override void Setup()
+        InputFixtureIsolation.NativeInputScope inputScope;
+        [SetUp] public void Setup()
         {
             sceneScope = new InputFixtureIsolation.SceneScope(); InputFixtureIsolation.DisableLiveActions();
-            base.Setup();
-            InputSystem.AddDevice<Keyboard>(); InputSystem.AddDevice<Mouse>();
+            inputScope = new InputFixtureIsolation.NativeInputScope();
             player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(
                 "Assets/LastSignal/Prefabs/Player/Player.prefab"), Vector3.zero, Quaternion.identity);
             player.AddComponent<LastSignal.Inventory.PlayerInventory>().Initialize(24);
@@ -40,14 +40,14 @@ namespace LastSignal.Tests
             input.SetGameplay(true);
         }
 
-        public override void TearDown()
+        [TearDown] public void TearDown()
         {
             if (player) Object.DestroyImmediate(player);
             foreach (var target in owned) if (target) Object.DestroyImmediate(target);
             owned.Clear();
             InputFixtureIsolation.DisableLiveActions();
             Time.timeScale = 1;
-            try { base.TearDown(); } finally { sceneScope?.Dispose(); sceneScope = null; }
+            try { inputScope?.Dispose(); inputScope = null; } finally { sceneScope?.Dispose(); sceneScope = null; }
         }
 
         S016InteractionProbe Target(string name, Vector3 position, Vector3 size)

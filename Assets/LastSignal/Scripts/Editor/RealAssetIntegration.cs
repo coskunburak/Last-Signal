@@ -10,7 +10,7 @@ namespace LastSignal.Editor
     /// <summary>Reproducible, project-owned adapter. Never changes the source meshes or animation curves.</summary>
     public static class RealAssetIntegration
     {
-        public const string Val = "Assets/ThirdParty/Characters/VAL.fbx";
+        public const string Val = "Assets/ThirdParty/Characters/VAL/VAL.fbx";
         public const string Rifle = "Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Models/Assault Rifle.fbx";
         public const string Prefab = "Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab";
         public const string Evidence = "Docs/Implementation/Combat/Evidence/20260917-RealAssets";
@@ -199,7 +199,7 @@ namespace LastSignal.Editor
                 var camera = player.GetComponentInChildren<Camera>(); camera.nearClipPlane = .01f; camera.cullingMask &= ~(1 << 30);
                 if (!player.transform.Find("WorldBody"))
                 {
-                    var body = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ThirdParty/Environment/TT3D/LowPolySci-FiStarterPack/Character/Models/space_crew_man.fbx"), player.transform);
+                    var body = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ThirdParty/Environments/TT3D/LowPolySci-FiStarterPack/Character/Models/space_crew_man.fbx"), player.transform);
                     body.name = "WorldBody";
                     foreach (var t in body.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = 30;
                     var anim = body.GetComponent<Animator>();

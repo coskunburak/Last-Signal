@@ -13,7 +13,11 @@ namespace LastSignal
         Vector3 restPosition;
         Quaternion restRotation;
         float weight, hit;
-        public void Configure(Transform parent, PlayerLocomotionPresenter presenter) { weaponParent=parent;character=presenter; }
+        public void Configure(Transform parent, PlayerLocomotionPresenter presenter)
+        {
+            weaponParent=parent;character=presenter;
+            if(weaponParent){restPosition=weaponParent.localPosition;restRotation=weaponParent.localRotation;}
+        }
         void Awake()
         {
             health=GetComponent<PlayerHealth>();

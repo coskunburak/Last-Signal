@@ -145,7 +145,7 @@ namespace LastSignal.Shelter
             depositOne.interactable=depositStack.interactable=a;withdrawOne.interactable=withdrawStack.interactable=b;
             status.text="SHELTER / PREPARATION    •    Expedition "+loop.ExpeditionIndex+" complete";
             var state=weapon?weapon.RuntimeState:null;
-            readiness.text=state==null?"Weapon preparing…":"Magazine "+state.CurrentMagazine+" / "+state.Definition.MagazineCapacity+"    |    Carried reserve "+state.ReserveAmmo+"    |    Stored ammo "+storage.GetTotalQuantity(state.Definition.Ammunition);
+            readiness.text=state==null?"Weapon preparing…":state.Definition.WeaponName+"    |    Magazine "+state.CurrentMagazine+" / "+state.Definition.MagazineCapacity+"    |    Carried reserve "+state.ReserveAmmo+"    |    Stored ammo "+storage.GetTotalQuantity(state.Definition.Ammunition)+"    |    "+(state.Condition==0?"BROKEN":"Condition "+(state.Condition/10)+"%");
             PresentationAllocatedBytes+=System.GC.GetAllocatedBytesForCurrentThread()-allocationStart;
         }
         void OnDisable() { if(loop && loop.Preparing) loop.ClosePreparation(); }

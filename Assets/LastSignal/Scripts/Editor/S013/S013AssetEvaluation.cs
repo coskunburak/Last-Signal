@@ -16,7 +16,7 @@ namespace LastSignal.Art.Editor
     {
         public const string Root = "Assets/LastSignal/Art/S013/Evaluation";
         public const string ScenePath = "Assets/LastSignal/Scenes/Validation/S013AssetComparison.unity";
-        const string Vendor = "Assets/ThirdParty/EnvironmentAsset/";
+        const string Vendor = "Assets/ThirdParty/Environments/";
         static readonly Dictionary<string, Material> Materials = new Dictionary<string, Material>();
         [Serializable] public class MeshRecord { public string path, name; public int vertices, submeshes; public long triangles; public bool uv, normals, tangents; public Vector3 size; }
         [Serializable] public class PrefabRecord { public string path; public Vector3 size, rootScale; public int renderers, colliders, lodGroups, missingScripts, missingMaterials; public string[] shaders; }

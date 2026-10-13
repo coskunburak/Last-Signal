@@ -1,0 +1,14 @@
+# Known limitations
+
+- All runtime, visual, shader and performance acceptance is **NOT_RUN**. Normal Editor imports occurred while authoring assets; no compilation verification gate was run or claimed.
+- Head/Ribcage dents move existing nearby vertices by at most 3 mm. Sparse triangles may show little geometric displacement. Other regions use shading depth. There is no arbitrary runtime cutting, new hole topology, cloth simulation or fluid simulation.
+- Production head/arm/hand cuts were already visually gated before this task. Those gates and gameplay sever thresholds are preserved. Anatomical severing infrastructure remains integrated, but approved stump/cap source art is still **BLOCKED**. Post-mortem limb detachment is **DEFERRED** behind that art dependency; corpse wounds/progression are implemented.
+- Existing logical sever rules disable a severed live region's hit colliders even where its unapproved cut remains visually gated. This pre-existing anatomy/art mismatch is not represented as approved sever art. Visible retained corpse triangles can still receive presentation-only impacts.
+- Runtime mapping supports the authored 15-surface production mesh and four-weight skinning. Blendshape variants, other character topologies and future mesh reauthoring require a binding/snapshot-version review. Triangle-index saves must not be reused blindly after topology changes.
+- Grazing capsule impacts can use a bounded 12 cm closest-surface fallback. An unsupported/missing mesh yields immediate blood at the accepted contact but no invented persistent wound. Resolution misses are exposed for manual inspection. Collider-versus-renderer coverage needs the real scene QA checklist.
+- Rest-space wound radii assume the production actor's authored scale. Extreme nonuniform scaling is not validated.
+- Blood marks remain the existing conservative planar marks; unsuitable, transparent, moving, unsupported or edge-straddling surfaces are rejected. Environmental coverage is intentionally not universal.
+- Wound restoration respects reduced gore and does not replay old impacts. Graphic wounds cleared by toggling gore OFF are not reintroduced on toggling ON. Corpse interaction/obstruction remains independent of gore.
+- Cosmetic merging can cover a nearby fresh hit within the larger wound. Every accepted hit still requests immediate blood; a saturated fixed effect pool replaces an older effect.
+- Corpse bodies are transient. Authored encounters retain a compact terminal record after cleanup; reload may recreate terminal presentation from that record, but does not issue another `Died` event or restore historical burst/particle instances.
+- Shot identity rings cover the most recent 32 shot/sub-hit pairs in this local synchronous pipeline. Future network replay/reordering needs a network authority design rather than treating these cosmetic rings as anti-replay security.

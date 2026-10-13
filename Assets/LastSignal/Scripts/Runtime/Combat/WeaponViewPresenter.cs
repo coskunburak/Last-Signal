@@ -12,6 +12,7 @@ namespace LastSignal
         [SerializeField] WeaponController weapon;
         [SerializeField] PlayerInputReader input;
         [SerializeField] Transform viewmodelRoot; // The transform we move for hip/ADS pose
+        [SerializeField] CharacterWeaponPoseProfile gripProfile;
         PlayerStance stance;
         FirstPersonMotor motor;
 
@@ -50,6 +51,12 @@ namespace LastSignal
         float recoilOffset;
         float crouchWeight;
         float slideWeight;
+        float presentationAim;
+        float readySeconds, readyWeight;
+        public float ReadyWeight => readyWeight;
+        public void SetGripProfile(CharacterWeaponPoseProfile profile)
+        { gripProfile = profile; readySeconds = readyWeight = recoilOffset = presentationAim = 0; }
+        public float TriggerPull => gripProfile ? Mathf.Clamp01(recoilOffset / Mathf.Max(.001f, gripProfile.RecoilDistance)) : 0;
 
         public void Configure(WeaponController ctrl, PlayerInputReader reader, Transform root)
         {
@@ -75,22 +82,35 @@ namespace LastSignal
         void OnDisable()
         {
             if (weapon) weapon.ShotFired -= OnShotFired;
+            readySeconds = readyWeight = 0;
+            recoilOffset = crouchWeight = slideWeight = bobTimer = presentationAim = 0; currentSway = Vector3.zero;
         }
 
         void LateUpdate()
         {
             if (!weapon || weapon.RuntimeState == null || !viewmodelRoot) return;
 
-            float dt = Time.deltaTime;
+            float dt = weapon.IsSimulationActive ? Time.deltaTime : 0;
+            if (gripProfile) { hipPosition = gripProfile.FpsHipPosition; hipRotation = gripProfile.FpsHipEuler; alignToSight = true; sightDistance = gripProfile.SightDistance; }
             crouchWeight = Mathf.MoveTowards(crouchWeight,
                 stance && stance.IsCrouching ? 1f : 0f, dt / crouchTransitionSeconds);
             slideWeight = Mathf.MoveTowards(slideWeight,
                 motor && motor.IsSliding ? 1f : 0f, dt / slideTransitionSeconds);
             float aim = weapon.RuntimeState.AimAmount * (1f - slideWeight);
+            if (gripProfile && !weapon.IsSimulationActive) aim = presentationAim;
+            else presentationAim = aim;
 
-            // Base pose: lerp between hip and ADS.
-            Vector3 targetPos = Vector3.Lerp(hipPosition, adsPosition, aim);
-            Quaternion targetRot = Quaternion.Slerp(Quaternion.Euler(hipRotation), Quaternion.Euler(adsRotation), aim);
+            Vector3 readyPosition = hipPosition;
+            Quaternion readyRotation = Quaternion.Euler(hipRotation);
+            if (gripProfile && gripProfile.Pistol)
+            {
+                readySeconds = Mathf.Max(0, readySeconds - dt);
+                readyWeight = gripProfile.StepReady(readyWeight, readySeconds, dt);
+                gripProfile.ReadyPose(readyWeight, out readyPosition, out readyRotation);
+            }
+            // Compose low/raised ready before sight-space ADS, maintaining one arm target.
+            Vector3 targetPos = Vector3.Lerp(readyPosition, adsPosition, aim);
+            Quaternion targetRot = Quaternion.Slerp(readyRotation, Quaternion.Euler(adsRotation), aim);
             if (alignToSight && weapon.AimReference)
             {
                 var sight = weapon.AimReference;
@@ -98,8 +118,14 @@ namespace LastSignal
                 Quaternion localSightRotation = Quaternion.Inverse(viewmodelRoot.rotation) * sight.rotation;
                 Quaternion alignedRotation = Quaternion.Inverse(localSightRotation);
                 Vector3 alignedPosition = new Vector3(0, 0, sightDistance) - alignedRotation * Vector3.Scale(localSight, viewmodelRoot.localScale);
-                targetPos = Vector3.Lerp(hipPosition, alignedPosition, aim);
-                targetRot = Quaternion.Slerp(Quaternion.Euler(hipRotation), alignedRotation, aim);
+                targetPos = Vector3.Lerp(readyPosition, alignedPosition, aim);
+                targetRot = Quaternion.Slerp(readyRotation, alignedRotation, aim);
+            }
+            if (gripProfile && gripProfile.Pistol)
+            {
+                PistolReloadPose.Sample(weapon.RuntimeState, out float reloadAssist, out _);
+                targetPos += gripProfile.PistolReloadPosition * reloadAssist;
+                targetRot *= Quaternion.Euler(gripProfile.PistolReloadEuler * reloadAssist);
             }
 
             // Preserve the authored sight alignment at full ADS.
@@ -126,20 +152,21 @@ namespace LastSignal
             float bobY = Mathf.Sin(bobTimer * 2f) * bobAmplitude * .5f * (1f - aim) * (1f - slideWeight);
 
             // Visual recoil recovery.
-            recoilOffset = Mathf.Lerp(recoilOffset, 0, dt * recoilRecovery);
+            recoilOffset = Mathf.Lerp(recoilOffset, 0, dt * (gripProfile ? gripProfile.RecoilRecovery : recoilRecovery));
 
             // Compose final viewmodel transform.
             Vector3 finalPos = targetPos + currentSway * (1f - aim) + new Vector3(bobX, bobY, -recoilOffset);
             viewmodelRoot.localPosition = finalPos;
-            viewmodelRoot.localRotation = targetRot;
+            viewmodelRoot.localRotation = targetRot * (gripProfile ? Quaternion.Euler(-Mathf.Clamp01(recoilOffset / Mathf.Max(.001f, gripProfile.RecoilDistance)) * gripProfile.RecoilPitch, 0, 0) : Quaternion.identity);
         }
 
         void OnShotFired(WeaponFireResolver.ShotResult result)
         {
-            float kick = recoilKickback;
+            if (gripProfile && gripProfile.Pistol) readySeconds = gripProfile.ReadyHoldSeconds;
+            float kick = gripProfile ? gripProfile.RecoilDistance : recoilKickback;
             if (weapon.RuntimeState != null)
                 kick *= Mathf.Lerp(1f, weapon.Definition.AdsRecoilMultiplier, weapon.RuntimeState.AimAmount);
-            recoilOffset += kick;
+            recoilOffset = gripProfile ? Mathf.Min(recoilOffset + kick, gripProfile.RecoilDistance * 2) : recoilOffset + kick;
         }
     }
 }

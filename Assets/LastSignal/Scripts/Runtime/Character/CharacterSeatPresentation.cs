@@ -44,7 +44,7 @@ namespace LastSignal
             animator.SetIKPositionWeight(AvatarIKGoal.RightHand,0);animator.SetIKRotationWeight(AvatarIKGoal.RightHand,0);
             animator.SetIKHintPositionWeight(AvatarIKHint.LeftElbow,0);animator.SetIKHintPositionWeight(AvatarIKHint.RightElbow,0);
             if(!state.Alive||!wheel||!wheel.Pivot)return;
-            if(hips&&transform.parent)transform.position+=transform.parent.TransformPoint(seatedHipOffset)-hips.position;
+            // Hip offset is already applied in LateUpdate; only solve hands here.
             var pivot=wheel.Pivot;
             // Use the actual steering-wheel transform; no secondary steering simulation.
             Hand(AvatarIKGoal.LeftHand,pivot.TransformPoint(Vector3.left*steeringRadius),pivot.rotation*Quaternion.Euler(0,90,-90));

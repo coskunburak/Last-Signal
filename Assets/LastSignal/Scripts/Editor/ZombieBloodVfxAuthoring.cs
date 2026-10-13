@@ -10,7 +10,7 @@ namespace LastSignal.Editor
         const string DataFolder = "Assets/LastSignal/Data/VFX/Blood";
         const string MaterialFolder = "Assets/LastSignal/Materials/VFX/Blood";
         const string PrefabFolder = "Assets/LastSignal/Prefabs/VFX/Blood";
-        const string Vendor = "Assets/ThirdParty/VFX/Vefects/Free Blood VFX/VFX/";
+        const string Vendor = "Assets/ThirdParty/VFX/Free Blood VFX/VFX/";
         const string Runtime = "Assets/LastSignal/Prefabs/Resources/LS_Zombie_Runtime.prefab";
         [MenuItem("Last Signal/Zombie/Author Blood VFX")]
         public static void Create()

@@ -17,6 +17,8 @@ namespace LastSignal
         int failures, stuckFailures;
         bool initialized, requested;
         bool running;
+        bool burst;
+        public void SetBurst(bool value) => burst = value;
         public bool Ready => initialized && agent && agent.enabled && agent.isOnNavMesh;
         public bool Exhausted { get; private set; }
         public bool Stuck { get; private set; }
@@ -33,7 +35,7 @@ namespace LastSignal
         {
             tuning = definition; path = new NavMeshPath(); agent = GetComponent<NavMeshAgent>();
             agent.updateRotation = false; agent.updateUpAxis = false; agent.autoRepath = false;
-            running = false; agent.speed = tuning.Speed; agent.acceleration = tuning.Acceleration;
+            running = burst = false; agent.speed = tuning.Speed; agent.acceleration = tuning.Acceleration;
             agent.angularSpeed = tuning.TurnSpeed;
             var filter = new NavMeshQueryFilter { agentTypeID = agent.agentTypeID, areaMask = agent.areaMask };
             if (!NavMesh.SamplePosition(transform.position, out var hit, tuning.SpawnSampleRadius, filter))
@@ -110,7 +112,7 @@ namespace LastSignal
                 Vector3 direction = agent.steeringTarget - transform.position; direction.y = 0;
                 Face(direction, seconds);
                 float alignment = direction.sqrMagnitude > .001f ? Vector3.Dot(transform.forward, direction.normalized) : 1;
-                agent.speed = (running ? tuning.RunSpeed : tuning.Speed) * Mathf.Clamp01(alignment);
+                agent.speed = (burst ? tuning.BurstSpeed : running ? tuning.RunSpeed : tuning.Speed) * Mathf.Clamp01(alignment);
                 if (alignment < .5f) { progressAge = 0; progressOrigin = transform.position; return; }
                 progressAge += seconds;
                 if (progressAge < tuning.StuckTimeout) return;
@@ -125,7 +127,7 @@ namespace LastSignal
         {
             direction.y = 0;
             if (direction.sqrMagnitude > .001f)
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction), tuning.TurnSpeed * seconds);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction), (burst ? tuning.BurstTurnSpeed : tuning.TurnSpeed) * seconds);
         }
         public bool SampleSearch(Vector3 desired, out Vector3 point)
         {

@@ -9,7 +9,7 @@ using UnityEngine.TestTools;
 
 namespace LastSignal.Tests
 {
-    public sealed class S014WeaponPresentationTests : InputTestFixture
+    public sealed class S014WeaponPresentationTests
     {
         GameObject player;
         PlayerInputReader input;
@@ -18,13 +18,12 @@ namespace LastSignal.Tests
         Animator animator;
 
         InputFixtureIsolation.SceneScope sceneScope;
-        public override void Setup()
+        InputFixtureIsolation.NativeInputScope inputScope;
+        [SetUp] public void Setup()
         {
             sceneScope = new InputFixtureIsolation.SceneScope(); InputFixtureIsolation.DisableLiveActions();
-            base.Setup();
+            inputScope = new InputFixtureIsolation.NativeInputScope();
             Time.timeScale = 1;
-            InputSystem.AddDevice<Keyboard>();
-            InputSystem.AddDevice<Mouse>();
             player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(
                 "Assets/LastSignal/Prefabs/Player/Player.prefab"), new Vector3(500, 100, 500), Quaternion.identity);
             player.GetComponent<FirstPersonMotor>().enabled = false;
@@ -36,12 +35,12 @@ namespace LastSignal.Tests
             combat = player.GetComponent<PlayerCombatController>();
         }
 
-        public override void TearDown()
+        [TearDown] public void TearDown()
         {
             if (player) Object.DestroyImmediate(player);
             Time.timeScale = 1;
             InputFixtureIsolation.DisableLiveActions();
-            try { base.TearDown(); } finally { sceneScope?.Dispose(); sceneScope = null; }
+            try { inputScope?.Dispose(); inputScope = null; } finally { sceneScope?.Dispose(); sceneScope = null; }
         }
 
         IEnumerator PrepareReload(bool empty)

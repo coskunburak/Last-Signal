@@ -26,6 +26,9 @@ namespace LastSignal.Persistence
         public int version;
         public int selectedSlot;
         public string meleeDefinitionId;
+        public string selectedFirearmId;
+        public string pistolVisualVariantId; // Additive: null/empty old saves choose DXT.
+        public WeaponSnapshot[] firearms;
         public float stamina, regenDelay;
         public bool exhausted;
     }
@@ -65,6 +68,7 @@ namespace LastSignal.Persistence
     {
         public string definitionId;
         public int magazine;
+        public int condition;
     }
     [Serializable] public sealed class ShelterSnapshot
     {
@@ -98,6 +102,7 @@ namespace LastSignal.Persistence
     [Serializable] public sealed class EnemySnapshot
     {
         public string id;
+        public string archetypeId; // Optional: absent/empty is legacy Shambler.
         public float health;
         public TransformSnapshot transform;
         public ZombieAnatomySnapshot anatomy;
@@ -108,6 +113,8 @@ namespace LastSignal.Persistence
         public int severedMask;
         public float torsoDamage;
         public float[] regionalDamage;
+        public bool suppressLegacyTorsoWound;
+        public ZombieWoundSnapshot wounds; // Optional versioned presentation extension; old saves remain intact.
     }
     [Serializable] public sealed class WorldSnapshot
     {
@@ -135,6 +142,7 @@ namespace LastSignal.Persistence
         public double departureTime;
         public double arrivalTime;
         public int size;
+        public PopulationActorSnapshot[] actors; // Optional legacy anonymous Shambler migration.
     }
     [Serializable] public sealed class PopulationLedgerSnapshot
     {
@@ -145,6 +153,7 @@ namespace LastSignal.Persistence
     [Serializable] public sealed class PopulationActorSnapshot
     {
         public string id, cellId;
+        public string archetypeId;
         public float health;
         public ZombieAnatomySnapshot anatomy;
     }
@@ -153,6 +162,7 @@ namespace LastSignal.Persistence
         public CellPressureSnapshot residentPressure;
         public long lastNoiseSequence;
         public PopulationActorSnapshot[] actors;
+        public PopulationActorSnapshot[] tombstones; // Optional identity-preserving dead population; never materialized.
         public CellPressureSnapshot[] pressures;
         public PopulationLedgerSnapshot[] ledgers;
         public MigrationGroupSnapshot[] migrations;

@@ -14,9 +14,10 @@ namespace LastSignal.Audio
         readonly AudioSource[] sources=new AudioSource[VoiceBudget];
         readonly AudioLowPassFilter[] filters=new AudioLowPassFilter[VoiceBudget];
         readonly Transform[] owners=new Transform[VoiceBudget];
+        readonly bool[] fixedPosition = new bool[VoiceBudget];
         readonly AudioCue[] playing=new AudioCue[VoiceBudget];
         readonly float[] gains=new float[VoiceBudget], cutoff=new float[VoiceBudget];
-        readonly int[] previous=new int[(int)AudioCue.Relief+1];
+        readonly int[] previous=new int[(int)AudioCue.RunnerRecovery+1];
         readonly RaycastHit[] hits=new RaycastHit[16];
         readonly AudioSource[] loops=new AudioSource[8];
         static readonly AudioCue[] LoopCues={AudioCue.Wind,AudioCue.Rain,AudioCue.HeavyRain,AudioCue.Night,AudioCue.Interior,AudioCue.Exploration,AudioCue.Threat,AudioCue.Relief};
@@ -95,13 +96,15 @@ namespace LastSignal.Audio
         public static string Direction(Vector3 local)
         { return Mathf.Abs(local.x)>Mathf.Abs(local.z) ? (local.x<0?"Sol":"Sağ") : (local.z<0?"Arka":"Ön"); }
         public bool Play(AudioCue id, Transform owner, float scale=1)
+            => PlayAt(id, owner, owner ? owner.position + Vector3.up * .8f : Vector3.zero, scale, false);
+        public bool PlayAt(AudioCue id, Transform owner, Vector3 position, float scale = 1, bool fixedWorldPosition = true)
         {
             if(!Active || !listener || !owner) return false;
             var cue=catalog.Get(id);
             if(cue==null || cue.clips==null || cue.clips.Length==0) return false;
-            float distance=(owner.position-listener.position).sqrMagnitude;
+            float distance=(position-listener.position).sqrMagnitude;
             if(cue.spatial && distance>cue.range*cue.range) return false;
-            bool critical=id==AudioCue.ZombieTelegraph;
+            bool critical=id==AudioCue.ZombieTelegraph || id==AudioCue.LurkerTelegraph || id==AudioCue.RunnerTelegraph || id==AudioCue.RunnerPreparation;
             // Captions share the audible cue's authored range, independent of device volume and voice stealing.
             if(critical || id==AudioCue.ZombieAlert)
             {
@@ -130,7 +133,7 @@ namespace LastSignal.Audio
             var clip=cue.clips[index]; if(!clip) return false;
             previous[(int)id]=index;
             var source=sources[slot]; source.Stop(); owners[slot]=owner; playing[slot]=id;
-            source.transform.position=owner.position+Vector3.up*.8f;
+            source.transform.position=position; fixedPosition[slot]=fixedWorldPosition;
             source.outputAudioMixerGroup=catalog.Group(cue.bus); source.clip=clip; source.loop=false;
             source.spatialBlend=cue.spatial?1:0; source.rolloffMode=AudioRolloffMode.Linear; source.minDistance=1; source.maxDistance=cue.range;
             source.priority=cue.priority; source.pitch=1+((float)random.NextDouble()*2-1)*cue.pitchVariation;
@@ -190,7 +193,7 @@ namespace LastSignal.Audio
                 {
                     int i=occlusionCursor++%VoiceBudget;
                     if(!sources[i].isPlaying || !owners[i] || sources[i].spatialBlend==0) continue;
-                    Vector3 delta=owners[i].position+Vector3.up*.8f-listener.position;
+                    Vector3 delta=sources[i].transform.position-listener.position;
                     bool blocked=Physics.Raycast(listener.position,delta.normalized,delta.magnitude,~((1<<8)|(1<<2)),QueryTriggerInteraction.Ignore);
                     cutoff[i]=blocked?3200:22000;
                 }
@@ -199,7 +202,7 @@ namespace LastSignal.Audio
             {
                 if(!sources[i].isPlaying) continue;
                 if(!owners[i] || !owners[i].gameObject.activeInHierarchy) { sources[i].Stop(); continue; }
-                sources[i].transform.position=owners[i].position+Vector3.up*.8f;
+                if (!fixedPosition[i]) sources[i].transform.position=owners[i].position+Vector3.up*.8f;
                 filters[i].cutoffFrequency=Mathf.Lerp(filters[i].cutoffFrequency,cutoff[i],1-Mathf.Exp(-dt*8));
                 sources[i].volume=Mathf.Lerp(sources[i].volume,gains[i]*(cutoff[i]<10000?.65f:1)*(playing[i]==AudioCue.Fire && elapsed<duckUntil?.7f:1),1-Mathf.Exp(-dt*8));
             }

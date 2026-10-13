@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""One-time, GUID-preserving Unity asset layout migration and integrity check.
+"""Historical one-time Unity migration and integrity check.
 
-Run --apply only with the Unity Editor closed. --check is safe at any time.
-The generated manifest records every moved asset and its original GUID.
+The migration plan reflects its original source layout and must not be reapplied
+after the manifest exists. --check validates the current manifest destinations.
 """
 
 import argparse
@@ -267,6 +267,12 @@ def check():
         if (ROOT / item["from"]).exists():
             failures.append(f"Old asset path still exists: {item['from']}")
     for item in data["directories"]:
+        if item.get("retired"):
+            if (ROOT / item["to"]).exists():
+                failures.append(f"Retired wrapper still exists: {item['to']}")
+            if not (ROOT / item["successor"]).is_dir():
+                failures.append(f"Retired wrapper successor missing: {item['successor']}")
+            continue
         path = ROOT / item["to"]
         if not path.is_dir() or meta_guid(path) != item["guid"]:
             failures.append(f"Moved directory missing or GUID changed: {item['to']}")

@@ -7,7 +7,7 @@ namespace LastSignal.Audio
     public enum AudioCue { StepDefault, StepWood, StepDirt, StepGrass, StepGravel, StepMetal, StepStone,
         ZombieIdle, ZombieAlert, ZombieApproach, ZombieTelegraph, ZombieAttack, ZombieHurt, ZombieDeath,
         Fire, DryFire, ReloadStart, MagazineOut, MagazineIn, Bolt, Equip, MeleeSwing, MeleeImpact, Confirm,
-        Wind, Rain, HeavyRain, Night, Interior, Exploration, Threat, Relief }
+        Wind, Rain, HeavyRain, Night, Interior, Exploration, Threat, Relief, ImpactDefault, ImpactFlesh, ImpactBone, ImpactMetal, ImpactStone, ImpactWood, ImpactSoil, ImpactSever, LurkerSuspicion, LurkerTelegraph, RunnerPreparation, RunnerTelegraph, RunnerRecovery }
     public enum AudioBus { Master, Effects, Ambience, Voice, Music }
     public enum AudioSurfaceKind { Default, Wood, Dirt, Grass, Gravel, Metal, Stone }
     [Serializable] public sealed class AudioCueEntry

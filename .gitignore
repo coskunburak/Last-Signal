@@ -122,9 +122,8 @@ InitTestScene*.unity*
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
 
-# macOS metadata and reviewable S001 text evidence
+# macOS metadata
 .DS_Store
-!Docs/Implementation/S001/Evidence/**/*.log
 
 # Local Python tool caches
 __pycache__/
@@ -157,36 +156,11 @@ __pycache__/
 *.swp
 *.swo
 
-# Local scratch and historical backup copies; canonical evidence lives in Docs.
+# Local scratch and historical backup copies.
 /scratch/
 /.p02-historical-backup/
 
-# S012 verification runs: keep reports, XML results, performance CSV and screenshots.
-# These files are local run artifacts or copies of evidence already in the project.
-/Docs/Implementation/S012/Evidence/**/generated-artifacts/
-/Docs/Implementation/S012/Evidence/**/start.marker
-/Docs/Implementation/S012/Evidence/**/preexisting-current.json*
-
-# S015 verification preserves duplicate historical outputs in each run folder.
-# The source audio packages under Assets/ThirdParty/S15 Sound Pack stay trackable;
-# .gitattributes stores their WAV and other large binary assets in Git LFS.
-/Docs/Implementation/S015/Evidence/**/generated-artifacts/
-!Docs/Implementation/S015/Evidence/**/*.log
-
-# Canonical sprint evidence stays versioned, including Unity build/test logs.
-# Preserve XML, JSON, CSV, screenshots and before/after settings snapshots.
-# CharacterIntegration gate-result.json, invocation.json, results.xml and
-# build-summary.txt are evidence too; never ignore that Evidence directory.
-!Docs/Implementation/**/Evidence/**/*.log
-
-# Verification runners copy historical evidence here for local recovery.
-# These duplicates are not the canonical results of the current run.
-/Docs/Implementation/**/Evidence/**/generated-artifacts/
-/Docs/Implementation/**/Evidence/**/start.marker
-/Docs/Implementation/**/Evidence/**/preexisting-current.json*
-
-# Ad-hoc root test outputs; canonical results belong under Docs/Implementation.
-# Already tracked files remain tracked until explicitly removed from the index.
+# Ad-hoc root test outputs.
 /*.xml
 /test_log.txt
 /pgrep.txt
@@ -199,3 +173,19 @@ __pycache__/
 *.tar
 *.tar.gz
 *.7z
+
+# GitHub is a source-review mirror; licensed/vendor media stays in the local Unity project.
+/Assets/ThirdParty/
+/Assets/ThirdParty.meta
+/Assets/Noto_Sans/
+/Assets/Noto_Sans.meta
+
+# Unity recovery and Test Runner scenes are local, not project source.
+/Assets/_Recovery/
+/Assets/_Recovery.meta
+/Assets/TestScene/
+/Assets/TestScene.meta
+
+# Test evidence is generated locally and dominates Git LFS usage.
+# Keep the authored implementation notes beside it under Docs/Implementation.
+/Docs/Implementation/**/Evidence/

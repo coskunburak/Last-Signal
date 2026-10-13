@@ -36,7 +36,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2211443619515615061}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.0073415735, z: 0, w: 0.9999731}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -188,7 +188,10 @@ MonoBehaviour:
   look: {fileID: 8492070216041348762}
   weaponParent: {fileID: 8492493606300100580}
   startingWeapon: {fileID: 3501217768431337136, guid: c5fcaa96926e74f95910d7a84445ff14, type: 3}
+  secondaryWeapon: {fileID: 8984473315127527048, guid: d66978f2ba9f8432d80da544729a9d33, type: 3}
   startingMelee: {fileID: 115205150761027965, guid: c2d25d4e67e6f4d3588be17f8d52e8a5, type: 3}
+  fastMelee: {fileID: 249183573944420685, guid: 1b3f46409abb0468cb28df9a1c671f1e, type: 3}
+  heavyMelee: {fileID: 4083784676043517642, guid: 4174728db329442079610f17aef3c09e, type: 3}
 --- !u!114 &7244106600074376475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,6 +302,7 @@ GameObject:
   - component: {fileID: 7719428882035794687}
   - component: {fileID: 6961469585183342571}
   - component: {fileID: 2817063700240794372}
+  - component: {fileID: 7121550602702918623}
   m_Layer: 2
   m_Name: View
   m_TagString: MainCamera
@@ -314,7 +318,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9138954289212425882}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.15595515, y: 0, z: 0, w: 0.9877641}
   m_LocalPosition: {x: 0, y: 1.62, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -381,6 +385,50 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9138954289212425882}
   m_Enabled: 1
+--- !u!114 &7121550602702918623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9138954289212425882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1001 &5179432017359486280
 PrefabInstance:
   m_ObjectHideFlags: 0

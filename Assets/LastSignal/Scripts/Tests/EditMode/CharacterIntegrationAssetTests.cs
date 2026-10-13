@@ -71,14 +71,18 @@ namespace LastSignal.Tests
         [Test] public void WorldWeaponProfilesHaveNoGameplayOrViewmodelComponents()
         {
             var body=AssetDatabase.LoadAssetAtPath<GameObject>(DieselCharacterAuthoring.BodyPath);
-            var profiles=body.GetComponent<CharacterWeaponRig>().Profiles;Assert.That(profiles,Has.Length.EqualTo(2));
+            var profiles=body.GetComponent<CharacterWeaponRig>().Profiles;Assert.That(profiles,Has.Length.EqualTo(5));
+            CollectionAssert.AreEquivalent(new[]{"weapon.rifle","weapon.pistol"},
+                profiles.Where(p=>p.Firearm).Select(p=>p.Firearm.WeaponId));
+            CollectionAssert.AreEquivalent(new[]{MeleeWeaponDefinition.CrowbarId,MeleeWeaponDefinition.BladeId,MeleeWeaponDefinition.AxeId},
+                profiles.Where(p=>p.Melee).Select(p=>p.Melee.WeaponId));
             foreach(var profile in profiles)
             {
                 Assert.That(profile.WorldPrefab,Is.Not.Null);Assert.That(profile.Firearm||profile.Melee,Is.True);
                 Assert.That(profile.WorldPrefab.GetComponentsInChildren<WeaponController>(true),Is.Empty);
                 Assert.That(profile.WorldPrefab.GetComponentsInChildren<MeleeWeaponController>(true),Is.Empty);
                 Assert.That(profile.WorldPrefab.GetComponentsInChildren<Collider>(true),Is.Empty);
-                if(profile.Firearm)Assert.That(profile.WorldPrefab.GetComponent<CharacterWeaponSockets>().HasFirearmGrips,Is.True);
+                if(profile.Firearm)Assert.That(profile.WorldPrefab.GetComponent<CharacterWeaponSockets>().ValidFor(profile),Is.True);
             }
         }
         [Test] public void RifleHipAndAimGripsAreWithinBothDieselArmsReach()
@@ -88,20 +92,29 @@ namespace LastSignal.Tests
             try
             {
                 var animator=root.GetComponent<Animator>();
-                var profile=root.GetComponent<CharacterWeaponRig>().Profiles.Single(p=>p.Firearm);
+                var profile=root.GetComponent<CharacterWeaponRig>().Profiles.Single(p=>p.Firearm && p.Firearm.WeaponId=="weapon.rifle");
                 weapon=PrefabUtility.LoadPrefabContents(AssetDatabase.GetAssetPath(profile.WorldPrefab));
                 weapon.transform.localScale*=profile.WorldScale;
                 var sockets=weapon.GetComponent<CharacterWeaponSockets>();
                 var chest=animator.GetBoneTransform(HumanBodyBones.Chest);
                 var chestRotation=chest.rotation;
+                var upperChest=animator.GetBoneTransform(HumanBodyBones.UpperChest);
+                var upperChestRest=upperChest.localRotation;
+                var frame=Quaternion.Inverse(upperChest.rotation)*root.transform.rotation;
+                var rightShoulder=animator.GetBoneTransform(HumanBodyBones.RightShoulder);
+                var leftShoulder=animator.GetBoneTransform(HumanBodyBones.LeftShoulder);
+                var rightRest=rightShoulder.localRotation;var leftRest=leftShoulder.localRotation;
                 var rightPalm=new CharacterHandPose(animator,false);
                 var leftPalm=new CharacterHandPose(animator,true);
                 Assert.That(rightPalm.Valid&&leftPalm.Valid,Is.True,"Both palms require actual finger landmark calibration.");
                 foreach(bool aiming in new[]{false,true})
                 {
-                    chest.rotation=Quaternion.AngleAxis(profile.TorsoYaw,root.transform.up)*chestRotation;
+                    rightShoulder.localRotation=rightRest;leftShoulder.localRotation=leftRest;
+                    upperChest.localRotation=upperChestRest;
+                    chest.rotation=Quaternion.AngleAxis(profile.TorsoYaw*.35f,root.transform.up)*chestRotation;
+                    upperChest.rotation=Quaternion.AngleAxis(profile.TorsoYaw*.65f,root.transform.up)*upperChest.rotation;
                     var shoulder=animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
-                    Vector3 stock=shoulder.position+root.transform.rotation*(aiming?profile.AimStockOffset:profile.HipStockOffset);
+                    Vector3 stock=shoulder.position+upperChest.rotation*frame*(aiming?profile.AimStockOffset:profile.HipStockOffset);
                     weapon.transform.rotation=root.transform.rotation*Quaternion.Euler(aiming?profile.AimEuler:profile.HipEuler);
                     weapon.transform.position+=stock-sockets.StockContact.position;
                     Assert.That(Vector3.Distance(stock,sockets.StockContact.position),Is.LessThan(.001f));
@@ -113,7 +126,10 @@ namespace LastSignal.Tests
                     var hand=animator.GetBoneTransform(left?HumanBodyBones.LeftHand:HumanBodyBones.RightHand);
                     var grip=left?sockets.LeftGrip:sockets.RightGrip;
                     (left?leftPalm:rightPalm).WristPose(grip.position,grip.rotation,out var target,out _);
-                    float reach=(Vector3.Distance(upper.position,lower.position)+Vector3.Distance(lower.position,hand.position))*profile.MaximumReach;
+                    float length=Vector3.Distance(upper.position,lower.position)+Vector3.Distance(lower.position,hand.position);
+                    var clavicle=left?leftShoulder:rightShoulder;
+                    clavicle.rotation=CharacterArmIK.ReachAssistance(clavicle.position,upper.position,target,length,profile.ShoulderReachDegrees,1)*clavicle.rotation;
+                    float reach=length*profile.MaximumReach;
                     Assert.That(Vector3.Distance(upper.position,target),Is.LessThanOrEqualTo(reach),
                         (aiming?"ADS":"Hip")+" "+(left?"support":"trigger")+" grip is outside the authored Diesel arm reach.");
                     }

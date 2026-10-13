@@ -117,6 +117,45 @@ namespace LastSignal.Inventory
             return true;
         }
 
+        // One synchronous transaction spans reserve removal and a weapon's magazine increment.
+        // Observers are notified only after both owners have changed. The busy guard rejects
+        // reentrant inventory mutations from those observers.
+        internal bool TryTransferAmmo(ItemDefinition item, int quantity, Action commitMagazine, Action rollbackMagazine)
+        {
+            if (IsBusy || !item || quantity <= 0 || commitMagazine == null || rollbackMagazine == null || GetTotalQuantity(item) < quantity) return false;
+            var before = (InventorySlot[])slots.Clone();
+            bool committed = false;
+            IsBusy = true;
+            try
+            {
+                try
+                {
+                    int remaining = quantity;
+                    for (int i = 0; i < slots.Length && remaining > 0; i++)
+                    {
+                        ref InventorySlot slot = ref slots[i];
+                        if (slot.IsEmpty || slot.Item.Id != item.Id) continue;
+                        int take = Mathf.Min(remaining, slot.Quantity);
+                        slot = slot.WithRemovedQuantity(take);
+                        remaining -= take;
+                    }
+                    commitMagazine();
+                    committed = true;
+                }
+                catch
+                {
+                    slots = before;
+                    if (committed) rollbackMagazine();
+                    throw;
+                }
+                // Notification happens after commit. Observers may already have consumed the
+                // new state, so their exceptions must not roll back either ammunition owner.
+                Notify();
+                return true;
+            }
+            finally { IsBusy = false; }
+        }
+
         public bool TryMove(int sourceIndex, int destIndex)
         {
             if (IsBusy) return false;

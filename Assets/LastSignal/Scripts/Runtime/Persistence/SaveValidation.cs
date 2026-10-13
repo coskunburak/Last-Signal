@@ -14,14 +14,23 @@ namespace LastSignal.Persistence
         readonly float maximumHealth, maximumEnemyHealth;
         readonly Dictionary<string, int> stackLimits;
         readonly Dictionary<string, int> backpackBonuses;
+        readonly Dictionary<string, int> weaponCapacities;
         public SaveValidation(string worldId, string contentVersion, IDictionary<string, int> stackLimits,
-            string weaponId, int magazineCapacity, float maximumHealth = 100, float maximumEnemyHealth = 100, IDictionary<string, int> backpackBonuses = null)
+            string weaponId, int magazineCapacity, float maximumHealth = 100, float maximumEnemyHealth = 100,
+            IDictionary<string, int> backpackBonuses = null, IDictionary<string, int> additionalWeapons = null)
         {
             if (!Id(worldId) || !Id(contentVersion) || !Id(weaponId) || stackLimits == null ||
                 magazineCapacity < 1 || !Finite(maximumHealth) || maximumHealth <= 0 ||
                 !Finite(maximumEnemyHealth) || maximumEnemyHealth <= 0) throw new ArgumentException("Invalid save compatibility context.");
             this.worldId = worldId; this.contentVersion = contentVersion; this.weaponId = weaponId;
             this.magazineCapacity = magazineCapacity; this.maximumHealth = maximumHealth; this.maximumEnemyHealth = maximumEnemyHealth;
+            weaponCapacities = new Dictionary<string, int>(StringComparer.Ordinal) { [weaponId] = magazineCapacity };
+            if (additionalWeapons != null) foreach (var pair in additionalWeapons)
+            {
+                if (!Id(pair.Key) || pair.Value < 1 || weaponCapacities.ContainsKey(pair.Key))
+                    throw new ArgumentException("Invalid additional weapon definition.");
+                weaponCapacities.Add(pair.Key, pair.Value);
+            }
             this.backpackBonuses = backpackBonuses == null
                 ? new Dictionary<string, int> { [PlayerSurvival.BackpackId] = PlayerSurvival.BackpackSlots }
                 : new Dictionary<string, int>(backpackBonuses, StringComparer.Ordinal);
@@ -51,8 +60,11 @@ namespace LastSignal.Persistence
             if (h.schemaVersion < 4 && save.population != null) return Invalid("Unversioned population data is unsupported; use a pre-S009 checkpoint.");
             if (h.progressionVersion < 0 || h.progressionVersion > 1 || (h.progressionVersion == 1 && save.progression == null) || (h.progressionVersion == 0 && save.progression != null) || !LastSignal.Objectives.RelayProgression.Valid(save.progression, save.worldTime?.seconds ?? 0)) return Invalid("Invalid relay progression extension.");
             var combat = save.combat;
-            if (combat != null && (combat.version != 1 || (combat.selectedSlot != 0 && combat.selectedSlot != 1) ||
-                combat.meleeDefinitionId != MeleeWeaponDefinition.CrowbarId || !Finite(combat.stamina) || combat.stamina < 0 || combat.stamina > PlayerStamina.Maximum ||
+            if (combat != null && ((combat.version != 1 && combat.version != 2) || (combat.selectedSlot != 0 && combat.selectedSlot != 1) ||
+                (combat.version == 1 ? combat.meleeDefinitionId != MeleeWeaponDefinition.CrowbarId :
+                    combat.meleeDefinitionId != MeleeWeaponDefinition.CrowbarId &&
+                    combat.meleeDefinitionId != MeleeWeaponDefinition.BladeId && combat.meleeDefinitionId != MeleeWeaponDefinition.AxeId) ||
+                !Finite(combat.stamina) || combat.stamina < 0 || combat.stamina > PlayerStamina.Maximum ||
                 !Finite(combat.regenDelay) || combat.regenDelay < 0 || combat.regenDelay > PlayerStamina.RegenDelay ||
                 (combat.stamina == 0 && !combat.exhausted) || (combat.stamina >= PlayerStamina.ResumeThreshold && combat.exhausted)))
                 return Invalid("Invalid combat equipment extension.");
@@ -102,6 +114,24 @@ namespace LastSignal.Persistence
             if (save.shelter.expeditionIndex < 0) return Invalid("Invalid expedition index.");
             if (save.weapon.definitionId != weaponId) return Fail(SaveError.UnknownDefinition, "Unknown weapon definition.");
             if (save.weapon.magazine < 0 || save.weapon.magazine > magazineCapacity) return Invalid("Invalid magazine quantity.");
+            if (combat != null && combat.version == 2)
+            {
+                if (combat.firearms == null || combat.firearms.Length != weaponCapacities.Count ||
+                    !weaponCapacities.ContainsKey(combat.selectedFirearmId ?? "")) return Invalid("Invalid owned firearm set.");
+                if (!PistolVisualVariant.KnownOrLegacy(combat.pistolVisualVariantId)) return Invalid("Unknown pistol visual variant.");
+                var seenWeapons = new HashSet<string>(StringComparer.Ordinal);
+                bool rifleMatched = false;
+                foreach (var weapon in combat.firearms)
+                {
+                    if (weapon == null || !seenWeapons.Add(weapon.definitionId ?? "") ||
+                        !weaponCapacities.TryGetValue(weapon.definitionId ?? "", out int capacity) ||
+                        weapon.magazine < 0 || weapon.magazine > capacity || weapon.condition < 0 || weapon.condition > 1000)
+                        return Invalid("Invalid owned firearm state.");
+                    if (weapon.definitionId == weaponId)
+                        rifleMatched = weapon.magazine == save.weapon.magazine && weapon.condition == save.weapon.condition;
+                }
+                if (!rifleMatched) return Invalid("Rifle snapshot mismatch.");
+            }
             var w = save.world;
             if (w.doors == null || w.opportunities == null || w.items == null || w.enemies == null ||
                 (long)w.doors.Length + w.opportunities.Length + w.items.Length + w.enemies.Length > MaxEntities)
@@ -141,6 +171,7 @@ namespace LastSignal.Persistence
             {
                 if (enemy == null || !AddId(ids, enemy.id)) return Identity();
                 if (!Pose(enemy.transform)) return Invalid("Invalid enemy transform.");
+                if (!ZombieArchetypes.ValidSaved(enemy.archetypeId, enemy.health)) return Invalid("Unknown archetype or incompatible health.");
                 if (!Finite(enemy.health) || enemy.health < 0 || enemy.health > maximumEnemyHealth)
                     return Invalid("Invalid enemy health.");
                 if (!ValidZombieAnatomy(enemy.anatomy))
@@ -171,7 +202,14 @@ namespace LastSignal.Persistence
                     if (count > MaxEntities) return Invalid("Excessive cell entities.");
                     if (cell.id == save.cells.playerCell) destination = true;
                 }
-                if (h.schemaVersion == 4 && !ValidPopulation(save.population, cellIds, save.worldTime.seconds)) return Invalid("Invalid population state.");
+                if (h.schemaVersion == 4)
+                {
+                    if (!ValidPopulation(save.population, cellIds, save.worldTime.seconds)) return Invalid("Invalid population state.");
+                    foreach (var unit in save.population.actors) if (!ids.Add(unit.id)) return Identity();
+                    if (save.population.tombstones != null) foreach (var unit in save.population.tombstones) if (!ids.Add(unit.id)) return Identity();
+                    foreach (var trip in save.population.migrations)
+                        if (trip.actors != null) foreach (var unit in trip.actors) if (!ids.Add(unit.id)) return Identity();
+                }
                 if (!destination) return Invalid("Player destination is not a visited cell.");
                 if (save.cells.playerCell != "resident" && LastSignal.WorldCells.CellCoordinate.FromWorld(new UnityEngine.Vector3(p.transform.x,p.transform.y,p.transform.z)).Id != save.cells.playerCell) return Invalid("Player cell ownership mismatch.");
             }
@@ -229,13 +267,32 @@ namespace LastSignal.Persistence
                     m.sourceCellId == m.targetCellId || m.size <= 0 || !LastSignal.WorldTime.WorldTimeSettings.ValidTime(m.departureTime) ||
                     !LastSignal.WorldTime.WorldTimeSettings.ValidTime(m.arrivalTime) || m.departureTime > now || m.arrivalTime <= m.departureTime) return false;
                 total += m.size;
+                if (m.actors != null)
+                {
+                    if (m.actors.Length != m.size) return false;
+                    foreach (var a in m.actors)
+                        if (a == null || !AddId(ids, a.id) || a.cellId != m.sourceCellId || a.health <= 0 ||
+                            !ZombieArchetypes.ValidSaved(a.archetypeId, a.health) || !ValidZombieAnatomy(a.anatomy) ||
+                            a.anatomy != null && (a.anatomy.severedMask & (1 << (int)ZombieBodyPart.Head)) != 0) return false;
+                }
             }
             if (total > MaxEntities) return false;
             foreach (var a in pop.actors)
             {
-                if (a == null || !AddId(ids, a.id) || !available.TryGetValue(a.cellId ?? "", out int count) || count <= 0 || !Finite(a.health) || a.health <= 0 || a.health > 100 || !ValidZombieAnatomy(a.anatomy) ||
+                if (a == null || !AddId(ids, a.id) || !available.TryGetValue(a.cellId ?? "", out int count) || count <= 0 || !Finite(a.health) || a.health <= 0 || !ZombieArchetypes.ValidSaved(a.archetypeId, a.health) || !ValidZombieAnatomy(a.anatomy) ||
                     (a.anatomy != null && (a.anatomy.severedMask & (1 << (int)ZombieBodyPart.Head)) != 0)) return false;
                 available[a.cellId] = count - 1;
+            }
+            if (pop.tombstones != null)
+            {
+                if (pop.tombstones.Length > MaxEntities) return false;
+                available.Clear(); foreach (var ledger in pop.ledgers) available.Add(ledger.cellId, ledger.dead);
+                foreach (var a in pop.tombstones)
+                {
+                    if (a == null || !AddId(ids, a.id) || !available.TryGetValue(a.cellId ?? "", out int count) || count <= 0 ||
+                        a.health != 0 || !ZombieArchetypes.ValidSaved(a.archetypeId, a.health) || !ValidZombieAnatomy(a.anatomy)) return false;
+                    available[a.cellId] = count - 1;
+                }
             }
             return true;
         }
@@ -245,7 +302,7 @@ namespace LastSignal.Persistence
             const int allowed = (1 << (int)ZombieBodyPart.Head) | (1 << (int)ZombieBodyPart.LeftArm) |
                 (1 << (int)ZombieBodyPart.RightArm) | (1 << (int)ZombieBodyPart.LeftHand) |
                 (1 << (int)ZombieBodyPart.RightHand);
-            if ((state.severedMask & ~allowed) != 0 || !Finite(state.torsoDamage) ||
+            if (!ZombieWoundSnapshot.Valid(state.wounds) || (state.severedMask & ~allowed) != 0 || !Finite(state.torsoDamage) ||
                 state.torsoDamage < 0 || state.torsoDamage > 10000 ||
                 state.regionalDamage == null || state.regionalDamage.Length != 9) return false;
             foreach (float amount in state.regionalDamage)

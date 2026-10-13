@@ -13,6 +13,7 @@ namespace LastSignal
         public float Amount;
         public float BaseAmount, Multiplier;
         public ulong ShotId;
+        public int SubHitId;
         public Collider HitCollider;
         public Vector3 Direction;
         public DamageRegion Region;

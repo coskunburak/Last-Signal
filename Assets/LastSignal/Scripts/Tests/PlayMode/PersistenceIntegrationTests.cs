@@ -30,6 +30,26 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator RealSavedLootRouteThreeCleanSessionsConserveAllOwners()
         {yield return PersistenceAcceptanceRoute.Run(saves,path,s=>TestContext.Out.WriteLine(s));}
+        [UnityTest] public IEnumerator ZombieCorpseRemovalSaveAndCompletedEncounterReload()
+        {
+            var encounter=flow.GetComponent<ZombieEncounter>();var actor=encounter.Actor;
+            actor.GetComponent<ZombieHealth>().TakeDamage(new DamageInfo{Amount=1000});
+            string identity=encounter.CaptureEnemy().id;
+            Assert.That(actor.GetComponent<ZombieBloodVfxPresenter>().RetainDeathPresentation(actor,"persistence-corpse-fixture"));
+            ZombieBloodVfxPool.ReleaseCell("persistence-corpse-fixture");yield return null;
+            Assert.That(!encounter.Actor);Assert.That(encounter.CaptureEnemy().health,Is.Zero);
+            Assert.That(saves.Save(path).Success,Is.True,saves.LastResult.Message);
+            flow.ReturnToMenu();yield return null;
+            var load=saves.Load(path);Assert.That(load.MoveNext());
+            var restored=flow.GetComponent<ZombieEncounter>().Actor;Assert.That(restored,Is.Not.Null);
+            int kills=0;restored.GetComponent<ZombieHealth>().Died+=()=>kills++;
+            yield return load;
+            Assert.That(saves.LastResult.Success,Is.True,saves.LastResult.Message);
+            Assert.That(restored.IsDead);Assert.That(restored.GetComponent<ZombieHealth>().CurrentHealth,Is.Zero);
+            Assert.That(kills,Is.Zero,"Restoring a completed encounter must not issue a new kill event.");
+            Assert.That(flow.GetComponent<ZombieEncounter>().CaptureEnemy().id,Is.EqualTo(identity));
+            Assert.That(saves.Save(path).Success,Is.True,saves.LastResult.Message);
+        }
         [UnityTest] public IEnumerator CorruptFileNeverCreatesSessionOrChangesOriginal()
         {
             Assert.IsTrue(saves.Save(path).Success);flow.ReturnToMenu();yield return null;

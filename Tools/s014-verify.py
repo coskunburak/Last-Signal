@@ -82,8 +82,8 @@ def main():
             'Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab',
             'Assets/LastSignal/Data/Combat/WeaponDefinition_AssaultRifle.asset',
             'Assets/LastSignal/Animations/VAL_MRPoly.controller',
-            'Assets/ThirdParty/Characters/VAL.fbx',
-            'Assets/ThirdParty/Characters/VAL.fbx.meta']]
+            'Assets/ThirdParty/Characters/VAL/VAL.fbx',
+            'Assets/ThirdParty/Characters/VAL/VAL.fbx.meta']]
     (run / 'changed-source-hashes.json').write_text(json.dumps({str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}, indent=2))
     print('RUN=' + str(run), flush=True)
     code = subprocess.call(command, cwd=root)

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Profiling;
 using UnityEngine.SceneManagement;
 
 namespace LastSignal
@@ -6,6 +7,28 @@ namespace LastSignal
     // Scene-local fixed arrays. All allocations and particle component discovery happen during warmup.
     public sealed class ZombieBloodVfxPool : MonoBehaviour
     {
+        static readonly ProfilerMarker HitMarker = new ProfilerMarker("LastSignal.Combat.BloodHit");
+        sealed class HitSlot
+        {
+            public Effect effect, bleed, drip;
+            public ZombieBloodVfxPresenter owner;
+            public ZombieWoundSurfaceResolver.Contact contact;
+            public uint generation;
+            public float expires, started, bleedSeconds, dripSeconds;
+            public bool dripping;
+        }
+        HitSlot[] hits;
+        int nextHit;
+        public int TotalHitRequests { get; private set; }
+        public Vector3 LastHitOrigin { get; private set; }
+        public bool TryGetBleedOrigin(ZombieBloodVfxPresenter owner, out Vector3 point)
+        {
+            if (hits != null) foreach (var h in hits) if (h.owner == owner && h.bleed.root.activeSelf)
+            { point = h.bleed.root.transform.position; return true; }
+            point = default; return false;
+        }
+        public int ActiveBleeds { get { int n = 0; if (hits != null) foreach (var h in hits) if (h.owner && h.contact.Valid && Time.time < h.started + h.bleedSeconds + h.dripSeconds) n++; return n; } }
+        public int ActiveHits { get { int n = 0; if (hits != null) foreach (var h in hits) if (h.owner) n++; return n; } }
         sealed class Effect
         {
             public GameObject root;
@@ -26,6 +49,9 @@ namespace LastSignal
             public GameObject root;
             public Renderer renderer;
             public Collider supportSurface;
+            public ZombieBloodVfxPresenter owner;
+            public Vector3 localPoint;
+            public Quaternion localRotation;
             public readonly MaterialPropertyBlock properties = new MaterialPropertyBlock();
             public float start, size;
             public bool pool;
@@ -62,7 +88,7 @@ namespace LastSignal
         }
         public static void ResetSession()
         {
-            try { if (instance) instance.ClearAll(); }
+            try { if (instance) instance.ClearAll(); ZombieLocalizedWounds.ClearSession(); ZombieDetachedPartPool.HideAll(); }
             catch (System.Exception e) { Debug.LogException(e); }
         }
 
@@ -79,7 +105,9 @@ namespace LastSignal
         void Initialize(ZombieBloodVfxProfile config)
         {
             profile = config;
-            corpses = new Corpse[profile.effectCapacity];
+            hits = new HitSlot[Mathf.Clamp(profile.hitCapacity, 1, 16)];
+            for (int i = 0; i < hits.Length; i++) hits[i] = new HitSlot { effect = Create(profile.burstPrefab), bleed = Create(profile.spurtPrefab), drip = Create(profile.dripPrefab) };
+            corpses = new Corpse[profile.woundProfile ? profile.woundProfile.corpseCapacity : 8];
             for (int i = 0; i < corpses.Length; i++) corpses[i] = new Corpse();
             slots = new Slot[profile.effectCapacity];
             for (int i = 0; i < slots.Length; i++) slots[i] = new Slot
@@ -132,14 +160,12 @@ namespace LastSignal
         }
         public bool RetainCorpse(ZombieBloodVfxPresenter owner, ZombieController actor, string cellId)
         {
-            // Only an already bleeding, terminal actor can enter this presentation-only bounded lease.
-            float expires = 0;
-            foreach (var s in slots)
-                if (s.owner == owner) expires = Mathf.Max(expires, s.start + s.region.spurtDuration + s.region.dripDuration + 1.5f);
-            if (expires <= Time.time || !actor || !actor.IsDead) return false;
-            foreach (var c in corpses) if (c.actor == actor) return true;
+            if (!actor || !actor.IsDead || !owner) return false;
+            foreach (var c in corpses) if (c.actor == actor) { if (!string.IsNullOrEmpty(cellId)) c.cellId = cellId; return true; }
+            float expires = Time.time + (profile.woundProfile ? profile.woundProfile.corpseSeconds : 30);
             var corpse = corpses[nextCorpse]; nextCorpse = (nextCorpse + 1) % corpses.Length;
             ReleaseCorpse(corpse); corpse.actor = actor; corpse.cellId = cellId; corpse.expires = expires;
+            actor.GetComponent<ZombieCorpseImpactReceiver>()?.Retain(expires);
             return true;
         }
         static void ReleaseCorpse(Corpse corpse)
@@ -151,7 +177,57 @@ namespace LastSignal
         }
         public void ReleaseOwner(ZombieBloodVfxPresenter owner)
         {
+            // Actor reset/reuse invalidates its old lease without destroying the new lifetime.
+            if (corpses != null) foreach (var c in corpses) if (c.actor && c.actor.gameObject == owner.gameObject)
+            { c.actor = null; c.cellId = null; c.expires = 0; }
             if (slots != null) foreach (var s in slots) if (s.owner == owner) Reset(s);
+            if (hits != null) foreach (var h in hits) if (h.owner == owner) ResetHit(h);
+            if (marks != null) foreach (var m in marks) if (m.owner == owner) { m.root.SetActive(false); m.owner = null; m.supportSurface = null; }
+        }
+        public void PlayHit(ZombieBloodVfxPresenter owner, DamageReceipt receipt, ZombieWoundSurfaceResolver.Contact contact = default)
+        {
+            if (!owner || !receipt.PresentationAccepted || !ZombieGorePreference.GraphicGoreEnabled) return;
+            var camera = Camera.main;
+            if (camera && (receipt.Hit.HitPoint - camera.transform.position).sqrMagnitude > profile.hitDistance * profile.hitDistance) return;
+            using (HitMarker.Auto())
+            {
+                var h = hits[nextHit]; nextHit = (nextHit + 1) % hits.Length;
+                ResetHit(h); h.owner = owner; h.started = Time.time; h.contact = contact;
+                h.generation = owner.GetComponent<ZombieLocalizedWounds>()?.Generation ?? 0;
+                h.bleedSeconds = (profile.woundProfile ? profile.woundProfile.bleedSeconds : .8f) * (receipt.CorpseImpact ? .45f : 1);
+                h.dripSeconds = profile.woundProfile ? profile.woundProfile.dripSeconds : 1.2f;
+                h.expires = Time.time + h.bleedSeconds + h.dripSeconds + 1.5f; TotalHitRequests++;
+                bool critical = receipt.Hit.Region == DamageRegion.Head;
+                float severity = receipt.Terminal || critical || receipt.Severity != ZombieImpactSeverity.Light ? 1.45f : 1;
+                foreach (var p in h.effect.particles)
+                {
+                    var emission = p.emission;
+                    if (!emission.enabled) continue;
+                    emission.rateOverTime = 0; emission.burstCount = 1;
+                    emission.SetBurst(0, new ParticleSystem.Burst(0, (short)Mathf.Clamp(Mathf.RoundToInt(profile.hitParticles * severity), 1, 12)));
+                    var main = p.main; main.startSpeed = 1.8f * severity; main.startLifetime = .3f;
+                    var shape = p.shape; shape.angle = critical ? 24 : 38;
+                }
+                Vector3 origin = contact.Valid ? contact.position : receipt.Hit.HitPoint;
+                Vector3 outward = contact.Valid ? contact.normal : receipt.Hit.HitNormal;
+                Vector3 direction = (outward * .75f - receipt.Hit.Direction.normalized * .25f).normalized;
+                if (direction.sqrMagnitude < .001f) direction = Vector3.up;
+                LastHitOrigin = origin;
+                Begin(h.effect, origin + direction * .004f, Quaternion.LookRotation(direction), profile.hitScale * severity * CombatPresentationPreference.BloodIntensity);
+                if (contact.Valid && !CombatPresentationPreference.ReducedEffects)
+                {
+                    foreach (var p in h.bleed.particles)
+                    {
+                        if (!p.emission.enabled) continue;
+                        var main = p.main; main.startSpeed = .35f; main.startLifetime = .25f;
+                        var shape = p.shape; shape.angle = 16;
+                        var emission = p.emission; emission.burstCount = 0;
+                    }
+                    Rate(h.bleed, 8); Begin(h.bleed, origin, Quaternion.LookRotation(direction), profile.hitScale * CombatPresentationPreference.BloodIntensity);
+                }
+                else { h.bleedSeconds = h.dripSeconds = 0; }
+                if (!CombatPresentationPreference.ReducedEffects) PlaceMarks(origin + direction * .01f, direction, profile.hand, owner);
+            }
         }
         public void Play(ZombieBloodVfxPresenter owner, Transform anchor, ZombieSeverPresentation request)
         {
@@ -174,7 +250,7 @@ namespace LastSignal
                 var shape = particle.shape; shape.angle = region.burstConeAngle;
                 var main = particle.main; main.startSpeed = region.burstSpeed;
             }
-            Begin(s.burst, anchor.position, anchor.rotation, region.scale);
+            Begin(s.burst, anchor.position, anchor.rotation, region.scale * CombatPresentationPreference.BloodIntensity);
             foreach (var particle in s.spurt.particles)
             {
                 if (!particle.emission.enabled) continue;
@@ -182,13 +258,35 @@ namespace LastSignal
                 var shape = particle.shape; shape.angle = region.spurtConeAngle;
             }
             Rate(s.spurt, region.spurtRate);
-            Begin(s.spurt, anchor.position, anchor.rotation, region.scale);
-            PlaceMarks(anchor.position, anchor.forward, region);
+            Begin(s.spurt, anchor.position, anchor.rotation, region.scale * CombatPresentationPreference.BloodIntensity);
+            PlaceMarks(anchor.position, anchor.forward, region, owner);
         }
         void LateUpdate()
         {
             if (slots == null) return;
             float now = Time.time;
+            if (hits != null) foreach (var h in hits)
+            {
+                if (h.expires <= 0) continue;
+                var wounds = h.owner ? h.owner.GetComponent<ZombieLocalizedWounds>() : null;
+                if (!h.owner || !h.owner.isActiveAndEnabled || now >= h.expires || wounds && wounds.Generation != h.generation)
+                { ResetHit(h); continue; }
+                float age = now - h.started;
+                if (h.contact.Evaluate(out var point, out var normal) && !CombatPresentationPreference.ReducedEffects)
+                {
+                    h.bleed.root.transform.SetPositionAndRotation(point, Quaternion.LookRotation(normal));
+                    Rate(h.bleed, age < h.bleedSeconds ? 8 * (1 - age / h.bleedSeconds) : 0);
+                    if (age >= h.bleedSeconds && !h.dripping && h.dripSeconds > 0)
+                    {
+                        foreach (var p in h.drip.particles) { if (!p.emission.enabled) continue; var e = p.emission; e.burstCount = 0; var m = p.main; m.startLifetime = .45f; m.startSpeed = .2f; }
+                        Rate(h.drip, 3); Begin(h.drip, point, Quaternion.LookRotation(Vector3.down), profile.hitScale * CombatPresentationPreference.BloodIntensity); h.dripping = true;
+                        PlaceMarks(point + normal * .015f, Vector3.down, profile.hand, h.owner);
+                    }
+                    h.drip.root.transform.position = point;
+                    Rate(h.drip, age < h.bleedSeconds + h.dripSeconds ? 3 : 0);
+                }
+                else { Rate(h.bleed, 0); Rate(h.drip, 0); }
+            }
             foreach (var s in slots)
             {
                 if (!s.owner) { if (s.anchor || s.region != null) Reset(s); continue; }
@@ -214,7 +312,7 @@ namespace LastSignal
                 {
                     Rate(s.spurt, 0);
                     if (!s.dripping && r.dripDuration > 0)
-                    { Rate(s.drip, r.dripRate); Begin(s.drip, s.anchor.position, Quaternion.LookRotation(Vector3.down), r.scale); s.dripping = true; }
+                    { Rate(s.drip, r.dripRate); Begin(s.drip, s.anchor.position, Quaternion.LookRotation(Vector3.down), r.scale * CombatPresentationPreference.BloodIntensity); s.dripping = true; }
                     if (s.dripping)
                     {
                         s.drip.root.transform.position = s.anchor.position;
@@ -230,6 +328,8 @@ namespace LastSignal
                 float age = now - m.start;
                 if (age >= profile.markLifetime || !m.supportSurface || !m.supportSurface.enabled || !m.supportSurface.gameObject.activeInHierarchy)
                 { m.root.SetActive(false); m.supportSurface = null; m.properties.Clear(); continue; }
+                m.root.transform.SetPositionAndRotation(m.supportSurface.transform.TransformPoint(m.localPoint),
+                    m.supportSurface.transform.rotation * m.localRotation);
                 float growth = m.pool ? Mathf.Lerp(.2f, 1, Mathf.Clamp01(age / profile.poolGrowthDuration)) : 1;
                 m.root.transform.localScale = Vector3.one * (m.size * growth);
                 float fade = Mathf.Clamp01((profile.markLifetime - age) / 3);
@@ -240,14 +340,14 @@ namespace LastSignal
                 m.renderer.SetPropertyBlock(m.properties);
             }
         }
-        void PlaceMarks(Vector3 origin, Vector3 forward, ZombieBloodVfxProfile.Region region)
+        void PlaceMarks(Vector3 origin, Vector3 forward, ZombieBloodVfxProfile.Region region, ZombieBloodVfxPresenter owner)
         {
             Vector3 previous = new Vector3(float.PositiveInfinity, 0, 0);
             // One downward pool candidate, then a small fixed fan. Never particle collision callbacks.
             for (int i = 0; i < region.surfaceMarks; i++)
             {
                 Vector3 direction = i == 0 ? Vector3.down : (forward + Vector3.down * (.3f + .35f * i)).normalized;
-                if (!Physics.Raycast(origin, direction, out var hit, profile.probeDistance, profile.surfaceLayers, QueryTriggerInteraction.Ignore)) continue;
+                if (!Physics.Raycast(origin, direction, out var hit, profile.probeDistance, (profile.surfaceLayers.value | (1 << 8) | (1 << 2)), QueryTriggerInteraction.Ignore)) continue;
                 if (hit.rigidbody || hit.collider.GetComponentInParent<ZombieHealth>() || hit.collider.GetComponentInParent<CharacterController>()) continue;
                 var target = hit.collider.GetComponent<Renderer>();
                 // Conservative: non-terrain colliders without an explicit opaque renderer are not eligible.
@@ -274,16 +374,24 @@ namespace LastSignal
                 var m = marks[nextMark]; nextMark = (nextMark + 1) % marks.Length;
                 m.root.SetActive(false); m.properties.Clear(); m.renderer.SetPropertyBlock(null);
                 m.root.transform.SetPositionAndRotation(hit.point + hit.normal * .008f, rotation);
-                m.supportSurface = hit.collider; m.start = Time.time; m.size = size; m.pool = i == 0 && hit.normal.y > .7f;
+                m.supportSurface = hit.collider; m.owner = owner;
+                m.localPoint = hit.collider.transform.InverseTransformPoint(hit.point + hit.normal * .008f);
+                m.localRotation = Quaternion.Inverse(hit.collider.transform.rotation) * rotation;
+                m.start = Time.time; m.size = size; m.pool = i == 0 && hit.normal.y > .7f;
                 m.root.transform.localScale = Vector3.one * size * (m.pool ? .2f : 1);
                 m.root.SetActive(true); previous = hit.point;
             }
         }
-        void GoreChanged(bool enabled) { if (!enabled) ClearAll(); }
+        void GoreChanged(bool enabled) { if (!enabled) ClearAll(false); }
         void SceneChanged(Scene previous, Scene current) { ClearAll(); }
-        void ClearAll()
+        void ResetHit(HitSlot h)
         {
-            if (corpses != null) foreach (var c in corpses) if (c != null) ReleaseCorpse(c);
+            Stop(h.effect); Stop(h.bleed); Stop(h.drip); h.owner = null; h.contact = default; h.expires = 0; h.dripping = false;
+        }
+        void ClearAll(bool releaseCorpses = true)
+        {
+            if (hits != null) foreach (var h in hits) if (h != null) ResetHit(h);
+            if (releaseCorpses && corpses != null) foreach (var c in corpses) if (c != null) ReleaseCorpse(c);
             if (slots != null) foreach (var s in slots) if (s != null) Reset(s);
             if (marks != null) foreach (var m in marks) if (m != null) { m.root.SetActive(false); m.supportSurface = null; m.properties.Clear(); if (m.renderer) m.renderer.SetPropertyBlock(null); }
         }

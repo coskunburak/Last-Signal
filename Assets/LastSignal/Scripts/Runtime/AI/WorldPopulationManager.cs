@@ -25,6 +25,7 @@ namespace LastSignal.AI
     {
         public string GroupId, SourceCellId, TargetCellId;
         public double DepartureTime, ArrivalTime;
+        public PopulationActorSnapshot[] Actors;
         public int Size;
     }
     [Serializable] public sealed class PopulationLedger
@@ -43,6 +44,7 @@ namespace LastSignal.AI
         public int MaxReceipts = 10;
         [SerializeField] ZombieController zombiePrefab;
         [SerializeField] bool materializationEnabled;
+        [SerializeField] int compositionSeed = 22;
         [SerializeField, Range(0, 100)] int initialPopulationPerCell = 15;
         readonly Dictionary<string, CellPressureState> pressures = new Dictionary<string, CellPressureState>(StringComparer.Ordinal);
         readonly Dictionary<string, PopulationLedger> ledgers = new Dictionary<string, PopulationLedger>(StringComparer.Ordinal);
@@ -54,6 +56,7 @@ namespace LastSignal.AI
             public Action Died;
         }
         readonly Dictionary<ZombieController, Physical> physical = new Dictionary<ZombieController, Physical>();
+        readonly List<PopulationActorSnapshot> tombstones = new List<PopulationActorSnapshot>();
         readonly List<PopulationActorSnapshot> dormant = new List<PopulationActorSnapshot>();
         readonly List<ZombieController> removal = new List<ZombieController>();
         readonly Plane[] planes = new Plane[6];
@@ -62,11 +65,32 @@ namespace LastSignal.AI
         SessionFlow flow;
         WorldSimulation simulation;
         long generation, lastNoiseSequence;
+        uint candidateSequence;
         double nextSearch;
         bool active;
         CellPressureState residentPressure;
+        ZombieArchetypeCatalog archetypeCatalog;
+        float FullHealth(string id) => archetypeCatalog.Resolve(id).ArchetypeHealth;
         public event Action<string> PressureChanged;
         public int PhysicalCount => physical.Count;
+        public int ArchetypeCount(string id)
+        {
+            int count = 0, representedLogical = 0, representedDead = tombstones.Count;
+            foreach (var unit in dormant) { representedLogical++; if (ZombieArchetypes.Legacy(unit.archetypeId) == id) count++; }
+            foreach (var pair in physical) if (pair.Key && pair.Key.Definition.ArchetypeId == id) count++;
+            foreach (var trip in migrations)
+            {
+                if (trip.Actors == null) { if (id == ZombieArchetypes.Shambler) count += trip.Size; }
+                else foreach (var unit in trip.Actors) if (ZombieArchetypes.Legacy(unit.archetypeId) == id) count++;
+            }
+            foreach (var dead in tombstones) if (ZombieArchetypes.Legacy(dead.archetypeId) == id) count++;
+            if (id == ZombieArchetypes.Shambler)
+            {
+                int logical = 0, dead = 0; foreach (var ledger in ledgers.Values) { logical += ledger.Logical; dead += ledger.Dead; }
+                count += logical - representedLogical + dead - representedDead; // Legacy anonymous records.
+            }
+            return count;
+        }
         public int MigrationCount => migrations.Count;
         public long LastNoiseSequence => lastNoiseSequence;
         public IReadOnlyList<MigrationGroup> Migrations => migrations;
@@ -84,11 +108,20 @@ namespace LastSignal.AI
                 !float.IsFinite(NoiseIntensityMultiplier) || NoiseIntensityMultiplier <= 0 ||
                 !WorldTimeSettings.ValidTime(TravelSecondsPerCell) || TravelSecondsPerCell <= 0 || MaxReceipts < 1 || MaxReceipts > 64)
                 throw new InvalidOperationException("Invalid population authoring.");
+            archetypeCatalog = Resources.Load<ZombieArchetypeCatalog>("S022/ZombieCatalog");
+            if (!archetypeCatalog || !archetypeCatalog.IsValid) throw new InvalidOperationException("Missing or invalid S022 archetype catalog.");
             active = true; generation = flow.Generation;
             foreach (var id in cells.DefinedCellIds)
             {
                 ledgers.Add(id, new PopulationLedger { CellId = id, Logical = initialPopulationPerCell });
                 pressures.Add(id, new CellPressureState { CellId = id, LastUpdateTime = clock.Simulation.Seconds });
+                for (int i = 0; i < initialPopulationPerCell; i++)
+                {
+                    string identity = "s022:" + compositionSeed + ":" + id + ":" + i;
+                    string type = archetypeCatalog.Select(identity);
+                    dormant.Add(new PopulationActorSnapshot { id = identity, cellId = id, archetypeId = type,
+                        health = FullHealth(type) });
+                }
             }
             if (GetComponent<Vehicles.VehicleWorld>()) residentPressure = new CellPressureState { CellId = "resident", LastUpdateTime = clock.Simulation.Seconds };
             BindClock();
@@ -142,13 +175,24 @@ namespace LastSignal.AI
             {
                 if (!ledgers.TryGetValue(id, out var source)) continue;
                 int available = source.Logical;
-                foreach (var unit in dormant) if (unit.cellId == id) available--; // Retain wounded identities at their owner.
+                foreach (var unit in dormant) if (unit.cellId == id && (unit.anatomy != null ||
+                    unit.health < FullHealth(unit.archetypeId))) available--; // Wounded identities remain at owner.
                 if (available <= 0) continue;
                 int size = Math.Min(3, available); double now = clock.Simulation.Seconds;
                 if (!WorldTimeSettings.ValidTime(now + TravelSecondsPerCell)) return;
+                var travelers = new PopulationActorSnapshot[size]; int selected = 0;
+                for (int i = 0; i < dormant.Count && selected < size;)
+                {
+                    var unit = dormant[i];
+                    float full = FullHealth(unit.archetypeId);
+                    if (unit.cellId != id || unit.anatomy != null || unit.health < full) { i++; continue; }
+                    travelers[selected++] = unit; dormant.RemoveAt(i);
+                }
+                while (selected < size) travelers[selected++] = new PopulationActorSnapshot {
+                    id = Guid.NewGuid().ToString("N"), cellId = id, archetypeId = ZombieArchetypes.Shambler, health = 100 };
                 source.Logical -= size;
                 migrations.Add(new MigrationGroup { GroupId = Guid.NewGuid().ToString("N"), SourceCellId = id,
-                    TargetCellId = target, DepartureTime = now, ArrivalTime = now + TravelSecondsPerCell, Size = size });
+                    TargetCellId = target, DepartureTime = now, ArrivalTime = now + TravelSecondsPerCell, Size = size, Actors = travelers });
                 return;
             }
         }
@@ -168,6 +212,7 @@ namespace LastSignal.AI
             for (int i = migrations.Count - 1; i >= 0; --i)
             {
                 var m = migrations[i]; if (m.ArrivalTime > to) continue;
+                if (m.Actors != null) foreach (var unit in m.Actors) { unit.cellId = m.TargetCellId; dormant.Add(unit); }
                 GetLedger(m.TargetCellId).Logical += m.Size; migrations.RemoveAt(i); nextSearch = 0;
             }
         }
@@ -188,19 +233,23 @@ namespace LastSignal.AI
         }
         public bool TryMaterialize()
         {
-            MaterializationState = "Deferred";
+            MaterializationState = "Deferred: session paused/restoring, population disabled, prefab absent or cell not ready";
             if (!Current || !materializationEnabled || flow.Restoring || flow.Paused || flow.PlayerDead || !zombiePrefab ||
                 cells.State(cells.CurrentCell) != CellState.Ready) return false;
             var content = cells.Content(cells.CurrentCell);
-            if (!content || !content.NavigationReady || !content.CollisionReady()) return false;
+            if (!content || !content.NavigationReady || !content.CollisionReady()) { MaterializationState = "Deferred: cell navigation/collision not ready"; return false; }
             string owner = cells.CurrentCell; var ledger = GetLedger(owner);
-            if (ledger.Logical <= 0 || !flow.Player) return false;
+            if (ledger.Logical <= 0 || !flow.Player) { MaterializationState = "Deferred: no logical population or player"; return false; }
             var camera = flow.Player.GetComponentInChildren<Camera>(); if (!camera) return false;
             var agent = zombiePrefab.GetComponent<NavMeshAgent>();
             GeometryUtility.CalculateFrustumPlanes(camera, planes);
+            MaterializationState = "Deferred: five candidates rejected by NavMesh, ground, safe radius, frustum or collision";
             for (int i = 0; i < 5; i++)
             {
-                Vector2 offset = UnityEngine.Random.insideUnitCircle * 20;
+                uint sample = ZombieArchetypes.Hash(owner) ^ unchecked(++candidateSequence * 2654435761u);
+                float angle = (sample % 3600) * Mathf.Deg2Rad * .1f;
+                float radius = 11 + ((sample >> 12) % 900) * .01f;
+                Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
                 var candidate = flow.Player.transform.position + new Vector3(offset.x, 0, offset.y);
                 if (!NavMesh.SamplePosition(candidate, out var hit, 2, new NavMeshQueryFilter { agentTypeID = agent.agentTypeID, areaMask = agent.areaMask })) continue;
                 if (CellCoordinate.FromWorld(hit.position).Id != owner || Vector3.Distance(hit.position, flow.Player.transform.position) <= 10) continue;
@@ -209,10 +258,15 @@ namespace LastSignal.AI
                 if (GeometryUtility.TestPlanesAABB(planes, new Bounds(center, new Vector3(agent.radius * 2, agent.height, agent.radius * 2)))) continue;
                 if (Physics.CheckCapsule(hit.position + Vector3.up * (agent.radius + .1f),
                     hit.position + Vector3.up * (agent.height - agent.radius), agent.radius, ~(1 << 2), QueryTriggerInteraction.Ignore)) continue;
+                PopulationActorSnapshot saved = null; int savedIndex = -1;
+                for (int d = 0; d < dormant.Count; d++) if (dormant[d].cellId == owner) { saved = dormant[d]; savedIndex = d; break; }
+                string type = ZombieArchetypes.Legacy(saved?.archetypeId);
+                var profile = ZombieArchetypes.Load(type);
+                if (!profile) { MaterializationState = "Blocked: missing " + type; return false; }
                 var actor = Instantiate(zombiePrefab, hit.position, Quaternion.identity);
-                if (!actor.Initialize() || !actor.Bind(flow.Player)) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); continue; }
-                PopulationActorSnapshot saved = null;
-                for (int d = 0; d < dormant.Count; d++) if (dormant[d].cellId == owner) { saved = dormant[d]; dormant.RemoveAt(d); break; }
+                actor.Configure(profile); actor.ConfigureAmbush(content.lurkerAmbushContext);
+                if (!actor.Initialize() || !actor.Bind(flow.Player)) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); MaterializationState = "Blocked: actor initialization"; return false; }
+                if (savedIndex >= 0) dormant.RemoveAt(savedIndex);
                 var health = actor.GetComponent<ZombieHealth>(); if (saved != null)
                 {
                     health.RestoreHealth(saved.health);
@@ -222,7 +276,7 @@ namespace LastSignal.AI
                 long token = generation;
                 record.Died = () => OnZombieDied(actor, token);
                 physical.Add(actor, record); health.Died += record.Died;
-                ledger.Logical--; ledger.Physical++; MaterializationState = "Materialized " + owner; return true;
+                ledger.Logical--; ledger.Physical++; MaterializationState = "Materialized " + owner + " " + type + " (stable saved composition; hidden candidate)"; return true;
             }
             return false;
         }
@@ -230,6 +284,8 @@ namespace LastSignal.AI
         {
             if (!Current || token != generation || !physical.TryGetValue(actor, out var record)) return;
             record.Health.Died -= record.Died; physical.Remove(actor);
+            tombstones.Add(new PopulationActorSnapshot { id = record.Id, cellId = record.Cell, archetypeId = actor.Definition.ArchetypeId,
+                health = 0, anatomy = actor.GetComponent<ZombieDismemberment>()?.CaptureState() });
             var ledger = GetLedger(record.Cell); ledger.Physical--; ledger.Dead++;
             // Terminal ledger is already committed. Keep the visual for its bounded death pose.
             try
@@ -252,7 +308,7 @@ namespace LastSignal.AI
             {
                 var record = physical[actor]; record.Health.Died -= record.Died;
                 dormant.Add(new PopulationActorSnapshot { id = record.Id, cellId = record.Cell,
-                    health = record.Health.CurrentHealth, anatomy = actor.GetComponent<ZombieDismemberment>()?.CaptureState() });
+                    archetypeId = actor.Definition.ArchetypeId, health = record.Health.CurrentHealth, anatomy = actor.GetComponent<ZombieDismemberment>()?.CaptureState() });
                 var ledger = GetLedger(record.Cell); ledger.Physical--; ledger.Logical++;
                 physical.Remove(actor); actor.Shutdown(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);
             }
@@ -271,11 +327,11 @@ namespace LastSignal.AI
                 l.Add(new PopulationLedgerSnapshot { cellId = state.CellId, logical = state.Logical + state.Physical, dead = state.Dead });
             var m = new List<MigrationGroupSnapshot>(); foreach (var state in migrations)
                 m.Add(new MigrationGroupSnapshot { groupId = state.GroupId, sourceCellId = state.SourceCellId, targetCellId = state.TargetCellId,
-                    departureTime = state.DepartureTime, arrivalTime = state.ArrivalTime, size = state.Size });
+                    departureTime = state.DepartureTime, arrivalTime = state.ArrivalTime, size = state.Size, actors = CopyActors(state.Actors) });
             var units = new List<PopulationActorSnapshot>(); foreach (var unit in dormant)
-                units.Add(new PopulationActorSnapshot { id = unit.id, cellId = unit.cellId, health = unit.health, anatomy = unit.anatomy });
+                units.Add(new PopulationActorSnapshot { id = unit.id, cellId = unit.cellId, archetypeId = unit.archetypeId, health = unit.health, anatomy = unit.anatomy });
             foreach (var pair in physical) units.Add(new PopulationActorSnapshot { id = pair.Value.Id, cellId = pair.Value.Cell,
-                health = pair.Value.Health.CurrentHealth, anatomy = pair.Key.GetComponent<ZombieDismemberment>()?.CaptureState() });
+                archetypeId = pair.Key.Definition.ArchetypeId, health = pair.Value.Health.CurrentHealth, anatomy = pair.Key.GetComponent<ZombieDismemberment>()?.CaptureState() });
             CellPressureSnapshot resident = null;
             if (residentPressure != null)
             {
@@ -283,7 +339,15 @@ namespace LastSignal.AI
                 resident = new CellPressureSnapshot { cellId = "resident", pressure = residentPressure.Pressure, lastUpdateTime = residentPressure.LastUpdateTime,
                     receipts = residentPressure.Receipts.ConvertAll(id => new NoiseReceiptSnapshot { id = id }).ToArray() };
             }
-            return new PopulationSnapshot { residentPressure = resident, pressures = p.ToArray(), ledgers = l.ToArray(), migrations = m.ToArray(), actors = units.ToArray(), lastNoiseSequence = lastNoiseSequence };
+            return new PopulationSnapshot { residentPressure = resident, pressures = p.ToArray(), ledgers = l.ToArray(), migrations = m.ToArray(), actors = units.ToArray(), tombstones = CopyActors(tombstones.ToArray()), lastNoiseSequence = lastNoiseSequence };
+        }
+        static PopulationActorSnapshot[] CopyActors(PopulationActorSnapshot[] actors)
+        {
+            if (actors == null) return null;
+            var copy = new PopulationActorSnapshot[actors.Length];
+            for (int i = 0; i < copy.Length; i++) { var a = actors[i]; copy[i] = new PopulationActorSnapshot {
+                id = a.id, cellId = a.cellId, archetypeId = a.archetypeId, health = a.health, anatomy = a.anatomy }; }
+            return copy;
         }
         public void SyncFromSave(PopulationSnapshot snap)
         {
@@ -291,14 +355,15 @@ namespace LastSignal.AI
             var ids = new HashSet<string>(ledgers.Keys, StringComparer.Ordinal);
             if (!SaveValidation.ValidPopulation(snap, ids, clock.Simulation.Seconds)) throw new InvalidOperationException("Invalid population snapshot.");
             // Validate detached data before replacing any runtime authority.
-            ClearActors(); pressures.Clear(); ledgers.Clear(); migrations.Clear(); dormant.Clear();
+            ClearActors(); pressures.Clear(); ledgers.Clear(); migrations.Clear(); dormant.Clear(); tombstones.Clear();
+            if (snap.tombstones != null) tombstones.AddRange(CopyActors(snap.tombstones));
             foreach (var p in snap.pressures) pressures.Add(p.cellId, new CellPressureState { CellId = p.cellId, Pressure = p.pressure, LastUpdateTime = p.lastUpdateTime,
                 Receipts = new List<string>(Array.ConvertAll(p.receipts, r => r.id)) });
             foreach (var l in snap.ledgers) ledgers.Add(l.cellId, new PopulationLedger { CellId = l.cellId, Logical = l.logical, Dead = l.dead });
             foreach (var m in snap.migrations) migrations.Add(new MigrationGroup { GroupId = m.groupId, SourceCellId = m.sourceCellId, TargetCellId = m.targetCellId,
-                DepartureTime = m.departureTime, ArrivalTime = m.arrivalTime, Size = m.size });
+                DepartureTime = m.departureTime, ArrivalTime = m.arrivalTime, Size = m.size, Actors = CopyActors(m.actors) });
             foreach (var unit in snap.actors) dormant.Add(new PopulationActorSnapshot { id = unit.id, cellId = unit.cellId,
-                health = unit.health, anatomy = unit.anatomy });
+                archetypeId = unit.archetypeId, health = unit.health, anatomy = unit.anatomy });
             if (residentPressure != null)
             {
                 var saved = snap.residentPressure;
@@ -320,7 +385,7 @@ namespace LastSignal.AI
             ZombieBloodVfxPool.ResetSession();
             active = false; simulation?.Unregister(this); simulation = null;
             residentPressure = null;
-            ClearActors(); dormant.Clear(); pressures.Clear(); ledgers.Clear(); migrations.Clear(); lastNoiseSequence = 0; nextSearch = 0;
+            ClearActors(); dormant.Clear(); tombstones.Clear(); candidateSequence = 0; pressures.Clear(); ledgers.Clear(); migrations.Clear(); lastNoiseSequence = 0; nextSearch = 0;
         }
         void OnDestroy()
         { ClearSession(); if (cells) { cells.CellReady -= OnCellReady; cells.CellLeaving -= DematerializeCell; cells.CellEntered -= OnCellReady; } }
@@ -331,6 +396,7 @@ namespace LastSignal.AI
             if (!showDebug || !Current) return;
             GUILayout.BeginArea(new Rect(10, 220, 650, 500), GUI.skin.box);
             GUILayout.Label($"Population: {TotalAccounted}, receipts through {lastNoiseSequence}; {MaterializationState}");
+            GUILayout.Label($"Archetypes (living + dead): S={ArchetypeCount(ZombieArchetypes.Shambler)} L={ArchetypeCount(ZombieArchetypes.Lurker)} R={ArchetypeCount(ZombieArchetypes.Runner)}");
             foreach (var p in pressures.Values) { var l = ledgers[p.CellId];
                 GUILayout.Label($"{p.CellId}: P={p.Pressure:F3} at {p.LastUpdateTime:F1}; L={l.Logical} P={l.Physical} D={l.Dead}; {string.Join(",", p.Receipts)}"); }
             foreach (var m in migrations) GUILayout.Label($"{m.SourceCellId} → {m.TargetCellId}: {m.Size}, departure {m.DepartureTime:F1}, ETA {m.ArrivalTime:F1}");

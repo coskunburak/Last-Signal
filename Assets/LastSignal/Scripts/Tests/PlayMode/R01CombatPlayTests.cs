@@ -82,7 +82,8 @@ namespace LastSignal.Tests
             Assert.AreEqual(MeleeState.Windup,combat.Melee.Simulation.State);Assert.Less(stamina.CurrentStamina,100);
             Assert.IsFalse(combat.Melee.TryAttack());combat.SelectSlot(PlayerCombatController.CombatSlot.Firearm);yield return new WaitForSeconds(.4f);Assert.AreEqual(MeleeState.Ready,combat.Melee.Simulation.State);
             for(int i=0;i<50;i++) {Assert.IsTrue(combat.SelectSlot(PlayerCombatController.CombatSlot.Melee));stamina.ResetSession();Assert.IsTrue(combat.Melee.TryAttack());combat.Melee.Simulation.Tick(1);Assert.IsTrue(combat.SelectSlot(PlayerCombatController.CombatSlot.Firearm));}
-            Assert.AreEqual(magazine,combat.Firearm.RuntimeState.CurrentMagazine);Assert.AreEqual(1,player.GetComponentsInChildren<MeleeWeaponController>(true).Length);
+            Assert.AreEqual(magazine,combat.Firearm.RuntimeState.CurrentMagazine);Assert.AreEqual(3,player.GetComponentsInChildren<MeleeWeaponController>(true).Length);
+            Assert.AreEqual(3,combat.MeleeWeapons.Count);
             combat.SelectSlot(PlayerCombatController.CombatSlot.Melee);stamina.ResetSession();Assert.IsTrue(combat.Melee.TryAttack());flow.Pause();yield return null;Assert.AreEqual(MeleeState.Ready,combat.Melee.Simulation.State);flow.Resume();yield return null;
             stamina.Restore(37);var saves=flow.GetComponent<SaveSession>();var path=Path.Combine(Path.GetTempPath(),"r01-"+Guid.NewGuid()+".json");
             Assert.IsTrue(saves.Save(path).Success,saves.LastResult.Message);flow.ReturnToMenu();yield return null;yield return saves.Load(path);Assert.IsTrue(saves.LastResult.Success,saves.LastResult.Message);

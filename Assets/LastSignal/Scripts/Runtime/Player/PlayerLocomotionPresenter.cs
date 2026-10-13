@@ -29,6 +29,8 @@ namespace LastSignal
         PlayerStance stance;
         FirstPersonMotor motor;
         PlayerCombatController combat;
+        MeleeWeaponController poseMelee;
+        bool profileOwnsMelee;
         PlayerHealth health;
         PlayerSurvival survival;
         InteractionController interaction;
@@ -165,7 +167,16 @@ namespace LastSignal
             bodyAnimator.SetBool(Dead, !alive); bodyAnimator.SetBool(Seated, seated);
             bodyAnimator.SetFloat(Aim, AimAmount); bodyAnimator.SetInteger(Weapon, state == null ? 0 : (int)state.State);
             bodyAnimator.SetFloat(ReloadTime, reload);
-            bool meleeActive = alive && combat && combat.SelectedSlot == PlayerCombatController.CombatSlot.Melee &&
+            var selectedMelee = combat && combat.SelectedSlot == PlayerCombatController.CombatSlot.Melee ? combat.Melee : null;
+            if (poseMelee != selectedMelee)
+            {
+                poseMelee = selectedMelee;
+                var presenter = poseMelee ? poseMelee.GetComponent<MeleeWeaponPresenter>() : null;
+                profileOwnsMelee = presenter && presenter.PoseProfile &&
+                    presenter.PoseProfile.AttackOwnership == WeaponPoseOwnership.ProfileArmTargets;
+            }
+            // Procedural melee owns the arms/torso; do not layer the old one-hand crowbar swing beneath it.
+            bool meleeActive = !profileOwnsMelee && alive && combat && combat.SelectedSlot == PlayerCombatController.CombatSlot.Melee &&
                 combat.Melee && combat.Melee.Simulation != null && combat.Melee.Simulation.State != MeleeState.Ready;
             bodyAnimator.SetBool(Melee, meleeActive);
             bodyAnimator.SetFloat(MeleeTime, combat && combat.Melee && combat.Melee.Simulation != null ? combat.Melee.Simulation.PresentationProgress : 0);

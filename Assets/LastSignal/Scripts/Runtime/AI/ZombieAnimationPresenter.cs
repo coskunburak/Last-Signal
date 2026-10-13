@@ -17,11 +17,37 @@ namespace LastSignal
         static readonly int FlyingBackDeath = Animator.StringToHash("FlyingBackDeath");
         [SerializeField] Animator animator;
         ZombieDefinition tuning;
+        ZombieController actor;
+        Quaternion postureChest, postureHead;
+        bool postureApplied;
+        void RestorePosture()
+        {
+            if (!postureApplied) return;
+            if (chestBone) chestBone.localRotation = postureChest;
+            if (headBone) headBone.localRotation = postureHead;
+            postureApplied = false;
+        }
+        void Update() => RestorePosture();
+        void LateUpdate()
+        {
+            if (!actor || !tuning || !HasAnimator || !chestBone || !headBone || paused || dead || attacking || damagePresentation ||
+                tuning.ArchetypeId == ZombieArchetypes.Shambler) return;
+            RestorePosture();
+            postureChest = chestBone.localRotation; postureHead = headBone.localRotation; postureApplied = true;
+            bool lurker = tuning.ArchetypeId == ZombieArchetypes.Lurker;
+            float lean = lurker ? 22 : 12;
+            if (actor.Archetype.Phase == ZombieArchetypePhase.Preparation) lean += 10;
+            chestBone.localRotation *= Quaternion.Euler(lean, 0, lurker ? -7 : 0);
+            headBone.localRotation *= Quaternion.Euler(-lean * .6f, lurker ? 12 : 0, 0);
+        }
         bool damagePresentation, dead, paused, attacking, proceduralReaction;
         float damageTime, activeDeathDuration, smoothedSpeed, locomotionPlayback = 1;
         int current;
         AnimatorCullingMode savedCulling;
-        Transform reactionBone;
+        Transform reactionBone, chestBone, headBone, leftArmBone, rightArmBone;
+        Quaternion boneBaseRotation;
+        bool boneOffsetApplied;
+        float impactGain = 1;
         Vector3 visualBasePosition;
         bool flyingDeath, vehicleKnockdown, vehicleDeath;
         float vehicleDeathStart;
@@ -48,6 +74,7 @@ namespace LastSignal
 
         public bool CorpseSettled { get; private set; }
         public float DamageTime => damageTime;
+        public float DeathPresentationRemaining => dead ? Mathf.Max(0, (vehicleDeath ? .55f : activeDeathDuration) - damageTime) : 0;
         public bool HasAnimator => animator && animator.runtimeAnimatorController;
         public void Configure(Animator value) => animator = value;
 
@@ -61,12 +88,17 @@ namespace LastSignal
 
         public bool Initialize(ZombieDefinition definition)
         {
-            tuning = definition;
+            RestorePosture(); actor = GetComponent<ZombieController>(); tuning = definition;
             if (!animator || !animator.avatar || !animator.avatar.isValid ||
                 !animator.runtimeAnimatorController || !HasHitSpeedParameter())
             { Debug.LogError("Zombie presentation requires the production Humanoid Animator and controller.", this); return false; }
             reactionBone = animator.GetBoneTransform(HumanBodyBones.Chest);
             if (!reactionBone) reactionBone = animator.GetBoneTransform(HumanBodyBones.Spine);
+            chestBone = reactionBone;
+            headBone = animator.GetBoneTransform(HumanBodyBones.Head);
+            leftArmBone = animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+            rightArmBone = animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
+            boneOffsetApplied = false;
             visualBasePosition = animator.transform.localPosition;
             damagePresentation = dead = paused = attacking = proceduralReaction = vehicleKnockdown = CorpseSettled = false;
             vehicleDeath = false; vehicleDeathStart = 0;
@@ -99,13 +131,18 @@ namespace LastSignal
         public void BeginDamage(bool lethal, ZombieImpactReaction impact)
         {
             if (!animator || dead) return;
+            RestorePosture(); RestoreBoneOffset();
             EndAttack(); vehicleKnockdown = false;
+            impactGain = 1;
+            reactionBone = impact.Part == ZombieBodyPart.Head ? headBone :
+                impact.Part == ZombieBodyPart.LeftArm || impact.Part == ZombieBodyPart.LeftHand ? leftArmBone :
+                impact.Part == ZombieBodyPart.RightArm || impact.Part == ZombieBodyPart.RightHand ? rightArmBone : chestBone;
+            if (!reactionBone) reactionBone = chestBone;
             if (!damagePresentation) savedCulling = animator.cullingMode;
             damagePresentation = true; dead = lethal; damageTime = 0; CorpseSettled = false;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             reaction = impact;
-            proceduralReaction = !lethal && reactionBone &&
-                (!impact.UseLegacyClip || impact.Side != ZombieImpactSide.Front);
+            proceduralReaction = !lethal && reactionBone;
             animator.SetLayerWeight(1, 0);
             if (lethal)
             {
@@ -133,6 +170,7 @@ namespace LastSignal
         public void AdvanceDamage(float seconds)
         {
             if (!animator || !damagePresentation || paused || CorpseSettled || seconds <= 0) return;
+            RestoreBoneOffset();
             if (vehicleDeath)
             {
                 damageTime = Mathf.Min(damageTime + seconds, .55f);
@@ -171,20 +209,32 @@ namespace LastSignal
             if (proceduralReaction)
             {
                 float phase = Mathf.Clamp01(damageTime / duration);
-                float angle = Mathf.Sin(phase * Mathf.PI) *
+                float angle = Mathf.Sin(phase * Mathf.PI) * impactGain *
                     (reaction.Severity == ZombieImpactSeverity.Light ? tuning.LightImpactAngle : tuning.HeavyImpactAngle);
                 Vector3 axis = reaction.Side == ZombieImpactSide.Left || reaction.Side == ZombieImpactSide.Right
                     ? animator.transform.forward : animator.transform.right;
                 if (reaction.Side == ZombieImpactSide.Front || reaction.Side == ZombieImpactSide.Left) angle = -angle;
+                boneBaseRotation = reactionBone.localRotation; boneOffsetApplied = true;
                 reactionBone.rotation = Quaternion.AngleAxis(angle, axis) * reactionBone.rotation;
             }
             if (dead && damageTime >= duration)
             { CorpseSettled = true; animator.enabled = false; }
         }
 
+        // A repeated hit can reinforce the current pose without restarting its clock or gameplay stun.
+        public void CoalesceImpact()
+        { if (damagePresentation && !dead && !vehicleKnockdown) impactGain = Mathf.Min(1.35f, impactGain + .1f); }
+        void RestoreBoneOffset()
+        {
+            if (boneOffsetApplied && reactionBone) reactionBone.localRotation = boneBaseRotation;
+            boneOffsetApplied = false;
+        }
+        void OnDisable() { RestorePosture(); RestoreBoneOffset(); }
+
         public void EndReaction()
         {
             if (!animator || !damagePresentation || dead) return;
+            RestoreBoneOffset();
             bool wasKnockedDown = vehicleKnockdown;
             damagePresentation = proceduralReaction = vehicleKnockdown = false;
             if (wasKnockedDown) { current = Idle; animator.CrossFadeInFixedTime(Idle, tuning.AnimationBlendTime); }
@@ -197,6 +247,7 @@ namespace LastSignal
         public void BeginAttack() => BeginAttack(false);
         public void BeginAttack(bool alternate)
         {
+            RestorePosture();
             if (!animator || attacking || damagePresentation) return;
             attacking = true; current = alternate ? AttackAlternate : Attack;
             savedCulling = animator.cullingMode; animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;

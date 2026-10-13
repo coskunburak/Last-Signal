@@ -49,6 +49,15 @@ namespace LastSignal.Persistence
                 if (candidate?.population?.actors != null)
                     foreach (var actor in candidate.population.actors)
                         if (actor != null) NormalizeAnatomy(ref actor.anatomy);
+                if (candidate?.population?.migrations != null)
+                    foreach (var migration in candidate.population.migrations)
+                        if (migration?.actors != null)
+                        {
+                            if (migration.actors.Length == 0) migration.actors = null; // Legacy JsonUtility optional array.
+                            else foreach (var actor in migration.actors) if (actor != null) NormalizeAnatomy(ref actor.anatomy);
+                        }
+                if (candidate?.population?.tombstones != null)
+                    foreach (var actor in candidate.population.tombstones) if (actor != null) NormalizeAnatomy(ref actor.anatomy);
                 var resident = candidate?.population?.residentPressure;
                 if (resident != null && string.IsNullOrEmpty(resident.cellId) && resident.pressure == 0 && resident.lastUpdateTime == 0 &&
                     (resident.receipts == null || resident.receipts.Length == 0)) candidate.population.residentPressure = null;
@@ -119,7 +128,9 @@ namespace LastSignal.Persistence
         }
         static void NormalizeAnatomy(ref ZombieAnatomySnapshot anatomy)
         {
-            if (anatomy != null && anatomy.severedMask == 0 && anatomy.torsoDamage == 0 &&
+            if (anatomy != null && anatomy.wounds != null && anatomy.wounds.version == 0 &&
+                (anatomy.wounds.entries == null || anatomy.wounds.entries.Length == 0)) anatomy.wounds = null;
+            if (anatomy != null && !anatomy.suppressLegacyTorsoWound && anatomy.wounds == null && anatomy.severedMask == 0 && anatomy.torsoDamage == 0 &&
                 (anatomy.regionalDamage == null || anatomy.regionalDamage.Length == 0))
                 anatomy = null;
         }

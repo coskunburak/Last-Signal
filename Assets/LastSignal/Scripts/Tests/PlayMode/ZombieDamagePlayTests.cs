@@ -61,6 +61,8 @@ namespace LastSignal.Tests
         {
             var weapon = session.Player.GetComponent<PlayerCombatController>().ActiveWeapon;
             Assert.That(weapon.RuntimeState.CanFire);
+            // These reaction/death scenarios measure pristine rifle damage; wear is covered by S021.
+            weapon.RuntimeState.RestoreCondition(1000);
             var camera = session.Player.GetComponent<FirstPersonLook>().View;
             camera.transform.LookAt(Region(type).HitCollider.bounds.center); Physics.SyncTransforms();
             weapon.OnFirePressed(); weapon.OnFireReleased();
@@ -130,6 +132,8 @@ namespace LastSignal.Tests
         [UnityTest] public IEnumerator HeadSeverUsesFlyingBackDeathAndRetainsCanonicalDeath()
         {
             yield return Load();
+            // Exercise the approved-cut path on the disposable actor, independently of the production art gate.
+            zombie.GetComponent<ZombieDismemberment>().PreviewUnapprovedCuts();
             var head = Region(DamageRegion.Head);
             int deaths = 0; health.Died += () => deaths++;
             var position = zombie.transform.position;
@@ -297,7 +301,7 @@ namespace LastSignal.Tests
         }
         [UnityTest] public IEnumerator FirstCompleteCombatLoopInNormalRoute()
         {
-            yield return Load("Assets/ThirdParty/UnityURPTemplate/Scenes/SampleScene.unity"); Place(zombie.transform.position+zombie.transform.forward*3);
+            yield return Load("Assets/ThirdParty/Samples/UnityURPTemplate/Scenes/SampleScene.unity"); Place(zombie.transform.position+zombie.transform.forward*3);
             yield return Until(()=>zombie.Runtime.State==ZombieState.Chasing); Capture("loop-chase");
             yield return Until(()=>zombie.Runtime.State==ZombieState.AttackCommit,10);
             var playerHealth=session.Player.GetComponent<PlayerHealth>();
@@ -381,6 +385,9 @@ namespace LastSignal.Tests
                     if(i>=liveCount){go.GetComponent<ZombieHealth>().TakeDamage(new DamageInfo{Amount=1000});corpses.Add(actor);} else actors.Add(actor);
                 }
                 yield return new WaitForSeconds(2.5f);
+                int corpseBudget=prefab.GetComponent<ZombieBloodVfxPresenter>().Profile.woundProfile.corpseCapacity;
+                int retained=0;foreach(var corpse in corpses)if(corpse)retained++;
+                Assert.That(retained,Is.EqualTo(Mathf.Min(liveCount,corpseBudget)),"Bounded retention evicts old corpse visuals, not death records.");
                 foreach(var actor in actors)actor.MeasureManagedAllocations=true;
                 using(var ai=ProfilerRecorder.StartNew(ProfilerCategory.Scripts,"LastSignal.Zombie.AI",1))
                 using(var perception=ProfilerRecorder.StartNew(ProfilerCategory.Scripts,"LastSignal.Zombie.Perception",1))
@@ -390,11 +397,11 @@ namespace LastSignal.Tests
                     long a=0,p=0,n=0,an=0;int frames=0;float elapsed=0;
                     while(elapsed<5||frames<300){yield return null;frames++;elapsed+=Time.unscaledDeltaTime;a+=ai.LastValue;p+=perception.LastValue;n+=nav.LastValue;an+=animation.LastValue;}
                     long bytes=0;foreach(var actor in actors)bytes+=actor.ManagedTickBytes;
-                    foreach(var corpse in corpses){Assert.That(corpse.Perception.Raycasts,Is.Zero);Assert.That(corpse.Navigation.PathRequests,Is.Zero);Assert.That(corpse.GetComponent<ZombieAnimationPresenter>().CorpseSettled);}
+                    foreach(var corpse in corpses)if(corpse){Assert.That(corpse.Perception.Raycasts,Is.Zero);Assert.That(corpse.Navigation.PathRequests,Is.Zero);Assert.That(corpse.GetComponent<ZombieAnimationPresenter>().CorpseSettled);}
                     report.AppendLine("live="+liveCount+" dead="+liveCount+" frames="+frames+" seconds="+elapsed+" AI_ms="+a/(frames*1e6)+" perception_ms="+p/(frames*1e6)+" nav_ms="+n/(frames*1e6)+" animator_ms="+an/(frames*1e6)+" valid="+ai.Valid+","+perception.Valid+","+nav.Valid+","+animation.Valid+" direct_AI_bytes="+bytes);
                     Assert.That(bytes,Is.Zero);
                 }
-                foreach(var actor in actors){owned.Remove(actor.gameObject);Object.DestroyImmediate(actor.gameObject);}foreach(var corpse in corpses){owned.Remove(corpse.gameObject);Object.DestroyImmediate(corpse.gameObject);}
+                foreach(var actor in actors){owned.Remove(actor.gameObject);Object.DestroyImmediate(actor.gameObject);}foreach(var corpse in corpses)if(corpse){owned.Remove(corpse.gameObject);Object.DestroyImmediate(corpse.gameObject);}
             }
             // Warm actual ray -> region -> health; tiny legal positive damage avoids destruction during the allocation sample.
             var region=Region(DamageRegion.Body);var origin=region.HitCollider.bounds.center+Vector3.forward*3;var direction=(region.HitCollider.bounds.center-origin).normalized;

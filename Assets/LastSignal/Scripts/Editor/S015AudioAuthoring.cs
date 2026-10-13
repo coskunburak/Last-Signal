@@ -11,7 +11,7 @@ namespace LastSignal.Editor
 {
     public static class S015AudioAuthoring
     {
-        const string Vendor="Assets/ThirdParty/S15 Sound Pack/";
+        const string Vendor="Assets/ThirdParty/Audio/";
         const string Root="Assets/LastSignal/Audio/";
         static AudioClip Clip(string path)
         {
@@ -78,11 +78,15 @@ namespace LastSignal.Editor
             Loop(AudioCue.Exploration,music+"WAV_ATMOSPHERIC_LOOP_Phosphoric_Synesthesia.wav",.11f,AudioBus.Music);
             Loop(AudioCue.Threat,music+"WAV_TENSION_LOOP_The_Wood_Monster.wav",.19f,AudioBus.Music);
             Loop(AudioCue.Relief,music+"WAV_AMBIENCE_LOOP_Mirrored_Reflections.wav",.1f,AudioBus.Music);
+            // Preserve project-owned combat and S022 extensions when rebuilding legacy catalog entries.
+            for (int id = (int)AudioCue.ImpactDefault; id <= (int)AudioCue.RunnerRecovery; id++)
+            { var existing = catalog.Get((AudioCue)id); if (existing != null) cues.Add(existing); }
             catalog.cues=cues.ToArray(); EditorUtility.SetDirty(catalog);
             // Retune only selected clip import metadata; raw vendor waveforms remain untouched.
             var seen=new HashSet<string>();
             foreach(var cue in cues) foreach(var clip in cue.clips)
             {
+                if ((int)cue.cue >= (int)AudioCue.ImpactDefault) continue; // Combat clips keep their supplied import settings.
                 string path=AssetDatabase.GetAssetPath(clip); if(!seen.Add(path)) continue;
                 var importer=(AudioImporter)AssetImporter.GetAtPath(path); var settings=importer.defaultSampleSettings;
                 settings.loadType=cue.loop?AudioClipLoadType.Streaming:AudioClipLoadType.DecompressOnLoad;

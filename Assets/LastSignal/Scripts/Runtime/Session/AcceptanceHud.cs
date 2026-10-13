@@ -15,7 +15,7 @@ namespace LastSignal
         [SerializeField] Text panelTitle;
         [SerializeField] Button startButton, resumeButton, menuButton;
         [SerializeField] Text ammoDisplay;
-        int displayedMagazine = -1, displayedReserve = -1;
+        int displayedMagazine = -1, displayedReserve = -1, displayedCondition = -1;
         float displayedHealth = -1, displayedMaxHealth = -1;
         PlayerStamina stamina;
         int shownStamina=-1;
@@ -59,7 +59,7 @@ namespace LastSignal
         {
             if (observedPlayer != session.Player)
             {
-                observedPlayer = session.Player; displayedMagazine = displayedReserve = -1;
+                observedPlayer = session.Player; displayedMagazine = displayedReserve = displayedCondition = -1;
                 interaction = observedPlayer ? observedPlayer.GetComponent<InteractionController>() : null;
                 stance = observedPlayer ? observedPlayer.GetComponent<PlayerStance>() : null;
                 health = observedPlayer ? observedPlayer.GetComponent<PlayerHealth>() : null;
@@ -124,6 +124,7 @@ namespace LastSignal
                 previousPrompt = null;
                 controlsText = controls.BindingText("Player/Move") + " Hareket   " + controls.BindingText("Player/Look") + " Bakış   " +
                     controls.BindingText("Player/Interact") + " Kullan   " + controls.BindingText("Player/Inventory") + " Envanter   " +
+                    controls.BindingText("Player/FirearmSlot") + " Silah/Görünüm   " +
                     controls.BindingText("Player/Journal") + " Günlük   " + controls.BindingText("Player/Pause") + " Menü";
             }
             string currentPrompt = interaction ? interaction.Prompt : "";
@@ -161,7 +162,7 @@ namespace LastSignal
             if (ammoWeapon) ammoWeapon.AmmoChanged -= RefreshAmmo;
             ammoWeapon = combat ? combat.ActiveWeapon : null;
             if (ammoWeapon) ammoWeapon.AmmoChanged += RefreshAmmo;
-            displayedMagazine = displayedReserve = -1;
+            displayedMagazine = displayedReserve = displayedCondition = -1;
             RefreshAmmo();
         }
         void RefreshAmmo()
@@ -170,11 +171,13 @@ namespace LastSignal
             if (!ammoWeapon || !ammoWeapon.isActiveAndEnabled || ammoWeapon.RuntimeState == null)
             { ammoDisplay.text = ""; ammoDisplay.enabled = false; return; }
             var state = ammoWeapon.RuntimeState;
-            int magazine = state.CurrentMagazine, reserve = state.ReserveAmmo;
+            int magazine = state.CurrentMagazine, reserve = state.ReserveAmmo, condition = state.Condition;
             float hp = ammoHealth ? ammoHealth.CurrentHealth : -1, maxHp = ammoHealth ? ammoHealth.MaxHealth : -1;
-            if (displayedMagazine == magazine && displayedReserve == reserve && displayedHealth == hp && displayedMaxHealth == maxHp) return;
-            displayedMagazine = magazine; displayedReserve = reserve; displayedHealth = hp; displayedMaxHealth = maxHp;
-            ammoDisplay.text = (ammoHealth ? "CAN " + hp.ToString("0") + " / " + maxHp.ToString("0") + "    |    " : "") + magazine + " / " + reserve;
+            if (displayedMagazine == magazine && displayedReserve == reserve && displayedCondition == condition && displayedHealth == hp && displayedMaxHealth == maxHp) return;
+            displayedMagazine = magazine; displayedReserve = reserve; displayedCondition = condition; displayedHealth = hp; displayedMaxHealth = maxHp;
+            ammoDisplay.text = (ammoHealth ? "CAN " + hp.ToString("0") + " / " + maxHp.ToString("0") + "    |    " : "") +
+                ammoWeapon.PresentationName + " " + magazine + " / " + reserve + "    |    " +
+                (condition == 0 ? "BROKEN" : "DUR " + (condition / 10) + "%");
         }
     }
 }

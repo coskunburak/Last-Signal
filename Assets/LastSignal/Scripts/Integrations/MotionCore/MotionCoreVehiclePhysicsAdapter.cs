@@ -17,8 +17,8 @@ namespace LastSignal.Vehicles.MotionCoreIntegration
         public float WheelSpeed01 { get; private set; }
         public float DriveLoad => propulsion ? Mathf.Max(intent.Throttle, intent.Reverse) : 0;
         public bool BrakeApplied => intent.ServiceBrake > .01f || intent.Handbrake ||
-            (propulsion && intent.Reverse > .01f && ForwardSpeed > .5f);
-        public bool ReverseEngaged => propulsion && intent.Reverse > .01f && intent.ServiceBrake <= .01f && ForwardSpeed < .5f;
+            (propulsion && intent.Reverse > .01f && ForwardSpeed > .05f);
+        public bool ReverseEngaged => propulsion && intent.Reverse > .01f && intent.ServiceBrake <= .01f && ForwardSpeed <= .05f;
         public float SpeedMetersPerSecond => SpeedKph / 3.6f;
         public void SetControl(VehicleControlIntent value, bool propulsionEnabled)
         { intent = value; propulsion = propulsionEnabled; }

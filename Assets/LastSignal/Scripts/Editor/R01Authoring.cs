@@ -55,7 +55,7 @@ namespace LastSignal.EditorTools
             animator.runtimeAnimatorController=Animations();animator.applyRootMotion=false;animator.cullingMode=AnimatorCullingMode.AlwaysAnimate;
             var audio=root.AddComponent<AudioSource>();audio.playOnAwake=false;audio.spatialBlend=0;
             var presenter=root.AddComponent<MeleeWeaponPresenter>();Ref(presenter,"controller",controller);Ref(presenter,"animator",animator);Ref(presenter,"audioSource",audio);
-            Ref(presenter,"impact",Asset<AudioClip>("Assets/ThirdParty/FirstPersonARPGStarterPack/Scripts/Characters/Player/Sounds/Damage_Tick.mp3"));
+            Ref(presenter,"impact",Asset<AudioClip>("Assets/ThirdParty/Frameworks/FirstPersonARPGStarterPack/Scripts/Characters/Player/Sounds/Damage_Tick.mp3"));
             foreach(var t in root.GetComponentsInChildren<Transform>(true)) t.gameObject.layer=2;
             foreach(var r in root.GetComponentsInChildren<Renderer>()) { r.shadowCastingMode=ShadowCastingMode.Off;r.receiveShadows=false; }
             foreach(var c in root.GetComponentsInChildren<Collider>()) UnityEngine.Object.DestroyImmediate(c);

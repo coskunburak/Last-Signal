@@ -12,6 +12,8 @@ namespace LastSignal.WorldCells
     /// <summary>One exclusive runtime content owner. Uses the existing identities, loot receipts and snapshot DTOs.</summary>
     public sealed class WorldCellContent : MonoBehaviour
     {
+        [Tooltip("S022: authored low-visibility interiors permit Lurker waiting; does not simulate lighting.")]
+        public bool lurkerAmbushContext;
         public CellCoordinate coordinate;
         public Transform entry;
         public Collider ground;
@@ -60,6 +62,8 @@ namespace LastSignal.WorldCells
                     if (state.world.enemies.Length != 1 || state.world.enemies[0].id != encounter.GetComponent<PersistentEntityId>().Id)
                         throw new InvalidOperationException("Cell enemy topology mismatch.");
                     var saved = state.world.enemies[0]; var actor = encounter.Actor;
+                    if (actor.Definition.ArchetypeId != ZombieArchetypes.Legacy(saved.archetypeId) && !actor.RestoreArchetype(saved.archetypeId))
+                        throw new InvalidOperationException("Saved cell archetype unavailable.");
                     if (!actor.GetComponent<NavMeshAgent>().Warp(Position(saved.transform))) throw new InvalidOperationException("Invalid enemy navigation pose.");
                     actor.transform.rotation = new Quaternion(saved.transform.qx, saved.transform.qy, saved.transform.qz, saved.transform.qw);
                     actor.GetComponent<ZombieDismemberment>()?.RestoreState(saved.anatomy);
@@ -111,10 +115,9 @@ namespace LastSignal.WorldCells
             var enemies = new List<EnemySnapshot>();
             if (encounter)
             {
-                if (!encounter.Actor) throw new InvalidOperationException("Missing cell enemy.");
-                enemies.Add(new EnemySnapshot { id = encounter.GetComponent<PersistentEntityId>().Id,
-                    health = encounter.Actor.GetComponent<ZombieHealth>().CurrentHealth, transform = SaveSession.Pose(encounter.Actor.transform),
-                    anatomy = encounter.Actor.GetComponent<ZombieDismemberment>()?.CaptureState() });
+                var enemy = encounter.CaptureEnemy();
+                if (enemy == null) throw new InvalidOperationException("Missing cell enemy state.");
+                enemies.Add(enemy);
             }
             return new WorldSnapshot { doors = doors.ToArray(), opportunities = opportunities.ToArray(), items = items.ToArray(), enemies = enemies.ToArray() };
         }

@@ -1,0 +1,13 @@
+# User-owned verification
+
+Initial delivery (superseded by user evidence in REGRESSION_FIX_01.md): all gates NOT_RUN: Compilation, Pistol EditMode, Pistol PlayMode, Character regression, Combat regression, Full EditMode, Full PlayMode, Development Build, Manual Visual QA. Incidental script compilation during asset authoring is not compilation verification.
+
+New EditMode class: `LastSignal.Tests.TriplePistolTests` in LastSignal.EditModeTests. Covers source resolution, all IDs/prefabs, per-rig profiles, scale/forward, right-hand policy, moving-part references, UV/normals, URP maps/import settings, common ammo owner, registry uniqueness, malformed config, old save identity and actual SaveCodec roundtrip/rejection.
+
+New PlayMode class: `LastSignal.Tests.TriplePistolPlayTests` in LastSignal.PlayModeTests. Three separate model lifecycle cases use the real Player prefab: equip/ADS/fire, one accepted shot/cue, ammo isolation, reload/cancel, disable/enable, seating, death and new session. Other cases cover pre/post-commit rapid swaps preserving the same state object, no late reload transfer, dry fire/empty reload, pause/crouch, sprint/slide, real keyboard selection, queued-switch cancellation on disable, rifle return and every variant's real S013Cabin SaveSession roundtrip. Existing WeaponGripProbe samples after final pose evaluation. Tests have not been executed.
+
+`Tools/pistol-integration-verify.py` imports the existing S021 runner without invoking it until main. Modes: compile, pistol-edit, pistol-play, character-regression, combat-regression, regression-edit, regression-play, development-build (also existing s021-edit/play). Regression filters reference actual current classes. Base runner resolves ProjectVersion, refuses a running/locked Editor, uses unique evidence directories, stores process exit/NUnit XML/Unity log and source before/after hashes, rejects zero/non-passing tests, and requires the actual build report's Result=Succeeded and Errors=0. Development-build remains the existing macOS developer build; Windows release performance/build acceptance is not claimed.
+
+First user gate is compile only. Close Unity normally beforehand. On failure, share gate-result.json and failure-excerpt.txt from the printed evidence folder; the next response should address that gate and give one focused retest. Do not interpret any authoring log as a PASS.
+
+Non-Unity inspection performed: Python syntax parsing without running the gate runner, vendor hash preservation comparison, targeted source-change review, asset metadata extraction. These do not establish gameplay success.

@@ -8,12 +8,17 @@ using UnityEditor;
 // Read-only MCP command. Run in the already open Editor; never changes importers/assets.
 internal class CommandScript : IRunCommand
 {
+    static bool IsS14SourcePath(string path) =>
+        path.StartsWith("Assets/ThirdParty/Characters/Fps Arms Pack [Updated] FBX/", StringComparison.Ordinal) ||
+        path.StartsWith("Assets/ThirdParty/Characters/Diesel/S14 Source/", StringComparison.Ordinal) ||
+        path.StartsWith("Assets/ThirdParty/Weapons/Gece Studio/", StringComparison.Ordinal);
+
     public void Execute(ExecutionResult result)
     {
         var report = new StringBuilder();
         report.AppendLine("Unity=" + Application.unityVersion + " GPU=" + SystemInfo.graphicsDeviceName);
         var paths = AssetDatabase.GetAllAssetPaths().Where(p =>
-            (p.StartsWith("Assets/ThirdParty/S14 ASSETS/") && p.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase)) ||
+            (IsS14SourcePath(p) && p.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase)) ||
             p.EndsWith("/VAL.fbx") || p.EndsWith("/fpsarms.fbx")).ToList();
         paths.AddRange(new[] { "Assets/LastSignal/Prefabs/Player/Player.prefab", "Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab", "Assets/LastSignal/Prefabs/Combat/Crowbar/Crowbar_Viewmodel.prefab", "Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shambler.prefab", "Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shirtless_Visual.prefab" });
         foreach (var path in paths)
@@ -47,7 +52,7 @@ internal class CommandScript : IRunCommand
             foreach (var c in root.GetComponentsInChildren<Component>(true))
                 if (!c) report.AppendLine("MISSING_SCRIPT");
         }
-        foreach (var path in AssetDatabase.GetAllAssetPaths().Where(p => p.StartsWith("Assets/ThirdParty/S14 ASSETS/")))
+        foreach (var path in AssetDatabase.GetAllAssetPaths().Where(IsS14SourcePath))
         {
             var ti = AssetImporter.GetAtPath(path) as TextureImporter;
             if (!ti) continue;
