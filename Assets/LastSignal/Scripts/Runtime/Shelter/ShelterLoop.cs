@@ -14,6 +14,23 @@ namespace LastSignal.Shelter
         [SerializeField] Transform insideAnchor, outsideAnchor;
         [SerializeField] ShelterPoint storagePoint, exitPoint, returnPoint;
         [SerializeField] ShelterStorageUI preparationUI;
+        [Tooltip("Opt-in continuous-world shelter. Crossing the bounds changes expedition state without moving the player.")]
+        [SerializeField] bool physicalTraversal;
+        [SerializeField] Bounds physicalShelterBounds;
+        public bool PhysicalTraversal => physicalTraversal;
+        public void ConfigurePhysicalTraversal(Bounds bounds) { physicalShelterBounds = bounds; physicalTraversal = true; }
+        void LateUpdate()
+        {
+            if (!physicalTraversal || !Alive || session.Paused || session.Restoring || session.PlayerDead || Preparing) return;
+            // Hysteresis prevents repeated expedition increments while standing on the boundary.
+            var bounds = physicalShelterBounds;
+            bounds.Expand(State == ExpeditionState.Shelter ? 2f : -2f);
+            bool inside = bounds.Contains(session.Player.transform.position);
+            if (State == ExpeditionState.Shelter && !inside)
+            { State = ExpeditionState.Expedition; ExpeditionIndex++; Changed?.Invoke(); }
+            else if (State == ExpeditionState.Expedition && inside)
+            { State = ExpeditionState.Shelter; Changed?.Invoke(); }
+        }
         SessionFlow session;
         PlayerInventory inventory;
         PlayerHealth health;
@@ -36,7 +53,12 @@ namespace LastSignal.Shelter
         public bool Validate(out string error)
         {
             error = null;
-            if (storageCapacity < 1 || storageCapacity > 256) error = "Storage capacity must be 1–256.";
+            if (physicalTraversal && (!float.IsFinite(physicalShelterBounds.center.x) || !float.IsFinite(physicalShelterBounds.center.y) ||
+                !float.IsFinite(physicalShelterBounds.center.z) || !float.IsFinite(physicalShelterBounds.size.x) ||
+                !float.IsFinite(physicalShelterBounds.size.y) || !float.IsFinite(physicalShelterBounds.size.z) ||
+                physicalShelterBounds.size.x <= 4 || physicalShelterBounds.size.y <= 4 || physicalShelterBounds.size.z <= 4))
+                error = "Physical shelter requires finite bounds larger than the crossing hysteresis.";
+            else if (storageCapacity < 1 || storageCapacity > 256) error = "Storage capacity must be 1–256.";
             else if (!insideAnchor || !outsideAnchor || !storagePoint || !exitPoint || !returnPoint || !preparationUI) error = "Assign both anchors, all three points and preparation UI.";
             else if (!GetComponent<SessionFlow>() || GetComponents<ShelterLoop>().Length != 1) error = "One ShelterLoop must share the SessionFlow object.";
             else if (insideAnchor.gameObject.scene != gameObject.scene || outsideAnchor.gameObject.scene != gameObject.scene || storagePoint.gameObject.scene != gameObject.scene || exitPoint.gameObject.scene != gameObject.scene || returnPoint.gameObject.scene != gameObject.scene || preparationUI.gameObject.scene != gameObject.scene) error = "All shelter references must belong to this scene.";
@@ -72,6 +94,7 @@ namespace LastSignal.Shelter
         {
             if (!Alive || session.Paused || transitioning || !point || point.Loop != this) return false;
             if ((session.Player.transform.position - point.transform.position).sqrMagnitude > point.UseRange * point.UseRange) return false;
+            if (physicalTraversal && point != storagePoint) return false;
             var site = GetComponent<ShelterSite>();
             if (point == storagePoint && site && (site.Production == null || !site.Production.Installed(ShelterModule.Storage))) return false;
             return point == storagePoint ? preparationUI && preparationUI.isActiveAndEnabled && State == ExpeditionState.Shelter : point == exitPoint ? State == ExpeditionState.Shelter : point == returnPoint && State == ExpeditionState.Expedition;

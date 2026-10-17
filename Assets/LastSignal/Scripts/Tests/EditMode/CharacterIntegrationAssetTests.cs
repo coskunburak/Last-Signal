@@ -9,7 +9,7 @@ namespace LastSignal.Tests
 {
     public sealed class CharacterIntegrationAssetTests
     {
-        [Test] public void ProductionPlayerHasExactlyOneDieselAndOneMovementAuthority()
+        [Test] public void ProductionPlayerHasExactlyOneArberryAndOneMovementAuthority()
         {
             var player=AssetDatabase.LoadAssetAtPath<GameObject>(DieselCharacterAuthoring.PlayerPath);
             Assert.That(player,Is.Not.Null);
@@ -17,7 +17,7 @@ namespace LastSignal.Tests
             Assert.That(player.GetComponentsInChildren<CharacterController>(true),Has.Length.EqualTo(1));
             Assert.That(player.GetComponentsInChildren<PlayerLocomotionPresenter>(true),Has.Length.EqualTo(1));
             var body=player.transform.Find("WorldBody"); Assert.That(body,Is.Not.Null);
-            Assert.That(PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(body.gameObject),Is.EqualTo(DieselCharacterAuthoring.BodyPath));
+            Assert.That(PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(body.gameObject),Is.EqualTo(ArberryCharacterAuthoring.BodyPath));
             Assert.That(body.GetComponent<Animator>().applyRootMotion,Is.False);
             Assert.That(player.GetComponent<CharacterInspectionCamera>(),Is.Not.Null);
             Assert.That(player.GetComponent<CharacterFirstPersonActions>(),Is.Not.Null);

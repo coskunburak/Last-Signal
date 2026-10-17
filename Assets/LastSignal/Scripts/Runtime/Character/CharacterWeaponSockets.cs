@@ -8,6 +8,16 @@ namespace LastSignal
         public Transform RightGrip, LeftGrip, AimReference, Muzzle, ReloadReference, Magazine, StockContact;
         // Existing RightGrip/LeftGrip serialization remains intact.
         public Transform PalmContact, WeaponVisualRoot, SilhouetteReference;
+
+        [Tooltip("TPS support-palm contact. Parent directly under the rigid weapon root.")]
+        public Transform PistolSupport;
+
+        public bool HasWorldPistolSupport =>
+            ValidContact(PistolSupport) &&
+            PistolSupport.parent == transform &&
+            PistolSupport != PrimaryGrip &&
+            (!Magazine ||
+                (PistolSupport != Magazine && !PistolSupport.IsChildOf(Magazine)));
         public Transform PrimaryGrip => PalmContact ? PalmContact : RightGrip;
         public Transform SecondaryGrip => LeftGrip;
         public bool ValidFor(CharacterWeaponPoseProfile profile)

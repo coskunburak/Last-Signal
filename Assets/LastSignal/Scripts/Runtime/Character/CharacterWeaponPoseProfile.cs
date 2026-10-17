@@ -14,23 +14,32 @@ namespace LastSignal
         public WeaponPrimaryHand PrimaryHand;
         public WeaponPoseOwnership AttackOwnership;
         public bool TwoHandedMelee => GripMode == WeaponGripMode.TwoHandedHeavyMelee;
+        [Tooltip("Bounded world melee rotation about the primary wrist when translation alone cannot clear both sleeves.")]
+        [Range(0,12)] public float MeleeClearanceRotation = 0;
+        [Tooltip("Two-hand world grip displacement during slide, in the calibrated torso frame. FPS has its own stance pivot.")]
+        public Vector3 WorldMeleeSlideOffset = new Vector3(0,-.02f,0);
         public bool ProceduralGrip => SingleHanded || TwoHandedMelee;
         public bool SingleHanded => GripMode == WeaponGripMode.OneHandedPistol ||
             GripMode == WeaponGripMode.OneHandedLightMelee || GripMode == WeaponGripMode.OneHandedHeavyMelee;
         public bool ValidGripData => PrimaryHand == WeaponPrimaryHand.Right &&
+            float.IsFinite(MeleeClearanceRotation) && MeleeClearanceRotation >= 0 && MeleeClearanceRotation <= 12 &&
             float.IsFinite(WorldScale) && WorldScale > 0 && float.IsFinite(PoseBlendSeconds) && PoseBlendSeconds > 0 &&
             Finite(HipGripOffset) && Finite(AimGripOffset) && Finite(HipEuler) && Finite(AimEuler) &&
             Finite(FpsHipPosition) && Finite(FpsHipEuler) && Finite(FpsRightShoulder) && Finite(FpsLeftShoulder) &&
+            (!FpsWeaponOwnsContacts || (Finite(FpsRightElbow) && Finite(FpsLeftElbow))) &&
             Finite(FpsRaisedPosition) && Finite(FpsRaisedEuler) && Finite(RaisedGripOffset) && Finite(RaisedEuler) &&
             Finite(FollowThroughOffset) && Finite(FollowThroughEuler) && Finite(FingerFlexion) && Finite(ThumbFlexion) && Finite(TriggerFlexion) &&
             float.IsFinite(ThumbOpposition) && ThumbOpposition >= 0 && ThumbOpposition <= 30 &&
             float.IsFinite(FingerClosure) && FingerClosure >= 0 && FingerClosure <= 1 &&
             float.IsFinite(ReadyHoldSeconds) && ReadyHoldSeconds >= 0 && float.IsFinite(FollowThroughFraction) && FollowThroughFraction > 0 && FollowThroughFraction < 1 &&
+            (!FpsSprintCarry || (Finite(FpsSprintPosition) && Finite(FpsSprintEuler) &&
+                float.IsFinite(FpsSprintBobAmplitude) && FpsSprintBobAmplitude >= 0 && FpsSprintBobAmplitude <= .02f)) &&
+            (!FpsTwoHandedPistol || ValidFpsPistolSupport) &&
             Finite(FpsOffhandPosition) && Finite(WindupOffset) && Finite(StrikeOffset) && Finite(WindupEuler) && Finite(StrikeEuler) &&
             (!TwoHandedMelee || (Melee && Melee.Valid && AttackOwnership == WeaponPoseOwnership.ProfileArmTargets &&
                 Finite(SecondaryFingerFlexion) && Finite(SecondaryThumbFlexion) && float.IsFinite(SecondaryThumbOpposition) &&
                 SecondaryThumbOpposition >= 0 && SecondaryThumbOpposition <= 30 &&
-                Finite(CrouchOffset) && Finite(SprintOffset) && Finite(SprintEuler) && Finite(SlideEuler) &&
+                Finite(CrouchOffset) && Finite(SprintOffset) && Finite(SprintEuler) && Finite(SlideEuler) && Finite(WorldMeleeSlideOffset) &&
                 Finite(RightElbow) && Finite(LeftElbow) && float.IsFinite(MaximumReach) && MaximumReach >= .5f && MaximumReach <= 1 &&
                 float.IsFinite(ElbowTurnDegreesPerSecond) && ElbowTurnDegreesPerSecond > 0 &&
                 float.IsFinite(ForearmTwistDegrees) && ForearmTwistDegrees >= 0 && ForearmTwistDegrees <= 90 &&
@@ -38,8 +47,60 @@ namespace LastSignal
             Finite(PistolReloadPosition) && Finite(PistolReloadEuler) && float.IsFinite(PistolMagazineTravel) && PistolMagazineTravel >= 0;
         static bool Finite(Vector3 v) => float.IsFinite(v.x) && float.IsFinite(v.y) && float.IsFinite(v.z);
         public bool Pistol => GripMode == WeaponGripMode.OneHandedPistol;
+        [Header("TPS pistol support")]
+        [Tooltip("Enables the support hand only in CharacterWeaponRig. FPS is unchanged.")]
+        public bool WorldTwoHandedPistol;
+
+        [Range(0, 1)]
+        public float WorldSupportFingerClosure = .65f;
+
+        public bool ValidWorldPistolSupport =>
+            Pistol && WorldTwoHandedPistol &&
+            float.IsFinite(PoseBlendSeconds) && PoseBlendSeconds > 0 &&
+            float.IsFinite(WorldSupportFingerClosure) &&
+            WorldSupportFingerClosure >= 0 && WorldSupportFingerClosure <= 1 &&
+            float.IsFinite(HandWeight) && HandWeight >= 0 && HandWeight <= 1 &&
+            float.IsFinite(FingerGripWeight) &&
+            FingerGripWeight >= 0 && FingerGripWeight <= 1 &&
+            float.IsFinite(ElbowWeight) && ElbowWeight >= 0 && ElbowWeight <= 1 &&
+            float.IsFinite(MaximumReach) && MaximumReach >= .5f && MaximumReach <= 1 &&
+            float.IsFinite(ElbowTurnDegreesPerSecond) && ElbowTurnDegreesPerSecond > 0 &&
+            float.IsFinite(ForearmTwistDegrees) &&
+            ForearmTwistDegrees >= 0 && ForearmTwistDegrees <= 90 &&
+            Finite(LeftElbow) &&
+            Finite(SecondaryFingerFlexion) &&
+            Finite(SecondaryThumbFlexion) &&
+            float.IsFinite(SecondaryThumbOpposition) &&
+            SecondaryThumbOpposition >= 0 && SecondaryThumbOpposition <= 30;
+
+        [Header("FPS pistol support, relative to primary palm in metres")]
+        public bool FpsTwoHandedPistol;
+        [Tooltip("Character palm correction in primary socket axes/metres. Leaves the weapon and sights fixed.")]
+        public Vector3 FpsPrimaryPalmOffset;
+        public Vector3 FpsSupportPalmOffset = new Vector3(0, .045f, -.014f);
+        public Vector3 FpsSupportPalmEuler = new Vector3(0, 0, 180);
+        [Range(0, 1)] public float FpsSupportFingerClosure = .65f;
+        public bool ValidFpsPistolSupport => Pistol && FpsTwoHandedPistol &&
+            Finite(FpsPrimaryPalmOffset) && Finite(FpsSupportPalmOffset) && Finite(FpsSupportPalmEuler) &&
+            Finite(FpsRightElbow) && Finite(FpsLeftElbow) &&
+            float.IsFinite(FpsSupportFingerClosure) && FpsSupportFingerClosure >= 0 && FpsSupportFingerClosure <= 1 &&
+            Finite(SecondaryFingerFlexion) && Finite(SecondaryThumbFlexion) &&
+            float.IsFinite(SecondaryThumbOpposition) && SecondaryThumbOpposition >= 0 && SecondaryThumbOpposition <= 30;
+
+        [Header("FPS sprint carry (camera space, weapon-owned contacts)")]
+        public bool FpsSprintCarry;
+        public Vector3 FpsSprintPosition = new Vector3(.06f, -.17f, .26f);
+        public Vector3 FpsSprintEuler = new Vector3(20, -12, -8);
+        [Range(0, .02f)] public float FpsSprintBobAmplitude = .006f;
+
         [Header("Pistol skeleton-specific bind-relative finger poses")]
         public PistolFingerPose FpsPistolFingers, WorldPistolFingers;
+        [Tooltip("Keep FPS weapons on their authored sight/contact frame. Unreachable hands must not drag the weapon off ADS.")]
+        public bool FpsWeaponOwnsContacts;
+        public bool TwoHandedFirearm => GripMode == WeaponGripMode.TwoHandedRifle;
+        [Header("FPS-only elbow hints in camera metres")]
+        public Vector3 FpsRightElbow = new Vector3(.34f,-.35f,.05f);
+        public Vector3 FpsLeftElbow = new Vector3(-.34f,-.35f,.08f);
         [Min(0)] public float PistolMagazineTravel = .08f;
         public Vector3 PistolReloadPosition = new Vector3(-.015f,.025f,0);
         public Vector3 PistolReloadEuler = new Vector3(0,-8,12);

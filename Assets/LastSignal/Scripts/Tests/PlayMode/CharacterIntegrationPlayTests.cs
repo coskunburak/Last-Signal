@@ -159,7 +159,11 @@ namespace LastSignal.Tests
             input.SetGameplay(true);Assert.That(combat.SelectSlot(PlayerCombatController.CombatSlot.Melee),Is.True);yield return null;
             Assert.That(rig.ActiveProfile.Melee,Is.SameAs(combat.Melee.Definition));
             Assert.That(combat.Melee.TryAttack(),Is.True);yield return null;
-            Assert.That(animator.GetBool("MeleeActive"),Is.True);
+            Assert.That(combat.Melee.Simulation.State,Is.Not.EqualTo(MeleeState.Ready));
+            bool procedural=rig.ActiveProfile.AttackOwnership==WeaponPoseOwnership.ProfileArmTargets;
+            Assert.That(animator.GetBool("MeleeActive"),Is.EqualTo(!procedural),
+                "Procedural melee must not also play the legacy crowbar animation.");
+            if(procedural)Assert.That(rig.RightGripError,Is.LessThan(.02f));
             Assert.That(animator.GetFloat("MeleeTime"),Is.EqualTo(combat.Melee.Simulation.PresentationProgress).Within(.1f));
             yield return new WaitForSeconds(1);
             Assert.That(animator.GetBool("MeleeActive"),Is.False);
@@ -238,7 +242,7 @@ namespace LastSignal.Tests
                 var otherSkins = otherBody.GetComponentsInChildren<SkinnedMeshRenderer>(true);
                 var firstArms = firstView.GetComponentsInChildren<Renderer>(true);
                 var otherArms = otherView.GetComponentsInChildren<Renderer>(true);
-                Assert.That(firstSkins,Has.Length.EqualTo(9));Assert.That(otherSkins,Has.Length.EqualTo(9));
+                Assert.That(firstSkins,Has.Length.EqualTo(11));Assert.That(otherSkins,Has.Length.EqualTo(11));
                 Assert.That(firstArms,Is.Not.Empty);Assert.That(otherArms,Is.Not.Empty);
                 int seen = 0;
                 bool remote = false;

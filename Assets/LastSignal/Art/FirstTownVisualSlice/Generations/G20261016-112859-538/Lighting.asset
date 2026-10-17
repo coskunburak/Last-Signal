@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25e716ee4f5d41b495000c37620ec796, type: 3}
+  m_Name: Lighting
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.Atmosphere.TownLightingProfile
+  sunIntensity: 1.5
+  dayAmbient: {r: 0.39, g: 0.43, b: 0.46, a: 1}
+  nightAmbient: {r: 0.055, g: 0.073, b: 0.105, a: 1}
+  daySkyFill: {r: 0.39, g: 0.45, b: 0.5, a: 1}
+  nightSkyFill: {r: 0.1, g: 0.13, b: 0.21, a: 1}
+  skyFillIntensity: 0.32
+  usePhaseLighting: 1
+  daylight:
+    keyColor: {r: 1, g: 0.965, b: 0.89, a: 1}
+    ambient: {r: 0.4, g: 0.45, b: 0.51, a: 1}
+    skyFill: {r: 0.43, g: 0.54, b: 0.68, a: 1}
+    fog: {r: 0.5, g: 0.59, b: 0.67, a: 1}
+    keyIntensity: 1.55
+    moonIntensity: 0
+    fillStrength: 0.34
+    fogDensity: 0.00145
+    reflection: 0.68
+    exposure: 0
+    contrast: 2
+    bloom: 0.08
+    shadowStrength: 0.78
+    skyDay: 1
+    skyGold: 0
+    twilight: 0
+    exterior: 0.03
+  sunset:
+    keyColor: {r: 1, g: 0.73, b: 0.47, a: 1}
+    ambient: {r: 0.22, g: 0.29, b: 0.4, a: 1}
+    skyFill: {r: 0.29, g: 0.41, b: 0.6, a: 1}
+    fog: {r: 0.4, g: 0.46, b: 0.55, a: 1}
+    keyIntensity: 0.56
+    moonIntensity: 0.015
+    fillStrength: 0.3
+    fogDensity: 0.002
+    reflection: 0.55
+    exposure: 0.06
+    contrast: 3
+    bloom: 0.1
+    shadowStrength: 0.84
+    skyDay: 0.86
+    skyGold: 0.94
+    twilight: 0
+    exterior: 0.24
+  dusk:
+    keyColor: {r: 0.75, g: 0.82, b: 1, a: 1}
+    ambient: {r: 0.105, g: 0.145, b: 0.215, a: 1}
+    skyFill: {r: 0.17, g: 0.26, b: 0.43, a: 1}
+    fog: {r: 0.16, g: 0.22, b: 0.32, a: 1}
+    keyIntensity: 0
+    moonIntensity: 0.065
+    fillStrength: 0.28
+    fogDensity: 0.0032
+    reflection: 0.4
+    exposure: 0.1
+    contrast: 1
+    bloom: 0.16
+    shadowStrength: 0.35
+    skyDay: 0.2
+    skyGold: 0.85
+    twilight: 1
+    exterior: 0.86
+  night:
+    keyColor: {r: 0.65, g: 0.75, b: 1, a: 1}
+    ambient: {r: 0.06, g: 0.08, b: 0.12, a: 1}
+    skyFill: {r: 0.1, g: 0.15, b: 0.25, a: 1}
+    fog: {r: 0.035, g: 0.052, b: 0.083, a: 1}
+    keyIntensity: 0
+    moonIntensity: 0.1
+    fillStrength: 0.24
+    fogDensity: 0.0022
+    reflection: 0.22
+    exposure: 0.1
+    contrast: 0
+    bloom: 0.14
+    shadowStrength: 0.3
+    skyDay: 0
+    skyGold: 0
+    twilight: 0
+    exterior: 1
+  skyExposure: {x: 0.72, y: 0.68, z: 0.58, w: 0.16}
+  twilightTint: {r: 0.12, g: 0.2, b: 0.32, a: 1}
+  cloudKeyTransmission: 0.38
+  rainKeyTransmission: 0.55
+  rainAmbientTransmission: 0.85
+  rainFogAddition: 0.0023
+  cloudFogAddition: 0.00045
+  opaqueWetCeiling: 0.58
+  puddleWetCeiling: 0.8
+  maximumWetDarkening: 0.23
+  roadMaterial: {fileID: 2100000, guid: 7674d4e7be46a455182d1fc82e7b0514, type: 2}
+  roadWetSmoothness: 0.46
+  fixtureEmission: 1.5
+  practicals:
+  - fixtureName: Gas forecourt
+    color: {r: 1, g: 0.83, b: 0.62, a: 1}
+    gain: 4
+    priority: 2.6
+    shadows: 1
+    levels: {x: 0.04, y: 0.38, z: 1, w: 1}
+  - fixtureName: service-shop interior
+    color: {r: 1, g: 0.84, b: 0.64, a: 1}
+    gain: 1.7
+    priority: 1.8
+    shadows: 1
+    levels: {x: 0.8, y: 0.9, z: 1, w: 1}
+  - fixtureName: Gas approach
+    color: {r: 1, g: 0.73, b: 0.48, a: 1}
+    gain: 4
+    priority: 1.4
+    shadows: 0
+    levels: {x: 0.02, y: 0.18, z: 0.75, w: 0.9}
+  - fixtureName: Shelter warm light
+    color: {r: 1, g: 0.78, b: 0.53, a: 1}
+    gain: 1.05
+    priority: 2.2
+    shadows: 1
+    levels: {x: 0.8, y: 0.92, z: 1, w: 1}
+  - fixtureName: Safehouse gate
+    color: {r: 1, g: 0.72, b: 0.44, a: 1}
+    gain: 2.5
+    priority: 1.8
+    shadows: 1
+    levels: {x: 0.03, y: 0.28, z: 0.9, w: 1}
+  - fixtureName: Safehouse yard
+    color: {r: 1, g: 0.76, b: 0.5, a: 1}
+    gain: 2
+    priority: 1.5
+    shadows: 0
+    levels: {x: 0.02, y: 0.25, z: 0.8, w: 1}
+  - fixtureName: Checkpoint
+    color: {r: 0.86, g: 0.9, b: 1, a: 1}
+    gain: 0.8
+    priority: 1.15
+    shadows: 0
+    levels: {x: 0.02, y: 0.14, z: 0.6, w: 0.8}
+  - fixtureName: Station canopy bay 1
+    color: {r: 1, g: 0.78, b: 0.53, a: 1}
+    gain: 1.2
+    priority: 2.5
+    shadows: 0
+    levels: {x: 0, y: 0.35, z: 1, w: 1}
+  - fixtureName: Station canopy bay 2
+    color: {r: 1, g: 0.78, b: 0.53, a: 1}
+    gain: 1.2
+    priority: 2.5
+    shadows: 0
+    levels: {x: 0, y: 0.35, z: 1, w: 1}

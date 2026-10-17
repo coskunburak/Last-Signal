@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8529fcb5dd3a40c4bf4924ceab035ead, type: 3}
+  m_Name: Profile
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.VisualSlice.FirstTownSliceProfile
+  seed: 161026
+  safehouse:
+    m_Center: {x: -185, y: 0, z: -166}
+    m_Extent: {x: 50, y: 20, z: 50}
+  station:
+    m_Center: {x: 66, y: 0, z: -85}
+    m_Extent: {x: 54, y: 20, z: 54}
+  corridorHalfWidth: 14
+  route:
+  - {x: -180, y: -170}
+  - {x: -180, y: -140}
+  - {x: 50, y: -140}
+  - {x: 50, y: -82}
+  footTrail:
+  - {x: -180, y: -138}
+  - {x: -195, y: -130}
+  - {x: -213, y: -137}
+  - {x: -222, y: -151}
+  - {x: -225, y: -178}
+  trailWidth: 2.4
+  treeBudget: 95
+  shrubBudget: 230
+  rockBudget: 60
+  grassBudget: 9000
+  artistExclusions: []
+  views:
+  - name: 01 Safehouse exterior
+    position: {x: -174, y: 1.65, z: -157}
+    target: {x: -181, y: 2, z: -170}
+    fieldOfView: 75
+    orthographic: 0
+    orthographicSize: 10
+  - name: 02 Forest trail
+    position: {x: -216, y: 1.65, z: -140}
+    target: {x: -224, y: 1.9125255, z: -157}
+    fieldOfView: 75
+    orthographic: 0
+    orthographicSize: 10
+  - name: 03 Roadside approach
+    position: {x: -168, y: 1.69, z: -135}
+    target: {x: -116, y: 2, z: -135}
+    fieldOfView: 75
+    orthographic: 0
+    orthographicSize: 10
+  - name: 04 Gas station
+    position: {x: 50, y: 1.69, z: -116}
+    target: {x: 73, y: 2.6, z: -80}
+    fieldOfView: 75
+    orthographic: 0
+    orthographicSize: 10
+  - name: 05 Service frontage
+    position: {x: 65, y: 1.69, z: -70}
+    target: {x: 70, y: 2, z: -55}
+    fieldOfView: 75
+    orthographic: 0
+    orthographicSize: 10
+  - name: 06 Aerial coverage
+    position: {x: -63, y: 270, z: -103}
+    target: {x: -63, y: 0, z: -104}
+    fieldOfView: 75
+    orthographic: 1
+    orthographicSize: 190

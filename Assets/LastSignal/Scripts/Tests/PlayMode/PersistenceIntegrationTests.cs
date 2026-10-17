@@ -165,11 +165,12 @@ namespace LastSignal.Tests
 
         static IEnumerator WaitForRifleReady(WeaponController weapon)
         {
-            var animator = weapon.GetComponentInChildren<Animator>(true);
-            Assert.IsNotNull(animator);
+            var grip = weapon.GetComponent<FirstPersonWeaponGrip>();
+            Assert.IsNotNull(grip, "Restored production rifle must bind its character grip.");
+            Assert.IsTrue(grip.ValidAuthoring);
             float deadline = Time.realtimeSinceStartup + 5;
             while (weapon.RuntimeState.State != WeaponState.Ready ||
-                !animator.GetCurrentAnimatorStateInfo(0).IsName("Ready") || animator.IsInTransition(0))
+                !grip.HasValidContact)
             {
                 Assert.Less(Time.realtimeSinceStartup, deadline, "Restored production rifle did not settle into Ready.");
                 yield return null;

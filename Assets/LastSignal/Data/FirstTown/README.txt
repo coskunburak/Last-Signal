@@ -1,0 +1,1 @@
+FirstTown native terrain, road, creek and loot data have been authored. Navigation is intentionally NOT_RUN. Open Assets/LastSignal/Scenes/Production/FirstTownCore.unity and run Last Signal > First Town > 2 Bake navigation, then 3 Validate authored town. Do not rerun Create over existing outputs. Handoff: Docs/Implementation/FirstTown/HANDOFF.md.

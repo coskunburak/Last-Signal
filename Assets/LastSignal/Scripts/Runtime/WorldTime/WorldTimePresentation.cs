@@ -4,6 +4,7 @@ namespace LastSignal.WorldTime
 {
     [DisallowMultipleComponent] public sealed class WorldTimePresentation : MonoBehaviour
     {
+        [SerializeField] LastSignal.Atmosphere.TownAtmosphere atmosphere;
         [SerializeField] Light sun;
         [SerializeField] Text status;
         [SerializeField] ParticleSystem rain;
@@ -23,10 +24,12 @@ namespace LastSignal.WorldTime
             Unbind(); clock = source; bound = true;
             originalAmbient = RenderSettings.ambientLight; originalAmbientIntensity = RenderSettings.ambientIntensity;
             if (sun) { originalSunIntensity = sun.intensity; originalSunRotation = sun.transform.rotation; }
+            if (atmosphere && atmosphere.isActiveAndEnabled) atmosphere.Bind(source);
             Refresh();
         }
         public void Unbind()
         {
+            if (atmosphere) atmosphere.Unbind();
             if (bound)
             {
                 RenderSettings.ambientLight = originalAmbient; RenderSettings.ambientIntensity = originalAmbientIntensity;
@@ -44,9 +47,14 @@ namespace LastSignal.WorldTime
             refreshRemaining -= Time.unscaledDeltaTime;
             if (refreshRemaining <= 0) { refreshRemaining = .25f; PresentText(); }
         }
-        public void Refresh() { if (!clock || clock.Simulation == null) return; PresentEnvironment(); PresentText(); }
+        public void Refresh() { if (!clock || clock.Simulation == null) return; if (atmosphere && atmosphere.isActiveAndEnabled) atmosphere.Present(0,true); else PresentEnvironment(); PresentText(); }
         void PresentEnvironment()
         {
+            if (atmosphere && atmosphere.isActiveAndEnabled)
+            {
+                if (!atmosphere.IsBound) atmosphere.Bind(clock);
+                if (atmosphere.IsBound) { atmosphere.Present(Time.deltaTime); return; }
+            }
             float day = (float)(clock.Simulation.TimeOfDay / 86400);
             float daylight = Mathf.Clamp01(Mathf.Sin((day - .25f) * Mathf.PI * 2));
             if (sun) { sun.transform.rotation = Quaternion.Euler(day * 360 - 90, -30, 0); sun.intensity = Mathf.Max(.06f, sunIntensity.Evaluate(day)); }

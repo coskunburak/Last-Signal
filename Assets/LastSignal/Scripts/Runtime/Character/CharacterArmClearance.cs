@@ -46,6 +46,45 @@ namespace LastSignal
                 SegmentPenetration(torso, elbow, wrist));
         }
 
+        // Search relative to the authored anatomical plane, never the previous frame's
+        // corrected elbow. A bounded swivel and a smooth preference for the hint keep
+        // a padded torso envelope from driving the arm over the shoulder.
+        public static CharacterArmIK.Solution AvoidTorsoLowerElbow(CharacterArmIK.Solution pose,
+            Vector3 shoulder, Torso torso, Vector3 up)
+        {
+            if (!pose.Valid) return pose;
+            up.Normalize();
+            Vector3 axis = (pose.Wrist - shoulder).normalized;
+            Vector3 center = shoulder + axis * Vector3.Dot(pose.Elbow - shoulder, axis);
+            Vector3 radial = pose.Elbow - center;
+            if (radial.sqrMagnitude < 1e-10f) return pose;
+            float ceiling = Mathf.Max(0, Vector3.Dot(pose.Wrist - shoulder, up)) - .02f;
+            float Score(float angle)
+            {
+                Vector3 elbow = center + Quaternion.AngleAxis(angle, axis) * radial;
+                float excess = Mathf.Max(0, Vector3.Dot(elbow - shoulder, up) - ceiling);
+                float depth = Penetration(torso, shoulder, elbow, pose.Wrist);
+                float deviation = angle * Mathf.Deg2Rad * radial.magnitude;
+                return 4 * excess * excess + depth * depth + .08f * deviation * deviation;
+            }
+            float best = 0, score = Score(0);
+            for (int step = -15; step <= 15; step++)
+            {
+                float angle = step * 5, candidate = Score(angle);
+                if (candidate < score) { score = candidate; best = angle; }
+            }
+            // Refine the local minimum so the coarse search never quantizes the pose.
+            float low = Mathf.Max(-75, best - 5), high = Mathf.Min(75, best + 5);
+            for (int i = 0; i < 14; i++)
+            {
+                float a = Mathf.Lerp(low, high, 1f / 3), b = Mathf.Lerp(low, high, 2f / 3);
+                if (Score(a) < Score(b)) high = b; else low = a;
+            }
+            pose.Elbow = center + Quaternion.AngleAxis((low + high) * .5f, axis) * radial;
+            pose.Bend = (pose.Elbow - center).normalized;
+            return pose;
+        }
+
         public static CharacterArmIK.Solution AvoidTorso(CharacterArmIK.Solution pose, Vector3 shoulder, Torso torso)
         {
             if (!pose.Valid || Penetration(torso, shoulder, pose.Elbow, pose.Wrist) <= .0001f) return pose;

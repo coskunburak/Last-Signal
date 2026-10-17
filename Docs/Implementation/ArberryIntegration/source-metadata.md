@@ -1,0 +1,174 @@
+# Local source metadata
+
+AssetDatabase inventory; authoring inspection, not a verification gate.
+
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Backpack/Backpack_BaseColor.jpg`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Backpack/Backpack_Normal.jpg`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Backpack/Backpack_OcclusionRoughnessMetallic.jpg`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_BaseColor.1001.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_BaseColor.1002.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_BaseColor.1003.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_BaseColor.1004.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Cavity_1001.png`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Cavity_1002.png`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Cavity_1003.png`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Cavity_1004.png`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Normal.1001.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Normal.1002.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Normal.1003.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Normal.1004.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_OcclusionRoughnessMetallic.1001.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_OcclusionRoughnessMetallic.1002.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_OcclusionRoughnessMetallic.1003.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_OcclusionRoughnessMetallic.1004.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Specular.1001.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Specular.1002.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Specular.1003.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_Specular.1004.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_SSS.1001.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_SSS.1002.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_SSS.1003.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Body/Body_SSS.1004.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eye/Eye_AO.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eye/Eye_BaseColor.png`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eye/Eye_Gloss.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eye/Eye_Normal.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eye/Eye_Parallax.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eye/Eye_SpecularColourBrown.png`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eyebrow_EyeLeashes/Eyebrows_AO.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eyebrow_EyeLeashes/Eyebrows_BaseColor.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eyebrow_EyeLeashes/Eyebrows_Depth.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eyebrow_EyeLeashes/Eyebrows_Flow.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eyebrow_EyeLeashes/Eyebrows_ID.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eyebrow_EyeLeashes/Eyebrows_Normal.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eyebrow_EyeLeashes/Eyebrows_Opacity.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Eyebrow_EyeLeashes/Eyebrows_Roots.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Gloves/Gloves_BaseColor.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Gloves/Gloves_Normal.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Gloves/Gloves_OcclusionRoughnessMetallic.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairCap/MP_Haircap_Albedo.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairCap/MP_Haircap_Alpha4.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairCap/MP_Haircap_AO.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairCap/MP_Haircap_Direction.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairCap/MP_Haircap_Height.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairCap/MP_Haircap_ID.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairCap/MP_Haircap_Normal.jpg`: 2048×2048; type=Default; sRGB=True; source RGBA8+mips estimate=21.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairStyle/HairBrown_Alpha.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairStyle/HairBrown_AO.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairStyle/HairBrown_Diffuse_2.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairStyle/HairBrown_Direction.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairStyle/HairBrown_Height.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairStyle/HairBrown_Normal.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/HairStyle/HairBrown_Roots.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Jacket/Jacket_BaseColor.jpg`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Jacket/Jacket_Normal.jpg`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Jacket/Jacket_OcclusionRoughnessMetallic.jpg`: 8192×8192; type=Default; sRGB=True; source RGBA8+mips estimate=341.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Jeans/Jeans_BaseColor.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Jeans/Jeans_Normal.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Jeans/Jeans_OcclusionRoughnessMetallic.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Mouth/Teet_Normal.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Mouth/Teeth_ORM.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Mouth/TeethBaseColor.png`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Shoes/Shoes_BaseColor.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Shoes/Shoes_Normal.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+- `Assets/ThirdParty/Characters/Survival Char/Textures 2/Textures/Shoes/Shoes_OcclusionRoughnessMetallic.jpg`: 4096×4096; type=Default; sRGB=True; source RGBA8+mips estimate=85.33 MiB (not runtime residency).
+
+Importer: Generic, NoAvatar; scale=1; optimize=False; clips=0.
+- Original remap `Arms` → `Assets/LastSignal/Art/Arberry/Materials/Arms.mat`
+- Original remap `Backpack2` → `Assets/LastSignal/Art/Arberry/Materials/Backpack2.mat`
+- Original remap `Body2` → `Assets/LastSignal/Art/Arberry/Materials/Body2.mat`
+- Original remap `Body_Arkit_Eye` → `Assets/LastSignal/Art/Arberry/Materials/Body_Arkit_Eye.mat`
+- Original remap `Brows_Leashes` → `Assets/LastSignal/Art/Arberry/Materials/Brows_Leashes.mat`
+- Original remap `Gloves1` → `Assets/LastSignal/Art/Arberry/Materials/Gloves1.mat`
+- Original remap `Hair3` → `Assets/LastSignal/Art/Arberry/Materials/Hair3.mat`
+- Original remap `Head` → `Assets/LastSignal/Art/Arberry/Materials/Head.mat`
+- Original remap `Jacket1` → `Assets/LastSignal/Art/Arberry/Materials/Jacket1.mat`
+- Original remap `Jeans1` → `Assets/LastSignal/Art/Arberry/Materials/Jeans1.mat`
+- Original remap `Mouth` → `Assets/LastSignal/Art/Arberry/Materials/Mouth.mat`
+- Original remap `Shoes1` → `Assets/LastSignal/Art/Arberry/Materials/Shoes1.mat`
+- Backpack: vertices=13957; triangles=22175; slots=1; bones=160; bindposes=160; blendshapes=0; bounds=Center: (0.00, 1.31, -0.11), Extents: (0.28, 0.33, 0.31); materials=Backpack2
+- Body3: vertices=10046; triangles=18180; slots=3; bones=160; bindposes=160; blendshapes=51; bounds=Center: (0.00, 1.37, 0.06), Extents: (0.59, 0.50, 0.24); materials=Head,Body2,Arms
+- Eye: vertices=942; triangles=1680; slots=1; bones=160; bindposes=160; blendshapes=9; bounds=Center: (0.00, 1.73, 0.11), Extents: (0.05, 0.02, 0.02); materials=Body_Arkit_Eye
+- Eyebrows: vertices=2632; triangles=2334; slots=1; bones=160; bindposes=160; blendshapes=13; bounds=Center: (0.00, 1.75, 0.13), Extents: (0.07, 0.02, 0.03); materials=Brows_Leashes
+- Eyeleash: vertices=5672; triangles=4824; slots=1; bones=160; bindposes=160; blendshapes=14; bounds=Center: (0.00, 1.73, 0.13), Extents: (0.05, 0.01, 0.01); materials=Brows_Leashes
+- Gloves: vertices=1651; triangles=2580; slots=1; bones=160; bindposes=160; blendshapes=0; bounds=Center: (0.00, 1.02, 0.19), Extents: (0.60, 0.12, 0.13); materials=Gloves1
+- Hair: vertices=30055; triangles=38428; slots=1; bones=160; bindposes=160; blendshapes=0; bounds=Center: (0.00, 1.75, 0.02), Extents: (0.11, 0.15, 0.15); materials=Hair3
+- Jacket: vertices=6344; triangles=10443; slots=1; bones=160; bindposes=160; blendshapes=0; bounds=Center: (0.00, 1.25, 0.00), Extents: (0.58, 0.41, 0.26); materials=Jacket1
+- Jeans: vertices=2414; triangles=4058; slots=1; bones=160; bindposes=160; blendshapes=0; bounds=Center: (0.00, 0.62, 0.03), Extents: (0.23, 0.55, 0.21); materials=Jeans1
+- Mouth1: vertices=4837; triangles=8203; slots=1; bones=160; bindposes=160; blendshapes=6; bounds=Center: (0.00, 1.64, 0.11), Extents: (0.04, 0.04, 0.05); materials=Mouth
+- Shoes: vertices=5010; triangles=8012; slots=1; bones=160; bindposes=160; blendshapes=0; bounds=Center: (0.00, 0.07, 0.07), Extents: (0.24, 0.11, 0.18); materials=Shoes1
+
+Total source triangles: 120917. No runtime measurement performed.
+- hierarchy `survival_character` parent=`none` scale=(1.00, 1.00, 1.00)
+- hierarchy `root` parent=`survival_character` scale=(1.00, 1.00, 1.00)
+- hierarchy `ik_foot_root` parent=`root` scale=(1.00, 1.00, 1.00)
+- hierarchy `ik_hand_root` parent=`root` scale=(1.00, 1.00, 1.00)
+- hierarchy `ik_hand_gun` parent=`ik_hand_root` scale=(1.00, 1.00, 1.00)
+- hierarchy `pelvis` parent=`root` scale=(1.00, 1.00, 1.00)
+- hierarchy `spine_01` parent=`pelvis` scale=(1.00, 1.00, 1.00)
+- hierarchy `spine_02` parent=`spine_01` scale=(1.00, 1.00, 1.00)
+- hierarchy `spine_03` parent=`spine_02` scale=(1.00, 1.00, 1.00)
+- hierarchy `spine_04` parent=`spine_03` scale=(1.00, 1.00, 1.00)
+- hierarchy `spine_05` parent=`spine_04` scale=(1.00, 1.00, 1.00)
+- hierarchy `clavicle_l` parent=`spine_05` scale=(1.00, 1.00, 1.00)
+- hierarchy `upperarm_l` parent=`clavicle_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `lowerarm_l` parent=`upperarm_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `hand_l` parent=`lowerarm_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `index_metacarpal_l` parent=`hand_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `index_01_l` parent=`index_metacarpal_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `index_02_l` parent=`index_01_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `middle_metacarpal_l` parent=`hand_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `middle_01_l` parent=`middle_metacarpal_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `middle_02_l` parent=`middle_01_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `pinky_metacarpal_l` parent=`hand_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `pinky_01_l` parent=`pinky_metacarpal_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `pinky_02_l` parent=`pinky_01_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `ring_metacarpal_l` parent=`hand_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `ring_01_l` parent=`ring_metacarpal_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `ring_02_l` parent=`ring_01_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `thumb_01_l` parent=`hand_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `thumb_02_l` parent=`thumb_01_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `lowerarm_correctiveRoot_l` parent=`lowerarm_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `upperarm_correctiveRoot_l` parent=`upperarm_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `upperarm_twist_01_l` parent=`upperarm_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `upperarm_twist_02_l` parent=`upperarm_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `clavicle_r` parent=`spine_05` scale=(1.00, 1.00, 1.00)
+- hierarchy `upperarm_r` parent=`clavicle_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `lowerarm_r` parent=`upperarm_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `hand_r` parent=`lowerarm_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `index_metacarpal_r` parent=`hand_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `index_01_r` parent=`index_metacarpal_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `index_02_r` parent=`index_01_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `middle_metacarpal_r` parent=`hand_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `middle_01_r` parent=`middle_metacarpal_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `middle_02_r` parent=`middle_01_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `pinky_metacarpal_r` parent=`hand_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `pinky_01_r` parent=`pinky_metacarpal_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `pinky_02_r` parent=`pinky_01_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `ring_metacarpal_r` parent=`hand_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `ring_01_r` parent=`ring_metacarpal_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `ring_02_r` parent=`ring_01_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `thumb_01_r` parent=`hand_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `thumb_02_r` parent=`thumb_01_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `lowerarm_correctiveRoot_r` parent=`lowerarm_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `upperarm_correctiveRoot_r` parent=`upperarm_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `upperarm_twist_01_r` parent=`upperarm_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `upperarm_twist_02_r` parent=`upperarm_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `neck_01` parent=`spine_05` scale=(1.00, 1.00, 1.00)
+- hierarchy `neck_02` parent=`neck_01` scale=(1.00, 1.00, 1.00)
+- hierarchy `thigh_l` parent=`pelvis` scale=(1.00, 1.00, 1.00)
+- hierarchy `calf_l` parent=`thigh_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `calf_correctiveRoot_l` parent=`calf_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `calf_twist_02_l` parent=`calf_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `foot_l` parent=`calf_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `thigh_correctiveRoot_l` parent=`thigh_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `thigh_twist_01_l` parent=`thigh_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `thigh_twist_02_l` parent=`thigh_l` scale=(1.00, 1.00, 1.00)
+- hierarchy `thigh_r` parent=`pelvis` scale=(1.00, 1.00, 1.00)
+- hierarchy `calf_r` parent=`thigh_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `calf_correctiveRoot_r` parent=`calf_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `calf_twist_02_r` parent=`calf_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `foot_r` parent=`calf_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `thigh_correctiveRoot_r` parent=`thigh_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `thigh_twist_01_r` parent=`thigh_r` scale=(1.00, 1.00, 1.00)
+- hierarchy `thigh_twist_02_r` parent=`thigh_r` scale=(1.00, 1.00, 1.00)

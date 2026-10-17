@@ -18,6 +18,10 @@ namespace LastSignal.Editor
                 return;
             }
             EditorGUILayout.LabelField("Pose weight", rig.PoseWeight.ToString("F3"));
+            EditorGUILayout.LabelField("Support hand weight", rig.SupportHandWeight.ToString("F3"));
+            if (rig.ActiveProfile.Pistol && rig.ActiveProfile.WorldTwoHandedPistol &&
+                (!rig.ActiveProfile.ValidWorldPistolSupport || !rig.Sockets || !rig.Sockets.HasWorldPistolSupport))
+                EditorGUILayout.HelpBox("Invalid TPS pistol support settings or PistolSupport reference.", MessageType.Warning);
             EditorGUILayout.LabelField("Palm error R / L (mm)", $"{rig.RightGripError * 1000:F1} / {rig.LeftGripError * 1000:F1}");
             EditorGUILayout.LabelField("Unreachable distance R / L (mm)", $"{rig.RightReachResidual * 1000:F1} / {rig.LeftReachResidual * 1000:F1}");
             EditorGUILayout.LabelField("Jacket penetration R / L (mm)", $"{rig.RightTorsoPenetration * 1000:F1} / {rig.LeftTorsoPenetration * 1000:F1}");

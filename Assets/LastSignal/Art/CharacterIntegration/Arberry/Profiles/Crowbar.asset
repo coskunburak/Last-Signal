@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea427d9e50dcb456e8a287db8e05a1fd, type: 3}
+  m_Name: Crowbar
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.CharacterWeaponPoseProfile
+  GripMode: 3
+  PrimaryHand: 0
+  AttackOwnership: 1
+  FpsPistolFingers: {fileID: 0}
+  WorldPistolFingers: {fileID: 0}
+  FpsWeaponOwnsContacts: 1
+  FpsRightElbow: {x: 0.34, y: -0.35, z: 0.05}
+  FpsLeftElbow: {x: -0.34, y: -0.35, z: 0.08}
+  PistolMagazineTravel: 0.08
+  PistolReloadPosition: {x: -0.015, y: 0.025, z: 0}
+  PistolReloadEuler: {x: 0, y: -8, z: 12}
+  HipGripOffset: {x: 0.04, y: -0.2090832, z: 0.29161602}
+  AimGripOffset: {x: -0.08, y: -0.055021893, z: 0.407162}
+  FpsHipPosition: {x: 0.13, y: -0.2, z: 0.29}
+  FpsHipEuler: {x: 35, y: 10, z: -20}
+  FpsRaisedPosition: {x: 0.12, y: -0.13, z: 0.3}
+  FpsRaisedEuler: {x: 3, y: 0, z: -3}
+  RaisedGripOffset: {x: 0.015, y: -0.13205254, z: 0.3521401}
+  RaisedEuler: {x: 4, y: 0, z: -4}
+  ReadyHoldSeconds: 1.1
+  FpsRightShoulder: {x: 0.19, y: -0.18, z: -0.06}
+  FpsLeftShoulder: {x: -0.19, y: -0.18, z: -0.06}
+  FpsOffhandPosition: {x: -0.23, y: -0.32, z: 0.16}
+  SightDistance: 0.32
+  CrouchOffset: {x: 0, y: -0.025, z: -0.015}
+  SprintOffset: {x: 0, y: -0.07, z: -0.04}
+  WindupOffset: {x: 0.035, y: 0.09, z: -0.07}
+  StrikeOffset: {x: -0.04, y: -0.04, z: 0.015}
+  WindupEuler: {x: -30, y: 20, z: 15}
+  StrikeEuler: {x: 35, y: -15, z: -15}
+  FollowThroughOffset: {x: -0.06, y: -0.065, z: 0}
+  FollowThroughEuler: {x: 45, y: -20, z: -20}
+  FollowThroughFraction: 0.22
+  FingerFlexion: {x: 55, y: 70, z: 45}
+  ThumbFlexion: {x: 20, y: 35, z: 25}
+  TriggerFlexion: {x: 18, y: 32, z: 18}
+  ThumbOpposition: 25
+  FingerClosure: 0.8
+  SecondaryFingerFlexion: {x: 58, y: 76, z: 48}
+  SecondaryThumbFlexion: {x: 25, y: 38, z: 26}
+  SecondaryThumbOpposition: 28
+  Firearm: {fileID: 0}
+  Melee: {fileID: 11400000, guid: 9afccf0b7a1754b478522c84c3f74856, type: 2}
+  WorldPrefab: {fileID: 3822284345669658257, guid: c3e05d6ac993942dd8754ba618d3c7e5, type: 3}
+  WorldScale: 1
+  HipStockOffset: {x: -0.02, y: -0.035, z: 0.08}
+  HipEuler: {x: 35, y: 10, z: -20}
+  AimStockOffset: {x: -0.02, y: -0.015, z: 0.08}
+  AimEuler: {x: 0, y: 0, z: 0}
+  TorsoYaw: 35
+  TorsoPitchWeight: 0.6
+  PoseBlendSeconds: 0.15
+  SprintEuler: {x: 35, y: -15, z: 5}
+  SlideEuler: {x: 18, y: -12, z: 8}
+  HandPosition: {x: 0, y: 0, z: 0}
+  HandEuler: {x: 0, y: 0, z: 90}
+  RightElbow: {x: 0.31, y: -0.17, z: 0.07}
+  LeftElbow: {x: -0.31, y: -0.17, z: 0.15}
+  HandWeight: 1
+  FingerGripWeight: 1
+  ElbowWeight: 0.65
+  MaximumReach: 0.97
+  ShoulderReachDegrees: 6
+  TorsoReachYawDegrees: 10
+  ElbowTurnDegreesPerSecond: 360
+  ForearmTwistDegrees: 45
+  RecoilPitch: 2
+  RecoilDistance: 0.025
+  RecoilRecovery: 14

@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df17e061acbb34afea91d5688c8b6cba, type: 3}
+  m_Name: Layout
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.Forest.ForestLayout
+  seed: 261016
+  treeLimit: 340
+  bushLimit: 520
+  rockLimit: 85
+  grassBudget: 12000
+  treeSpacing: 7.5
+  tile:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 250, y: 10, z: 250}
+  artistExclusions: []
+  clearings:
+  - center: {x: -222, y: -80}
+    radius: 12
+  - center: {x: -213, y: 180}
+    radius: 13
+  - center: {x: -40, y: 223}
+    radius: 10
+  trails:
+  - name: West forest vehicle loop
+    width: 7
+    vehicle: 1
+    points:
+    - {x: -180, y: -140}
+    - {x: -204, y: -116}
+    - {x: -212, y: -68}
+    - {x: -194, y: -18}
+    - {x: -211, y: 31}
+    - {x: -197, y: 80}
+  - name: Ranger woodland foot loop
+    width: 2.4
+    vehicle: 0
+    points:
+    - {x: -197, y: 136}
+    - {x: -211, y: 153}
+    - {x: -213, y: 180}
+    - {x: -187, y: 211}
+    - {x: -158, y: 216}
+    - {x: -151, y: 173}
+    - {x: -160, y: 117}
+    - {x: -190, y: 80}
+  - name: North woodland to farm
+    width: 3
+    vehicle: 0
+    points:
+    - {x: -75, y: 170}
+    - {x: -72, y: 191}
+    - {x: -47, y: 214}
+    - {x: 0, y: 224}
+    - {x: 65, y: 219}
+    - {x: 120, y: 210}
+    - {x: 120, y: 200}

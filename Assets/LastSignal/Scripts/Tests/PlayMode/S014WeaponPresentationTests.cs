@@ -33,6 +33,14 @@ namespace LastSignal.Tests
             input = player.GetComponent<PlayerInputReader>();
             input.SetGameplay(true);
             combat = player.GetComponent<PlayerCombatController>();
+            // Preserve coverage of the retained Diesel/VAL animation fallback. Active Arberry FPS
+            // contacts and authoritative cancellation are covered by CharacterIntegrationPlayTests.Arberry.
+            var legacy=new SerializedObject(combat);
+            var rifle=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab");
+            var crowbar=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Combat/Crowbar/Crowbar_Viewmodel.prefab");
+            legacy.FindProperty("startingWeapon").objectReferenceValue=rifle.GetComponent<WeaponController>();
+            legacy.FindProperty("startingMelee").objectReferenceValue=crowbar.GetComponent<MeleeWeaponController>();
+            legacy.ApplyModifiedPropertiesWithoutUndo();
         }
 
         [TearDown] public void TearDown()

@@ -90,7 +90,7 @@ namespace LastSignal
         {
             grip.BindVisual(Selected.Pose, visual, sockets);
             weapon.BindPistolPresentation(this, Selected.Pose, sockets);
-            if (view) view.SetGripProfile(Selected.Pose);
+            if (view) view.SetGripProfile(grip.Profile);
             var mechanics = visual.GetComponent<PistolMechanics>();
             if (mechanics) mechanics.Bind(weapon);
             if (vfx) vfx.BindPistolSockets(sockets, mechanics ? mechanics.EjectionPort : null);

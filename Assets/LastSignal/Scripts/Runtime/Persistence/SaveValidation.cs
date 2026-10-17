@@ -179,7 +179,8 @@ namespace LastSignal.Persistence
             }
             if (h.schemaVersion >= 3)
             {
-                if (save.cells == null || save.cells.cells == null || save.cells.cells.Length < 1 || save.cells.cells.Length > 16) return Invalid("Missing/excessive cells.");
+                // A continuous resident world has no streamed cells. Non-resident destinations still require a visited cell below.
+                if (save.cells == null || save.cells.cells == null || save.cells.cells.Length > 16) return Invalid("Missing/excessive cells.");
                 var cellIds = new HashSet<string>(StringComparer.Ordinal);
                 bool destination = save.cells.playerCell == "resident";
                 int count = w.items.Length + w.doors.Length + w.enemies.Length + w.opportunities.Length;

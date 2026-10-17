@@ -5,6 +5,17 @@ namespace LastSignal.Tests
 {
     public sealed class CharacterArmClearanceTests
     {
+        [TestCase(0f)][TestCase(6f)][TestCase(12f)]
+        public void RepeatedClearanceRotationsStayInsideTheirPhysicalBudget(float limit)
+        {
+            var rotation=Quaternion.identity;
+            for(int i=0;i<1000;i++) {
+                var axis=i%2==0?new Vector3(.31f,.87f,-.12f):new Vector3(-.42f,.16f,.71f);
+                rotation=CharacterArmIK.ClampRotation(Quaternion.AngleAxis(4,axis)*rotation,limit);
+                Assert.That(CharacterArmIK.RotationDegrees(rotation),Is.LessThanOrEqualTo(limit+.0001f));
+                Assert.That(Quaternion.Dot(rotation,rotation),Is.EqualTo(1).Within(.000001f));
+            }
+        }
         static CharacterArmClearance.Torso Envelope => new CharacterArmClearance.Torso
         { Center = Vector3.zero, Radii = Vector3.one * .14f, Rotation = Quaternion.identity };
         [TestCase(-1f)] [TestCase(1f)]
