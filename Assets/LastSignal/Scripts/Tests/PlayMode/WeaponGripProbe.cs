@@ -34,7 +34,7 @@ namespace LastSignal.Tests
                 $"R upper/elbow/wrist={Bone(HumanBodyBones.RightUpperArm)}/{Bone(HumanBodyBones.RightLowerArm)}/{Bone(HumanBodyBones.RightHand)}, " +
                 $"L upper/elbow/wrist={Bone(HumanBodyBones.LeftUpperArm)}/{Bone(HumanBodyBones.LeftLowerArm)}/{Bone(HumanBodyBones.LeftHand)}, " +
                 $"requested R/L={torso.Local(World.RightWristTarget):F4}/{torso.Local(World.LeftWristTarget):F4}, " +
-                $"contact R/L={WorldError:F5}/{WorldSecondaryError:F5}, residual R/L={WorldRightResidual:F5}/{WorldSecondaryResidual:F5}, adjustment={World.MeleePlacementCorrection:F5}, hipAngle={WorldHipClearanceDegrees:F3}, stockError={WorldStockError:F5}, actorRotation={World.transform.rotation.eulerAngles:F2}, grounded={GetComponent<FirstPersonMotor>().Grounded}, animatorState={animator.GetCurrentAnimatorStateInfo(0).fullPathHash}";
+                $"contact R/L={WorldError:F5}/{WorldSecondaryError:F5}, residual R/L={WorldRightResidual:F5}/{WorldSecondaryResidual:F5}, adjustment={World.MeleePlacementCorrection:F5}, hipAngle={WorldHipClearanceDegrees:F3}, stockError={WorldStockError:F5}, actorRotation={World.transform.rotation.eulerAngles:F2}, grounded={GetComponent<FirstPersonMotor>().Grounded}, sliding={GetComponent<FirstPersonMotor>().IsSliding}, worldSlideOffset={World.ActiveProfile.WorldMeleeSlideOffset:F4}, animatorState={animator.GetCurrentAnimatorStateInfo(0).fullPathHash}";
         }
         void LateUpdate()
         {
@@ -55,7 +55,11 @@ namespace LastSignal.Tests
                 {
                     var bone=Fps.RightFingers[i];
                     PistolFingerSegments[i*2]=model.InverseTransformPoint(bone.position);
-                    PistolFingerSegments[i*2+1]=model.InverseTransformPoint(bone.GetChild(0).position);
+                    // Arberry has no terminal tip transforms. Match the bind-relative
+                    // distal endpoint used by its authoring, then follow the live joint rotation.
+                    Vector3 endpoint = bone.childCount > 0 ? bone.GetChild(0).position :
+                        bone.TransformPoint(Quaternion.Inverse(Fps.RightFingerRest[i]) * (bone.localPosition * .75f));
+                    PistolFingerSegments[i*2+1]=model.InverseTransformPoint(endpoint);
                 }
                 if(Fps.Sockets.Magazine)MagazineLocalPosition=Fps.Sockets.Magazine.localPosition;
             }

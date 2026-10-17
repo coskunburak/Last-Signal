@@ -5,6 +5,20 @@ namespace LastSignal
     /// <summary>Geometry used by CharacterWeaponRig's final two-bone pass. All distances are world metres.</summary>
     public static class CharacterArmIK
     {
+        // atan2 retains precision near small angles; acos(dot) amplifies quaternion rounding.
+        public static float RotationDegrees(Quaternion rotation)
+        {
+            double length=System.Math.Sqrt((double)rotation.x*rotation.x+(double)rotation.y*rotation.y+(double)rotation.z*rotation.z);
+            return (float)(2*System.Math.Atan2(length,System.Math.Abs(rotation.w))*180/System.Math.PI);
+        }
+        public static Quaternion ClampRotation(Quaternion rotation,float limit)
+        {
+            rotation=rotation.normalized;
+            if(rotation.w<0)rotation=new Quaternion(-rotation.x,-rotation.y,-rotation.z,-rotation.w);
+            float angle=RotationDegrees(rotation);
+            if(angle<=limit)return rotation;
+            return Quaternion.AngleAxis(Mathf.Max(0,limit),new Vector3(rotation.x,rotation.y,rotation.z).normalized);
+        }
         public struct Solution
         {
             public Vector3 Elbow, Wrist, Bend;
@@ -49,6 +63,26 @@ namespace LastSignal
             result.Residual = Vector3.Distance(target, result.Wrist);
             result.Valid = true;
             return result;
+        }
+
+        /// <summary>Final swivel filter, after clearance. Preserves wrist and both bone lengths.</summary>
+        public static Solution StabilizeBend(Solution pose, Vector3 shoulder, Vector3 previousBend,
+            float degreesPerSecond, float seconds)
+        {
+            if (!pose.Valid) return pose;
+            Vector3 axis = (pose.Wrist - shoulder).normalized;
+            Vector3 previous = Vector3.ProjectOnPlane(previousBend, axis);
+            if (previous.sqrMagnitude < 1e-10f) return pose;
+            previous.Normalize();
+            float angle = Vector3.SignedAngle(previous, pose.Bend, axis);
+            float dt = Mathf.Max(0, seconds);
+            float step = angle * (1 - Mathf.Exp(-14 * dt));
+            float limit = Mathf.Max(0, degreesPerSecond) * dt;
+            Vector3 center = shoulder + axis * Vector3.Dot(pose.Elbow - shoulder, axis);
+            float radius = Vector3.Distance(pose.Elbow, center);
+            pose.Bend = Quaternion.AngleAxis(Mathf.Clamp(step, -limit, limit), axis) * previous;
+            pose.Elbow = center + pose.Bend * radius;
+            return pose;
         }
 
         public static void ReachLimits(float upperLength, float lowerLength, float maximumReach, out float minimum, out float maximum)

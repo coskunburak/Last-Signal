@@ -143,6 +143,14 @@ namespace LastSignal.Tests
         [UnityTest]
         public IEnumerator ValViewmodelUsesSprintClipOnlyWhileActuallySprinting()
         {
+#if UNITY_EDITOR
+            // This test explicitly covers the preserved VAL fallback animation contract.
+            // The production character uses procedural arms, covered by the test below.
+            var serialized=new SerializedObject(player.GetComponent<PlayerCombatController>());
+            serialized.FindProperty("startingWeapon").objectReferenceValue=AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab").GetComponent<WeaponController>();
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+#endif
             yield return null; // PlayerCombatController creates the rifle in Start.
             var rifle = player.GetComponent<PlayerCombatController>().Firearm;
             Assert.That(rifle, Is.Not.Null);
@@ -168,6 +176,26 @@ namespace LastSignal.Tests
             Assert.That(motor.IsSprinting, Is.False);
             yield return new WaitForSeconds(.2f);
             Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Ready"), Is.True);
+        }
+        [UnityTest]
+        public IEnumerator ArberryViewmodelLowersOnlyDuringActualSprintAndRestoresContacts()
+        {
+            yield return null;
+            var rifle=player.GetComponent<PlayerCombatController>().Firearm;
+            var grip=rifle.GetComponent<FirstPersonWeaponGrip>();
+            Assert.That(grip,Is.Not.Null);Assert.That(grip.Profile.FpsWeaponOwnsContacts,Is.True);
+            float deadline=Time.realtimeSinceStartup+5f;
+            while(rifle.RuntimeState.State!=WeaponState.Ready){Assert.That(Time.realtimeSinceStartup,Is.LessThan(deadline));yield return null;}
+            yield return null;
+            var rest=grip.PoseFrame.InverseTransformPoint(grip.Visual.position);
+            motor.Simulate(Vector2.up,true,1f/60f);Assert.That(motor.IsSprinting,Is.True);
+            yield return new WaitForSeconds(.3f);
+            Assert.That(grip.HasValidContact,Is.True);
+            Assert.That(grip.PoseFrame.InverseTransformPoint(grip.Visual.position).y,Is.LessThan(rest.y-.02f));
+            motor.Simulate(Vector2.zero,false,1f/60f);Assert.That(motor.IsSprinting,Is.False);
+            yield return new WaitForSeconds(.3f);
+            Assert.That(grip.HasValidContact,Is.True);
+            Assert.That(Vector3.Distance(grip.PoseFrame.InverseTransformPoint(grip.Visual.position),rest),Is.LessThan(.005f));
         }
         [Test]
         public void PitchClampsInBothDirections()

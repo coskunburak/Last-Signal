@@ -22,8 +22,10 @@ namespace LastSignal
         public Vector3 PalmPosition => hand.TransformPoint(palmLocal);
         public Quaternion PalmRotation => hand.rotation * handToPalm;
         public CharacterHandPose(Animator animator, bool left)
+            : this(animator,left,.012f) { }
+        public CharacterHandPose(Animator animator, bool left, float palmDepth)
             : this(animator.GetBoneTransform(left ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand),
-                HumanoidFingers(animator, left), left, .012f * Mathf.Abs(animator.transform.lossyScale.x), false) { }
+                HumanoidFingers(animator, left), left, palmDepth * Mathf.Abs(animator.transform.lossyScale.x), false) { }
         static Transform[] HumanoidFingers(Animator animator, bool left)
         {
             var bones = new Transform[15];
@@ -52,7 +54,8 @@ namespace LastSignal
             {
                 var bone = fingers[f * 3 + s];
                 if (!bone) return;
-                Vector3 direction = bone.childCount > 0 ? bone.GetChild(0).position - bone.position : forward;
+                Vector3 direction = bone.childCount > 0 ? bone.GetChild(0).position - bone.position
+                    : bone.parent ? bone.position - bone.parent.position : forward;
                 Vector3 flex = Vector3.Cross(direction.normalized, normal).normalized;
                 var opposition = Quaternion.identity;
                 if (f == 0 && s == 0)
@@ -76,6 +79,8 @@ namespace LastSignal
             if (!Valid) return;
             if (applied) Restore(); // A second presentation sample must not replace the original restoration snapshot.
             bool useAuthored = authored && authored.Valid;
+            bool useSecondary = secondary && profile &&
+                (profile.TwoHandedMelee || (profile.Pistol && (profile.WorldTwoHandedPistol || profile.FpsTwoHandedPistol)));
             for (int i = 0; i < joints.Length; i++)
             {
                 ref var joint = ref joints[i];
@@ -87,11 +92,11 @@ namespace LastSignal
                 if (profile)
                 {
                     var angles = finger == 0 ? profile.ThumbFlexion : triggerHand && finger == 1 ? profile.TriggerFlexion : profile.FingerFlexion;
-                    if (secondary && profile.TwoHandedMelee) angles = finger == 0 ? profile.SecondaryThumbFlexion : profile.SecondaryFingerFlexion;
+                    if (useSecondary) angles = finger == 0 ? profile.SecondaryThumbFlexion : profile.SecondaryFingerFlexion;
                     curl = angles[segment] + (triggerHand && finger == 1 ? triggerPull * 12 : 0);
                 }
                 joint.Previous = joint.Bone.localRotation;
-                var grip = preserveAuthoredCurl ? joint.Bind : joint.Bind * Quaternion.Slerp(Quaternion.identity, joint.Opposition, profile ? (secondary && profile.TwoHandedMelee ? profile.SecondaryThumbOpposition : profile.ThumbOpposition) / 30f : 1) * Quaternion.AngleAxis(curl * Mathf.Clamp01(closure), joint.FlexAxis);
+                var grip = preserveAuthoredCurl ? joint.Bind : joint.Bind * Quaternion.Slerp(Quaternion.identity, joint.Opposition, profile ? (useSecondary ? profile.SecondaryThumbOpposition : profile.ThumbOpposition) / 30f : 1) * Quaternion.AngleAxis(curl * Mathf.Clamp01(closure), joint.FlexAxis);
                 if (useAuthored) grip = joint.Bind * authored.Sample(i, triggerPull);
                 joint.Bone.localRotation = Quaternion.Slerp(joint.Previous, grip, Mathf.Clamp01(weight));
             }

@@ -7,7 +7,24 @@ namespace LastSignal
     public sealed class CharacterWeaponRig : MonoBehaviour
     {
         [SerializeField] CharacterWeaponPoseProfile[] profiles;
-        [Header("Diesel jacket envelope, including forearm/sleeve clearance (actor metres)")]
+        [SerializeField,Min(0)] float rightPalmDepth=.012f, leftPalmDepth=.012f;
+        [System.Serializable]
+        public struct PresentationOverride
+        {
+            public CharacterWeaponPoseProfile Source;
+            public CharacterWeaponPoseProfile Character;
+        }
+        [SerializeField] PresentationOverride[] presentationOverrides;
+        // Match by source asset identity so cosmetic pistol variants keep their own geometry.
+        public CharacterWeaponPoseProfile ResolvePresentation(CharacterWeaponPoseProfile source)
+        {
+            if (source && presentationOverrides != null)
+                foreach (var entry in presentationOverrides)
+                    if (entry.Source == source && entry.Character) return entry.Character;
+            return source;
+        }
+        public void ConfigureOverrides(PresentationOverride[] values) => presentationOverrides = values;
+        [Header("Character jacket envelope, including forearm/sleeve clearance (actor metres)")]
         [SerializeField] Vector3 torsoCenterOffset = new Vector3(0, .08f, .025f);
         [SerializeField] Vector3 torsoClearanceRadii = new Vector3(.25f, .34f, .225f);
         public CharacterArmClearance.Torso TorsoClearance => new CharacterArmClearance.Torso
@@ -32,6 +49,8 @@ namespace LastSignal
         Quaternion chestToBodyFrame;
         Vector3 rightBendLocal, leftBendLocal;
         float frameSeconds;
+        float pistolSupportWeight, pistolReloadBlend;
+        bool pistolSupportWarningIssued;
         public bool HasFirearmPose { get; private set; }
         public float SupportHandWeight { get; private set; }
         public float PoseWeight => poseWeight;
@@ -48,7 +67,11 @@ namespace LastSignal
         public float TorsoReachYaw { get; private set; }
         public float HipClearanceDegrees { get; private set; }
         public float RightGripError => sockets && sockets.PrimaryGrip && weaponVisual && weaponVisual.activeSelf ? Vector3.Distance(rightPalm.PalmPosition, sockets.PrimaryGrip.position) : 0;
-        public float LeftGripError => profile && weaponVisual && weaponVisual.activeSelf && (profile.TwoHandedMelee || (HasFirearmPose && !profile.SingleHanded)) ? Vector3.Distance(leftPalm.PalmPosition, LeftPalmTarget) : 0;
+        public float LeftGripError => profile && weaponVisual && weaponVisual.activeSelf &&
+            leftPalm != null && leftPalm.Valid &&
+            (profile.TwoHandedMelee || (HasFirearmPose && !profile.SingleHanded) ||
+             (profile.Pistol && profile.WorldTwoHandedPistol && SupportHandWeight > .001f))
+                ? Vector3.Distance(leftPalm.PalmPosition, LeftPalmTarget) : 0;
         public bool HasValidMeleeContact => profile && profile.Melee && weaponVisual && weaponVisual.activeSelf &&
             RightGripError <= .02f && RightReachResidual <= .02f &&
             (!profile.TwoHandedMelee || (LeftGripError <= .02f && LeftReachResidual <= .02f));
@@ -66,7 +89,7 @@ namespace LastSignal
         Vector3 magazineRest;
         Transform magazineParent;
         bool reloadContactFollowsMagazine;
-        float recoil, readySeconds, readyWeight;
+        float recoil, readySeconds, readyWeight, shotCarryDelay;
         Vector3 meleePosition;
         Quaternion meleeRotation = Quaternion.identity;
         public float ReadyWeight => readyWeight;
@@ -94,7 +117,7 @@ namespace LastSignal
             leftUpper = animator.GetBoneTransform(HumanBodyBones.LeftUpperArm); leftLower = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
             if (!chest || !head || !rightHand || !leftHand || !rightUpper || !rightLower || !leftUpper || !leftLower)
             { enabled = false; return; }
-            rightPalm = new CharacterHandPose(animator, false); leftPalm = new CharacterHandPose(animator, true);
+            rightPalm = new CharacterHandPose(animator, false, rightPalmDepth); leftPalm = new CharacterHandPose(animator, true, leftPalmDepth);
             if (!rightPalm.Valid || !leftPalm.Valid) { enabled = false; return; }
             // Imported bone axes are not character axes. Cache their relationship once in the authored rest pose.
             chestToBodyFrame = Quaternion.Inverse((upperChest ? upperChest : chest).rotation) * transform.rotation;
@@ -111,8 +134,10 @@ namespace LastSignal
         }
         void ResetPoseState()
         {
+            pistolSupportWeight = pistolReloadBlend = 0;
+            pistolSupportWarningIssued = false;
             meleePosition = Vector3.zero; meleeRotation = Quaternion.identity;
-            HasFirearmPose = false; SupportHandWeight = 0; readySeconds = readyWeight = 0;
+            HasFirearmPose = false; SupportHandWeight = 0; readySeconds = readyWeight = shotCarryDelay = 0;
             poseWeight = sprintWeight = slideWeight = aimPitch = aimWeight = 0;
             rightBendLocal = leftBendLocal = Vector3.zero;
             RightReachResidual = LeftReachResidual = 0;
@@ -132,7 +157,7 @@ namespace LastSignal
             if (subscribedWeapon) subscribedWeapon.ShotFired += OnShot;
         }
         void OnShot(WeaponFireResolver.ShotResult shot)
-        { if (profile && profile.Pistol) readySeconds = profile.ReadyHoldSeconds; if (state) state.InterruptCosmeticAction(); if (profile && state && !state.SeatedNow) recoil = Mathf.Min(profile.RecoilDistance * 2, recoil + profile.RecoilDistance); }
+        { shotCarryDelay = .18f; if (profile && profile.Pistol) readySeconds = profile.ReadyHoldSeconds; if (state) state.InterruptCosmeticAction(); if (profile && state && !state.SeatedNow) recoil = Mathf.Min(profile.RecoilDistance * 2, recoil + profile.RecoilDistance); }
         void Update()
         {
             // Restore the preceding frame before Animator evaluation; never accumulate procedural offsets.
@@ -162,6 +187,7 @@ namespace LastSignal
                 if (candidate && ((firearm && candidate.Firearm == firearm.Definition) || (melee && candidate.Melee == melee.Definition)))
                 { next = candidate; break; }
             if (firearm && firearm.PresentationProfile) next = firearm.PresentationProfile;
+            next = ResolvePresentation(next);
             if (profile != next || observedMelee != melee) ReplaceVisual(next, melee);
             if (!weaponVisual) return;
             bool shown = (!profile.ProceduralGrip || (sockets && sockets.ValidFor(profile))) && state.Alive && !state.SeatedNow && !state.Treating && (!state.UpperActionBusy || melee) &&
@@ -173,7 +199,11 @@ namespace LastSignal
                 ResetPoseState(); recoil = 0;
                 if (sockets && sockets.Magazine) sockets.Magazine.localPosition = magazineRest;
             }
-            if (state.PresentationActive) recoil *= Mathf.Exp(-Mathf.Max(.01f, profile.RecoilRecovery) * Time.deltaTime);
+            if (state.PresentationActive)
+            {
+                recoil *= Mathf.Exp(-Mathf.Max(.01f, profile.RecoilRecovery) * Time.deltaTime);
+                shotCarryDelay = Mathf.Max(0, shotCarryDelay - Time.deltaTime);
+            }
         }
         void ReplaceVisual(CharacterWeaponPoseProfile next, MeleeWeaponController melee)
         {
@@ -196,6 +226,13 @@ namespace LastSignal
             }
             if (visibility) visibility.RefreshRenderers();
         }
+        bool WantsSprintCarry()
+        {
+            if (!state || !state.Motor || !state.Motor.IsSprinting) return false;
+            if (!subscribedWeapon) return true;
+            var runtime = subscribedWeapon.RuntimeState;
+            return runtime != null && runtime.State == WeaponState.Ready && runtime.AimAmount < .01f && shotCarryDelay <= 0;
+        }
         void LateUpdate()
         {
             // Animator action ownership can change after Update. Release in this same presentation frame.
@@ -213,7 +250,7 @@ namespace LastSignal
                 frameSeconds = state.PresentationActive ? Mathf.Max(0, Time.deltaTime) : 0;
                 float singleStep = frameSeconds / Mathf.Max(.01f, profile.PoseBlendSeconds);
                 poseWeight = Mathf.MoveTowards(poseWeight, 1, singleStep);
-                sprintWeight = Mathf.MoveTowards(sprintWeight, state.Motor && state.Motor.IsSprinting ? 1 : 0, singleStep);
+                sprintWeight = Mathf.MoveTowards(sprintWeight, WantsSprintCarry() ? 1 : 0, singleStep);
                 slideWeight = Mathf.MoveTowards(slideWeight, state.Sliding ? 1 : 0, singleStep);
                 for (int i = 0; i < posedBones.Length; i++) if (posedBones[i]) previousRotations[i] = posedBones[i].localRotation;
                 poseCaptured = true;
@@ -236,7 +273,7 @@ namespace LastSignal
             float equipWeight = runtime.State == WeaponState.Unequipping
                 ? 1 - Mathf.SmoothStep(0, 1, runtime.StateTimer / Mathf.Max(.01f, runtime.Definition.UnequipSeconds)) : 1;
             poseWeight = Mathf.MoveTowards(poseWeight, equipWeight, step);
-            sprintWeight = Mathf.MoveTowards(sprintWeight, state.Motor && state.Motor.IsSprinting ? 1 : 0, step);
+            sprintWeight = Mathf.MoveTowards(sprintWeight, WantsSprintCarry() ? 1 : 0, step);
             slideWeight = Mathf.MoveTowards(slideWeight, state.Sliding ? 1 : 0, step);
             for (int i = 0; i < posedBones.Length; i++) if (posedBones[i]) previousRotations[i] = posedBones[i].localRotation;
             poseCaptured = true;
@@ -327,7 +364,7 @@ namespace LastSignal
                 pocketFrame = torso.rotation * chestToBodyFrame;
             }
             Quaternion clearance = FindHipClearanceRotation(rightPosition, leftPosition, 12 * (1 - aimWeight));
-            HipClearanceDegrees = Quaternion.Angle(Quaternion.identity, clearance);
+            HipClearanceDegrees = CharacterArmIK.RotationDegrees(clearance);
             if (HipClearanceDegrees > .001f)
             {
                 weaponVisual.transform.SetPositionAndRotation(StockTarget + clearance * (weaponVisual.transform.position - StockTarget),
@@ -361,12 +398,12 @@ namespace LastSignal
             if (upperChest) RotateTorso(upperChest, aimPitch * .12f * poseWeight, turn);
             Quaternion bodyFrame = TorsoFrame;
             Quaternion facing = bodyFrame * Quaternion.Euler(aimPitch * .35f, 0, 0);
-            // A slide already lowers Diesel's animated shoulders. Do not stack the
-            // full sprint drop with a second slide drop on the connected axe.
+            // Slide changes the animated shoulder relationship. Use the character's
+            // connected two-hand slide pose without stacking the full sprint drop.
             Vector3 offset = profile.HipGripOffset + meleePosition +
                 profile.SprintOffset * sprintWeight * (1 - slideWeight) +
                 profile.CrouchOffset * (state.Crouching && !state.Sliding ? 1 : 0) +
-                Vector3.down * (.02f * slideWeight + .10f * (1 - poseWeight));
+                profile.WorldMeleeSlideOffset * slideWeight + Vector3.down * (.10f * (1 - poseWeight));
             Quaternion rotation = facing * Quaternion.Euler(profile.HipEuler) * meleeRotation *
                 Quaternion.Euler(profile.SprintEuler * sprintWeight * (1 - slideWeight)) * Quaternion.Euler(0, 0, 90);
             CharacterWeaponSockets.Attach(weaponVisual.transform, sockets.PrimaryGrip,
@@ -400,8 +437,9 @@ namespace LastSignal
                 LeftPalmTarget = sockets.SecondaryGrip.position;
                 leftPalm.WristPose(LeftPalmTarget, sockets.SecondaryGrip.rotation, out lp, out lr);
             }
-            Vector3 safeShift = FindMeleeClearanceShift(rp, lp, authoredPosition);
-            weaponVisual.transform.position += safeShift;
+            Vector3 safeShift = FindMeleeClearanceShift(rp, lp, authoredPosition,out var safeRotation);
+            weaponVisual.transform.SetPositionAndRotation(rp+safeRotation*(weaponVisual.transform.position-rp)+safeShift,
+                safeRotation*weaponVisual.transform.rotation);
             rightPalm.WristPose(sockets.PrimaryGrip.position, sockets.PrimaryGrip.rotation, out rp, out rr);
             LeftPalmTarget = sockets.SecondaryGrip.position;
             leftPalm.WristPose(LeftPalmTarget, sockets.SecondaryGrip.rotation, out lp, out lr);
@@ -432,7 +470,7 @@ namespace LastSignal
                     for (int sign = -1; sign <= 1; sign += 2)
                     {
                         Vector3 direction = torso.Rotation * (axis == 0 ? Vector3.right : Vector3.up);
-                        Quaternion candidate = Quaternion.RotateTowards(Quaternion.identity,
+                        Quaternion candidate = CharacterArmIK.ClampRotation(
                             Quaternion.AngleAxis(step * sign, direction) * previous, limit);
                         float cost = ArmsClearanceCost(StockTarget + candidate * (right - StockTarget),
                             StockTarget + candidate * (left - StockTarget), torso);
@@ -444,30 +482,51 @@ namespace LastSignal
             }
             return best;
         }
-        Vector3 FindMeleeClearanceShift(Vector3 right, Vector3 left, Vector3 authoredPosition)
+        Vector3 FindMeleeClearanceShift(Vector3 right, Vector3 left, Vector3 authoredPosition,out Quaternion rotation)
         {
             var torso = TorsoClearance;
             Vector3 root = weaponVisual.transform.position;
             Vector3 best = Vector3.zero;
+            Quaternion bestRotation=Quaternion.identity;
+            rotation=bestRotation;
             float score = ArmsClearanceCost(right, left, torso);
             if (score <= .0002f) return best;
-            for (float step = .04f; step >= .004f; step *= .5f)
+            float limit=Mathf.Clamp(profile.MeleeClearanceRotation,0,12);
+            void Consider(Vector3 shift,Quaternion turn)
+            {
+                var rotatedRoot=right+turn*(root-right);
+                shift=authoredPosition+Vector3.ClampMagnitude(rotatedRoot+shift-authoredPosition,.10f)-rotatedRoot;
+                float cost=ArmsClearanceCost(right+shift,right+turn*(left-right)+shift,torso);
+                if(cost<score){score=cost;best=shift;bestRotation=turn;}
+            }
+            // Reach projection can start on the boundary in the wrong direction. Seed
+            // the entire bounded volume before refinement rather than following only six axes.
+            for(int x=-1;x<=1&&score>.0002f;x++)
+            for(int y=-1;y<=1&&score>.0002f;y++)
+            for(int z=-1;z<=1&&score>.0002f;z++)
+            {
+                var direction=new Vector3(x,y,z).normalized;
+                Consider(authoredPosition-root+torso.Rotation*direction*.10f,Quaternion.identity);
+            }
+            for (float step = .04f; step >= .001f; step *= .5f)
             {
                 for (int pass = 0; pass < 3; pass++)
                 {
                     Vector3 previous = best;
+                    Quaternion previousRotation=bestRotation;
                     for (int axis = 0; axis < 3; axis++)
                     for (int sign = -1; sign <= 1; sign += 2)
                     {
                         Vector3 direction = torso.Rotation * (axis == 0 ? Vector3.forward : axis == 1 ? Vector3.up : Vector3.right);
-                        Vector3 candidate = authoredPosition + Vector3.ClampMagnitude(root + previous + direction * (step * sign) - authoredPosition, .10f) - root;
-                        float cost = ArmsClearanceCost(right + candidate, left + candidate, torso);
-                        if (cost < score) { score = cost; best = candidate; }
+                        Consider(previous+direction*(step*sign),previousRotation);
+                        if(limit>0)Consider(previous,CharacterArmIK.ClampRotation(
+                            Quaternion.AngleAxis(step*200*sign,direction)*previousRotation,limit));
                     }
-                    if (score <= .0002f || (best - previous).sqrMagnitude < 1e-10f) break;
+                    if (score <= .0002f || ((best - previous).sqrMagnitude < 1e-10f&&CharacterArmIK.RotationDegrees(bestRotation*Quaternion.Inverse(previousRotation))<.001f)) break;
                 }
                 if (score <= .0002f) break;
             }
+            rotation=bestRotation;
             return best;
         }
         float ArmsClearanceCost(Vector3 right, Vector3 left, CharacterArmClearance.Torso torso)
@@ -535,20 +594,71 @@ namespace LastSignal
             CharacterWeaponSockets.Attach(weaponVisual.transform, sockets.PrimaryGrip, rightPalm.PalmPosition, rightPalm.PalmRotation);
             rightPalm.Apply(profile.FingerGripWeight * poseWeight, profile.Pistol, kick, profile.FingerClosure, profile,
                 profile.Pistol ? profile.WorldPistolFingers : null);
-            // Left arm remains locomotion-owned except for the explicitly bounded pistol reload window.
-            SupportHandWeight = assist;
-            if (sockets.Magazine) sockets.Magazine.localPosition = magazineRest + Vector3.down * (profile.PistolMagazineTravel * extraction);
-            LeftReachResidual = 0;
-            if (assist > 0)
+            ApplyPistolSupport(runtime, assist, extraction, scale);
+        }
+        void ApplyPistolSupport(WeaponRuntimeState runtime, float assist, float extraction, float scale)
+        {
+            if (sockets.Magazine)
+                sockets.Magazine.localPosition = magazineRest + Vector3.down * (profile.PistolMagazineTravel * extraction);
+            SupportHandWeight = 0;
+            LeftReachResidual = LeftTorsoPenetration = 0;
+            if (leftPalm == null || !leftPalm.Valid || !leftUpper || !leftLower || !leftHand || !chest) return;
+
+            bool requested = profile.Pistol && profile.WorldTwoHandedPistol;
+            if (!requested || !profile.ValidWorldPistolSupport || !sockets.HasWorldPistolSupport)
             {
-                LeftPalmTarget = sockets.ReloadReference.position;
-                leftPalm.WristPose(LeftPalmTarget, sockets.ReloadReference.rotation, out var leftPosition, out var leftRotation);
-                LeftWristTarget = leftPosition;
-                LeftElbowHint = chest.position + transform.rotation * (profile.LeftElbow * scale);
-                var left = SolveArm(leftUpper, leftLower, leftHand, leftPosition, leftRotation, LeftElbowHint, assist, ref leftBendLocal);
-                LeftSolvedWrist = left.Wrist; LeftReachResidual = left.Residual;
-                leftPalm.Apply(profile.FingerGripWeight * assist * .5f, false, 0);
+                pistolSupportWeight = pistolReloadBlend = 0;
+                if (requested && !pistolSupportWarningIssued)
+                {
+                    Debug.LogWarning("TPS pistol support configuration is invalid; using reload-only left hand.", this);
+                    pistolSupportWarningIssued = true;
+                }
+                ApplyLegacyPistolReload(assist, scale);
+                return;
             }
+
+            float step = Mathf.Max(0, frameSeconds) / Mathf.Max(.01f, profile.PoseBlendSeconds);
+            bool hold = runtime != null && (runtime.State == WeaponState.Ready || runtime.State == WeaponState.Reloading);
+            // Carry with both hands through sprint/slide; the weapon pose owns lowering.
+            float targetWeight = hold ? Mathf.Clamp01(poseWeight) * profile.HandWeight : 0;
+            pistolSupportWeight = Mathf.MoveTowards(pistolSupportWeight, targetWeight, step);
+            float reload = runtime != null && runtime.State == WeaponState.Reloading && sockets.ReloadReference
+                ? Mathf.Clamp01(assist) : 0;
+            pistolReloadBlend = Mathf.MoveTowards(pistolReloadBlend, reload, step);
+            SupportHandWeight = pistolSupportWeight;
+            if (pistolSupportWeight <= 0) return;
+
+            // Resolve contacts after the right hand attaches the weapon. Filter only the
+            // reload transition: world-space filtering would introduce recoil separation.
+            var contact = sockets.PistolSupport.position;
+            var rotation = sockets.PistolSupport.rotation;
+            if (sockets.ReloadReference && pistolReloadBlend > 0)
+            {
+                contact = Vector3.Lerp(contact, sockets.ReloadReference.position, pistolReloadBlend);
+                rotation = Quaternion.Slerp(rotation, sockets.ReloadReference.rotation, pistolReloadBlend);
+            }
+            LeftPalmTarget = contact;
+            leftPalm.WristPose(contact, rotation, out var position, out var wrist);
+            LeftWristTarget = position;
+            LeftElbowHint = chest.position + transform.rotation * (profile.LeftElbow * scale);
+            var solved = SolveArm(leftUpper, leftLower, leftHand, position, wrist,
+                LeftElbowHint, pistolSupportWeight, ref leftBendLocal);
+            LeftSolvedWrist = solved.Wrist;
+            LeftReachResidual = solved.Residual;
+            leftPalm.Apply(profile.FingerGripWeight * pistolSupportWeight * Mathf.Lerp(1, .5f, pistolReloadBlend),
+                false, 0, Mathf.Lerp(profile.WorldSupportFingerClosure, .35f, pistolReloadBlend), profile, null, true);
+        }
+        void ApplyLegacyPistolReload(float assist, float scale)
+        {
+            if (assist <= 0 || !sockets.ReloadReference) return;
+            SupportHandWeight = assist;
+            LeftPalmTarget = sockets.ReloadReference.position;
+            leftPalm.WristPose(LeftPalmTarget, sockets.ReloadReference.rotation, out var position, out var rotation);
+            LeftWristTarget = position;
+            LeftElbowHint = chest.position + transform.rotation * (profile.LeftElbow * scale);
+            var solved = SolveArm(leftUpper, leftLower, leftHand, position, rotation, LeftElbowHint, assist, ref leftBendLocal);
+            LeftSolvedWrist = solved.Wrist; LeftReachResidual = solved.Residual;
+            leftPalm.Apply(profile.FingerGripWeight * assist * .5f, false, 0);
         }
         public static float CalculateTorsoYawCorrection(Quaternion anatomicalFrame, Quaternion actorFrame, float desiredYaw, float weight)
         {
@@ -613,11 +723,17 @@ namespace LastSignal
             float a = Vector3.Distance(origin, lower.position), b = Vector3.Distance(lower.position, hand.position);
             Vector3 blendedTarget = Vector3.Lerp(hand.position, target, weight);
             Vector3 hint = Vector3.Lerp(lower.position, elbow, Mathf.Clamp01(profile.ElbowWeight) * weight);
+            bool supportedPistol = profile.Pistol && profile.WorldTwoHandedPistol;
             var solution = CharacterArmIK.Solve(origin, blendedTarget, a, b, hint, -transform.up,
-                transform.rotation * previousBendLocal, profile.MaximumReach,
+                supportedPistol ? Vector3.zero : transform.rotation * previousBendLocal, profile.MaximumReach,
                 profile.ElbowTurnDegreesPerSecond * Mathf.Deg2Rad * frameSeconds);
             if (!solution.Valid) return solution;
-            solution = CharacterArmClearance.AvoidTorso(solution, origin, TorsoClearance);
+            solution = supportedPistol
+                ? CharacterArmClearance.AvoidTorsoLowerElbow(solution, origin, TorsoClearance, transform.up)
+                : CharacterArmClearance.AvoidTorso(solution, origin, TorsoClearance);
+            if (supportedPistol)
+                solution = CharacterArmIK.StabilizeBend(solution, origin, transform.rotation * previousBendLocal,
+                    profile.ElbowTurnDegreesPerSecond, frameSeconds);
             if (weight > 0)
             {
                 Quaternion initialHandRotation = hand.rotation;

@@ -8,6 +8,8 @@ namespace LastSignal.Audio
     {
         public const int VoiceBudget=16;
         [SerializeField] AudioCatalog catalog;
+        [SerializeField] bool useWorldRoofAmbience;
+        [SerializeField] LastSignal.Atmosphere.TownAtmosphere atmosphere;
         [SerializeField] Vector3 cabinCenter=new Vector3(-360,1.5f,-140), cabinSize=new Vector3(6,3,6);
         [SerializeField] AudioSurface[] groundAreas=System.Array.Empty<AudioSurface>();
         public void ConfigureGroundAreas(AudioSurface[] areas) => groundAreas=areas;
@@ -172,7 +174,8 @@ namespace LastSignal.Audio
             float dt=Mathf.Min(Time.deltaTime,.1f); elapsed+=dt; tension.Tick(elapsed);
             if(elapsed>captionUntil) Caption="";
             float indoor=ShelterBlend(listener.position,cabinCenter,cabinSize);
-            float rain=clock && clock.Simulation!=null?(float)clock.Simulation.RainPresentation:0;
+            if(useWorldRoofAmbience && clock && clock.ProtectedFromRain) indoor=Mathf.Max(indoor,.85f);
+            float rain=atmosphere && atmosphere.isActiveAndEnabled ? atmosphere.RainBlend : clock && clock.Simulation!=null?(float)clock.Simulation.RainPresentation:0;
             float hour=clock && clock.Simulation!=null?(float)(clock.Simulation.TimeOfDay/3600):12;
             float night=1-Mathf.Clamp01(Mathf.Min(hour-5,20-hour));
             float duck=elapsed<duckUntil?.55f:1;

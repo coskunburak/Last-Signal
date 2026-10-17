@@ -57,7 +57,7 @@ namespace LastSignal.Tests
         {
             Assert.That(probe.Active,Is.True);Assert.That(probe.FpsError,Is.LessThan(.02f));
             Assert.That(probe.WorldError,Is.LessThan(.02f));Assert.That(probe.Residual,Is.LessThan(.02f),"Do not hide an unreachable target by moving the gun.");
-            Assert.That(probe.World.ActiveProfile,Is.SameAs(combat.ActiveWeapon.PistolVariants.Selected.Pose));
+            Assert.That(probe.World.ActiveProfile,Is.SameAs(probe.World.ResolvePresentation(combat.ActiveWeapon.PistolVariants.Selected.Pose)));
             Assert.That(probe.World.SupportHandWeight,Is.Zero);
         }
         [UnityTest] public IEnumerator DxtEquipAdsFireReloadAndLifecycle() => Exercise(PistolVisualVariant.DxtId);
@@ -66,7 +66,7 @@ namespace LastSignal.Tests
         IEnumerator Exercise(string id)
         {
             yield return Select(id);Contacts();var pistol=combat.ActiveWeapon;var variants=pistol.PistolVariants;var state=pistol.RuntimeState;
-            Assert.That(variants.SelectedId,Is.EqualTo(id));Assert.That(probe.Fps.Profile,Is.SameAs(variants.Selected.Pose));
+            Assert.That(variants.SelectedId,Is.EqualTo(id));Assert.That(probe.Fps.Profile,Is.SameAs(probe.Fps.ResolveProfile(variants.Selected.Pose)));
             Assert.That(probe.Fps.Visual.GetComponentsInChildren<Renderer>(),Is.Not.Empty);
             int rifle=combat.Rifle.RuntimeState.CurrentMagazine,shots=0;int cues=pistol.GetComponent<WeaponAudioPresenter>().PresentedCueCount;
             pistol.ShotFired+=_=>shots++;

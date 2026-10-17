@@ -6,6 +6,7 @@ namespace LastSignal
     /// Manages viewmodel position: hip pose, ADS pose interpolation, sway, bob, and visual recoil.
     /// Driven by WeaponRuntimeState.AimAmount. Does NOT move the gameplay player controller.
     /// </summary>
+    [DefaultExecutionOrder(250)]
     public sealed class WeaponViewPresenter : MonoBehaviour
     {
         [Header("References")]
@@ -50,12 +51,13 @@ namespace LastSignal
         float bobTimer;
         float recoilOffset;
         float crouchWeight;
-        float slideWeight;
+        float slideWeight, sprintWeight, shotCarryDelay;
+        public float SprintWeight => sprintWeight;
         float presentationAim;
         float readySeconds, readyWeight;
         public float ReadyWeight => readyWeight;
         public void SetGripProfile(CharacterWeaponPoseProfile profile)
-        { gripProfile = profile; readySeconds = readyWeight = recoilOffset = presentationAim = 0; }
+        { gripProfile = profile; readySeconds = readyWeight = recoilOffset = presentationAim = sprintWeight = shotCarryDelay = 0; }
         public float TriggerPull => gripProfile ? Mathf.Clamp01(recoilOffset / Mathf.Max(.001f, gripProfile.RecoilDistance)) : 0;
 
         public void Configure(WeaponController ctrl, PlayerInputReader reader, Transform root)
@@ -83,7 +85,7 @@ namespace LastSignal
         {
             if (weapon) weapon.ShotFired -= OnShotFired;
             readySeconds = readyWeight = 0;
-            recoilOffset = crouchWeight = slideWeight = bobTimer = presentationAim = 0; currentSway = Vector3.zero;
+            recoilOffset = crouchWeight = slideWeight = sprintWeight = shotCarryDelay = bobTimer = presentationAim = 0; currentSway = Vector3.zero;
         }
 
         void LateUpdate()
@@ -96,6 +98,11 @@ namespace LastSignal
                 stance && stance.IsCrouching ? 1f : 0f, dt / crouchTransitionSeconds);
             slideWeight = Mathf.MoveTowards(slideWeight,
                 motor && motor.IsSliding ? 1f : 0f, dt / slideTransitionSeconds);
+            shotCarryDelay = Mathf.Max(0, shotCarryDelay - dt);
+            bool carrying = gripProfile && gripProfile.FpsSprintCarry && motor && motor.IsSprinting &&
+                weapon.RuntimeState.State == WeaponState.Ready && weapon.RuntimeState.AimAmount < .01f && shotCarryDelay <= 0;
+            sprintWeight = Mathf.MoveTowards(sprintWeight, carrying ? 1 : 0,
+                dt / (gripProfile ? Mathf.Max(.01f, gripProfile.PoseBlendSeconds) : .15f));
             float aim = weapon.RuntimeState.AimAmount * (1f - slideWeight);
             if (gripProfile && !weapon.IsSimulationActive) aim = presentationAim;
             else presentationAim = aim;
@@ -128,6 +135,13 @@ namespace LastSignal
                 targetRot *= Quaternion.Euler(gripProfile.PistolReloadEuler * reloadAssist);
             }
 
+            if (gripProfile && gripProfile.FpsSprintCarry)
+            {
+                // One owner moves the complete weapon frame; IK follows both contacts.
+                targetPos = Vector3.Lerp(targetPos, gripProfile.FpsSprintPosition, sprintWeight);
+                targetRot = Quaternion.Slerp(targetRot, Quaternion.Euler(gripProfile.FpsSprintEuler), sprintWeight);
+            }
+
             // Preserve the authored sight alignment at full ADS.
             float crouchHipWeight = crouchWeight * (1f - aim) * (1f - slideWeight);
             targetPos += crouchPositionOffset * crouchHipWeight + slidePositionOffset * slideWeight;
@@ -144,12 +158,16 @@ namespace LastSignal
 
             // Movement bob (suppressed by ADS).
             if (input && input.Move.sqrMagnitude > .01f && slideWeight < .01f)
-                bobTimer += dt * bobFrequency;
+                bobTimer += dt * bobFrequency * Mathf.Lerp(1, 1.45f, sprintWeight);
             else
                 bobTimer = Mathf.Lerp(bobTimer, 0, dt * 4f);
 
-            float bobX = Mathf.Sin(bobTimer) * bobAmplitude * (1f - aim) * (1f - slideWeight);
-            float bobY = Mathf.Sin(bobTimer * 2f) * bobAmplitude * .5f * (1f - aim) * (1f - slideWeight);
+            float amplitude = gripProfile && gripProfile.FpsSprintCarry
+                ? Mathf.Lerp(bobAmplitude, gripProfile.FpsSprintBobAmplitude, sprintWeight) : bobAmplitude;
+            float bobX = Mathf.Sin(bobTimer) * amplitude * (1f - aim) * (1f - slideWeight);
+            float bobY = Mathf.Sin(bobTimer * 2f) * amplitude * .5f * (1f - aim) * (1f - slideWeight);
+            targetRot *= Quaternion.Euler(Mathf.Sin(bobTimer * 2f) * .45f * sprintWeight,
+                0, Mathf.Sin(bobTimer) * .7f * sprintWeight);
 
             // Visual recoil recovery.
             recoilOffset = Mathf.Lerp(recoilOffset, 0, dt * (gripProfile ? gripProfile.RecoilRecovery : recoilRecovery));
@@ -162,6 +180,7 @@ namespace LastSignal
 
         void OnShotFired(WeaponFireResolver.ShotResult result)
         {
+            shotCarryDelay = .18f;
             if (gripProfile && gripProfile.Pistol) readySeconds = gripProfile.ReadyHoldSeconds;
             float kick = gripProfile ? gripProfile.RecoilDistance : recoilKickback;
             if (weapon.RuntimeState != null)

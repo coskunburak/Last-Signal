@@ -39,6 +39,18 @@ namespace LastSignal
         [SerializeField] Transform spawnPoint;
         [SerializeField] DoorInteractable[] doors;
         [SerializeField] ZombieEncounter zombieEncounter;
+        [SerializeField] ZombieEncounter[] additionalEncounters = System.Array.Empty<ZombieEncounter>();
+        public System.Collections.Generic.IEnumerable<ZombieEncounter> ResidentEncounters
+        {
+            get
+            {
+                if (zombieEncounter) yield return zombieEncounter;
+                if (additionalEncounters != null)
+                    foreach (var encounter in additionalEncounters) if (encounter) yield return encounter;
+            }
+        }
+        public void ConfigureResidentEncounters(ZombieEncounter primary, ZombieEncounter[] additional)
+        { zombieEncounter = primary; additionalEncounters = additional ?? System.Array.Empty<ZombieEncounter>(); }
         public void ConfigureEncounter(ZombieEncounter encounter) => zombieEncounter = encounter;
         public GameObject Player { get; private set; }
         public bool Paused { get; private set; }
@@ -122,7 +134,7 @@ namespace LastSignal
             Noise?.End();
             Noise = new Noise.GameplayNoiseSystem(NoiseTime, NoiseAllowed, population ? new Noise.WorldPressureNoiseAdapter(population, this) : null, Debug.LogException);
             Player.AddComponent<Noise.GameplayNoiseContext>().Bind(this);
-            if (zombieEncounter) zombieEncounter.Begin(Player);
+            foreach (var encounter in ResidentEncounters) encounter.Begin(Player);
             loot = GetComponent<LastSignal.Loot.LootPopulationService>();
             if (loot && !restoring) loot.Begin(Player);
             shelter = GetComponent<Shelter.ShelterLoop>();
@@ -172,7 +184,7 @@ namespace LastSignal
             Paused = value;
             if (value || PlayerDead) GetComponent<Vehicles.VehicleWorld>()?.Suspend();
             if (value && Player) Player.GetComponent<FirstPersonMotor>()?.ResetNoiseCadence();
-            if (zombieEncounter) zombieEncounter.SetPaused(value);
+            foreach (var encounter in ResidentEncounters) encounter.SetPaused(value);
             Time.timeScale = value ? 0 : 1;
             if (input) input.SetGameplay(!value && !PlayerDead);
             if (value || PlayerDead) CancelPlayerCombat();
@@ -216,7 +228,7 @@ namespace LastSignal
             if (loot) loot.End();
             if (health) health.Died -= OnPlayerDied;
             health = null;
-            if (zombieEncounter) zombieEncounter.End();
+            foreach (var encounter in ResidentEncounters) encounter.End();
             if (input)
             {
                 input.JournalRequested -= OpenJournal;

@@ -71,18 +71,18 @@ namespace LastSignal.Tests
         {
             Assert.That(probe.Active, Is.True);
             BodyClearance();
-            Assert.That(probe.World.ActiveProfile, Is.SameAs(probe.Fps.Profile));
+            Assert.That(probe.World.ActiveProfile, Is.SameAs(probe.World.ResolvePresentation(probe.Fps.Profile)));
             Assert.That(probe.FpsError, Is.LessThan(.02f), "FPS right palm");
-            Assert.That(probe.WorldError, Is.LessThan(.02f), "Diesel right palm");
+            Assert.That(probe.WorldError, Is.LessThan(.02f), "Active character right palm");
             Assert.That(probe.Residual, Is.LessThan(.02f), "FPS requested wrist reach");
-            Assert.That(probe.WorldRightResidual, Is.LessThan(.02f), "Diesel requested wrist reach");
+            Assert.That(probe.WorldRightResidual, Is.LessThan(.02f), "Active character requested wrist reach");
             Assert.That(float.IsFinite(probe.WristBend), Is.True);
             if (axe)
             {
                 Assert.That(probe.Support, Is.EqualTo(1));
                 Assert.That(probe.FpsSecondaryError, Is.LessThan(.02f), "FPS left palm");
                 Assert.That(probe.WorldSecondaryError, Is.LessThan(.02f),
-                    $"Diesel left palm; reach={probe.WorldSecondaryResidual:F4} m, shared-root adjustment={probe.World.MeleePlacementCorrection:F4} m");
+                    $"Active character left palm; reach={probe.WorldSecondaryResidual:F4} m, shared-root adjustment={probe.World.MeleePlacementCorrection:F4} m");
                 Assert.That(probe.FpsSecondaryResidual, Is.LessThan(.02f));
                 Assert.That(probe.WorldSecondaryResidual, Is.LessThan(.02f));
                 Assert.That(probe.World.MeleePlacementCorrection, Is.LessThanOrEqualTo(.1001f));

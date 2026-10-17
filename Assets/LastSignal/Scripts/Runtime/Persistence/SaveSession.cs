@@ -72,7 +72,13 @@ namespace LastSignal.Persistence
                 if (!AddIdentity(encounter.GetComponent<PersistentEntityId>(), ids)) return Invalid("Encounter requires a unique authored identity.");
             foreach (var point in SceneComponents<LootSpawnPoint>())
                 if (!point.Validate(out _) || !ids.Add(point.StableId)) return Invalid("Invalid or duplicate loot point identity.");
-            if (SceneComponents<ZombieEncounter>().Count != 1 || !GetComponent<ShelterLoop>().Validate(out _)) return Invalid("V1 requires the current one-encounter shelter composition.");
+            var authoredEncounters = SceneComponents<ZombieEncounter>();
+            var ownedEncounters = new HashSet<ZombieEncounter>();
+            foreach (var encounter in Flow.ResidentEncounters)
+                if (!ownedEncounters.Add(encounter) || !authoredEncounters.Contains(encounter))
+                    return Invalid("Resident encounter must be unique, active and owned by this scene.");
+            if (authoredEncounters.Count == 0 || ownedEncounters.Count != authoredEncounters.Count || !GetComponent<ShelterLoop>().Validate(out _))
+                return Invalid("Every resident encounter must be owned by SessionFlow; valid shelter required.");
             return SaveResult.Ok;
         }
         static bool AddIdentity(PersistentEntityId identity, HashSet<string> ids) => identity && !string.IsNullOrWhiteSpace(identity.Id) && ids.Add(identity.Id);
@@ -162,8 +168,14 @@ namespace LastSignal.Persistence
                 items.Add(ItemState(item));
             }
             items.Sort((a,b)=>StringComparer.Ordinal.Compare(a.id,b.id));
-            var encounter = SceneComponents<ZombieEncounter>()[0]; var enemyState = encounter.CaptureEnemy();
-            if (enemyState == null) return Invalid("Missing persistent encounter state.");
+            var enemyStates = new List<EnemySnapshot>();
+            foreach (var encounter in SceneComponents<ZombieEncounter>())
+            {
+                var enemyState = encounter.CaptureEnemy();
+                if (enemyState == null) return Invalid("Missing persistent encounter state.");
+                enemyStates.Add(enemyState);
+            }
+            enemyStates.Sort((a, b) => StringComparer.Ordinal.Compare(a.id, b.id));
             var look=player.GetComponent<FirstPersonLook>();
             var combatSnapshot = CaptureCombat(player);
             if (combatSnapshot == null) return Busy();
@@ -179,8 +191,7 @@ namespace LastSignal.Persistence
                 inventory=carried,weapon=new WeaponSnapshot {definitionId=WeaponId,magazine=weapon.RuntimeState.CurrentMagazine,
                     condition=weapon.RuntimeState.Condition},
                 shelter=new ShelterSnapshot {production=GetComponent<ShelterSite>()?.Production?.Capture(),storage=stash,onExpedition=shelter.State==ExpeditionState.Expedition,expeditionIndex=shelter.ExpeditionIndex},
-                world=new WorldSnapshot {doors=doors.ToArray(),opportunities=opportunities.ToArray(),items=items.ToArray(),enemies=new[] {
-                    enemyState }}
+                world=new WorldSnapshot {doors=doors.ToArray(),opportunities=opportunities.ToArray(),items=items.ToArray(),enemies=enemyStates.ToArray()}
             };
             if (cells)
             {
@@ -334,8 +345,10 @@ namespace LastSignal.Persistence
                 if(!expected.Remove(point.id)) return Invalid("Unknown loot point.");
                 if(point.outcome==OpportunityOutcome.Generated && point.entityId!="loot:"+point.id) return Invalid("Loot entity belongs to the wrong opportunity.");
             }
-            var encounter=SceneComponents<ZombieEncounter>()[0];
-            if(state.world.enemies.Length!=1 || state.world.enemies[0].id!=encounter.GetComponent<PersistentEntityId>().Id) return Invalid("Enemy topology changed.");
+            foreach (var encounter in SceneComponents<ZombieEncounter>()) expected.Add(encounter.GetComponent<PersistentEntityId>().Id);
+            if (expected.Count != state.world.enemies.Length) return Invalid("Enemy topology changed.");
+            foreach (var enemy in state.world.enemies)
+                if (!expected.Remove(enemy.id)) return Invalid("Unknown or duplicate resident enemy identity.");
             foreach(var item in state.world.items)
                 if(item.origin==WorldItemOrigin.Authored) return Invalid("Authored WorldItem hydration is not supported by this world version.");
             // Menu must not contain unowned authored items: those require their own baseline contract.
@@ -389,14 +402,23 @@ namespace LastSignal.Persistence
                 throw new InvalidOperationException("Missing saved combat slot.");
             if(combat.Melee) combat.Melee.Cancel();
             shelter.RestoreExpedition(state.shelter.onExpedition,state.shelter.expeditionIndex);
-            var actor=SceneComponents<ZombieEncounter>()[0].Actor; var enemy=state.world.enemies[0];
-            if (actor.Definition.ArchetypeId != ZombieArchetypes.Legacy(enemy.archetypeId) && !actor.RestoreArchetype(enemy.archetypeId))
-                throw new InvalidOperationException("Saved archetype asset unavailable.");
-            var agent=actor.GetComponent<NavMeshAgent>(); var position=Position(enemy.transform);
-            if(!NavMesh.SamplePosition(position,out var hit,.5f,NavMesh.AllAreas) || !agent.Warp(hit.position)) throw new InvalidOperationException("Saved enemy is outside navigation.");
-            actor.transform.rotation=Rotation(enemy.transform);
-            actor.GetComponent<ZombieDismemberment>()?.RestoreState(enemy.anatomy);
-            actor.GetComponent<ZombieHealth>().RestoreHealth(enemy.health);
+            var encounterById = new Dictionary<string, ZombieEncounter>(StringComparer.Ordinal);
+            foreach (var encounter in SceneComponents<ZombieEncounter>())
+                encounterById.Add(encounter.GetComponent<PersistentEntityId>().Id, encounter);
+            foreach (var enemy in state.world.enemies)
+            {
+                var actor = encounterById[enemy.id].Actor;
+                if (!actor) throw new InvalidOperationException("Resident encounter failed to initialize.");
+                if (actor.Definition.ArchetypeId != ZombieArchetypes.Legacy(enemy.archetypeId) && !actor.RestoreArchetype(enemy.archetypeId))
+                    throw new InvalidOperationException("Saved archetype asset unavailable.");
+                var agent = actor.GetComponent<NavMeshAgent>(); var position = Position(enemy.transform);
+                var filter = new NavMeshQueryFilter { agentTypeID = agent.agentTypeID, areaMask = agent.areaMask };
+                if (!NavMesh.SamplePosition(position, out var hit, .5f, filter) || !agent.Warp(hit.position))
+                    throw new InvalidOperationException("Saved enemy is outside navigation.");
+                actor.transform.rotation = Rotation(enemy.transform);
+                actor.GetComponent<ZombieDismemberment>()?.RestoreState(enemy.anatomy);
+                actor.GetComponent<ZombieHealth>().RestoreHealth(enemy.health);
+            }
         }
         static CombatEquipmentSnapshot CaptureCombat(GameObject player)
         {
