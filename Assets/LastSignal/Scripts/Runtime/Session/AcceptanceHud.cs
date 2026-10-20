@@ -26,6 +26,7 @@ namespace LastSignal
         string shownSurvivalFeedback;
         GameObject observedPlayer;
         InteractionController interaction;
+        Gathering.GatheringWorld gathering;
         PlayerStance stance;
         PlayerHealth health;
         PlayerCombatController combat;
@@ -38,7 +39,7 @@ namespace LastSignal
             panel = menuPanel; panelTitle = title; startButton = start; resumeButton = resume; menuButton = menu;
         }
         public void SetAmmoDisplay(Text ammo) { ammoDisplay = ammo; RefreshAmmo(); }
-        void Start() { if (session && prompt) gameObject.AddComponent<InputPromptGlyph>().Initialize(session, prompt); }
+        void Start() { if(session) gathering=session.GetComponent<Gathering.GatheringWorld>(); if (session && prompt) gameObject.AddComponent<InputPromptGlyph>().Initialize(session, prompt); }
         void OnEnable()
         {
             if (!session) return;
@@ -135,7 +136,7 @@ namespace LastSignal
                     (controls && controls.Actions ? controls.BindingText("Player/Interact") + " — " : "") + currentPrompt;
             }
             prompt.text = menu || paused || session.PlayerDead ? "" : composedPrompt;
-            status.text = stance && stance.StandBlocked ? "Baş üstünde engel var. Açık alanda tekrar çömelme tuşuna bas." : controlsText;
+            status.text = menu || paused || session.PlayerDead ? "" : stance && stance.StandBlocked ? "Baş üstünde engel var. Açık alanda tekrar çömelme tuşuna bas." : gathering && Time.unscaledTime<gathering.FeedbackUntil ? gathering.PlayerFeedback : controlsText;
 
             if (ammoDisplay) ammoDisplay.enabled = ammoWeapon && !menu && !paused && !session.PlayerDead;
         }

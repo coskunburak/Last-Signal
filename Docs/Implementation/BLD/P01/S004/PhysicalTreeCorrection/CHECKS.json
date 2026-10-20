@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-19",
+  "scope": "SOURCE_ONLY_NOT_UNITY_ACCEPTANCE",
+  "assemblies": {
+    "LastSignal.Runtime": {
+      "exitCode": 0,
+      "log": "LastSignal.Runtime.log"
+    },
+    "LastSignal.Editor": {
+      "exitCode": 0,
+      "log": "LastSignal.Editor.log"
+    },
+    "LastSignal.EditModeTests": {
+      "exitCode": 0,
+      "log": "LastSignal.EditModeTests.log"
+    },
+    "LastSignal.PlayModeTests": {
+      "exitCode": 0,
+      "log": "LastSignal.PlayModeTests.log"
+    }
+  },
+  "unityTests": "NOT_RUN_BY_AGENT",
+  "authoring": "NOT_RUN_BY_AGENT",
+  "visual": "NOT_APPROVED",
+  "performance": "NOT_MEASURED",
+  "sourceSceneSha256": "d7462730c8a04808e20581ff71e3d911e194364b59bf932379a637b7102835fb",
+  "sourceSceneUnchanged": true,
+  "targetedEntryFilesChanged": [
+    "Assets/LastSignal/Scripts/Runtime/Gathering/GatheringState.cs",
+    "Assets/LastSignal/Scripts/Runtime/Gathering/TreeStructure.cs",
+    "Assets/LastSignal/Scripts/Runtime/Gathering/ResourceNodeDefinition.cs",
+    "Assets/LastSignal/Scripts/Runtime/Gathering/TreePhysicsProfile.cs",
+    "Assets/LastSignal/Scripts/Runtime/Gathering/TreePhysicsBody.cs",
+    "Assets/LastSignal/Scripts/Runtime/Gathering/ResourceNodeView.cs",
+    "Assets/LastSignal/Scripts/Runtime/Gathering/GatheringWorld.cs",
+    "Assets/LastSignal/Scripts/Editor/TreePhysicsAuthoring.cs",
+    "Assets/LastSignal/Scripts/Tests/PlayMode/P01TreeStageTests.cs",
+    "Assets/LastSignal/Scripts/Tests/PlayMode/P01TreePhysicsTests.cs",
+    "Assets/LastSignal/Scripts/Tests/EditMode/P01TreePersistenceTests.cs",
+    "Assets/LastSignal/Scripts/Tests/EditMode/P01TreeStructureTests.cs",
+    "Tools/p01-tree-verify.py"
+  ],
+  "targetedEntryFilesUnchanged": [
+    "Assets/LastSignal/Scripts/Runtime/Gathering/HarvestManifest.cs",
+    "Assets/LastSignal/Scripts/Runtime/Gathering/TreeAudioBank.cs",
+    "Assets/LastSignal/Scripts/Runtime/Gathering/HarvestDurability.cs",
+    "Assets/LastSignal/Scenes/Validation/FirstTownHarvest_20261018150846-032db4e9.unity"
+  ],
+  "gitDiffCheckExitCode": 0,
+  "runnerPythonSyntax": "checked without executing runner",
+  "limitation": "Cached installed Unity/package assembly references; actual Unity compilation/tests and generation still owner-only.",
+  "dirtySourceSaveFollowUp": {
+    "date": "2026-10-19",
+    "editorSourceCompileExitCode": 0,
+    "log": "DirtySourceSave-Editor.log",
+    "gitDiffCheckExitCode": 0,
+    "unityTests": "NOT_RUN_BY_AGENT",
+    "authoring": "NOT_RUN_BY_AGENT",
+    "behavior": "Explicit Save and continue / Cancel on modified S003 source; save failure stops before generation."
+  },
+  "treePickerWindowFollowUp": {
+    "date": "2026-10-19",
+    "editorSourceCompileExitCode": 0,
+    "log": "TreePickerWindow-Editor.log",
+    "gitDiffCheckExitCode": 0,
+    "unityTests": "NOT_RUN_BY_AGENT",
+    "authoring": "NOT_RUN_BY_AGENT",
+    "visibility": "OWNER_VERIFICATION_REQUIRED",
+    "behavior": "Persistent utility window replaces context menu; explicit choose/create; delayed callback revalidates source."
+  },
+  "projectionActivationFollowUp": {
+    "date": "2026-10-19",
+    "editorSourceCompileExitCode": 0,
+    "editModeTestSourceCompileExitCode": 0,
+    "logs": [
+      "ProjectionActivation-Editor.log",
+      "ProjectionActivation-EditModeTests.log"
+    ],
+    "gitDiffCheckExitCode": 0,
+    "unityTests": "NOT_RUN_BY_AGENT",
+    "authoring": "NOT_RUN_BY_AGENT",
+    "ownerEvidence": "Picker opened with 3 trees; generic projection validation failed. Failed predicate not captured in original log.",
+    "change": "Activate assembled kinematic trunk and sync before existing strict Valid check; detailed rejection and replacement deactivation; source visual retained.",
+    "ownerRetry": "Original FirstTownHarvest source -> Create -> choose tree; require S004_STAGE_PREPARED."
+  },
+  "draftRetryFollowUp": {
+    "date": "2026-10-19",
+    "editorSourceCompileExitCode": 0,
+    "log": "DraftRetry-Editor.log",
+    "gitDiffCheckExitCode": 0,
+    "authoring": "NOT_RUN_BY_AGENT",
+    "unityTests": "NOT_RUN_BY_AGENT",
+    "behavior": "Owner Create from S004 draft recovers S003 source through existing save/cancel flow."
+  }
+}

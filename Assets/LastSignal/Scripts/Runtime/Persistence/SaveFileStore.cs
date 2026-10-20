@@ -50,6 +50,7 @@ namespace LastSignal.Persistence
         bool busy;
         long sessionGeneration;
         public long SessionGeneration => sessionGeneration;
+        public bool LastWriteMayHavePublished { get; private set; }
         public SaveFileStore(string currentPath, SaveCodec codec, ISaveFiles files = null)
         {
             this.currentPath = Path.GetFullPath(currentPath ?? throw new ArgumentNullException(nameof(currentPath)));
@@ -78,6 +79,7 @@ namespace LastSignal.Persistence
             if (busy) return new SaveResult(SaveError.Busy, "Save operation already in progress.");
             if (expectedSession != sessionGeneration) return Stale();
             busy = true;
+            LastWriteMayHavePublished = false;
             string temporary = null;
             try
             {
@@ -99,6 +101,7 @@ namespace LastSignal.Persistence
                 // Full exact candidate comparison, in addition to content/schema/checksum validation.
                 if (files.Read(temporary) != json) return new SaveResult(SaveError.ChecksumMismatch, "Candidate differs from captured snapshot.");
                 if (expectedSession != sessionGeneration) return Stale();
+                LastWriteMayHavePublished = true;
                 files.Publish(temporary, currentPath, currentPath + ".bak");
                 return SaveResult.Ok;
             }
@@ -110,6 +113,13 @@ namespace LastSignal.Persistence
                     try { files.DeleteCandidate(temporary); } catch (Exception e) when (IsFileError(e)) { /* Orphan temp is never considered committed. */ }
                 busy = false;
             }
+        }
+        public bool Equivalent(SaveGame left, SaveGame right)
+        {
+            // Compare complete normalized snapshots, including inventory and every world domain.
+            if (!codec.Encode(left, out var a).Success || !codec.Decode(a, out var x).Success ||
+                !codec.Encode(right, out var b).Success || !codec.Decode(b, out var y).Success) return false;
+            return codec.Encode(x, out a).Success && codec.Encode(y, out b).Success && a == b;
         }
         SaveResult ReadPath(string path, out SaveGame state)
         {

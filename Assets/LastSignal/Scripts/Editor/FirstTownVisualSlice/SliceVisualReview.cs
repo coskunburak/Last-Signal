@@ -59,6 +59,13 @@ namespace LastSignal.Editor.FirstTownVisualSlice
             public string captureRevision="LIGHTING03_SRGB",projectColorSpace,renderTargetGraphicsFormat,outputEncoding;
             public bool renderTargetSrgb;
             public PracticalRecord[] practicalLights;
+            public MeshRecord[] canopyMeshes;
+        }
+        [Serializable] sealed class MeshRecord
+        {
+            public string asset,assetHash;
+            public Bounds loadedBounds;
+            public int vertices;
         }
         [Serializable] sealed class PracticalRecord
         {
@@ -162,6 +169,12 @@ namespace LastSignal.Editor.FirstTownVisualSlice
                     .Select(l=>new PracticalRecord{name=l.light.name,position=l.light.transform.position,enabled=l.light.enabled,
                         active=l.light.gameObject.activeInHierarchy,intensity=l.light.intensity,range=l.light.range,
                         shadows=l.light.shadows.ToString(),color=l.light.color}).ToArray();
+                // Mesh assets can change without changing the scene hash. Record the
+                // actually loaded bounds too, so a stale import is visible in evidence.
+                record.canopyMeshes=SliceAuthoring.All<MeshFilter>(scene).Where(f=>f.sharedMesh)
+                    .Select(f=>f.sharedMesh).Distinct()
+                    .Where(m=>AssetDatabase.GetAssetPath(m).StartsWith(SliceAuthoring.Root+"/Refinement05/",StringComparison.Ordinal))
+                    .Select(m=>new MeshRecord{asset=AssetDatabase.GetAssetPath(m),assetHash=SliceAuthoring.Hash(AssetDatabase.GetAssetPath(m)),loadedBounds=m.bounds,vertices=m.vertexCount}).ToArray();
                 if(previewVolume && previewVolume.TryGet<ColorAdjustments>(out var grade))record.postExposure=grade.postExposure.value;
                 File.WriteAllText(stem+".json",JsonUtility.ToJson(record,true));Debug.Log("Editor comparison captured: "+stem+".png. Runtime acceptance NOT_RUN.");
             }

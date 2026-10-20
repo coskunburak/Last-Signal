@@ -15,23 +15,28 @@ namespace LastSignal.Noise
         public long LastPressureReceipt { get; private set; }
         public WorldPressureNoiseAdapter(WorldPopulationManager manager, SessionFlow owner)
         { population = manager; flow = owner; generation = owner.Generation; }
+        public static bool Contributes(GameplayNoiseCategory category) => category==GameplayNoiseCategory.Gunshot ||
+            category==GameplayNoiseCategory.Generator || category==GameplayNoiseCategory.VehicleEngine ||
+            category==GameplayNoiseCategory.VehicleHorn || category==GameplayNoiseCategory.VehicleImpact ||
+            category==GameplayNoiseCategory.TreeChop || category==GameplayNoiseCategory.TreeImpact;
         public bool Forward(in GameplayNoiseEvent noise)
         {
             if (!population || !flow || flow.Generation != generation || flow.InMenu || flow.Paused || flow.Restoring || flow.PlayerDead ||
-                (noise.Category != GameplayNoiseCategory.Gunshot && noise.Category != GameplayNoiseCategory.Generator &&
-                 noise.Category != GameplayNoiseCategory.VehicleEngine && noise.Category != GameplayNoiseCategory.VehicleHorn &&
-                 noise.Category != GameplayNoiseCategory.VehicleImpact) || noise.Intensity <= 0 ||
+                !Contributes(noise.Category) || noise.Intensity <= 0 ||
                 (noise.EventId.Epoch == lastReceived.Epoch && noise.EventId.Sequence <= lastReceived.Sequence) ||
                 population.LastNoiseSequence == long.MaxValue) return false;
             var id = CellCoordinate.FromWorld(noise.Position).Id;
             // Unknown world cells have no pressure ledger; local distribution still remains valid.
             var cells = flow.GetComponent<WorldCellManager>();
             bool known = false;
-            foreach (var defined in cells.DefinedCellIds) if (defined == id) { known = true; break; }
+            if(cells) foreach (var defined in cells.DefinedCellIds) if (defined == id) { known = true; break; }
             if (!known)
             {
                 var vehicles = flow.GetComponent<Vehicles.VehicleWorld>();
-                if (!vehicles || !vehicles.ContainsResidentPosition(noise.Position)) return false;
+                var gathering=flow.GetComponent<Gathering.GatheringWorld>();
+                bool authoredTree=(noise.Category==GameplayNoiseCategory.TreeChop || noise.Category==GameplayNoiseCategory.TreeImpact) &&
+                    gathering && gathering.ContainsResidentTreePosition(noise.Position);
+                if (!authoredTree && (!vehicles || !vehicles.ContainsResidentPosition(noise.Position))) return false;
                 id = "resident";
             }
             lastReceived = noise.EventId;

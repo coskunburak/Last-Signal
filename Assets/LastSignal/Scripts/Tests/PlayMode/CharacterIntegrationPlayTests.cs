@@ -158,7 +158,8 @@ namespace LastSignal.Tests
             Assert.That(weapon.RuntimeState.StateTimer,Is.EqualTo(timer));Assert.That(animator.GetFloat("ReloadTime"),Is.EqualTo(reload));
             input.SetGameplay(true);Assert.That(combat.SelectSlot(PlayerCombatController.CombatSlot.Melee),Is.True);yield return null;
             Assert.That(rig.ActiveProfile.Melee,Is.SameAs(combat.Melee.Definition));
-            Assert.That(combat.Melee.TryAttack(),Is.True);yield return null;
+            var meleePose=AddPoseProbe();
+            Assert.That(combat.Melee.TryAttack(),Is.True);yield return NextPose(meleePose);
             Assert.That(combat.Melee.Simulation.State,Is.Not.EqualTo(MeleeState.Ready));
             bool procedural=rig.ActiveProfile.AttackOwnership==WeaponPoseOwnership.ProfileArmTargets;
             Assert.That(animator.GetBool("MeleeActive"),Is.EqualTo(!procedural),

@@ -12,11 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea427d9e50dcb456e8a287db8e05a1fd, type: 3}
   m_Name: WoodenAxe
   m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.CharacterWeaponPoseProfile
-  WorldMeleeSlideOffset: {x: -0.06, y: 0.04, z: -0.03}
-  MeleeClearanceRotation: 12
   GripMode: 5
   PrimaryHand: 0
   AttackOwnership: 1
+  MeleeClearanceRotation: 12
+  WorldMeleeSlideOffset: {x: -0.06, y: 0.04, z: -0.03}
+  WorldTwoHandedPistol: 0
+  WorldSupportFingerClosure: 0.65
+  FpsTwoHandedPistol: 0
+  FpsPrimaryPalmOffset: {x: 0, y: 0, z: 0}
+  FpsSupportPalmOffset: {x: 0, y: 0.045, z: -0.014}
+  FpsSupportPalmEuler: {x: 0, y: 0, z: 180}
+  FpsSupportFingerClosure: 0.65
+  FpsSprintCarry: 0
+  FpsSprintPosition: {x: 0.06, y: -0.17, z: 0.26}
+  FpsSprintEuler: {x: 20, y: -12, z: -8}
+  FpsSprintBobAmplitude: 0.006
   FpsPistolFingers: {fileID: 0}
   WorldPistolFingers: {fileID: 0}
   FpsWeaponOwnsContacts: 1
@@ -27,7 +38,7 @@ MonoBehaviour:
   PistolReloadEuler: {x: 0, y: -8, z: 12}
   HipGripOffset: {x: -0.18, y: 0.015, z: 0.42015326}
   AimGripOffset: {x: -0.08, y: -0.055021893, z: 0.407162}
-  FpsHipPosition: {x: 0.12, y: -0.02, z: 0.32}
+  FpsHipPosition: {x: 0.12, y: 0.005, z: 0.32}
   FpsHipEuler: {x: 8, y: -8, z: -38}
   FpsRaisedPosition: {x: 0.12, y: -0.13, z: 0.3}
   FpsRaisedEuler: {x: 3, y: 0, z: -3}

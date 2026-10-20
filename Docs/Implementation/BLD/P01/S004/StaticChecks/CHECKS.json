@@ -1,0 +1,32 @@
+{
+  "kind": "SOURCE_ONLY_NOT_UNITY_ACCEPTANCE",
+  "date": "2026-10-18",
+  "compiler": "/usr/local/share/dotnet/sdk/9.0.306/Roslyn/bincore/csc.dll",
+  "responseFiles": "Library/Bee/artifacts/200b0aE.dag/*.rsp, adapted in source_compile.py",
+  "assemblies": {
+    "LastSignal.Runtime": {
+      "exitCode": 0,
+      "log": "LastSignal.Runtime.log"
+    },
+    "LastSignal.Editor": {
+      "exitCode": 0,
+      "log": "LastSignal.Editor.log"
+    },
+    "LastSignal.EditModeTests": {
+      "exitCode": 0,
+      "log": "LastSignal.EditModeTests.log"
+    },
+    "LastSignal.PlayModeTests": {
+      "exitCode": 0,
+      "log": "LastSignal.PlayModeTests.log"
+    }
+  },
+  "limitations": [
+    "Cached Unity/package references; clean Unity import still required",
+    "No Unity Editor compilation, tests, simulation, authoring or build executed"
+  ],
+  "pythonAstSyntax": "checked without execution",
+  "gateFixturePathsAndAssemblyNames": "checked",
+  "gitDiffCheckExitCode": 0,
+  "initialDirtyFilePreservation": "see ../PRESERVATION.json"
+}

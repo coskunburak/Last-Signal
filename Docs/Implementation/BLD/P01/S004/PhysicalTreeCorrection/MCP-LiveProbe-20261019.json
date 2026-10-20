@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-19",
+  "scope": "User-authorized live MCP gameplay probe; not full acceptance suite",
+  "scene": "Assets/LastSignal/Scenes/Validation/FirstTownTreePhysics_20261019102748-99bfd179.unity",
+  "initial": {
+    "playing": true,
+    "editorPaused": false,
+    "timeScale": 0,
+    "physicalTreeCount": 0,
+    "nearestNode": "harvest:f01ca8cb88a74783b46ada5c7112e482",
+    "nearestAnchor": "Harvest anchor 1",
+    "cameraDistance": 1.86511,
+    "clearanceApproved": true
+  },
+  "attack": "[Log] S004_MCP_SWING_BEGIN accepted=True rejection=None",
+  "result": "[Log] S004_MCP_RESULT weapon=FPS_WoodenAxe(Clone) swing=7 state=Ready melee=Harvest:PhysicsNotReady outcome=Rejected\n[Log] feedback=This tree is not ready for chopping paused=True timeScale=0 physicalCount=0\n[Log] node=harvest:b255d940478d46898fe2871a2ed19e68 sourceVisible=True physics=False\n[Log] node=harvest:c9f22cf3b0f34ac1bfb3a050bd08e64d sourceVisible=True physics=False\n[Log] node=harvest:f01ca8cb88a74783b46ada5c7112e482 sourceVisible=True physics=False",
+  "limitations": [
+    "No cut/fracture/settling test possible: no TreePhysicsBody exists in current scene, including inactive objects.",
+    "Pre-attack GatheringWorld.Capture() rejected Missing/relocated ready harvest anchor; no persistence-invariance claim made.",
+    "A private-state diagnostic was rejected by MCP namespace policy; no private state was read or modified. Final attack used public SessionFlow.Resume and MeleeWeaponController.TryAttack APIs.",
+    "No authoring, scene save, scene switch, checkpoint save, or automated test suite executed. Session pause restored after one accepted attack initiation."
+  ]
+}

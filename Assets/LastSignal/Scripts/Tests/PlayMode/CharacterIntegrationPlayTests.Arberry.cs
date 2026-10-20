@@ -38,7 +38,10 @@ namespace LastSignal.Tests
                 var source=pistol.PistolVariants.Selected.Pose;
                 Assert.That(rig.ActiveProfile,Is.SameAs(rig.ResolvePresentation(source)));
                 Assert.That(rig.ActiveProfile.WorldPistolFingers.Rig,Does.StartWith("Arberry"));
-                Assert.That(rig.ActiveProfile.WorldPrefab,Is.SameAs(source.WorldPrefab));
+                // Character overrides may supply their own calibrated two-hand visual.
+                // The selected definition and the resolved socket contract remain authoritative.
+                Assert.That(rig.ActiveProfile.Firearm,Is.SameAs(source.Firearm));
+                Assert.That(rig.WeaponVisual.GetComponent<CharacterWeaponSockets>().ValidFor(rig.ActiveProfile),Is.True);
                 Assert.That(pistol.RuntimeState,Is.SameAs(state));Assert.That(state.CurrentMagazine,Is.EqualTo(rounds));
                 Assert.That(player.GetComponent<PlayerHealth>(),Is.SameAs(health));
                 Assert.That(rig.transform.Cast<Transform>().Count(t=>t.name.StartsWith("WorldWeapon_")&&t.gameObject.activeSelf),Is.LessThanOrEqualTo(1));

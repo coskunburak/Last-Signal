@@ -15,7 +15,14 @@ namespace LastSignal
         public MeleeWeaponDefinition Definition => definition;
         public string LastRejectionReason { get; private set; } = "None";
         public string LastMeleeResult => resolver.LastResult;
+        public bool TreeOwnsImpactAudio => resolver.TreeOwnsImpactAudio;
+        public MeleeTargetOutcome LastMeleeOutcome => resolver.LastOutcome;
         public IDamageable LastMeleeTarget => resolver.LastTarget;
+        public GameObject Owner => player;
+        public Transform Eye => eye;
+        public Transform Origin => meleeOrigin;
+        public Gathering.GatheringWorld GatheringAuthority { get; private set; }
+        public void BindGathering(Gathering.GatheringWorld authority) => GatheringAuthority = authority;
         Noise.GameplayNoiseSystem noise;
         Noise.GameplayNoiseTuning noiseTuning;
         ulong noiseSource;
@@ -47,10 +54,11 @@ namespace LastSignal
         }
         void Resolve()
         {
-            if (Allowed && resolver.Resolve(eye, meleeOrigin, definition, player, Simulation.SwingId))
+            if (Allowed && resolver.Resolve(eye, meleeOrigin, definition, player, Simulation.SwingId, this))
             {
                 noise?.TryEmit(new Noise.GameplayNoiseRequest(noiseSource, resolver.LastImpactPosition,
-                    Noise.GameplayNoiseCategory.MeleeImpact, noiseTuning.Melee, Simulation.SwingId), out _);
+                    resolver.LastOutcome==MeleeTargetOutcome.HarvestHit?Noise.GameplayNoiseCategory.TreeChop:Noise.GameplayNoiseCategory.MeleeImpact,
+                    resolver.LastOutcome==MeleeTargetOutcome.HarvestHit?noiseTuning.TreeChop:noiseTuning.Melee, Simulation.SwingId), out _);
                 ImpactCommitted?.Invoke();
             }
         }

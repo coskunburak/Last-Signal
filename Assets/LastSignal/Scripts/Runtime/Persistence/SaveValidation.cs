@@ -223,6 +223,26 @@ namespace LastSignal.Persistence
                 int expected = save.progression.repairReceipt == LastSignal.Objectives.RelayProgression.RepairReceipt ? 0 : 1;
                 if (fuseCount != expected) return Invalid("Critical fuse ownership contradicts repair receipt.");
             }
+            if (h.gatheringVersion < 0 || h.gatheringVersion > 1 ||
+                (h.gatheringVersion == 0 ? save.gathering != null : !Gathering.GatheringState.Valid(save.gathering)))
+                return Invalid("Invalid gathering extension.");
+            if (save.gathering != null)
+                foreach (var node in save.gathering.nodes)
+                {
+                    if (!AddId(ids,node.id) || !stackLimits.TryGetValue(node.outputId,out int stack) || node.budget > stack)
+                        return Invalid("Unknown/duplicate gathering identity or output.");
+                    bool cellExists=node.cellId == "resident";
+                    if (save.cells?.cells != null) foreach (var cell in save.cells.cells) if (cell.id==node.cellId) cellExists=true;
+                    if (!cellExists) return Invalid("Unknown gathering cell.");
+                    if (node.pickup != null && !AddId(ids,node.pickup.id)) return Identity();
+                    if (node.pickup?.transform != null)
+                    {
+                        var address=WorldCells.CellCoordinate.FromWorld(new UnityEngine.Vector3(node.pickup.transform.x,node.pickup.transform.y,node.pickup.transform.z)).Id;
+                        if (node.cellId!="resident" && address!=node.cellId) return Invalid("Gathering pickup crossed its owner cell.");
+                        if (node.cellId=="resident" && save.cells?.cells!=null)
+                            foreach (var cell in save.cells.cells) if(cell.id==address) return Invalid("Resident harvest pickup overlaps a defined cell.");
+                    }
+                }
             return SaveResult.Ok;
         }
         static long CountFuse(ContainerSnapshot container)
@@ -328,7 +348,7 @@ namespace LastSignal.Persistence
         static bool Id(string value) => !string.IsNullOrWhiteSpace(value) && value.Length <= 128;
         static bool AddId(HashSet<string> ids, string id) => Id(id) && ids.Add(id);
         static bool Finite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
-        static bool Pose(TransformSnapshot p)
+        public static bool Pose(TransformSnapshot p)
         {
             if (p == null || !Finite(p.x) || !Finite(p.y) || !Finite(p.z) || Math.Abs(p.x) > 100000 || Math.Abs(p.y) > 100000 || Math.Abs(p.z) > 100000 ||
                 !Finite(p.qx) || !Finite(p.qy) || !Finite(p.qz) || !Finite(p.qw)) return false;

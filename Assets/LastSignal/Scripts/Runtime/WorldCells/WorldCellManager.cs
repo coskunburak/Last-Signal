@@ -32,6 +32,8 @@ namespace LastSignal.WorldCells
         public IEnumerable<string> DefinedCellIds => cells.Keys;
         public bool ContainsCell(string id) => id != null && cells.ContainsKey(id);
         public string CurrentCell { get; private set; } = "resident";
+        public string OwnerForPosition(Vector3 position)
+        { var id = CellCoordinate.FromWorld(position).Id; return cells.ContainsKey(id) ? id : "resident"; }
         public string Failure { get; private set; }
         public int ReadyListenerCount => CellReady?.GetInvocationList().Length ?? 0;
         public bool Stable

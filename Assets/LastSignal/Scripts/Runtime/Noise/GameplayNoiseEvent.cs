@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LastSignal.Noise
 {
-    public enum GameplayNoiseCategory { Footstep, SprintFootstep, MeleeImpact, Gunshot, Generator, VehicleEngine, VehicleHorn, VehicleImpact }
+    public enum GameplayNoiseCategory { Footstep, SprintFootstep, MeleeImpact, Gunshot, Generator, VehicleEngine, VehicleHorn, VehicleImpact, TreeChop, TreeImpact }
 
     public readonly struct GameplayNoiseId : IEquatable<GameplayNoiseId>
     {
@@ -52,9 +52,11 @@ namespace LastSignal.Noise
         public GameplayNoiseProfile Sprint = new GameplayNoiseProfile(12, .4f, 2);
         public GameplayNoiseProfile Crouch = new GameplayNoiseProfile(3, .1f, 2);
         public GameplayNoiseProfile Melee = new GameplayNoiseProfile(10, .35f, 2);
+        public GameplayNoiseProfile TreeChop = new GameplayNoiseProfile(12,.35f,2);
+        public GameplayNoiseProfile TreeImpact = new GameplayNoiseProfile(24,.65f,3);
         public GameplayNoiseProfile Gunshot = new GameplayNoiseProfile(96, 1, 3);
         public float StrideMeters = 1.6f;
-        public bool Valid => Walk.Valid && Sprint.Valid && Crouch.Valid && Melee.Valid && Gunshot.Valid &&
+        public bool Valid => Walk.Valid && Sprint.Valid && Crouch.Valid && Melee.Valid && Gunshot.Valid && TreeChop.Valid && TreeImpact.Valid &&
             float.IsFinite(StrideMeters) && StrideMeters >= .5f && StrideMeters <= 3;
     }
 

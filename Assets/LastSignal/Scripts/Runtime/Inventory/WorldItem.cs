@@ -9,7 +9,10 @@ namespace LastSignal.Inventory
         [SerializeField, Min(1)] int quantity = 1;
 
         string persistentId;
+        string pickupFeedback;
         System.Action<string,int> persistenceChanged;
+        System.Func<WorldItem,PlayerInventory,bool> pickupGuard;
+        internal void BindPickupGuard(System.Func<WorldItem,PlayerInventory,bool> guard) => pickupGuard = guard;
         internal void BindPersistence(System.Action<string,int> listener) => persistenceChanged = listener;
         LastSignal.Persistence.WorldItemOrigin origin = LastSignal.Persistence.WorldItemOrigin.Drop;
         // New runtime drops receive an ID once. Restore replaces it with the SAVED ID before activation.
@@ -22,7 +25,7 @@ namespace LastSignal.Inventory
         public ItemDefinition Definition => definition;
         public int Quantity => quantity;
         public bool Available => isActiveAndEnabled && definition != null && quantity > 0;
-        public string Prompt => definition != null ? $"Pick up {definition.DisplayName} x{quantity}" : "Invalid Item";
+        public string Prompt => !string.IsNullOrEmpty(pickupFeedback) ? pickupFeedback : definition != null ? $"Pick up {definition.DisplayName} x{quantity}" : "Invalid Item";
 
         public void Configure(ItemDefinition item, int initialQuantity)
         {
@@ -45,12 +48,18 @@ namespace LastSignal.Inventory
             if (playerInventory == null) return false;
             var health = playerInventory.GetComponent<PlayerHealth>();
             if (health && !health.IsAlive) return false;
+            if (pickupGuard != null && !pickupGuard(this, playerInventory)) return false;
 
             LastSignal.Persistence.OwnershipTransaction.Enter();
             try
             {
                 int accepted = playerInventory.Container.BeginWorldAdd(definition, quantity);
-                if (accepted <= 0) return false;
+                if (accepted <= 0)
+                {
+                    if (origin==LastSignal.Persistence.WorldItemOrigin.Harvest) pickupFeedback="Inventory full — wood remains here";
+                    return false;
+                }
+                pickupFeedback=null;
                 try
                 {
                     quantity -= accepted;
