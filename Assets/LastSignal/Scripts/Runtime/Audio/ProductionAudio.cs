@@ -97,6 +97,25 @@ namespace LastSignal.Audio
         { for(int i=0;i<sources.Length;i++) if(owners[i]==actor) { if(sources[i]) sources[i].Stop(); owners[i]=null; } }
         public static string Direction(Vector3 local)
         { return Mathf.Abs(local.x)>Mathf.Abs(local.z) ? (local.x<0?"Sol":"Sağ") : (local.z<0?"Arka":"Ön"); }
+        // Tree presentation shares the S015 pool, mixer, occlusion and lifecycle. No extra voices/noise authority.
+        public bool PlayTreeClip(AudioClip clip, Transform owner, Vector3 position, float gain)
+        {
+            if(!Active || !listener || !owner || !clip || (position-listener.position).sqrMagnitude>40*40) return false;
+            int slot=-1, count=0;
+            for(int i=4;i<VoiceBudget;i++)
+            {
+                if(sources[i].isPlaying && owners[i]==owner) count++;
+                if(slot<0 && !sources[i].isPlaying) slot=i;
+            }
+            if(slot<0 || count>=2) return false;
+            var source=sources[slot]; source.Stop(); owners[slot]=owner; playing[slot]=AudioCue.MeleeImpact;
+            fixedPosition[slot]=true; source.transform.position=position; source.clip=clip; source.loop=false;
+            source.outputAudioMixerGroup=catalog.effects; source.spatialBlend=1; source.dopplerLevel=0;
+            source.rolloffMode=AudioRolloffMode.Linear; source.minDistance=1; source.maxDistance=40;
+            source.priority=160; source.pitch=1; gains[slot]=Mathf.Clamp01(gain); source.volume=gains[slot];
+            cutoff[slot]=22000; filters[slot].cutoffFrequency=22000; source.Play(); CueCount++;
+            return true;
+        }
         public bool Play(AudioCue id, Transform owner, float scale=1)
             => PlayAt(id, owner, owner ? owner.position + Vector3.up * .8f : Vector3.zero, scale, false);
         public bool PlayAt(AudioCue id, Transform owner, Vector3 position, float scale = 1, bool fixedWorldPosition = true)

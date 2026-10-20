@@ -181,7 +181,8 @@ namespace LastSignal.Tests
                 yield return Equip(true);
                 Assert.That(combat.SelectFirearm("weapon.pistol"), Is.True);
                 yield return new WaitForSeconds(.7f); yield return Sample();
-                Assert.That(probe.World.SupportHandWeight, Is.Zero);
+                // Current character profile intentionally supports the pistol with both hands.
+                Assert.That(probe.World.SupportHandWeight, probe.World.ActiveProfile.WorldTwoHandedPistol ? Is.GreaterThan(.95f) : Is.Zero);
                 yield return Equip(false);
                 Assert.That(combat.SelectFirearm("weapon.rifle"), Is.True);
                 yield return new WaitForSeconds(.7f); yield return Sample();

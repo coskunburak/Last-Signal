@@ -53,7 +53,7 @@ namespace LastSignal
             }
             PlayAudio(Audio.AudioCue.MeleeSwing,swing,.45f);
         }
-        void OnImpact() { PlayAudio(Audio.AudioCue.MeleeImpact,impact,.6f); }
+        void OnImpact() { if(controller && controller.TreeOwnsImpactAudio) return; PlayAudio(Audio.AudioCue.MeleeImpact,impact,.6f); }
         void Update()
         {
             if(!controller || controller.Simulation==null) return;

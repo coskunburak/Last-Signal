@@ -35,6 +35,25 @@ namespace LastSignal.Persistence
                 if (!string.Equals(Hash(envelope.payload), envelope.checksum, StringComparison.Ordinal))
                     return new SaveResult(SaveError.ChecksumMismatch, "Save payload checksum mismatch.");
                 var candidate = JsonUtility.FromJson<SaveGame>(envelope.payload);
+
+                if (candidate?.header != null)
+                {
+                    // Legacy saves may not contain a Gathering section.
+                    // JsonUtility can materialize absent serializable fields
+                    // as default objects, so inspect the original payload.
+                    if (candidate.header.gatheringVersion == 0 &&
+                        !HasRootProperty(envelope.payload, "gathering"))
+                    {
+                        candidate.gathering = null;
+                    }
+                    else
+                    {
+                        Gathering.GatheringState.Normalize(
+                            ref candidate.gathering,
+                            candidate.header.gatheringVersion
+                        );
+                    }
+                }
                 var survival = candidate?.survival;
                 if (candidate?.header != null && candidate.header.survivalVersion == 0 && survival != null &&
                     survival.version == 0 && survival.hydration == 0 && survival.nutrition == 0 && survival.bleeding == 0 &&
@@ -113,6 +132,104 @@ namespace LastSignal.Persistence
                 return SaveResult.Ok;
             }
             catch (ArgumentException) { return new SaveResult(SaveError.InvalidJson, "Malformed save JSON."); }
+        }
+
+        /// <summary>
+        /// Checks whether a property exists at the root of a JSON object.
+        /// Ignores nested object properties and JSON string contents.
+        /// Escaped property names fail closed instead of hiding data.
+        /// </summary>
+        static bool HasRootProperty(string json, string propertyName)
+        {
+            if (string.IsNullOrEmpty(json))
+                return false;
+
+            int depth = 0;
+
+            for (int i = 0; i < json.Length; i++)
+            {
+                char c = json[i];
+
+                if (c == '{')
+                {
+                    depth++;
+                    continue;
+                }
+
+                if (c == '}')
+                {
+                    depth--;
+                    continue;
+                }
+
+                if (c != '"')
+                    continue;
+
+                int start = i + 1;
+                int end = start;
+
+                bool escaped = false;
+                bool escapeNext = false;
+
+                for (; end < json.Length; end++)
+                {
+                    char current = json[end];
+
+                    if (escapeNext)
+                    {
+                        escapeNext = false;
+                        continue;
+                    }
+
+                    if (current == '\\')
+                    {
+                        escaped = true;
+                        escapeNext = true;
+                        continue;
+                    }
+
+                    if (current == '"')
+                        break;
+                }
+
+                // Malformed input: preserve the candidate for validation.
+                if (end >= json.Length)
+                    return true;
+
+                int next = end + 1;
+
+                while (next < json.Length &&
+                    char.IsWhiteSpace(json[next]))
+                {
+                    next++;
+                }
+
+                if (depth == 1 &&
+                    next < json.Length &&
+                    json[next] == ':')
+                {
+                    // Escaped root keys are treated conservatively.
+                    if (escaped)
+                        return true;
+
+                    int length = end - start;
+
+                    if (length == propertyName.Length &&
+                        string.CompareOrdinal(
+                            json,
+                            start,
+                            propertyName,
+                            0,
+                            propertyName.Length) == 0)
+                    {
+                        return true;
+                    }
+                }
+
+                i = end;
+            }
+
+            return false;
         }
         static string Hash(string payload)
         {

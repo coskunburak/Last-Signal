@@ -160,6 +160,7 @@ namespace LastSignal
             GetComponent<Objectives.RelayMission>()?.Begin();
             GetComponent<Vehicles.VehicleWorld>()?.Begin(this);
             GetComponent<Audio.ProductionAudio>()?.BeginSession();
+            GetComponent<Gathering.GatheringWorld>()?.Begin();
             SetPaused(restoring);
             Debug.Log("S001 session started: one player, local input.");
         }
@@ -214,6 +215,7 @@ namespace LastSignal
             CargoPoint = null;
             if (inventoryView) inventoryView.HideFromSession();
             GetComponent<Audio.ProductionAudio>()?.EndSession();
+            GetComponent<Gathering.GatheringWorld>()?.End();
             Generation++; Restoring = false;
             Noise?.End(); Noise = null;
             GetComponent<Objectives.RelayMission>()?.End();

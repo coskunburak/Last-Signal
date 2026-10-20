@@ -1,0 +1,164 @@
+[
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Editor/TreePhysicsAuthoring.cs",
+    "purpose": "Generate 128 capped notch pairs; validate before visual handoff; derive size-based effort; create clear stage-only nearby spawn and authoring receipt; read-only stage validator; preserve source/prefab links and save only generated assets. Offer explicit source-scene save/cancel before generation when dirty. Persistent tree selection window with explicit generation and source revalidation. Activate kinematic projection before live binding validation; preserve original on failure and report failed predicates.",
+    "entrySha256": "98c18fcd62e9d7c77828165b18861894b500792d12b17b76e1a35790f3c652ce",
+    "currentSha256": "88b1a3e49f3cdc9ad11a34026236382e908e468a093da276e0f3b1d917504294"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Gathering/GatheringState.cs",
+    "purpose": "Create version-2 physical cut snapshots; append explicit authoring/fully-cut rejection reasons. Legacy save/pickup transactions retained.",
+    "entrySha256": "336afc280575066df727c7f75131544093fef582bcf3436723ef8a775df7c638",
+    "currentSha256": "81ee6c87700ad134582c70f537980b03f3301fb7fa5eb089f3bf37a741a2950b"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Gathering/GatheringWorld.cs",
+    "purpose": "Require complete physical binding for live axe hits; remove legacy live health-depletion fallback; validate saved configurable penetration; precise feedback.",
+    "entrySha256": "7637117542c1b204f640ce935216bd2ac7c3fdc70d1f69ca6914b803cc95c40d",
+    "currentSha256": "3a0a643ff2dbd49fd90a74359b0c8454420981c8750367f499c53bd7ffae3902"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Gathering/ResourceNodeDefinition.cs",
+    "purpose": "Remove exact 100/25 restriction; add bounded cutting resistance and axe efficiency.",
+    "entrySha256": "038ce33315a635d2428de28f65d0645d8653495bba9fce31752d0227a118dd47",
+    "currentSha256": "ab38a975246df987f2f8cddc0f455f971904a0e36943bc71c26df2a8ab66399d"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Gathering/ResourceNodeView.cs",
+    "purpose": "Explain unprepared nonphysical trees while retaining legacy pending pickup/save projection.",
+    "entrySha256": "51e80ded1caa0e107feca89390df180fc5848dff37489e5292ac0cf23b1991ac",
+    "currentSha256": "d2d7f8c7579982d3fda841e715a034ac7dd0cd7a8ab8919e013eaf1d5e6da0da"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Gathering/TreePhysicsBody.cs",
+    "purpose": "Load support through remaining-section centroid; retain consumed trunk/crown/collision; validate visible geometry; narrow cut band; resume saved cut loading; fracture splinters and diagnostics.",
+    "entrySha256": "c7e2854648f95775d299e91017136b23ec43f1b15a2a71b17b48e5c0303e112c",
+    "currentSha256": "718ecdbee126ac0de17afb3177d1db44ef5d3cae87b1ae149a3844f39cc9e1a0"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Gathering/TreePhysicsProfile.cs",
+    "purpose": "Support 16 exact authored depth levels and original four-level profiles with strict geometry-table validation.",
+    "entrySha256": "844988b725dc22a2bc2b09d71a1987c577b57c00b061ad33d6d473b7f837da56",
+    "currentSha256": "549a1fac13e2a486d6ccc50ec548dbe02c560a9833e3550ab5a42b14e36df8ed"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Runtime/Gathering/TreeStructure.cs",
+    "purpose": "V2 quantized cut effort, condition scaling, first-contact persistence, support centroid and validation; retain v1 saves.",
+    "entrySha256": "2762986fd1a5443725a70895af6277a1b6bd81633c8d87251a4b3556a62f84db",
+    "currentSha256": "edd3ab3ce1fcabb933d2e9d00988e2b39ebbe51f1d30ea0e18acc862b166a104"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/P01TreePersistenceTests.cs",
+    "purpose": "Real save-envelope roundtrips for v1 and v2 partial/fractured snapshots.",
+    "entrySha256": "f74345b4ae83147ca02cd434a07aea1d63d99047f2a23ad490e472daf0579656",
+    "currentSha256": "4406eb3a188f87e82aaf6edd8c22e3e05afb65795af2d2a62d2934e35583d5a0"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/EditMode/P01TreeStructureTests.cs",
+    "purpose": "Configurable hit budgets, condition/resistance, stable notch, quantization rejection, support centroid, actual slicer removed-volume/cap cases. Inactive authoring assembly and missing-mesh rejection regression cases (owner-run only).",
+    "entrySha256": "5d42fc11bee57a8d5ae1e52a3d018c297440dae567afec316e33feb00118d794",
+    "currentSha256": "3a19cfd94df4807276c106b2c152fded9820672f4fe44fa93e2ca116988cedd1"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/P01TreePhysicsTests.cs",
+    "purpose": "Visible trunk/stump after fracture/consumption, exact progressive mesh indexing and deep-cut restore loading.",
+    "entrySha256": "b8177593706a84aaeec68a80a0639082a9d38dde0d52accca43f57b8530cbe03",
+    "currentSha256": "268f70c205d641a993b7a41f2c658030fc1201aa1859814b92153b1ee7a0e8ab"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Assets/LastSignal/Scripts/Tests/PlayMode/P01TreeStageTests.cs",
+    "purpose": "Owner-authored actual axe/joint/visibility/yield regression, missing binding rejection, configurable chop scenario, variable effort integration.",
+    "entrySha256": "ac90e9d2f817fe3cdcbe113730219c0be6e0d60ea867aa9ee0fb3649924f9ce3",
+    "currentSha256": "47a44edb7ffb114ab270529cbe4e9bf5506511de1281bac927e9019734ba4ccb"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/HANDOFF.md",
+    "purpose": "Point to latest correction and superseded original assumptions.",
+    "entrySha256": null,
+    "currentSha256": "e2583c7037f67ea3dfa1df4da3855ec9701f46e78d27e68a82bb8cf6acefe411"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/CHECKS.json",
+    "purpose": "Source-only outcomes, preservation and no-run limitations.",
+    "entrySha256": null,
+    "currentSha256": "0cae63edf16e67ec34342ef59917c8e309430b35118c22e84c58a74bc0a2dca3"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/ENTRY.json",
+    "purpose": "Pre-correction branch/HEAD/status and targeted source/scene fingerprints.",
+    "entrySha256": null,
+    "currentSha256": "f31d6f4cbc33fda01538f48bd707c26218b57b15b9226ae70ee7c46a0a74601b"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/FILES.json",
+    "purpose": "This per-file scope manifest; self-hash intentionally omitted.",
+    "entrySha256": null,
+    "currentSha256": null
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/LastSignal.EditModeTests.log",
+    "purpose": "Final source-only Roslyn diagnostics for LastSignal.EditModeTests; no Unity execution or acceptance claim.",
+    "entrySha256": null,
+    "currentSha256": "0212c0d0b4ab213b278d6760c1d0c126978e53e92ccfe035cf5618c74384d141"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/LastSignal.Editor.log",
+    "purpose": "Final source-only Roslyn diagnostics for LastSignal.Editor; no Unity execution or acceptance claim.",
+    "entrySha256": null,
+    "currentSha256": "3612d5c291026f8632a2ce83e21dc00d8f8505eadc7d23564719e34f4120f369"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/LastSignal.PlayModeTests.log",
+    "purpose": "Final source-only Roslyn diagnostics for LastSignal.PlayModeTests; no Unity execution or acceptance claim.",
+    "entrySha256": null,
+    "currentSha256": "f25d4fc1d80a07133b9799d9d674e861f3ee488371bbe1910fb5ebb226cd80e7"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/LastSignal.Runtime.log",
+    "purpose": "Final source-only Roslyn diagnostics for LastSignal.Runtime; no Unity execution or acceptance claim.",
+    "entrySha256": null,
+    "currentSha256": "36aa8715a8e88e06279ded7d6a6d8b08c485200b5da64f0011c9708f05303840"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/README.md",
+    "purpose": "A\u2013J root cause, implementation, limitations, owner authoring/test commands and acceptance report.",
+    "entrySha256": null,
+    "currentSha256": "b28062676436b5176397137e7880bd680020869cef4f3f1f0507fbe32845a844"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Tools/p01-tree-verify.py",
+    "purpose": "Add --chops fixture setting and actual disappearance/missing-binding physics filters; record fixture settings in each owner evidence run.",
+    "entrySha256": "970d84ebd1a1c8405980430057e299c066cd5045049b319b381504eeda73712d",
+    "currentSha256": "9fc38fb677b3f60e5e61d87b886ff9951acd7c81865f5d62e5256c0f186acae3"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/DirtySourceSave-Editor.log",
+    "purpose": "Source-only Editor compile after dirty-source save/cancel UX correction; no Unity execution.",
+    "entrySha256": null,
+    "currentSha256": "51089f3611702e56d07e21561cc0bac5f9cbc13a2d2b7ecb44cdcabfe9c652e9"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/TreePickerWindow-Editor.log",
+    "purpose": "Source-only Editor compile after persistent tree picker correction; Unity visibility/generation not executed.",
+    "entrySha256": null,
+    "currentSha256": "a0a68e20cfec7ed15387d1cfb66c674e845120fb77897da6a69e449ddb1d7fc6"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/ProjectionActivation-Editor.log",
+    "purpose": "Source-only compile after projection activation fix; no Unity execution.",
+    "entrySha256": null,
+    "currentSha256": "a0a68e20cfec7ed15387d1cfb66c674e845120fb77897da6a69e449ddb1d7fc6"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/ProjectionActivation-EditModeTests.log",
+    "purpose": "Source-only compile after projection activation fix; no Unity execution.",
+    "entrySha256": null,
+    "currentSha256": "51ceeffa624492ce5e1c0f716de0e33de18781835e7e2267a0866dcab4efe2e3"
+  },
+  {
+    "path": "/Users/burakcoskun/Last Signal/Docs/Implementation/BLD/P01/S004/PhysicalTreeCorrection/DraftRetry-Editor.log",
+    "purpose": "Source-only Editor compile after recovery from generated draft; no Unity execution.",
+    "entrySha256": null,
+    "currentSha256": "a0a68e20cfec7ed15387d1cfb66c674e845120fb77897da6a69e449ddb1d7fc6"
+  }
+]

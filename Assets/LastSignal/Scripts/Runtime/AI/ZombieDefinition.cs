@@ -36,6 +36,8 @@ namespace LastSignal
             Noise.GameplayNoiseCategory.VehicleEngine => footstepSensitivity,
             Noise.GameplayNoiseCategory.VehicleHorn => gunshotSensitivity,
             Noise.GameplayNoiseCategory.VehicleImpact => meleeSensitivity,
+            Noise.GameplayNoiseCategory.TreeChop => meleeSensitivity,
+            Noise.GameplayNoiseCategory.TreeImpact => meleeSensitivity,
             _ => 0 };
         public bool IsHearingValid => Positive(hearingThreshold) && Positive(hearingMemoryDuration) &&
             Positive(investigateDuration) && Positive(investigateArrivalDistance) &&

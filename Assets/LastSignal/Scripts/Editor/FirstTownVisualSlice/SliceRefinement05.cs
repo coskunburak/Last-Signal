@@ -20,7 +20,7 @@ namespace LastSignal.Editor.FirstTownVisualSlice
         {
             public string status="APPLIED_EXISTING_STAGE",checkpoint,sourceHashBefore,sourceHashAfter,stageHashBefore,stageHashAfter;
             public string visual="NOT_VERIFIED",navigation="NOT_RUN",runtime="NOT_RUN";
-            public Bounds vendorRoofBounds;public Vector3 approachPoleBefore,approachPoleAfter;
+            public Bounds vendorRoofBounds,visualCanopyBounds;public Vector3 approachPoleBefore,approachPoleAfter;
             public int mountedLights;
         }
         [MenuItem("Last Signal/First Town/Visual Slice/2c Repair station canopy and lighting (existing stage)")]
@@ -45,6 +45,11 @@ namespace LastSignal.Editor.FirstTownVisualSlice
             var roof=roofs[0].bounds;
             if(roof.size.x<5 || roof.size.x>9 || roof.size.z<18 || roof.size.z>25 || roof.min.y<7 || roof.max.y>10)
                 throw new InvalidOperationException("Vendor canopy roof dimensions changed; preserve asset and refit manually: "+roof);
+            // The imported collider is narrower and lower than the visible roof.
+            // It remains the contact/light mounting reference, never the cover envelope.
+            var cover=SliceAssets.BoundsOf(canopy.gameObject);
+            if(cover.size.x<7 || cover.size.x>10 || cover.size.z<20 || cover.size.z>25 || cover.max.y<8 || cover.max.y>10)
+                throw new InvalidOperationException("Visual canopy envelope changed; preserve and refit: "+cover);
             var director=state.atmosphere;
             if(!director || !director.lightingProfile)throw new InvalidOperationException("Stage lighting dependencies missing.");
             if(director.lamps.Any(l=>l.light && l.light.name.StartsWith("Station canopy bay ",StringComparison.Ordinal)))
@@ -62,7 +67,7 @@ namespace LastSignal.Editor.FirstTownVisualSlice
             if(!metal || !trim || !shader)throw new InvalidOperationException("Project-owned roof materials or URP shader missing.");
             string folder=SliceAuthoring.Evidence+"/Refinement05";Directory.CreateDirectory(folder);
             string stamp=DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff");
-            var report=new Report{checkpoint=folder+"/stage-before-"+stamp+".unity",sourceHashBefore=SliceAuthoring.Hash(SliceAuthoring.Source),stageHashBefore=SliceAuthoring.Hash(scene.path),vendorRoofBounds=roof,approachPoleBefore=pole.position};
+            var report=new Report{checkpoint=folder+"/stage-before-"+stamp+".unity",sourceHashBefore=SliceAuthoring.Hash(SliceAuthoring.Source),stageHashBefore=SliceAuthoring.Hash(scene.path),vendorRoofBounds=roof,visualCanopyBounds=cover,approachPoleBefore=pole.position};
             if(!EditorSceneManager.SaveScene(scene,report.checkpoint,true))throw new IOException("Could not save stage checkpoint. No edits made.");
             SliceAuthoring.Folder(Art);
             Undo.IncrementCurrentGroup();int undo=Undo.GetCurrentGroup();Undo.SetCurrentGroupName("FirstTown Refinement05");
@@ -71,10 +76,10 @@ namespace LastSignal.Editor.FirstTownVisualSlice
             {
                 var root=new GameObject(Marker);Undo.RegisterCreatedObjectUndo(root,"Refinement05 root");root.transform.SetParent(state.generated.transform,false);
                 // The vendor's perforated support geometry and colliders remain. Fit a
-                // weatherproof sheet to its measured roof collider, with overhang and
+                // weatherproof sheet to its visible mesh envelope, with overhang and
                 // separate fascia, standing seams, gutters and mounted bay fixtures.
-                float x0=roof.min.x-.18f,x1=roof.max.x+.18f,z0=roof.min.z-.20f,z1=roof.max.z+.20f;
-                float y=roof.max.y+.035f;
+                float x0=cover.min.x-.18f,x1=cover.max.x+.18f,z0=cover.min.z-.20f,z1=cover.max.z+.20f;
+                float y=cover.max.y+.035f;
                 var sheet=new SliceMesh();sheet.Box(new Vector3((x0+x1)*.5f,y-.06f,(z0+z1)*.5f),new Vector3(x1-x0,.12f,z1-z0),Quaternion.identity);
                 var sheetGO=sheet.CreateOwned("Continuous standing-seam canopy sheet",root.transform,Art+"/CanopySheet.asset",metal);
                 Undo.RegisterCreatedObjectUndo(sheetGO,"Canopy sheet");
@@ -111,7 +116,9 @@ namespace LastSignal.Editor.FirstTownVisualSlice
                     fixture.AddComponent<MeshFilter>().sharedMesh=lens;
                     var renderer=fixture.AddComponent<MeshRenderer>();renderer.sharedMaterial=lensMat;renderer.shadowCastingMode=ShadowCastingMode.Off;
                     lamps.Add(new TownAtmosphere.Lamp{light=light,intensity=10,interior=false,shadows=false});
-                    practicals.Add(new TownLightingProfile.Practical{fixtureName=name,color=light.color,gain=1.2f,priority=2.5f,shadows=false,levels=new Vector4(0,.35f,1,1)});
+                    // ~7.8 m mounting height: 12 effective intensity was too weak
+                    // in owner dusk captures. Keep exposure/ambient and the budget fixed.
+                    practicals.Add(new TownLightingProfile.Practical{fixtureName=name,color=light.color,gain=6f,priority=2.5f,shadows=false,levels=new Vector4(0,.35f,1,1)});
                     report.mountedLights++;
                 }
                 Undo.RecordObject(director,"Add bounded canopy practicals");director.lamps=lamps.ToArray();EditorUtility.SetDirty(director);

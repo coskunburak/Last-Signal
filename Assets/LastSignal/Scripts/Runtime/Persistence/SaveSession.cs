@@ -65,6 +65,10 @@ namespace LastSignal.Persistence
                     (!item.WorldPrefab && item.Category != LastSignal.Inventory.Data.ItemCategory.Tool) ||
                     (item.WorldPrefab && !item.WorldPrefab.GetComponent<WorldItem>()))
                     return Invalid("Invalid or duplicate catalog identity/prefab.");
+            var gathering = GetComponent<Gathering.GatheringWorld>();
+            if (gathering && (!gathering.manifest || !gathering.manifest.Valid)) return Invalid("Invalid harvest authoring manifest.");
+            if (gathering) foreach (var anchor in gathering.manifest.anchors)
+                if (catalog.GetItem(anchor.definition.output.Id)!=anchor.definition.output) return Invalid("Harvest output is outside session catalog.");
             var ids = new HashSet<string>(StringComparer.Ordinal);
             foreach (var door in SceneComponents<DoorInteractable>())
                 if (!AddIdentity(door.GetComponent<PersistentEntityId>(), ids)) return Invalid("Every persistent door requires a unique authored identity.");
@@ -105,6 +109,7 @@ namespace LastSignal.Persistence
         public SaveResult Capture(out SaveGame snapshot)
         {
             snapshot = null;
+            var gathering = GetComponent<Gathering.GatheringWorld>();
             var clock = GetComponent<LastSignal.WorldTime.WorldClock>();
             var cells = GetComponent<LastSignal.WorldCells.WorldCellManager>();
             if (cells && !cells.Stable) return Busy();
@@ -133,6 +138,11 @@ namespace LastSignal.Persistence
             foreach (var item in SceneComponents<WorldItem>())
             {
                 if (!item.Available) continue;
+                if (item.Origin == WorldItemOrigin.Harvest)
+                {
+                    if (!gathering || !gathering.OwnsPickup(item)) return Invalid("Unowned harvest pickup.");
+                    continue; // Authoritative gathering section owns this identity, never world.items.
+                }
                 if (string.IsNullOrEmpty(item.PersistentId) || live.ContainsKey(item.PersistentId)) return Invalid("Duplicate world item identity.");
                 live.Add(item.PersistentId,item);
             }
@@ -210,9 +220,38 @@ namespace LastSignal.Persistence
             var pop = GetComponent<LastSignal.AI.WorldPopulationManager>();
             if (pop && cells) snapshot.population = pop.GetSaveSnapshot();
             
+            if (gathering)
+            {
+                try { snapshot.gathering = gathering.Capture(); snapshot.header.gatheringVersion = 1; }
+                catch (InvalidOperationException e) { snapshot=null; return new SaveResult(SaveError.Busy,e.Message); }
+            }
             result = Codec().Encode(snapshot,out _); CaptureMilliseconds=watch.Elapsed.TotalMilliseconds;
             if (!result.Success) snapshot=null;
             return result;
+        }
+        internal Gathering.DurableOutcome CommitGathering(Gathering.GatheringWorld owner,
+            Gathering.GatheringSnapshot candidate, out SaveResult result)
+        {
+            result=Invalid("Invalid gathering transaction owner/candidate.");
+            if (!owner || owner!=GetComponent<Gathering.GatheringWorld>() || !owner.Ready || !owner.Compatible(candidate))
+                return Gathering.DurableOutcome.Aborted;
+            result=Capture(out var snapshot); if (!result.Success) return Gathering.DurableOutcome.Aborted;
+            snapshot.gathering=Gathering.GatheringState.Copy(candidate); snapshot.header.gatheringVersion=1;
+            busy=true; OwnershipTransaction.Enter();
+            try
+            {
+                var outcome=Gathering.HarvestDurability.Publish(Store(DefaultPath),snapshot,out result);
+                if (outcome==Gathering.DurableOutcome.Committed) owner.Adopt(snapshot.gathering);
+                else if (outcome==Gathering.DurableOutcome.RecoveryRequired) owner.RequireRecovery();
+                LastResult=result; return outcome;
+            }
+            catch (Exception e)
+            {
+                // Unexpected failure is not evidence that publication did not happen.
+                owner.RequireRecovery(); result=LastResult=new SaveResult(SaveError.IoFailure,"Harvest publication requires recovery: "+e.GetType().Name);
+                return Gathering.DurableOutcome.RecoveryRequired;
+            }
+            finally { OwnershipTransaction.Exit(); busy=false; }
         }
         public SaveResult Save(string path = null)
         {
@@ -294,6 +333,7 @@ namespace LastSignal.Persistence
                 if (vehicles) Require(vehicles.Actor.Restore(candidate.vehicles, catalog));
                 Hydrate(candidate);
                 if (vehicles && !vehicles.Actor.RestoreOccupancy(candidate.vehicles)) throw new InvalidOperationException("Vehicle occupancy restore failed.");
+                GetComponent<Gathering.GatheringWorld>()?.Restore(candidate.gathering);
                 Physics.SyncTransforms();
                 if (!(vehicles && vehicles.Actor.Occupied) && !PlayerLocationClear()) throw new InvalidOperationException("Saved player capsule overlaps solid world geometry.");
                 // Finalize transform-dependent state only after all hydration and physics synchronization.
@@ -318,6 +358,9 @@ namespace LastSignal.Persistence
         }
         SaveResult ValidateTopology(SaveGame state)
         {
+            var gathering=GetComponent<Gathering.GatheringWorld>();
+            if ((!gathering && state.gathering!=null) || (gathering && !gathering.Compatible(state.gathering)))
+                return Invalid("Incompatible harvest manifest/definition revision.");
             if (state.survival != null && !Flow.SurvivalEnabled) return Invalid("This scene cannot restore survival equipment.");
             var vehicles = GetComponent<Vehicles.VehicleWorld>();
             if (state.population?.residentPressure != null && !vehicles) return Invalid("Scene has no resident pressure region.");

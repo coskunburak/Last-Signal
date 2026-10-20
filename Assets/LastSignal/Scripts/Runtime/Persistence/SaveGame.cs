@@ -6,6 +6,7 @@ namespace LastSignal.Persistence
     // missing sections must remain detectable when parsing old/corrupt JSON.
     [Serializable] public sealed class SaveGame
     {
+        public LastSignal.Gathering.GatheringSnapshot gathering;
         public LastSignal.Vehicles.VehicleWorldSnapshot vehicles;
         public LastSignal.WorldTime.WorldTimeSnapshot worldTime;
         public LastSignal.WorldCells.CellWorldSnapshot cells;
@@ -34,6 +35,7 @@ namespace LastSignal.Persistence
     }
     [Serializable] public sealed class SaveHeader
     {
+        public int gatheringVersion;
         public int schemaVersion;
         public int progressionVersion;
         public int vehicleVersion;
@@ -83,7 +85,7 @@ namespace LastSignal.Persistence
         public bool open;
     }
     public enum OpportunityOutcome { Unknown = 0, Generated = 1, Empty = 2, Blocked = 3 }
-    public enum WorldItemOrigin { Unknown = 0, Loot = 1, Drop = 2, Authored = 3 }
+    public enum WorldItemOrigin { Unknown = 0, Loot = 1, Drop = 2, Authored = 3, Harvest = 4 }
     public enum EntityDisposition { Unknown = 0, Present = 1, Consumed = 2 }
     [Serializable] public sealed class LootOpportunitySnapshot
     {
