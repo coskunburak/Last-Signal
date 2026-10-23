@@ -20,6 +20,7 @@ namespace LastSignal
         public void CloseCargo(Vehicles.VehicleServicePoint point) { if (CargoPoint != point) return; CargoPoint = null; Resume(); }
         void Awake()
         {
+            RenderingQuality.GraphicsSettingsManager.Ensure();
             Controls = gameObject.AddComponent<SessionInput>();
         }
         public void OpenSettings()
@@ -105,6 +106,8 @@ namespace LastSignal
             if (!playerPrefab || !spawnPoint) { Debug.LogError("Session requires player prefab and spawn point.", this); return; }
             foreach (var door in doors) if (door) door.ResetDoor();
             Player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
+            RenderingQuality.GraphicsSettingsManager.Ensure().RegisterRoot(Player);
+            RenderingQuality.GraphicsSettingsManager.Instance.Reapply();
             input = Player.GetComponent<PlayerInputReader>();
             input.ExternalUiOwner = Controls && Controls.Actions;
             input.JournalRequested += OpenJournal;

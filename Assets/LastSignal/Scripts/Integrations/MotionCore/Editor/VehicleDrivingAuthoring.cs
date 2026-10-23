@@ -81,9 +81,11 @@ namespace LastSignal.VehicleAuthoring
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (!material)
             {
-                material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                material.SetColor("_BaseColor", color); material.SetColor("_EmissionColor", color * 2);
-                material.EnableKeyword("_EMISSION"); AssetDatabase.CreateAsset(material, path);
+                material = new Material(Shader.Find("HDRP/Lit"));
+                material.SetColor("_BaseColor", color); material.SetColor("_EmissiveColor", color * 2);
+                material.SetFloat("_UseEmissiveIntensity", 0);
+                UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(material);
+                AssetDatabase.CreateAsset(material, path);
             }
             for (int i = 0; i < 2; i++)
             {
@@ -142,8 +144,9 @@ namespace LastSignal.VehicleAuthoring
             string path = "Assets/LastSignal/_Game/Vehicles/Materials/M_Route_" + name + ".mat";
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (material) return material;
-            material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            material = new Material(Shader.Find("HDRP/Lit"));
             material.SetColor("_BaseColor", color); material.SetFloat("_Smoothness", .08f);
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(material);
             AssetDatabase.CreateAsset(material, path); return material;
         }
         static GameObject RouteBlock(GameObject root, string name, Vector3 position, Vector3 size, Material material)

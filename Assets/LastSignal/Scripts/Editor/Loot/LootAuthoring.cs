@@ -71,7 +71,7 @@ namespace LastSignal.Editor
         static Material Material(string name,Color color)
         {
             string path=Materials+"/"+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);
-            if(!m){m=new Material(Shader.Find("Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(m,path);}m.color=color;return m;
+            if(!m){m=new Material(Shader.Find("HDRP/Lit"));AssetDatabase.CreateAsset(m,path);}m.SetColor("_BaseColor",color);UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(m);EditorUtility.SetDirty(m);return m;
         }
         static void Visuals()
         {

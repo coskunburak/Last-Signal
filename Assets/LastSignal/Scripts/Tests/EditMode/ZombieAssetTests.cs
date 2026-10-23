@@ -63,13 +63,17 @@ namespace LastSignal.Tests
         public void MaterialUsesLinearPackedMapsAndCorrectNormalImporter()
         {
             var material = Prefab.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial;
-            Assert.That(material.shader.name, Is.EqualTo("Universal Render Pipeline/Lit"));
+            Assert.That(material.shader.name, Is.EqualTo("HDRP/Lit"));
             Assert.That(material.shader.isSupported, Is.True);
-            foreach (var key in new[] { "_BaseMap", "_BumpMap", "_MetallicGlossMap", "_OcclusionMap" }) Assert.That(material.GetTexture(key), Is.Not.Null);
-            var normal = (TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material.GetTexture("_BumpMap")));
+            foreach (var key in new[] { "_BaseColorMap", "_NormalMap", "_MaskMap" }) Assert.That(material.GetTexture(key), Is.Not.Null);
+            var normal = (TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material.GetTexture("_NormalMap")));
             Assert.That(normal.textureType, Is.EqualTo(TextureImporterType.NormalMap));
-            var mask = (TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material.GetTexture("_MetallicGlossMap")));
+            var mask = (TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material.GetTexture("_MaskMap")));
             Assert.That(mask.sRGBTexture, Is.False);
+            Assert.That(material.IsKeywordEnabled("_MASKMAP"), Is.True);
+            Assert.That(material.IsKeywordEnabled("_NORMALMAP"), Is.True);
+            Assert.That(material.GetFloat("_AORemapMin"), Is.Zero);
+            Assert.That(material.GetFloat("_AORemapMax"), Is.EqualTo(1));
         }
 
         [Test]

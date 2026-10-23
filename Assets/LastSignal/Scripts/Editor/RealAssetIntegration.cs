@@ -33,19 +33,20 @@ namespace LastSignal.Editor
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (material) return material;
             var source = AssetDatabase.LoadAssetAtPath<Material>("Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Materials/" + name + ".mat");
-            material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            material = new Material(Shader.Find("HDRP/Lit"));
             material.SetColor("_BaseColor", source.GetColor("_Color"));
             material.SetFloat("_Metallic", source.GetFloat("_Metallic"));
             material.SetFloat("_Smoothness", source.GetFloat("_Glossiness"));
             if (name == "Glass_01_Mat")
             {
                 material.SetColor("_BaseColor", new Color(.35f, .65f, .7f, .08f));
-                material.SetFloat("_Surface", 1); material.SetFloat("_ZWrite", 0);
+                material.SetFloat("_SurfaceType", 1); material.SetFloat("_BlendMode", 0); material.SetFloat("_ZWrite", 0);
                 material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                 material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT"); material.renderQueue = 3000;
                 material.SetOverrideTag("RenderType", "Transparent");
             }
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(material);
             AssetDatabase.CreateAsset(material, path); return material;
         }
         static void RifleMaterials(GameObject model)
@@ -175,7 +176,7 @@ namespace LastSignal.Editor
                 var emission = flash.emission; emission.rateOverTime = 0; emission.SetBursts(new[] { new ParticleSystem.Burst(0, 3) });
                 var shape = flash.shape; shape.shapeType = ParticleSystemShapeType.Cone; shape.angle = 12; shape.radius = .008f;
                 var flashMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Materials/MuzzleFlash.mat");
-                if (!flashMaterial) { flashMaterial = new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit")); flashMaterial.SetColor("_BaseColor", new Color(1, .65f, .12f)); AssetDatabase.CreateAsset(flashMaterial, "Assets/LastSignal/Materials/MuzzleFlash.mat"); }
+                if (!flashMaterial) { flashMaterial = new Material(Shader.Find("LastSignal/VFX/Particles/Unlit")); flashMaterial.SetColor("_BaseColor", new Color(1, .65f, .12f)); AssetDatabase.CreateAsset(flashMaterial, "Assets/LastSignal/Materials/MuzzleFlash.mat"); }
                 flash.GetComponent<ParticleSystemRenderer>().sharedMaterial = flashMaterial;
                 Set(vfx, "muzzleFlash", flash);
                 foreach (var r in rig.GetComponentsInChildren<Renderer>(true)) r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

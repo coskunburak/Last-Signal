@@ -143,60 +143,115 @@ namespace LastSignal.Tests
         [UnityTest]
         public IEnumerator ValViewmodelUsesSprintClipOnlyWhileActuallySprinting()
         {
+            yield return null; // Let the production starting equipment initialize first.
+            var combat = player.GetComponent<PlayerCombatController>();
 #if UNITY_EDITOR
-            // This test explicitly covers the preserved VAL fallback animation contract.
-            // The production character uses procedural arms, covered by the test below.
-            var serialized=new SerializedObject(player.GetComponent<PlayerCombatController>());
-            serialized.FindProperty("startingWeapon").objectReferenceValue=AssetDatabase.LoadAssetAtPath<GameObject>(
-                "Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab").GetComponent<WeaponController>();
-            serialized.ApplyModifiedPropertiesWithoutUndo();
+            // Start can run between SetUp and this coroutine. Changing startingWeapon here
+            // leaves the already-equipped procedural Arberry rifle (no controller) in place.
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/LastSignal/Prefabs/Resources/Weapon_AssaultRifle.prefab");
+            Assert.That(prefab, Is.Not.Null);
+            combat.EquipWeapon(Object.Instantiate(prefab, player.transform).GetComponent<WeaponController>());
 #endif
-            yield return null; // PlayerCombatController creates the rifle in Start.
-            var rifle = player.GetComponent<PlayerCombatController>().Firearm;
+            var rifle = combat.Firearm;
             Assert.That(rifle, Is.Not.Null);
-            float deadline = Time.realtimeSinceStartup + 5f;
-            while (rifle.RuntimeState.State != WeaponState.Ready && Time.realtimeSinceStartup < deadline)
-                yield return null;
-            Assert.That(rifle.RuntimeState.State, Is.EqualTo(WeaponState.Ready));
             var animator = rifle.GetComponentInChildren<Animator>(true);
             Assert.That(animator, Is.Not.Null);
-            deadline = Time.realtimeSinceStartup + 5f;
-            while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Ready") && Time.realtimeSinceStartup < deadline)
-                yield return null;
-            Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Ready"), Is.True,
-                "Rifle equip animation must finish before testing the Ready-to-Sprint transition.");
+            Assert.That(animator.runtimeAnimatorController, Is.Not.Null, "The VAL fixture must have an Animator controller.");
+#if UNITY_EDITOR
+            Assert.That(animator.runtimeAnimatorController, Is.EqualTo(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                "Assets/LastSignal/Animations/VAL_MRPoly.controller")));
+#endif
+            Assert.That(motor.enabled, Is.False, "Only explicit simulation steps may change sprint state in this fixture.");
+            yield return WaitForWeaponReady(rifle);
+            yield return WaitForWeaponAnimation(animator, "Ready");
+            Assert.That(animator.GetBool("Sprinting"), Is.False);
 
             motor.Simulate(Vector2.up, true, 1f / 60f);
             Assert.That(motor.IsSprinting, Is.True);
-            yield return new WaitForSeconds(.2f);
+            yield return WaitForWeaponAnimation(animator, "Sprint");
             Assert.That(animator.GetBool("Sprinting"), Is.True);
             Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Sprint"), Is.True);
 
             motor.Simulate(Vector2.zero, false, 1f / 60f);
             Assert.That(motor.IsSprinting, Is.False);
-            yield return new WaitForSeconds(.2f);
+            yield return WaitForWeaponAnimation(animator, "Ready");
+            Assert.That(animator.GetBool("Sprinting"), Is.False);
             Assert.That(animator.GetCurrentAnimatorStateInfo(0).IsName("Ready"), Is.True);
         }
         [UnityTest]
         public IEnumerator ArberryViewmodelLowersOnlyDuringActualSprintAndRestoresContacts()
         {
+#if UNITY_EDITOR
             yield return null;
             var rifle=player.GetComponent<PlayerCombatController>().Firearm;
+            Assert.That(rifle, Is.Not.Null);
             var grip=rifle.GetComponent<FirstPersonWeaponGrip>();
             Assert.That(grip,Is.Not.Null);Assert.That(grip.Profile.FpsWeaponOwnsContacts,Is.True);
-            float deadline=Time.realtimeSinceStartup+5f;
-            while(rifle.RuntimeState.State!=WeaponState.Ready){Assert.That(Time.realtimeSinceStartup,Is.LessThan(deadline));yield return null;}
-            yield return null;
-            var rest=grip.PoseFrame.InverseTransformPoint(grip.Visual.position);
+            Assert.That(grip.Profile.FpsSprintCarry, Is.True);
+            Assert.That(motor.enabled, Is.False, "Only explicit simulation steps may change sprint state in this fixture.");
+            Assert.That(input.Move, Is.EqualTo(Vector2.zero), "Keep input bob out of the authored carry-pose comparison.");
+            var view = rifle.GetComponent<WeaponViewPresenter>();
+            Assert.That(view, Is.Not.Null);
+            var probe = player.AddComponent<WeaponGripProbe>(); probe.Fps = grip;
+            yield return WaitForWeaponReady(rifle);
+            Assert.That(rifle.RuntimeState.AimAmount, Is.Zero);
+            yield return WaitForSprintPose(probe, view, 0);
+            Assert.That(probe.ValidContact, Is.True);
+            var rest = probe.PoseFrameLocalPosition;
+            var restRotation = probe.PoseFrameLocalRotation;
+            Assert.That(Vector3.Distance(rest, grip.Profile.FpsHipPosition), Is.LessThan(.005f));
+            Assert.That(Quaternion.Angle(restRotation, Quaternion.Euler(grip.Profile.FpsHipEuler)), Is.LessThan(.5f));
             motor.Simulate(Vector2.up,true,1f/60f);Assert.That(motor.IsSprinting,Is.True);
-            yield return new WaitForSeconds(.3f);
-            Assert.That(grip.HasValidContact,Is.True);
-            Assert.That(grip.PoseFrame.InverseTransformPoint(grip.Visual.position).y,Is.LessThan(rest.y-.02f));
+            yield return WaitForSprintPose(probe, view, 1);
+            Assert.That(probe.ValidContact, Is.True);
+            // FpsSprintCarry moves the whole PoseFrame. Visual relative to that frame
+            // stays fixed; the profile specifies a carry rotation, not a 2 cm local drop.
+            Assert.That(Vector3.Distance(probe.PoseFrameLocalPosition, grip.Profile.FpsSprintPosition), Is.LessThan(.005f));
+            Assert.That(Quaternion.Angle(probe.PoseFrameLocalRotation, Quaternion.Euler(grip.Profile.FpsSprintEuler)), Is.LessThan(.5f));
             motor.Simulate(Vector2.zero,false,1f/60f);Assert.That(motor.IsSprinting,Is.False);
-            yield return new WaitForSeconds(.3f);
-            Assert.That(grip.HasValidContact,Is.True);
-            Assert.That(Vector3.Distance(grip.PoseFrame.InverseTransformPoint(grip.Visual.position),rest),Is.LessThan(.005f));
+            yield return WaitForSprintPose(probe, view, 0);
+            Assert.That(probe.ValidContact, Is.True);
+            Assert.That(Vector3.Distance(probe.PoseFrameLocalPosition, rest), Is.LessThan(.005f));
+            Assert.That(Quaternion.Angle(probe.PoseFrameLocalRotation, restRotation), Is.LessThan(.5f));
+#else
+            Assert.Fail("This authored-prefab test requires the Unity Editor.");
+            yield break;
+#endif
         }
+        static IEnumerator WaitForWeaponReady(WeaponController rifle)
+        {
+            float deadline = Time.realtimeSinceStartup + 5f;
+            while (rifle.RuntimeState.State != WeaponState.Ready && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(rifle.IsSimulationActive, Is.True, "The equip/presentation clock must be running.");
+            Assert.That(rifle.RuntimeState.State, Is.EqualTo(WeaponState.Ready), "Weapon equip did not complete within 5 seconds.");
+        }
+        static IEnumerator WaitForWeaponAnimation(Animator animator, string state)
+        {
+            float deadline = Time.realtimeSinceStartup + 5f;
+            while (Time.realtimeSinceStartup < deadline)
+            {
+                if (animator.isInitialized && !animator.IsInTransition(0) && animator.GetCurrentAnimatorStateInfo(0).IsName(state))
+                    yield break;
+                yield return null;
+            }
+            Assert.Fail($"Expected settled VAL {state} within 5 seconds; active={animator.isActiveAndEnabled}, " +
+                $"initialized={animator.isInitialized}, controller={animator.runtimeAnimatorController}, speed={animator.speed}.");
+        }
+#if UNITY_EDITOR
+        static IEnumerator WaitForSprintPose(WeaponGripProbe probe, WeaponViewPresenter view, float weight)
+        {
+            int before = probe.Samples;
+            float deadline = Time.realtimeSinceStartup + 5f;
+            // The probe observes production LateUpdate after the grip solver. Ordinary
+            // coroutine resumes see Update's restored pose; EndOfFrame is unsuitable in batchmode.
+            do { yield return null; }
+            while ((probe.Samples <= before || view.SprintWeight != weight) && Time.realtimeSinceStartup < deadline);
+            Assert.That(probe.Samples, Is.GreaterThan(before), "No new final LateUpdate pose was observed.");
+            Assert.That(view.SprintWeight, Is.EqualTo(weight), "Sprint carry blend did not reach its target within 5 seconds.");
+            Assert.That(probe.Active, Is.True, "The final grip pose must be solved before inspecting contacts or transforms.");
+        }
+#endif
         [Test]
         public void PitchClampsInBothDirections()
         {

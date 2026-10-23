@@ -73,8 +73,8 @@ namespace LastSignal.EditorTools
         {var t=new GameObject(name).transform;t.SetParent(parent,false);t.localPosition=position;return t;}
         static Material Material(string name,string texture,Color tint,float smooth)
         {
-            var m=Asset<Material>(MaterialRoot+name+".mat");if(!m) {m=new Material(Shader.Find("Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(m,MaterialRoot+name+".mat");}
-            m.SetTexture("_BaseMap",Asset<Texture2D>(texture));m.SetColor("_BaseColor",tint);m.SetFloat("_Smoothness",smooth);EditorUtility.SetDirty(m);return m;
+            var m=Asset<Material>(MaterialRoot+name+".mat");if(!m) {m=new Material(Shader.Find("HDRP/Lit"));AssetDatabase.CreateAsset(m,MaterialRoot+name+".mat");}
+            m.SetTexture("_BaseColorMap",Asset<Texture2D>(texture));m.SetColor("_BaseColor",tint);m.SetFloat("_Smoothness",smooth);UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(m);EditorUtility.SetDirty(m);return m;
         }
         static RuntimeAnimatorController Animations()
         {

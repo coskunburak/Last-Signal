@@ -14,6 +14,18 @@ namespace LastSignal.Atmosphere
         public Color nightSkyFill = new Color(.10f,.13f,.21f);
         public float skyFillIntensity = .3f;
 
+        // Candidate-only opt-in. Historical profiles retain their unit-scale HDRP presentation.
+        public bool usePhysicalHdrpLighting;
+        [Min(1)] public float hdrpSunLuxPerUnit = 42000f;
+        [Min(0)] public float hdrpMoonLuxPerUnit = .5f;
+        public float hdrpDayExposure = 12.8f, hdrpOvercastExposure = 11.5f, hdrpNightExposure = 4.5f;
+        public float HdrpExposure(float day, float clouds, float rain)
+        {
+            float daylight = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(-.08f, .28f, Altitude(day)));
+            float weather = Mathf.Clamp01(Mathf.Max(clouds, rain));
+            return Mathf.Lerp(hdrpNightExposure, Mathf.Lerp(hdrpDayExposure, hdrpOvercastExposure, weather), daylight);
+        }
+
         public bool usePhaseLighting;
         [Serializable] public struct Phase
         {

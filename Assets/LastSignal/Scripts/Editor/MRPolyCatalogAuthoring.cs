@@ -90,12 +90,13 @@ namespace LastSignal.Editor
             if (existing) return existing;
             var source = AssetDatabase.LoadAssetAtPath<Material>(Source + "/Materials/" + name + ".mat");
             if (!source) throw new InvalidOperationException("Palet materyali bulunamadı: " + name);
-            var shader = Shader.Find("Universal Render Pipeline/Lit");
-            if (!shader) throw new InvalidOperationException("URP/Lit bulunamadı.");
+            var shader = Shader.Find("HDRP/Lit");
+            if (!shader) throw new InvalidOperationException("HDRP/Lit bulunamadı.");
             var material = new Material(shader) { name = name };
             material.SetColor("_BaseColor", source.GetColor("_Color"));
             material.SetFloat("_Metallic", source.GetFloat("_Metallic"));
             material.SetFloat("_Smoothness", source.GetFloat("_Glossiness"));
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(material);
             AssetDatabase.CreateAsset(material, path);
             return material;
         }

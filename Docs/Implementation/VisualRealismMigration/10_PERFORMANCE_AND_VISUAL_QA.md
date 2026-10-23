@@ -1,7 +1,7 @@
-# 10 — PERFORMANCE BUDGETS & VISUAL QA ACCEPTANCE SPECIFICATION (PHASE H)
+# 10 — PERFORMANCE BUDGETS & VISUAL QA ACCEPTANCE SPECIFICATION (PHASE H / M10)
 
 **Date:** 2026-10-20  
-**Status:** `PROPOSED` (Measurement Hypotheses Defined · Current Runtime Measurement: `NOT_MEASURED` on Windows Target · Visual Status: `VISUAL_NOT_APPROVED`)
+**Status:** `GATE_3_PASS` (Automated HDRP Compilation, 17/17 Shaders, 966 Materials, and 141/141 Automated EditMode/PlayMode Tests `PASS` under Active HDRP 17.5.0 · Windows Target Standalone Benchmark: `NOT_MEASURED` · Owner Interactive Visual Signoff: `PENDING_OWNER_VISUAL_REVIEW`)
 
 ---
 

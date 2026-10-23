@@ -16,7 +16,11 @@ namespace LastSignal.Gathering
             world && world.Pending(nodeId) ? "Collect timber at the stump — clear ground required" :
             world && !world.ToolUsable ? "Axe broken" : "Requires axe — aim at the trunk notch";
         public bool TryInteract() => Available && world.RetryReward(this);
-        void OnEnable() { if (world) world.Register(this); }
+        void OnEnable()
+        {
+            if (Application.isPlaying) RenderingQuality.VegetationShadowController.Attach(gameObject);
+            if (world) world.Register(this);
+        }
         void OnDisable() { if (world) world.Unregister(this); }
         public void Present(ResourceNodeState state)
         {

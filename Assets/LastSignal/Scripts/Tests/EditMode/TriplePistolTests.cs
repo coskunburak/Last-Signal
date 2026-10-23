@@ -45,14 +45,14 @@ namespace LastSignal.Tests
                 foreach(var material in renderer.sharedMaterials)
                 {
                     Assert.That(material && material.shader, Is.True);
-                    Assert.That(material.shader.name, Is.EqualTo("Universal Render Pipeline/Lit"));
-                    foreach(var map in new[]{"_BaseMap","_BumpMap","_MetallicGlossMap"})
+                    Assert.That(material.shader.name, Is.EqualTo("HDRP/Lit"));
+                    foreach(var map in new[]{"_BaseColorMap","_NormalMap","_MaskMap"})
                     {
                         var texture=material.GetTexture(map);Assert.That(texture, Is.Not.Null, map);
                         var importer=(TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(texture));
                         Assert.That(importer.maxTextureSize, Is.LessThanOrEqualTo(2048));
-                        Assert.That(importer.sRGBTexture, Is.EqualTo(map=="_BaseMap"));
-                        if(map=="_BumpMap")Assert.That(importer.textureType, Is.EqualTo(TextureImporterType.NormalMap));
+                        Assert.That(importer.sRGBTexture, Is.EqualTo(map=="_BaseColorMap"));
+                        if(map=="_NormalMap")Assert.That(importer.textureType, Is.EqualTo(TextureImporterType.NormalMap));
                     }
                 }
             var fps=AssetDatabase.LoadAssetAtPath<GameObject>(Root+name+"/FPS.prefab");Assert.That(fps, Is.Not.Null);

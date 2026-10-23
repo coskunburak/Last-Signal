@@ -138,10 +138,10 @@ namespace LastSignal.Editor
             string[] colors={"#A07860","#40564A","#75604B","#4D5351","#393732","#7A8076","#302D29"};
             string path=Root+"/Materials/Diesel_"+key+".mat";
             var mat=AssetDatabase.LoadAssetAtPath<Material>(path);
-            if (!mat) { mat=new Material(Shader.Find("Universal Render Pipeline/Lit")); AssetDatabase.CreateAsset(mat,path); }
+            if (!mat) { mat=new Material(Shader.Find("HDRP/Lit")); AssetDatabase.CreateAsset(mat,path); }
             ColorUtility.TryParseHtmlString(colors[Array.IndexOf(keys,key)],out var color);
             mat.SetColor("_BaseColor",color); mat.SetFloat("_Smoothness",key=="Eyes"?.3f:.16f); mat.SetFloat("_Metallic",0);
-            EditorUtility.SetDirty(mat); return mat;
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(mat); EditorUtility.SetDirty(mat); return mat;
         }
         static void AttachToPlayer()
         {

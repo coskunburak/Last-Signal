@@ -13,9 +13,9 @@
 |---|---|---|---|
 | **Unity Editor Version** | `6000.5.0f1 (88b47c5e7076)` | `ProjectSettings/ProjectVersion.txt` | `CONFIRMED` |
 | **Git Branch** | `s012-integrated-graybox-slice` | `git branch --show-current` | `CONFIRMED` |
-| **Git HEAD Commit** | `84aa7358be7b3f47517b7e083ff0734e762e210f` | `git rev-parse HEAD` | `CONFIRMED` |
-| **Working Tree State** | **DIRTY** (42 modified tracked files, 52 untracked top-level/nested paths) | `git status --short --untracked-files=all` | `CONFIRMED` |
-| **Backup Verification State** | `BACKUP_NOT_VERIFIED` (User stated a backup copy exists, but external backup integrity/completeness cannot be verified from inside the workspace) | Workspace boundary rule | `BLOCKED` (Requires checkpoint before destructive/global changes) |
+| **Git HEAD Commit (Gate 2A Baseline)** | `3fa3161f0d3d22f40d422fd5b404605f25088ce0` *(Gate 0 Audit HEAD was `84aa7358be7b3f47517b7e083ff0734e762e210f`; GitHub `main` merge commit: `0262ef1a3e43847e671821d25189dd3ba39855bf`)* | `git rev-parse HEAD` | `CONFIRMED` |
+| **Working Tree State (Post-Push Baseline)** | **CLEAN (`0` modified, `0` untracked)** prior to Gate 2A `RenderPipelineAdapter` code changes *(Pre-push Gate 0 had 41/42 modified and 52 untracked paths, all committed in `3fa3161f`)* | `git status --short --untracked-files=all` | `CONFIRMED` |
+| **Backup & Checkpoint State** | **Gate 2A External Checkpoint Verified** (`gate2a_project_core_snapshot.tar.gz` + `gate2a_untracked_vendor_metas.tar.gz` + `THIRDPARTY_AND_UNTRACKED_MANIFEST.json` at `/Users/burakcoskun/.gemini/antigravity/brain/e750ef1b-976f-4c5b-a78e-b81a3ab980db/scratch/checkpoints/gate2a/`). Note: Full 9.43 GB binary copy of `Assets/ThirdParty/` outside workspace remains `BACKUP_NOT_VERIFIED` unless verified by owner on external storage, while in-place `21,515` files (`11,176` `.meta` files) are cryptographically verified. | `restore_gate2a.py --verify` | `CONFIRMED` |
 | **Active Render Pipeline** | **URP 17.5.0** (`com.unity.render-pipelines.universal: 17.5.0`) | `Packages/manifest.json` | `CONFIRMED` |
 | **HDRP Package Installed?** | **NO** (`com.unity.render-pipelines.high-definition` absent) | `Packages/manifest.json`, `Packages/packages-lock.json` | `CONFIRMED` |
 | **Default Custom RP Asset** | `Assets/LastSignal/Settings/Rendering/PC_RPAsset.asset` (GUID `4b83569d67af61e458304325a23e5dfd`) | `ProjectSettings/GraphicsSettings.asset` | `CONFIRMED` |

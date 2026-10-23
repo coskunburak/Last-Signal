@@ -1,8 +1,25 @@
-# 06 — CONTROLLED HDRP MIGRATION EXECUTION PLAN (PHASE E)
+# 06 — CONTROLLED HDRP MIGRATION EXECUTION PLAN (PHASE E / M0–M11)
 
 **Date:** 2026-10-20  
-**Gate Status:** `PROPOSED` · **LOCKED BEHIND OWNER APPROVAL (`APPROVE HDRP MIGRATION`)**  
-**Rule:** None of Steps E1–E5 below will be executed until the owner explicitly replies with `APPROVE HDRP MIGRATION` (or selects the Option C/A baseline path).
+**Gate Status:** `GATE_2A_PASS` · `GATE_2B_PASS` · `GATE_3_PASS` · **`PRODUCTION_HDRP_ACTIVE`**  
+**Rule:** Phases M0 through M9 have been implemented and verified by owner-operated Unity 6000.5.0f1 test execution. HDRP 17.5.0 is now the active render pipeline (`LastSignal_HDRP_High.asset` / `LastSignal_HDRP_Medium.asset`), with 17/17 shaders validated (`0` errors), 966 materials audited and migrated (`0` errors), and 141/141 automated EditMode + PlayMode tests passing under active HDRP.
+
+---
+
+## 0. Completed Migration Phases (M0–M9 — 2026-10-20)
+
+| Phase | Target Artifact / File | Status | Owner-Verified Evidence |
+|---|---|---|---|
+| **M0 — Gate 2A Verification & Checkpoint** | `m0_post_gate2a_project_snapshot.tar.gz` (`23e21b405549669e746662550f2864bec0b560c04442dccc54e4b5fe4152812e`) | `GATE_2A_PASS` | `20261020-164905-593716-compile`, `20261020-164924-070631-references`, `20261020-164937-826703-editmode` (`31/31`), `20261020-165024-469515-playmode` (`15/15`), `OWNER-20261020-165008-edit-ayiodcb5` (`74/74`), `OWNER-20261020-165103-play-xz9a89ha` (`21/21`) |
+| **M1 — HDRP 17.5.0 Package & Assemblies** | `Packages/manifest.json`, `LastSignal.Runtime.asmdef`, `LastSignal.Editor.asmdef`, `LastSignal.Art.Editor.asmdef` | `PASS` | `Docs/Implementation/VisualRealismMigration/Evidence/20261020-185059-234541-compile/process.json` (`exitCode: 0`) |
+| **M2 — RenderPipelineAdapter HDRP Implementation** | `Assets/LastSignal/Scripts/Runtime/Rendering/RenderPipelineAdapter.cs` | `PASS` | Verified in both Gate 2B (`URP` active) and Gate 3 (`HDRP` active) test suites |
+| **M3 — HDRP Pipeline & Volume Assets** | `Assets/LastSignal/Settings/Rendering/HDRP/LastSignal_HDRP_{Medium,High,Benchmark,DefaultVolumeProfile}.asset`, `TownVolume.asset` | `PASS` | `Docs/Implementation/VisualRealismMigration/Evidence/hdrp_assets_setup.json` (`status: PASS`) |
+| **M4 — Custom Shader HDRP Conversion** | `HdrpCustomLighting.hlsl`, `ForestTerrainHdrpPasses.hlsl`, `ScopeLens`, `LS_Ballistic`, `LS_BloodSurface`, `LS_LocalizedWound`, `TownSky`, `ForestLit`, `ForestTerrain`, `ForestTerrainBase`, `LS_ParticleUnlit`, plus 5 `*_HDRP.shader` assets | `PASS` | `Docs/Implementation/VisualRealismMigration/Evidence/hdrp_shader_validation.json` (`17/17 PASS`, `failedCount: 0`) |
+| **M5 — Material Migration & Rollback Manifest** | `HdrpMaterialMigrationUtility.cs`, `MaterialRollbackManifest.json` | `PASS` | `Docs/Implementation/VisualRealismMigration/Evidence/material_migration_execution.json` (`966` scanned, `731` `HDRP/Lit`, `3` `HDRP/Unlit`, `15` `LastSignal/VFX/Particles/Unlit`, `1` `HDRP/TerrainLit`, `19` dual-pipeline retained, `9` existing HDRP validated, `errorCount: 0`) |
+| **M6 — TownAtmosphere HDRP Upgrade** | `Assets/LastSignal/Scripts/Runtime/Atmosphere/TownAtmosphere.cs` | `PASS` | `PhysicallyBasedSky`, volumetric `Fog`, `VolumetricClouds`, fixed unit `Exposure` (`EV100 = -0.2630344`), ACES `Tonemapping`, `SSAO`, `SSR`, `ContactShadows`, wet surfaces, and lamps verified in `WorldTimeIntegrationTests` (`15/15 PASS`) |
+| **M7 — Isolated HDRP Test Scene** | `Assets/LastSignal/Scenes/Validation/HDRP_MigrationTest.unity` | `PASS` | `Docs/Implementation/VisualRealismMigration/Evidence/hdrp_isolated_scene_validation.json` (`9` specimens, `status: PASS`) |
+| **M8 — Global HDRP Activation & FirstTownCore Verification** | `GraphicsSettings.asset`, `QualitySettings.asset`, `UrpPipelineRollbackState.json` | `GATE_3_PASS` / `PRODUCTION_HDRP_ACTIVE` | `hdrp_pipeline_activation.json` (`activePipelineKind: HDRP`), `20261020-191614-180188-references` (`PASS`), `20261020-191633-522745-editmode` (`31/31 PASS`), `20261020-191801-877369-playmode` (`15/15 PASS`) |
+| **M9 — S004 Tree Physics & Forest Verification Under Active HDRP** | `ForestLit.shader`, `ForestTerrain.shader`, S004 harvesting & joint fracture | `PASS` | `OWNER-20261020-191844-edit-awyjjtdn` (`74/74 PASS`), `OWNER-20261020-191900-play-xp52be1n` (`21/21 PASS`) |
 
 ---
 

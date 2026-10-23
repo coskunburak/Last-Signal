@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
+using LastSignal.Rendering;
 using LastSignal.WorldTime;
 namespace LastSignal.Slice
 {
@@ -22,7 +22,7 @@ namespace LastSignal.Slice
                 RenderSettings.fogDensity=clock.Simulation.Raining?.010f:.006f;
             }
             var camera=Camera.main;
-            if(camera){var data=camera.GetUniversalAdditionalCameraData();data.renderPostProcessing=true;data.antialiasing=AntialiasingMode.SubpixelMorphologicalAntiAliasing;data.antialiasingQuality=AntialiasingQuality.Medium;}
+            if(camera)RenderPipelineAdapter.EnableGameplayPostAndAA(camera);
         }
     }
 }

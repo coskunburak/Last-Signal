@@ -31,7 +31,7 @@ namespace LastSignal.Art.Tests
         {
             root = GameObject.CreatePrimitive(PrimitiveType.Cube);
             Object.DestroyImmediate(root.GetComponent<Collider>());
-            material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            material = new Material(Shader.Find("HDRP/Lit"));
             root.GetComponent<Renderer>().sharedMaterial = material;
             Assert.That(S013PrefabValidation.Inspect(root, false, true), Is.Empty);
             CollectionAssert.Contains(S013PrefabValidation.Inspect(root, true, true), "REQUIRED_COLLIDER");
@@ -39,7 +39,7 @@ namespace LastSignal.Art.Tests
         [Test] public void CompatibleGeometryDoesNotImplyLicenseApproval()
         {
             root = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            material = new Material(Shader.Find("HDRP/Lit"));
             root.GetComponent<Renderer>().sharedMaterial = material;
             CollectionAssert.AreEqual(new[] { "LICENSE_NOT_APPROVED" }, S013PrefabValidation.Inspect(root, true, false));
         }

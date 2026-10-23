@@ -21,11 +21,12 @@ namespace LastSignal.Editor.FirstTown
             var scene=SceneManager.GetActiveScene();if(scene.path!=FirstTownAuthoring.ScenePath)throw new InvalidOperationException("Open FirstTownCore.");
             var d=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<TownAtmosphere>(true)).Single();
             if(d.transform.Find("Selective road puddles"))throw new InvalidOperationException("Polish already installed.");
-            var mat=new Material(Shader.Find("Universal Render Pipeline/Lit")){name="Road puddle",renderQueue=3000};
-            mat.SetFloat("_Surface",1);mat.SetFloat("_Blend",0);mat.SetFloat("_SrcBlend",(float)BlendMode.SrcAlpha);mat.SetFloat("_DstBlend",(float)BlendMode.OneMinusSrcAlpha);
+            var mat=new Material(Shader.Find("HDRP/Lit")){name="Road puddle",renderQueue=3000};
+            mat.SetFloat("_SurfaceType",1);mat.SetFloat("_BlendMode",0);mat.SetFloat("_SrcBlend",(float)BlendMode.SrcAlpha);mat.SetFloat("_DstBlend",(float)BlendMode.OneMinusSrcAlpha);
             mat.SetFloat("_SrcBlendAlpha",1);mat.SetFloat("_DstBlendAlpha",(float)BlendMode.OneMinusSrcAlpha);mat.SetFloat("_ZWrite",0);
             mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");mat.SetOverrideTag("RenderType","Transparent");mat.SetShaderPassEnabled("ShadowCaster",false);
             mat.SetColor("_BaseColor",new Color(.13f,.17f,.18f,.46f));mat.SetFloat("_Smoothness",.79f);mat.SetFloat("_Metallic",0);
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(mat);
             AssetDatabase.CreateAsset(mat,Root+"Puddle.mat");
             var mesh=new Mesh {name="Shallow irregular puddle"};var vertices=new Vector3[17];var uv=new Vector2[17];var triangles=new int[48];uv[0]=new Vector2(.5f,.5f);
             for(int i=0;i<16;i++){float a=i*Mathf.PI/8,r=.85f+.13f*Mathf.Sin(i*2.7f);vertices[i+1]=new Vector3(Mathf.Cos(a)*r,0,Mathf.Sin(a)*r);uv[i+1]=new Vector2(vertices[i+1].x*.5f+.5f,vertices[i+1].z*.5f+.5f);triangles[i*3]=0;triangles[i*3+1]=(i+1)%16+1;triangles[i*3+2]=i+1;}

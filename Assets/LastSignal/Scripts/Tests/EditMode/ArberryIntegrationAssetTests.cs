@@ -38,20 +38,20 @@ namespace LastSignal.Tests
                 foreach(var bone in new[]{HumanBodyBones.Hips,HumanBodyBones.Spine,HumanBodyBones.Chest,HumanBodyBones.UpperChest,HumanBodyBones.Neck,HumanBodyBones.Head,HumanBodyBones.LeftUpperArm,HumanBodyBones.RightUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.RightLowerArm,HumanBodyBones.LeftHand,HumanBodyBones.RightHand,HumanBodyBones.LeftUpperLeg,HumanBodyBones.RightUpperLeg,HumanBodyBones.LeftLowerLeg,HumanBodyBones.RightLowerLeg,HumanBodyBones.LeftFoot,HumanBodyBones.RightFoot,HumanBodyBones.LeftToes,HumanBodyBones.RightToes})Assert.That(a.GetBoneTransform(bone),Is.Not.Null,bone.ToString());
                 var skins=root.GetComponentsInChildren<SkinnedMeshRenderer>(true);Assert.That(skins,Has.Length.EqualTo(11));
                 Assert.That(skins.Select(r=>r.name).Distinct().Count(),Is.EqualTo(11));
-                foreach(var r in skins){Assert.That(r.rootBone,Is.Not.Null);Assert.That(r.bones,Has.Length.EqualTo(160));Assert.That(r.bones.All(b=>b&&b.IsChildOf(root.transform)),Is.True,r.name);Assert.That(r.sharedMaterials,Has.Length.EqualTo(r.sharedMesh.subMeshCount));Assert.That(r.sharedMaterials.All(m=>m&&m.GetTexture("_BaseMap")),Is.True,r.name);}
+                foreach(var r in skins){Assert.That(r.rootBone,Is.Not.Null);Assert.That(r.bones,Has.Length.EqualTo(160));Assert.That(r.bones.All(b=>b&&b.IsChildOf(root.transform)),Is.True,r.name);Assert.That(r.sharedMaterials,Has.Length.EqualTo(r.sharedMesh.subMeshCount));Assert.That(r.sharedMaterials.All(m=>m&&m.GetTexture("_BaseColorMap")),Is.True,r.name);}
                 Assert.That(root.GetComponentsInChildren<FirstPersonMotor>(true),Is.Empty);Assert.That(root.GetComponentsInChildren<WeaponController>(true),Is.Empty);
                 Assert.That(new CharacterHandPose(a,false).Valid&&new CharacterHandPose(a,true).Valid,Is.True);
             }finally{PrefabUtility.UnloadPrefabContents(root);}
         }
-        [Test] public void MaterialsUseBoundedTypedTexturesAndCorrectUrpPacking()
+        [Test] public void MaterialsUseBoundedTypedTexturesAndCorrectHdrpPacking()
         {
             string[] names={"Arms","Backpack2","Body2","Body_Arkit_Eye","Brows_Leashes","Gloves1","Hair3","Head","Jacket1","Jeans1","Mouth","Shoes1"};
             foreach(string name in names){
-                var m=AssetDatabase.LoadAssetAtPath<Material>(ArberryCharacterAuthoring.Root+"/Materials/"+name+".mat");Assert.That(m,Is.Not.Null,name);Assert.That(m.shader.name,Is.EqualTo("Universal Render Pipeline/Lit"));
-                Check(m,"_BaseMap",true,TextureImporterType.Default);Check(m,"_BumpMap",false,TextureImporterType.NormalMap);
+                var m=AssetDatabase.LoadAssetAtPath<Material>(ArberryCharacterAuthoring.Root+"/Materials/"+name+".mat");Assert.That(m,Is.Not.Null,name);Assert.That(m.shader.name,Is.EqualTo("HDRP/Lit"));
+                Check(m,"_BaseColorMap",true,TextureImporterType.Default);Check(m,"_NormalMap",false,TextureImporterType.NormalMap);
                 Assert.That(m.IsKeywordEnabled("_NORMALMAP"),Is.True);
-                if(name=="Hair3"||name=="Brows_Leashes"){Assert.That(m.GetFloat("_AlphaClip"),Is.EqualTo(1));Assert.That(m.IsKeywordEnabled("_ALPHATEST_ON"),Is.True);}
-                else if(name!="Body_Arkit_Eye") {Check(m,"_MetallicGlossMap",false,TextureImporterType.Default);Assert.That(m.GetTexture("_OcclusionMap"),Is.SameAs(m.GetTexture("_MetallicGlossMap")));Assert.That(m.GetFloat("_SmoothnessTextureChannel"),Is.Zero);}
+                if(name=="Hair3"||name=="Brows_Leashes"){Assert.That(m.GetFloat("_AlphaCutoffEnable"),Is.EqualTo(1));Assert.That(m.IsKeywordEnabled("_ALPHATEST_ON"),Is.True);}
+                else if(name!="Body_Arkit_Eye") {Check(m,"_MaskMap",false,TextureImporterType.Default);Assert.That(m.IsKeywordEnabled("_MASKMAP"),Is.True);Assert.That(m.GetFloat("_MetallicRemapMin"),Is.Zero);Assert.That(m.GetFloat("_MetallicRemapMax"),Is.EqualTo(1));Assert.That(m.GetFloat("_AORemapMin"),Is.Zero);Assert.That(m.GetFloat("_AORemapMax"),Is.EqualTo(1));Assert.That(m.GetFloat("_SmoothnessRemapMin"),Is.Zero);Assert.That(m.GetFloat("_SmoothnessRemapMax"),Is.EqualTo(1));}
             }
         }
         static void Check(Material m,string property,bool srgb,TextureImporterType type)

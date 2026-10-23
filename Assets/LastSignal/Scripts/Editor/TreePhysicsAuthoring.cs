@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using LastSignal.Gathering;
 using LastSignal.Persistence;
+using LastSignal.Rendering;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -100,8 +101,10 @@ namespace LastSignal.Editor
             }
             var wood=Selection.objects.OfType<Material>().SingleOrDefault();
             if(!wood) wood=AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Art/S013/Production/Materials/Wood.mat");
-            if(!wood || !wood.shader || !wood.shader.name.StartsWith("Universal Render Pipeline/"))
-                throw new InvalidOperationException("Select one S003 ResourceNodeView root. The existing production Wood material must be available, or select an approved URP interior-wood material as an override.");
+            if(!RenderPipelineAdapter.IsOpaqueUnclippedStandardLitMaterial(wood) ||
+                (RenderPipelineAdapter.IsHDRP && wood.shader.name != RenderPipelineAdapter.HdrpLitShaderName) ||
+                (RenderPipelineAdapter.IsURP && wood.shader.name != RenderPipelineAdapter.UrpLitShaderName))
+                throw new InvalidOperationException("Select one S003 ResourceNodeView root. The production Wood material or selected override must be opaque, unclipped Lit for the active render pipeline (HDRP/Lit under HDRP).");
             var node=selected[0];
             if(node.gameObject.scene!=scene)
                 throw new InvalidOperationException("S004_SELECTION_OUTSIDE_SOURCE: Select a ResourceNodeView root in the active FirstTownHarvest scene Hierarchy, not a Project prefab or Prefab Mode object.");

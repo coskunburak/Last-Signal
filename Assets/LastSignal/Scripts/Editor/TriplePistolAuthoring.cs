@@ -97,7 +97,7 @@ namespace LastSignal.EditorTools
             string folder=Folder+name+"/";
             string path=folder+"PBR.mat";
             var existing=AssetDatabase.LoadAssetAtPath<Material>(path); if(existing)return existing;
-            var material=new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            var material=new Material(Shader.Find("HDRP/Lit"));
             foreach(var map in new[]{"BaseColor","Normal","MetallicSmoothness","AO"})
             {
                 string texturePath=folder+"Textures/"+map+".png";
@@ -109,12 +109,15 @@ namespace LastSignal.EditorTools
                 importer.textureCompression=TextureImporterCompression.CompressedHQ;
                 importer.alphaSource=TextureImporterAlphaSource.FromInput;
                 importer.SaveAndReimport();
-                material.SetTexture(map=="BaseColor"?"_BaseMap":map=="Normal"?"_BumpMap":map=="AO"?"_OcclusionMap":"_MetallicGlossMap",AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath));
+                if(map=="BaseColor" || map=="Normal") material.SetTexture(map=="BaseColor"?"_BaseColorMap":"_NormalMap",AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath));
             }
-            material.SetFloat("_Metallic",1);material.SetFloat("_Smoothness",1);material.SetFloat("_BumpScale",1);
-            material.SetFloat("_SmoothnessTextureChannel",0);material.SetFloat("_OcclusionStrength",1);
-            material.EnableKeyword("_NORMALMAP");material.EnableKeyword("_METALLICSPECGLOSSMAP");
-            if(material.GetTexture("_OcclusionMap"))material.EnableKeyword("_OCCLUSIONMAP");
+            // Owned linear inputs: R metallic, G separate AO, B neutral detail, A smoothness.
+            string metal=folder+"Textures/MetallicSmoothness.png", ao=folder+"Textures/AO.png";
+            bool hasAo=File.Exists(ao);
+            var mask=global::LastSignal.Editor.Rendering.HdrpMaterialMaskUtility.WritePacked(folder+"Textures/HDRPMask.png",metal,hasAo?ao:"","","",2048,false);
+            global::LastSignal.Editor.Rendering.HdrpMaterialMaskUtility.Apply(material,mask,true,true,1,1,1,hasAo,Vector2.one,Vector2.zero);
+            material.SetFloat("_NormalScale",1);
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(material);
             AssetDatabase.CreateAsset(material,path);return material;
         }
         static GameObject Visual(int i,Material material,Material magazineMaterial)

@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using Unity.Profiling;
+using UnityEngine;
+
+namespace LastSignal.Forest
+{
+    /// <summary>Opt-in F9 capture only. No benchmark runs on scene load or authoring.</summary>
+    public sealed class ForestPrototypeCapture : MonoBehaviour
+    {
+        public ForestPrototypeState state;
+        readonly FrameTiming[] timings = new FrameTiming[1];
+        readonly List<double[]> samples = new List<double[]>(1800);
+        ProfilerRecorder main, render, draws, triangles, memory;
+        int warmup;
+        float started;
+        string label;
+        string metadata;
+        public void Begin()
+        {
+            if (enabled) return;
+            samples.Clear(); warmup = 180;
+            main = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 1);
+            render = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Render Thread", 1);
+            draws = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Draw Calls Count", 1);
+            triangles = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Triangles Count", 1);
+            memory = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "Total Used Memory", 1);
+            var camera = state.gameplayCamera;
+            label = DateTime.UtcNow.ToString("yyyyMMdd-HHmmss");
+            metadata = "UTC=" + label + "\nScene=" + state.gameObject.scene.path + "\nGeneration=" + state.generationFolder +
+                "\nDevice=" + SystemInfo.deviceModel + "\nCPU=" + SystemInfo.processorType + "\nGPU=" + SystemInfo.graphicsDeviceName +
+                "\nAPI=" + SystemInfo.graphicsDeviceType + "\nUnity=" + Application.unityVersion + "\nEditor=" + Application.isEditor +
+                "\nResolution=" + camera.pixelWidth + "x" + camera.pixelHeight + "\nQuality=" + QualitySettings.names[QualitySettings.GetQualityLevel()] +
+                "\nVSync=" + QualitySettings.vSyncCount + "\nTargetFrameRate=" + Application.targetFrameRate +
+                "\nCamera=" + camera.transform.position + " / " + camera.transform.eulerAngles + "\nOvercast=" + state.generated.GetComponentInChildren<ForestPrototypeLighting>().isOvercast;
+            enabled = true;
+            Debug.Log("Forest capture requested: 180 warmup frames, then 30 seconds. Keep this viewpoint or follow your recorded route. No quality settings changed.");
+        }
+        static double Read(ProfilerRecorder recorder, double divisor = 1) => recorder.Valid && recorder.Count > 0 ? recorder.LastValue / divisor : double.NaN;
+        void Update()
+        {
+            if (warmup-- > 0) { started = Time.realtimeSinceStartup; return; }
+            double gpu = double.NaN;
+            if (FrameTimingManager.IsFeatureEnabled())
+            {
+                FrameTimingManager.CaptureFrameTimings();
+                if (FrameTimingManager.GetLatestTimings(1, timings) > 0 && timings[0].gpuFrameTime > 0) gpu = timings[0].gpuFrameTime;
+            }
+            samples.Add(new[] { (double)Time.unscaledDeltaTime * 1000, Read(main, 1000000), Read(render, 1000000), gpu, Read(draws), Read(triangles), Read(memory) });
+            if (Time.realtimeSinceStartup - started >= 30) Finish();
+        }
+        static string Number(double value) => double.IsNaN(value) ? "" : value.ToString("F4", CultureInfo.InvariantCulture);
+        void Finish()
+        {
+            enabled = false;
+            string path = Path.Combine(Application.persistentDataPath, "ForestPrototype120", label); Directory.CreateDirectory(path);
+            File.WriteAllLines(Path.Combine(path, "frames.csv"), new[] { "frame_ms,main_thread_ms,render_thread_ms,gpu_ms,draw_calls,triangles,memory_bytes" }
+                .Concat(samples.Select(row => string.Join(",", row.Select(Number)))));
+            var frame = samples.Select(row => row[0]).OrderBy(x => x).ToArray();
+            double Percentile(double p) => frame[Mathf.Clamp((int)Math.Ceiling(frame.Length * p) - 1, 0, frame.Length - 1)];
+            File.WriteAllText(Path.Combine(path, "summary.txt"), metadata + "\nFrames=" + frame.Length + "\nAverageFPS=" + Number(1000 / frame.Average()) +
+                "\nP50ms=" + Number(Percentile(.5)) + "\nP95ms=" + Number(Percentile(.95)) + "\nP99ms=" + Number(Percentile(.99)) +
+                "\nUnavailable counters are blank. Thread marker times include waits. GPU timing may be unsupported. This capture does not measure individual HDRP pass costs.\n");
+            Debug.Log("Forest performance capture written: " + path);
+        }
+        void OnDisable() { main.Dispose(); render.Dispose(); draws.Dispose(); triangles.Dispose(); memory.Dispose(); }
+    }
+}

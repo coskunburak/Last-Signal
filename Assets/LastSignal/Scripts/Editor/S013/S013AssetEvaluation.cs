@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
+using LastSignal.Rendering;
 
 namespace LastSignal.Art.Editor
 {
@@ -54,8 +54,8 @@ namespace LastSignal.Art.Editor
             if(Materials.TryGetValue(key,out var cached))return cached;
             var path=Root+"/Materials/"+source.name+"_"+Hash128.Compute(key)+".mat";
             var existing=AssetDatabase.LoadAssetAtPath<Material>(path);if(existing){Materials[key]=existing;return existing;}
-            bool urp=source.shader&&source.shader.name.StartsWith("Universal Render Pipeline/");
-            var m=urp?new Material(source):new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            bool urp=RenderPipelineAdapter.IsPipelineFamilyShader(source.shader);
+            var m=urp?new Material(source):new Material(RenderPipelineAdapter.FindStandardLitShader());
             m.name=source.name+"_Evaluation";
             if(!urp)
             {
@@ -73,7 +73,7 @@ namespace LastSignal.Art.Editor
         static Material Solid(string name,Color color)
         {
             var p=Root+"/Materials/"+name+".mat"; var m=AssetDatabase.LoadAssetAtPath<Material>(p);if(m)return m;
-            m=new Material(Shader.Find("Universal Render Pipeline/Lit"));m.SetColor("_BaseColor",color);m.SetFloat("_Smoothness",0.1f);AssetDatabase.CreateAsset(m,p);return m;
+            m=new Material(RenderPipelineAdapter.FindStandardLitShader());m.SetColor("_BaseColor",color);m.SetFloat("_Smoothness",0.1f);AssetDatabase.CreateAsset(m,p);return m;
         }
         static GameObject Place(string path,Transform bay,Vector3 position,bool normalize=true)
         {
@@ -113,7 +113,7 @@ namespace LastSignal.Art.Editor
             var previous=SceneManager.GetActiveScene();var s=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Additive);SceneManager.SetActiveScene(s);
             RenderSettings.skybox=null;RenderSettings.fog=false;RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientLight=new Color(.48f,.5f,.53f);
             var sun=new GameObject("Fixed comparison sun").AddComponent<Light>();sun.type=LightType.Directional;sun.intensity=1.3f;sun.color=new Color(1,.96f,.89f);sun.shadows=LightShadows.Soft;sun.transform.rotation=Quaternion.Euler(48,-35,0);RenderSettings.sun=sun;
-            var volume=new GameObject("Fixed ACES exposure 0").AddComponent<Volume>();volume.isGlobal=true;volume.sharedProfile=ScriptableObject.CreateInstance<VolumeProfile>();var tone=volume.sharedProfile.Add<Tonemapping>();tone.mode.Override(TonemappingMode.ACES);AssetDatabase.CreateAsset(volume.sharedProfile,Root+"/ComparisonVolume.asset");
+            var volume=new GameObject("Fixed ACES exposure 0").AddComponent<Volume>();volume.isGlobal=true;volume.sharedProfile=ScriptableObject.CreateInstance<VolumeProfile>();RenderPipelineAdapter.AddAcesTonemappingOverride(volume.sharedProfile);AssetDatabase.CreateAsset(volume.sharedProfile,Root+"/ComparisonVolume.asset");
             var a=Bay("A Silver Cats",0);string ap=Vendor+"Silver_Cats/Hand_Painted_Nature_Kit_LITE/";
             Place(ap+"Prefabs/Pine_Tree.prefab",a,new Vector3(-4,0,3));Place(ap+"Prefabs/Cedar_Tree_03.prefab",a,new Vector3(5,0,4));Place(ap+"Prefabs/Fern.prefab",a,new Vector3(3,0,-5));Place(ap+"Prefabs/Stump.prefab",a,new Vector3(6,0,-5));GroundSample(a,ap+"Textures/Forest/Forest_Grass_02_d.png");
             var b=Bay("B Fantasy Landscape",50);string bp=Vendor+"FantasyEnvironments/Environments/";
@@ -124,7 +124,7 @@ namespace LastSignal.Art.Editor
             var d=Bay("D Barn geometry - materials pending",150);Place(Vendor+"BarnExtracted/barn_1.FBX",d,Vector3.zero);
             var e=Bay("E Cupboard source identity pending",200);Place(Vendor+"cupboard_pack.fbx",e,Vector3.zero);
             foreach(var bay in new[]{a,b,c,d,e})Place("Assets/LastSignal/Prefabs/Enemies/Zombie/LS_Zombie_Shirtless_Visual.prefab",bay,new Vector3(-7,0,-2),false);
-            var camera=new GameObject("ComparisonCamera 1920x1080 FOV50").AddComponent<Camera>();camera.fieldOfView=50;camera.nearClipPlane=.1f;camera.farClipPlane=90;camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(.32f,.38f,.42f);camera.transform.position=new Vector3(0,8,-25);camera.transform.LookAt(new Vector3(0,4,2));camera.gameObject.AddComponent<UniversalAdditionalCameraData>().renderPostProcessing=true;
+            var camera=new GameObject("ComparisonCamera 1920x1080 FOV50").AddComponent<Camera>();camera.fieldOfView=50;camera.nearClipPlane=.1f;camera.farClipPlane=90;camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(.32f,.38f,.42f);camera.transform.position=new Vector3(0,8,-25);camera.transform.LookAt(new Vector3(0,4,2));RenderPipelineAdapter.EnableCameraPostProcessingOnly(camera);
             AssetDatabase.SaveAssets();EditorSceneManager.SaveScene(s,ScenePath);SceneManager.SetActiveScene(previous);
             AddReferenceDisplay();CleanReferenceDisplay();GroundCandidates();
         }

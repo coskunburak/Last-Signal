@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Linq;
 using LastSignal.Atmosphere;
+using LastSignal.Rendering;
 using LastSignal.WorldTime;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 namespace LastSignal.Editor.FirstTown
 {
     /// <summary>Explicit USER-RUN checks. Not called by installer or on import.</summary>
@@ -33,7 +33,7 @@ namespace LastSignal.Editor.FirstTown
             if(d.rain.middle.Length!=8 || d.rain.middle.Any(p=>!p) || !d.rain.near || !d.rain.splash)throw new InvalidOperationException("Rain wiring incomplete.");
             foreach(var n in new[]{"_DayTex","_OvercastTex","_SunsetTex","_NightTex","_CloudTex"})if(!d.sky.GetTexture(n))throw new InvalidOperationException("Missing sky texture "+n);
             if(ShaderUtil.ShaderHasError(d.sky.shader))throw new InvalidOperationException("Sky shader has compiler errors.");
-            if(!d.volume.sharedProfile.TryGet<Tonemapping>(out var tone) || tone.mode.value!=TonemappingMode.ACES || d.volume.sharedProfile.components.Any(c=>!c))throw new InvalidOperationException("Invalid persistent volume profile.");
+            if(!RenderPipelineAdapter.IsValidControlledAcesVolumeProfile(d.volume.sharedProfile))throw new InvalidOperationException("Invalid persistent volume profile.");
             if(d.surfaces.Any(s=>!s.material) || d.wetRenderers.Any(r=>!r) || d.lamps.Any(l=>!l.light))throw new InvalidOperationException("Dangling presentation references.");
             Directory.CreateDirectory("Docs/Implementation/FirstTownAtmosphere/Evidence");
             File.WriteAllText("Docs/Implementation/FirstTownAtmosphere/Evidence/references-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+".json","{\"references\":\"PASS\",\"visual\":\"NOT_RUN\",\"gameplay\":\"NOT_RUN\",\"performance\":\"NOT_RUN\"}");

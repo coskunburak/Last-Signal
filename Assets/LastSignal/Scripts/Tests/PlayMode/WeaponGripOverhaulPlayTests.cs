@@ -7,7 +7,7 @@ namespace LastSignal.Tests
 {
     public sealed partial class WeaponGripCorrectionPlayTests
     {
-        [UnityTest] public IEnumerator PistolLowRaisedReadyAndReturnRemainOneHanded()
+        [UnityTest] public IEnumerator PistolLowRaisedReadyAndReturnKeepAuthoredHandContacts()
         {
             yield return Pistol();
             var view = combat.ActiveWeapon.GetComponent<WeaponViewPresenter>();
@@ -17,7 +17,7 @@ namespace LastSignal.Tests
             yield return new WaitForSeconds(.3f); yield return Sample();
             Assert.That(view.ReadyWeight, Is.GreaterThan(.95f));
             Assert.That(probe.World.ReadyWeight, Is.GreaterThan(.95f));
-            Assert.That(probe.Support, Is.Zero); Contact();
+            PistolSupportContact(); Contact();
             input.SetGameplay(false); Time.timeScale = 0;
             float ready = view.ReadyWeight; yield return Sample(); yield return Sample();
             Assert.That(view.ReadyWeight, Is.EqualTo(ready));

@@ -43,7 +43,24 @@ namespace LastSignal.Tests
                     Assert.That(root.GetComponent<ScopeOpticPresenter>().Lens.transform.IsChildOf(grip.Visual),Is.True);
                 }
                 if(grip.Profile.Pistol){
-                    Assert.That(grip.Profile.FpsPistolFingers,Is.SameAs(grip.Profile.WorldPistolFingers));
+                    // FPS primary offsets require dedicated DXT/Custom9mm calibration. World
+                    // contacts retain their original poses; runtime mesh contact has its own test.
+                    var worldPose=AssetDatabase.LoadAssetAtPath<PistolFingerPose>(ArberryCharacterAuthoring.Root+"/Profiles/"+key+"_Fingers.asset");
+                    bool dedicated=key=="DXT" || key=="Custom9mm";
+                    var fpsPose=dedicated?AssetDatabase.LoadAssetAtPath<PistolFingerPose>(ArberryCharacterAuthoring.Root+"/Profiles/"+key+"_FpsFingers.asset"):worldPose;
+                    Assert.That(worldPose,Is.Not.Null,key);Assert.That(fpsPose,Is.Not.Null,key);
+                    Assert.That(worldPose.Valid && fpsPose.Valid,Is.True,key);
+                    Assert.That(grip.Profile.WorldPistolFingers,Is.SameAs(worldPose),"Preserve the world calibration.");
+                    Assert.That(grip.Profile.FpsPistolFingers,Is.SameAs(fpsPose),"Bind the reviewed FPS calibration.");
+                    if(dedicated){
+                        Assert.That(fpsPose,Is.Not.SameAs(worldPose));
+                        for(int i=0;i<6;i++){
+                            Assert.That(fpsPose.GripRelative[i],Is.EqualTo(worldPose.GripRelative[i]),"Preserve thumb/index grip.");
+                            Assert.That(fpsPose.TriggerRelative[i],Is.EqualTo(worldPose.TriggerRelative[i]),"Preserve thumb/index trigger.");
+                        }
+                        for(int i=6;i<15;i++)
+                            Assert.That(fpsPose.GripRelative[i],Is.EqualTo(fpsPose.TriggerRelative[i]),"Trigger pull must retain the calibrated wrap.");
+                    }
                     foreach(var variant in root.GetComponent<PistolVariantPresenter>().Variants){var mapped=grip.ResolveProfile(variant.Pose);Assert.That(mapped.FpsPistolFingers.Rig,Does.StartWith("Arberry"));Assert.That(mapped.Firearm,Is.SameAs(variant.Pose.Firearm));}
                 }
             }finally{PrefabUtility.UnloadPrefabContents(root);}

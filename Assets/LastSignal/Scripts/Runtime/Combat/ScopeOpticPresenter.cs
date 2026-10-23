@@ -1,5 +1,5 @@
+using LastSignal.Rendering;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 namespace LastSignal
 {
@@ -168,13 +168,7 @@ namespace LastSignal
             scopeCamera.allowHDR = format == RenderTextureFormat.ARGBHalf;
             scopeCamera.allowMSAA = false;
             scopeCamera.useOcclusionCulling = view.useOcclusionCulling;
-            var data = go.AddComponent<UniversalAdditionalCameraData>();
-            data.renderType = CameraRenderType.Base;
-            data.SetRenderer(definition.RendererIndex);
-            data.renderShadows = true;
-            // Ana kamera mercek görüntüsüne post-process uygular; ikinci tonemapping yapılmaz.
-            data.renderPostProcessing = false;
-            data.volumeLayerMask = 0;
+            RenderPipelineAdapter.ConfigureScopeCamera(go, definition.RendererIndex);
             return true;
         }
 

@@ -1,0 +1,103 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using LastSignal.Forest;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
+
+namespace LastSignal.Editor.FirstTownForest
+{
+    /// <summary>Play-Mode-only single-variable A/B overrides. Never touches colliders, assets or authority.</summary>
+    public static class ForestPerformanceIsolation
+    {
+        struct SavedRenderer { public Renderer renderer; public bool enabled; public ShadowCastingMode shadows; }
+        static readonly List<SavedRenderer> saved = new List<SavedRenderer>();
+        static ForestPrototypeCapture capture;
+        static string previousScenario;
+        static bool hooked;
+        static ForestPrototypeState Current()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (!EditorApplication.isPlaying || scene.path != "Assets/LastSignal/Scenes/Validation/ForestPrototype120.unity" || SceneManager.sceneCount != 1)
+                throw new InvalidOperationException("Enter Play Mode with only ForestPrototype120 loaded. No benchmark starts automatically.");
+            var state = scene.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<ForestPrototypeState>(true)).Single();
+            var recorder = state.generated.GetComponentInChildren<ForestPrototypeCapture>(true);
+            if (!recorder || recorder.enabled) throw new InvalidOperationException("Wait for F9 capture to finish before switching experiments.");
+            return state;
+        }
+        static IEnumerable<Renderer> Vegetation(ForestPrototypeState state, bool treesOnly)
+        {
+            // Verified authored roots; use renderer flags instead of disabling hierarchy/gameplay.
+            var vegetation = state.generated.transform.Find("Vegetation");
+            var distant = state.generated.transform.Find("Non-playable distant dressing");
+            if (!vegetation || !distant || !state.canopy || !state.undergrowth)
+                throw new InvalidOperationException("Authored vegetation roots changed; inspect before applying isolation.");
+            var hero = vegetation.Find("HeroTrees");
+            if (!hero) throw new InvalidOperationException("Missing HeroTrees root.");
+            var roots = treesOnly ? new[] { state.canopy, hero } : new[] { vegetation };
+            var result = roots.SelectMany(t => t.GetComponentsInChildren<Renderer>(true));
+            // Exclude the distant terrain apron; distant tree LODs are the intended vegetation.
+            return result.Concat(distant.GetComponentsInChildren<LODGroup>(true)
+                .SelectMany(g => g.GetComponentsInChildren<Renderer>(true))).Distinct();
+        }
+        static void Apply(bool shadowsOnly)
+        {
+            var state = Current();
+            var renderers = Vegetation(state, shadowsOnly).ToArray(); // Validate before changing existing override.
+            RestoreInternal();
+            capture = state.generated.GetComponentInChildren<ForestPrototypeCapture>(true);
+            previousScenario = capture.scenario;
+            try
+            {
+                foreach (var r in renderers)
+                {
+                    saved.Add(new SavedRenderer { renderer = r, enabled = r.enabled, shadows = r.shadowCastingMode });
+                    if (shadowsOnly) r.shadowCastingMode = ShadowCastingMode.Off;
+                    else r.enabled = false;
+                }
+                capture.scenario = shadowsOnly ? "C-tree-shadows-off" : "B-vegetation-renderers-off-grass-retained";
+                if (!hooked)
+                {
+                    EditorApplication.playModeStateChanged += OnPlayMode;
+                    AssemblyReloadEvents.beforeAssemblyReload += RestoreInternal;
+                    hooked = true;
+                }
+                Debug.Log(capture.scenario + ": " + saved.Count + " renderer slots. Terrain grass retained; colliders/gameplay unchanged. Focus Game view, then press F9 manually. Restore A before comparing another feature.");
+            }
+            catch { RestoreInternal(); throw; }
+        }
+        [MenuItem("Last Signal/Forest 120/Performance/B - Hide vegetation renderers (Play Mode only)")]
+        public static void HideVegetation() => Apply(false);
+        [MenuItem("Last Signal/Forest 120/Performance/C - Disable tree shadows (Play Mode only)")]
+        public static void DisableTreeShadows() => Apply(true);
+        [MenuItem("Last Signal/Forest 120/Performance/A - Restore diagnostic overrides")]
+        public static void Restore()
+        {
+            if (capture && capture.enabled) throw new InvalidOperationException("Wait for capture completion before restoring.");
+            RestoreInternal();
+            Debug.Log("Forest diagnostic renderer overrides restored. This does not undo other manual changes.");
+        }
+        static void OnPlayMode(PlayModeStateChange change)
+        {
+            if (change == PlayModeStateChange.ExitingPlayMode) RestoreInternal();
+        }
+        static void RestoreInternal()
+        {
+            // Cancel in-flight capture if exiting Play Mode or recompiling; never export a mixed A/B run.
+            if (capture && capture.enabled) capture.enabled = false;
+            foreach (var item in saved)
+                if (item.renderer) { item.renderer.enabled = item.enabled; item.renderer.shadowCastingMode = item.shadows; }
+            saved.Clear();
+            if (capture) capture.scenario = previousScenario;
+            capture = null; previousScenario = null;
+            if (hooked)
+            {
+                EditorApplication.playModeStateChanged -= OnPlayMode;
+                AssemblyReloadEvents.beforeAssemblyReload -= RestoreInternal;
+                hooked = false;
+            }
+        }
+    }
+}

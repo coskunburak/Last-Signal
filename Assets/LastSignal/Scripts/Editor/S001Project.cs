@@ -93,8 +93,9 @@ namespace LastSignal.Editor
         {
             string path = "Assets/LastSignal/Materials/" + name + ".mat";
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
-            if (!material) { material = new Material(Shader.Find("Universal Render Pipeline/Lit")); AssetDatabase.CreateAsset(material, path); }
-            material.color = color;
+            if (!material) { material = new Material(Shader.Find("HDRP/Lit")); AssetDatabase.CreateAsset(material, path); }
+            material.SetColor("_BaseColor", color);
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(material);
             EditorUtility.SetDirty(material);
             return material;
         }

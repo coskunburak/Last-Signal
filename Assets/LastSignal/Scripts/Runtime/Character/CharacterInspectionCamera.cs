@@ -1,6 +1,6 @@
+using LastSignal.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering.Universal;
 
 namespace LastSignal
 {
@@ -50,8 +50,7 @@ namespace LastSignal
                     var go = new GameObject("CharacterInspectionCamera"); go.transform.SetParent(transform, false);
                     inspection = go.AddComponent<Camera>(); inspection.enabled = false;
                     inspection.CopyFrom(firstPerson);
-                    var data = inspection.GetUniversalAdditionalCameraData();
-                    data.renderType = CameraRenderType.Base; data.cameraStack?.Clear();
+                    RenderPipelineAdapter.ConfigureInspectionCamera(inspection);
                     inspection.cullingMask = (firstPerson.cullingMask | (1 << 30)) & ~((1 << 29) | (1 << 2));
                     inspection.fieldOfView = 55; inspection.nearClipPlane = .06f;
                     inspection.targetTexture = null;

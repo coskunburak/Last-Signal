@@ -105,15 +105,16 @@ namespace LastSignal.Editor
             normalImporter.textureType = TextureImporterType.NormalMap; normalImporter.sRGBTexture = false; normalImporter.SaveAndReimport();
             var matPath = MaterialRoot + "/M_Zombie_Shambler_URP.mat";
             var mat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
-            if (!mat) { mat = new Material(Shader.Find("Universal Render Pipeline/Lit")); AssetDatabase.CreateAsset(mat, matPath); }
-            mat.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(Textures + "A_Albedo.png"));
+            if (!mat) { mat = new Material(Shader.Find("HDRP/Lit")); AssetDatabase.CreateAsset(mat, matPath); }
+            mat.shader = Shader.Find("HDRP/Lit");
+            mat.SetTexture("_BaseColorMap", AssetDatabase.LoadAssetAtPath<Texture2D>(Textures + "A_Albedo.png"));
             mat.SetColor("_BaseColor", Color.white);
-            mat.SetTexture("_BumpMap", AssetDatabase.LoadAssetAtPath<Texture2D>(normalPath)); mat.SetFloat("_BumpScale", 1);
-            mat.SetTexture("_MetallicGlossMap", AssetDatabase.LoadAssetAtPath<Texture2D>(maskPath));
-            mat.SetTexture("_OcclusionMap", AssetDatabase.LoadAssetAtPath<Texture2D>(maskPath));
-            mat.SetFloat("_Metallic", 1); mat.SetFloat("_Smoothness", 1); mat.SetFloat("_OcclusionStrength", 1);
-            mat.SetFloat("_Surface", 0); mat.SetFloat("_AlphaClip", 0); mat.SetFloat("_SmoothnessTextureChannel", 0);
-            mat.EnableKeyword("_NORMALMAP"); mat.EnableKeyword("_METALLICSPECGLOSSMAP"); mat.EnableKeyword("_OCCLUSIONMAP");
+            mat.SetTexture("_NormalMap", AssetDatabase.LoadAssetAtPath<Texture2D>(normalPath));
+            mat.SetFloat("_NormalScale", 1);
+            Rendering.HdrpMaterialMaskUtility.Apply(mat, AssetDatabase.LoadAssetAtPath<Texture2D>(maskPath),
+                true, true, 1, 1, 1, true, Vector2.one, Vector2.zero);
+            mat.SetFloat("_SurfaceType", 0); mat.SetFloat("_AlphaCutoffEnable", 0);
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(mat);
             EditorUtility.SetDirty(mat);
 
             var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(Controller);
@@ -163,7 +164,7 @@ namespace LastSignal.Editor
                 UnityEngine.Object.DestroyImmediate(floor.GetComponent<Collider>());
                 var floorPath = MaterialRoot + "/M_AcceptanceGround.mat";
                 var floorMat = AssetDatabase.LoadAssetAtPath<Material>(floorPath);
-                if (!floorMat) { floorMat = new Material(Shader.Find("Universal Render Pipeline/Lit")); AssetDatabase.CreateAsset(floorMat, floorPath); }
+                if (!floorMat) { floorMat = new Material(Shader.Find("HDRP/Lit")); AssetDatabase.CreateAsset(floorMat, floorPath); }
                 floorMat.color = new Color(.22f, .24f, .26f); floorMat.SetFloat("_Smoothness", .15f); floor.GetComponent<Renderer>().sharedMaterial = floorMat;
                 var light = new GameObject("NeutralKey").AddComponent<Light>(); light.type = LightType.Directional; light.intensity = 2.2f; light.shadows = LightShadows.Soft; light.transform.rotation = Quaternion.Euler(40, -35, 0);
                 var fill = new GameObject("NeutralFill").AddComponent<Light>(); fill.type = LightType.Directional; fill.intensity = .65f; fill.transform.rotation = Quaternion.Euler(25, 140, 0);

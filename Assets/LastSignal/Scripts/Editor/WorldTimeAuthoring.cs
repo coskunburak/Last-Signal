@@ -33,7 +33,7 @@ namespace LastSignal.Editor
             var shape=rain.shape;shape.shapeType=ParticleSystemShapeType.Box;shape.scale=new Vector3(14,14,.1f);particles.transform.rotation=Quaternion.Euler(90,0,0);
             var renderer=rain.GetComponent<ParticleSystemRenderer>();renderer.renderMode=ParticleSystemRenderMode.Stretch;renderer.lengthScale=4;renderer.velocityScale=.04f;
             string materialPath="Assets/LastSignal/Materials/Shelter/WorldRain.mat";var material=AssetDatabase.LoadAssetAtPath<Material>(materialPath);
-            if(!material){material=new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit"));AssetDatabase.CreateAsset(material,materialPath);}renderer.sharedMaterial=material;
+            if(!material){material=new Material(Shader.Find("LastSignal/VFX/Particles/Unlit"));AssetDatabase.CreateAsset(material,materialPath);}renderer.sharedMaterial=material;
             var saveButton=SaveButton(hud.transform,"Save checkpoint",new Vector2(24,-200));
             var loadButton=SaveButton(hud.transform,"Load checkpoint",new Vector2(24,-200));
             var saveFeedback=new GameObject("Checkpoint feedback",typeof(RectTransform),typeof(Text));saveFeedback.transform.SetParent(hud.transform,false);

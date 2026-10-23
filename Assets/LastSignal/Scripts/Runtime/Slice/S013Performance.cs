@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using LastSignal.Rendering;
 using LastSignal.WorldTime;
 using LastSignal.WorldCells;
 using Unity.Profiling;
@@ -26,7 +27,7 @@ namespace LastSignal.Slice
             yield return null;flow=FindAnyObjectByType<SessionFlow>();
             var args=Environment.GetCommandLineArgs();quick=Array.IndexOf(args,"-s013Quick")>=0;
             string tier="PC baseline";int ti=Array.IndexOf(args,"-s013Tier");
-            if(ti>=0&&ti+1<args.Length){tier=args[ti+1];var source=UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline as UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset;var clone=Instantiate(source);QualitySettings.renderPipeline=clone;if(tier=="Low"){clone.shadowDistance=25;clone.shadowCascadeCount=1;clone.msaaSampleCount=1;}else if(tier=="Medium"){clone.shadowDistance=40;clone.shadowCascadeCount=2;clone.msaaSampleCount=2;}}
+            if(ti>=0&&ti+1<args.Length){tier=args[ti+1];RenderPipelineAdapter.ApplyBenchmarkQualityTierOverride(tier);}
             string variant="normal";int vi=Array.IndexOf(args,"-s013Variant");if(vi>=0&&vi+1<args.Length)variant=args[vi+1];
             if(variant=="shadow-off")foreach(var light in FindObjectsByType<Light>(FindObjectsSortMode.None))light.shadows=LightShadows.None;
             if(variant=="vegetation-off")
@@ -47,7 +48,7 @@ namespace LastSignal.Slice
             Vector3[] positions={new Vector3(17,5,-14),new Vector3(10,1.7f,1),new Vector3(1.9f,1.65f,-2),new Vector3(1.1f,1.55f,-1.5f),new Vector3(12,1.7f,4),new Vector3(1.9f,1.65f,1.6f)};
             Vector3[] targets={new Vector3(0,2,0),new Vector3(3,1.5f,1),new Vector3(-.5f,1.3f,1),new Vector3(0,1.2f,0),new Vector3(20,1,4),new Vector3(-1.5f,1.4f,-1)};
             var obj=new GameObject("Fixed golden capture");var camera=obj.AddComponent<Camera>();camera.enabled=false;camera.fieldOfView=65;camera.nearClipPlane=.05f;camera.farClipPlane=250;
-            var cameraData=obj.AddComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();cameraData.renderPostProcessing=true;cameraData.antialiasing=UnityEngine.Rendering.Universal.AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+            RenderPipelineAdapter.EnableGoldenCaptureCameraPostAndAA(camera);
             for(int i=0;i<names.Length;i++)
             {
                 camera.transform.position=origin+positions[i];camera.transform.LookAt(origin+targets[i]);

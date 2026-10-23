@@ -1,8 +1,8 @@
-# 09 — PHYSICS-BASED TREE CHOPPING COMPATIBILITY CONTRACT (PHASE G)
+# 09 — PHYSICS-BASED TREE CHOPPING COMPATIBILITY CONTRACT (PHASE G / M9)
 
 **Date:** 2026-10-20  
 **Local Implementation Baseline:** BLD P01 S003 & S004 (`PhysicalTreeCorrection` v2, 2026-10-19)  
-**Status:** `CONFIRMED` (Local S004 v2 code inspected; compatibility contract defined without rewriting S004 runtime code).
+**Status:** `GATE_3_PASS` (`ForestLit.shader` & `ForestTerrain.shader` converted to dual-pipeline HDRP/URP with camera-relative `GetAbsolutePositionWS` wind in `ForestWind.hlsl`; S004 EditMode `74/74 PASS` in `OWNER-20261020-191844-edit-awyjjtdn` and PlayMode `21/21 PASS` in `OWNER-20261020-191900-play-xp52be1n` under active HDRP 17.5.0).
 
 ---
 

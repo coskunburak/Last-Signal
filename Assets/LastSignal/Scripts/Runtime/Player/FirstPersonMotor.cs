@@ -49,6 +49,16 @@ namespace LastSignal
         PlayerHealth health;
         public bool Grounded => capsule && capsule.enabled && capsule.isGrounded;
         public bool IsSprinting { get; private set; }
+        // Optional caller-driven jump. Existing scenes keep their existing input bindings.
+        public bool TryJump(float heightMeters)
+        {
+            if (!isActiveAndEnabled || !input || !input.GameplayActive || !capsule || !capsule.enabled ||
+                !capsule.isGrounded || !stance || stance.IsCrouching || IsSliding ||
+                (health && !health.IsAlive) || !float.IsFinite(heightMeters) || heightMeters <= 0 ||
+                gravityMetersPerSecondSquared >= 0 || verticalSpeed > 0) return false;
+            verticalSpeed = Mathf.Sqrt(-2 * gravityMetersPerSecondSquared * Mathf.Min(heightMeters, 2));
+            return true;
+        }
         public void Configure(PlayerInputReader reader, CharacterController controller, PlayerStance playerStance)
         { input = reader; capsule = controller; stance = playerStance; }
         void Awake()

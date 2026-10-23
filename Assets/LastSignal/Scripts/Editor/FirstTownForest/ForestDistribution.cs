@@ -14,6 +14,7 @@ namespace LastSignal.Editor.FirstTownForest
         {
             var root=state.generated.transform;
             var edge=Group("ForestEdge",root);var mixed=Group("MixedWoodland",root);var deep=Group("DeepForest",root);
+            state.treeShadowRoots = new[] { edge, mixed, deep };
             var under=Group("GroundCover",root);var rocks=Group("RockClusters",root);var trails=Group("TrailVegetation",root);
             var clearings=Group("Encounter clearings - no automatic spawns",root);
             var rng=new System.Random(state.layout.seed);var used=new List<Vector2>();var digest=new StringBuilder();

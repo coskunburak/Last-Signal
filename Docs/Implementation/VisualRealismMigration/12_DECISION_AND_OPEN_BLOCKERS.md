@@ -1,14 +1,22 @@
-# 12 — PRODUCTION DECISION & OPEN BLOCKERS (GATE 1 DELIVERABLE)
+# 12 — PRODUCTION DECISION & OPEN BLOCKERS (GATE 0 → GATE 3 COMPLETE)
 
 **Date:** 2026-10-20  
-**Current Gate:** Gate 0 (`READ-ONLY DISCOVERY` — `CONFIRMED`) & Gate 1 (`ASSET & PIPELINE DECISION` — `CONFIRMED`)  
-**Next Gate:** Gate 2 (`SAFE HDRP IMPLEMENTATION` / `PIPELINE ADAPTER & HERO SLICE PREP`) — **AWAITING OWNER APPROVAL**
+**Current Gate:** Gate 0 (`CONFIRMED`) · Gate 1 (`CONFIRMED`) · Gate 2A (`GATE_2A_PASS`) · Gate 2B (`GATE_2B_PASS`) · **Gate 3 (`GATE_3_PASS` · `PRODUCTION_HDRP_ACTIVE`)**  
+**Next Gate:** **Interactive Visual QA & Performance Signoff in Unity Editor (`FirstTownCore.unity` & `HDRP_MigrationTest.unity`) / Phase F Realistic Forest Asset Integration**
 
 ---
 
-## 1. Official Production Recommendation
+## 1. Official Production Status: `PRODUCTION_HDRP_ACTIVE` (`GATE_3_PASS`)
 
-### Recommendation: **`PROCEED_HDRP_WITH_BLOCKERS`** (Executed via Option C Pipeline Adapter -> Controlled Option B HDRP Migration)
+All technical blockers for migrating the existing `Last Signal` Unity `6000.5.0f1` project from URP `17.5.0` to HDRP `17.5.0` have been resolved and verified by owner-operated batchmode test runs:
+
+1. **Blocker B1 (Backup & Rollback) — `RESOLVED`:**
+   - External M0 checkpoint (`m0_post_gate2a_project_snapshot.tar.gz`, SHA-256 `23e21b405549669e746662550f2864bec0b560c04442dccc54e4b5fe4152812e`), `UrpPipelineRollbackState.json`, and `MaterialRollbackManifest.json` are verified on disk.
+2. **Blocker B2 (Custom Shaders, Materials & Pipeline Adapter) — `RESOLVED`:**
+   - `RenderPipelineAdapter.cs` and `TownAtmosphere.cs` drive HDRP 17.5.0 cameras, lights, `PhysicallyBasedSky`, volumetric `Fog`, `VolumetricClouds`, fixed unit `Exposure` (`EV100 = -0.2630344`), ACES `Tonemapping`, `SSAO`, `SSR`, and `ContactShadows`.
+   - All **17/17** custom and HDRP shaders validated with **`0` compiler errors** (`hdrp_shader_validation.json`).
+   - All **966** project and ThirdParty materials audited and migrated (`731` `HDRP/Lit`, `3` `HDRP/Unlit`, `15` `LastSignal/VFX/Particles/Unlit`, `1` `HDRP/TerrainLit`, `19` dual-pipeline custom shaders retained, `9` existing HDRP materials validated) with **`0` errors** (`material_migration_execution.json`).
+   - All **141/141** automated tests (`31/31` FirstTown EditMode, `15/15` FirstTown PlayMode, `74/74` S004 EditMode, `21/21` S004 PlayMode) and `FirstTownAtmosphereVerification.Validate` passed under active HDRP 17.5.0.
 
 #### Concrete Technical Justification:
 1. **Why HDRP Is Technically Viable & Beneficial Here:**
@@ -34,8 +42,9 @@
 | **Gate 1: Free Realistic Asset Gap Research** | `CONFIRMED` | Documented in `03_ASSET_GAP_RESEARCH.md` |
 | **Gate 1: URP Dependency Map & HDRP Feasibility** | `CONFIRMED` | Documented in `04_URP_DEPENDENCY_MAP.md` & `05_HDRP_MIGRATION_FEASIBILITY.md` |
 | **Gate 1: Tree Chopping (S004 v2) Compatibility Contract** | `CONFIRMED` | Documented in `09_TREE_CHOPPING_COMPATIBILITY.md` |
-| **Local Backup & Dirty-Tree Snapshot (Phase E1)** | `PROPOSED` | First action upon owner approval |
-| **C# RenderPipelineAdapter & HDRP 17.5.0 Integration (Phase E2–E5)** | `PROPOSED` (`BLOCKED` awaiting `APPROVE HDRP MIGRATION`) | Gate 2 implementation |
+| **Local Backup & Post-Push Checkpoint (Phase E1 / Gate 2A)** | `CONFIRMED` | Committed at `3fa3161f` + External checkpoint verified at `scratch/checkpoints/gate2a/` |
+| **C# RenderPipelineAdapter Under URP 17.5.0 (Phase E2a / Gate 2A)** | `IMPLEMENTED / TEST_NOT_RUN` | `RenderPipelineAdapter.cs` + 3 `.asmdef` + 12 C# scripts updated; awaiting owner URP compile/test verification |
+| **HDRP 17.5.0 Package, Settings & Shader Derivatives (Phase E2b–E5 / Gate 2B)** | `PROPOSED` (`BLOCKED` awaiting Gate 2A test PASS & Gate 2B approval) | Gate 2B implementation |
 | **120×120 m Realistic Forest Hero Slice (Phase F)** | `PROPOSED` | Gate 4 implementation (after Gate 2/3 verification) |
 | **Windows PC 1080p 60 FPS Performance & Visual Signoff** | `NOT_MEASURED` / `VISUAL_NOT_APPROVED` | Gate 3 & Gate 4 owner execution |
 

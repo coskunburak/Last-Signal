@@ -8,24 +8,21 @@ Shader "LastSignal/LocalizedWound"
     }
     SubShader
     {
-        Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Transparent" "RenderType"="Transparent" }
+        Tags { "RenderPipeline"="HDRenderPipeline" "Queue"="Transparent" "RenderType"="Transparent" }
         Pass
         {
-            Tags { "LightMode"="UniversalForward" }
+            Name "ForwardOnly"
+            Tags { "LightMode"="ForwardOnly" }
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
             Cull Back
             Offset -1, -1
             HLSLPROGRAM
-            #pragma vertex Vert
-            #pragma fragment Frag
+            #pragma target 4.5
+            #pragma vertex HdrpVert
+            #pragma fragment HdrpFrag
             #pragma multi_compile_instancing
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/LastSignal/Scripts/Runtime/Rendering/HdrpCustomLighting.hlsl"
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseColor;
@@ -34,22 +31,17 @@ Shader "LastSignal/LocalizedWound"
             CBUFFER_END
             float4 _WoundCenters[8], _WoundNormals[8], _WoundDetails[8];
             struct Attributes { float4 positionOS:POSITION; float3 normalOS:NORMAL; float3 rest:TEXCOORD2; float3 restNormal:TEXCOORD3; UNITY_VERTEX_INPUT_INSTANCE_ID };
-            struct Varyings { float4 positionCS:SV_POSITION; float3 positionWS:TEXCOORD0; float3 normalWS:TEXCOORD1; float3 rest:TEXCOORD2; float3 restNormal:TEXCOORD3; UNITY_VERTEX_INPUT_INSTANCE_ID };
-            Varyings Vert(Attributes v)
+            struct Varyings { float4 positionCS:SV_POSITION; float3 positionRWS:TEXCOORD0; float3 normalWS:TEXCOORD1; float3 rest:TEXCOORD2; float3 restNormal:TEXCOORD3; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            Varyings HdrpVert(Attributes v)
             {
                 Varyings o; UNITY_SETUP_INSTANCE_ID(v); UNITY_TRANSFER_INSTANCE_ID(v,o);
-                o.positionWS = TransformObjectToWorld(v.positionOS.xyz);
-                o.positionCS = TransformWorldToHClip(o.positionWS);
+                o.positionRWS = TransformObjectToWorld(v.positionOS.xyz);
+                o.positionCS = TransformWorldToHClip(o.positionRWS);
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
-                o.rest = v.rest; o.restNormal = v.restNormal; return o;
+                o.rest = v.rest; o.restNormal = v.restNormal;
+                return o;
             }
-            half3 Shade(Light light, half3 n, half3 view, half3 albedo, half wet)
-            {
-                half diffuse = saturate(dot(n,light.direction));
-                half spec = pow(saturate(dot(n,normalize(light.direction+view))),lerp(12,72,wet)) * .13 * wet;
-                return (albedo*diffuse+spec) * light.color * light.distanceAttenuation * light.shadowAttenuation;
-            }
-            half4 Frag(Varyings i):SV_Target
+            float4 HdrpFrag(Varyings i) : SV_Target0
             {
                 UNITY_SETUP_INSTANCE_ID(i);
                 float alpha=0, cavity=0, rim=0, age=1, clothing=0, height=0;
@@ -81,37 +73,29 @@ Shader "LastSignal/LocalizedWound"
                     }
                 }
                 clip(alpha-.025);
-                half3 n=normalize(i.normalWS), view=GetWorldSpaceNormalizeViewDir(i.positionWS);
-                // Surface-gradient bump supplies recessed normals on triangles too coarse for small physical dents.
-                float3 dpdx=ddx(i.positionWS), dpdy=ddy(i.positionWS);
+                float3 n=normalize(i.normalWS), view=GetWorldSpaceNormalizeViewDir(i.positionRWS);
+                float3 dpdx=ddx(i.positionRWS), dpdy=ddy(i.positionRWS);
                 float3 r1=cross(dpdy,n), r2=cross(n,dpdx);
                 float determinant=dot(dpdx,r1);
                 float3 gradient=(r1*ddx(height)+r2*ddy(height))/max(abs(determinant),.00000001)*sign(determinant);
                 n=normalize(n-gradient);
-                half3 blood=lerp(_BaseColor.rgb,half3(.085,.012,.009),age);
-                half3 tissue=lerp(blood,half3(.31,.085,.06),rim*.5*(1-clothing));
+                float3 blood=lerp(_BaseColor.rgb,float3(.085,.012,.009),age);
+                float3 tissue=lerp(blood,float3(.31,.085,.06),rim*.5*(1-clothing));
                 float weave=sin(i.rest.x*2400)*sin(i.rest.y*2400)*.05;
                 tissue=lerp(tissue,tissue*.66+weave*.1,clothing);
-                half3 albedo=lerp(tissue,half3(.015,.003,.002),cavity*.95);
-                half wet=_Smoothness*(1-age*.7)*(1-clothing*.55)*(1-cavity*.8);
-                half3 color=SampleSH(n)*albedo*(1-cavity*.65);
-                color+=Shade(GetMainLight(TransformWorldToShadowCoord(i.positionWS)),n,view,albedo,wet);
-                #ifdef _ADDITIONAL_LIGHTS
-                uint count=GetAdditionalLightsCount();
-                InputData inputData = (InputData)0;
-                inputData.positionWS = i.positionWS;
-                inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(i.positionCS);
-                #if USE_CLUSTER_LIGHT_LOOP
-                for(uint lightIndex=0;lightIndex<min(URP_FP_DIRECTIONAL_LIGHTS_COUNT,MAX_VISIBLE_LIGHTS);lightIndex++)
-                    color+=Shade(GetAdditionalLight(lightIndex,i.positionWS),n,view,albedo,wet);
-                #endif
-                LIGHT_LOOP_BEGIN(count)
-                    color+=Shade(GetAdditionalLight(lightIndex,i.positionWS),n,view,albedo,wet);
-                LIGHT_LOOP_END
-                #endif
-                return half4(color,saturate(alpha*_BaseColor.a));
+                float3 albedo=lerp(tissue,float3(.015,.003,.002),cavity*.95);
+                float wet=_Smoothness*(1-age*.7)*(1-clothing*.55)*(1-cavity*.8);
+                LS_HdrpSurface s = (LS_HdrpSurface)0;
+                s.albedo = albedo;
+                s.normalWS = n;
+                s.smoothness = wet;
+                s.occlusion = 1.0 - cavity * 0.65;
+                s.alpha = saturate(alpha * _BaseColor.a);
+                float3 color = LS_EvaluateHdrpLit(i.positionCS.xy, i.positionRWS, view, s);
+                return float4(color, s.alpha);
             }
             ENDHLSL
         }
     }
+
 }
