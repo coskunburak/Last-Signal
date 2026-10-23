@@ -195,8 +195,8 @@ namespace LastSignal.Editor
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play mode first.");
             var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(WoundTexturePath);
-            var shader = Shader.Find("Universal Render Pipeline/Lit");
-            if (!texture || !shader) throw new InvalidOperationException("Missing wound texture or URP Lit shader.");
+            var shader = Shader.Find("HDRP/Lit");
+            if (!texture || !shader) throw new InvalidOperationException("Missing wound texture or HDRP Lit shader.");
             var root = PrefabUtility.LoadPrefabContents(RuntimePath);
             Mesh fitted = null;
             try
@@ -222,12 +222,12 @@ namespace LastSignal.Editor
                 }
                 material.shader = shader;
                 material.shaderKeywords = Array.Empty<string>();
-                material.SetTexture("_BaseMap", texture);
+                material.SetTexture("_BaseColorMap", texture);
                 material.SetColor("_BaseColor", new Color(.88f, .88f, .88f, 1));
                 material.SetFloat("_Metallic", 0);
                 material.SetFloat("_Smoothness", .38f);
-                material.SetFloat("_Surface", 1);
-                material.SetFloat("_Blend", 0);
+                material.SetFloat("_SurfaceType", 1);
+                material.SetFloat("_BlendMode", 0);
                 material.SetFloat("_Cull", (float)UnityEngine.Rendering.CullMode.Back);
                 material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -235,12 +235,13 @@ namespace LastSignal.Editor
                 material.SetFloat("_DstBlendAlpha", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                 material.SetFloat("_ZWrite", 0);
                 material.SetFloat("_ReceiveShadows", 1);
-                material.SetColor("_EmissionColor", Color.black);
+                material.SetColor("_EmissiveColor", Color.black);
                 material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
                 material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
                 material.SetOverrideTag("RenderType", "Transparent");
                 material.SetShaderPassEnabled("ShadowCaster", false);
                 material.SetShaderPassEnabled("DepthOnly", false);
+                UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(material);
                 EditorUtility.SetDirty(material);
                 Transform wound = null;
                 foreach (var t in root.GetComponentsInChildren<Transform>(true))

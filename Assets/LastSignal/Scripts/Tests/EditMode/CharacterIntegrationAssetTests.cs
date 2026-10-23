@@ -45,7 +45,7 @@ namespace LastSignal.Tests
                 {
                     Assert.That(skin.sharedMesh,Is.Not.Null);Assert.That(skin.rootBone,Is.Not.Null);
                     Assert.That(skin.bones.All(b=>b&&b.IsChildOf(root.transform)),Is.True,skin.name);
-                    Assert.That(skin.sharedMaterials.All(m=>m&&m.shader.name=="Universal Render Pipeline/Lit"),Is.True,skin.name);
+                    Assert.That(skin.sharedMaterials.All(m=>m&&m.shader.name=="HDRP/Lit"),Is.True,skin.name);
                 }
             }
             finally{PrefabUtility.UnloadPrefabContents(root);}

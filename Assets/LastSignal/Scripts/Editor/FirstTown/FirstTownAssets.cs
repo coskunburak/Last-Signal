@@ -79,7 +79,7 @@ namespace LastSignal.Editor.FirstTown
             Load<GameObject>(S019.PoiAuthoring.TemplatePath);
             foreach (var name in new[] { "Stone", "GroundSoil", "GroundPath", "Iron", "Wood", "InteriorPlaster", "RoofMetal" })
                 Load<Material>(Kit + "/Materials/" + name + ".mat");
-            if (!Shader.Find("Universal Render Pipeline/Lit") || !Shader.Find("Universal Render Pipeline/Terrain/Lit")) throw new InvalidOperationException("URP Lit shader unavailable.");
+            if (!Shader.Find("HDRP/Lit") || !Shader.Find("HDRP/TerrainLit")) throw new InvalidOperationException("HDRP Lit shader unavailable.");
         }
         internal void Prepare()
         {
@@ -109,9 +109,10 @@ namespace LastSignal.Editor.FirstTown
             if (name == "Asphalt") material = Normalize(Load<Material>("Assets/ThirdParty/VGtiXN/Countryside gas station/Art/Materials/Road.mat"));
             else if (name == "Stripe" || name == "Water" || name == "School" || name == "Clinic")
             {
-                material = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = name, enableInstancing = true };
+                material = new Material(Shader.Find("HDRP/Lit")) { name = name, enableInstancing = true };
                 material.SetColor("_BaseColor", name == "Stripe" ? new Color(.72f,.64f,.39f) : name == "Water" ? new Color(.10f,.19f,.20f) : name == "Clinic" ? new Color(.68f,.71f,.66f) : new Color(.40f,.27f,.20f));
                 material.SetFloat("_Smoothness", name == "Water" ? .83f : .18f);
+                UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(material);
                 Save(material, Root + "/Materials/" + name + ".mat");
             }
             else material = Load<Material>(Kit + "/Materials/" + name + ".mat");
@@ -120,25 +121,13 @@ namespace LastSignal.Editor.FirstTown
         Material Normalize(Material source)
         {
             if (!source) throw new InvalidOperationException("Missing source material; no silent replacement.");
-            if (source.shader && source.shader.name.StartsWith("Universal Render Pipeline/", StringComparison.Ordinal)) return source;
+            if (source.shader && source.GetTag("RenderPipeline", false) == "HDRenderPipeline") return source;
             if (converted.TryGetValue(source, out var existing)) return existing;
             string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(source));
             if (string.IsNullOrEmpty(guid)) throw new InvalidOperationException("Unsaved source material " + source.name);
             AssetDatabase.TryGetGUIDAndLocalFileIdentifier(source, out string ignoredGuid, out long localId);
-            var target = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = source.name, enableInstancing = true };
-            string color = source.HasProperty("_BaseColor") ? "_BaseColor" : "_Color";
-            if (source.HasProperty(color)) target.SetColor("_BaseColor", source.GetColor(color));
-            string texture = source.HasProperty("_BaseMap") ? "_BaseMap" : "_MainTex";
-            CopyTexture(source, target, texture, "_BaseMap");
-            CopyTexture(source, target, "_BumpMap", "_BumpMap");
-            CopyTexture(source, target, "_MetallicGlossMap", "_MetallicGlossMap");
-            if (target.GetTexture("_BumpMap")) target.EnableKeyword("_NORMALMAP");
-            if (target.GetTexture("_MetallicGlossMap")) target.EnableKeyword("_METALLICSPECGLOSSMAP");
-            if (source.HasProperty("_Metallic")) target.SetFloat("_Metallic", source.GetFloat("_Metallic"));
-            target.SetFloat("_Smoothness", source.HasProperty("_Glossiness") ? Mathf.Min(.5f, source.GetFloat("_Glossiness")) : .2f);
-            bool cutout = source.IsKeywordEnabled("_ALPHATEST_ON") || (source.HasProperty("_Mode") && source.GetFloat("_Mode") == 1);
-            if (cutout) { target.SetFloat("_AlphaClip", 1); target.EnableKeyword("_ALPHATEST_ON"); target.renderQueue = 2450; }
-            Save(target, Root + "/Materials/Source_" + guid + "_" + localId + ".mat");
+            var target = LastSignal.Editor.Rendering.HdrpMaterialMigrationUtility.CreateHdrpLitCopy(source,
+                Root + "/Materials/Source_" + guid + "_" + localId + ".mat");
             converted.Add(source, target); return target;
         }
         static void CopyTexture(Material source, Material target, string from, string to)

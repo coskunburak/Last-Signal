@@ -3,61 +3,58 @@ Shader "LastSignal/Ballistic"
     Properties { _BaseColor("Color", Color) = (1,1,1,1) _Mark("Entry mark", Float) = 0 }
     SubShader
     {
-        Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Transparent" "RenderType"="Transparent" }
+        Tags { "RenderPipeline"="HDRenderPipeline" "Queue"="Transparent" "RenderType"="Transparent" }
         Pass
         {
-            Tags { "LightMode"="UniversalForward" }
+            Name "ForwardOnly"
+            Tags { "LightMode"="ForwardOnly" }
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
             Cull Off
             HLSLPROGRAM
-            #pragma vertex Vert
-            #pragma fragment Frag
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #pragma target 4.5
+            #pragma vertex HdrpVert
+            #pragma fragment HdrpFrag
+            #include "Assets/LastSignal/Scripts/Runtime/Rendering/HdrpCustomLighting.hlsl"
             CBUFFER_START(UnityPerMaterial)
-            half4 _BaseColor; float _Mark;
+            float4 _BaseColor;
+            float _Mark;
             CBUFFER_END
-            struct A { float4 positionOS:POSITION; float3 normalOS:NORMAL; half4 color:COLOR; float2 uv:TEXCOORD0; };
-            struct V { float4 positionCS:SV_POSITION; float3 normalWS:TEXCOORD1; float3 positionWS:TEXCOORD2; half4 color:COLOR; float2 uv:TEXCOORD0; };
-            V Vert(A v) { V o; o.positionWS=TransformObjectToWorld(v.positionOS.xyz); o.normalWS=TransformObjectToWorldNormal(v.normalOS); o.positionCS=TransformWorldToHClip(o.positionWS); o.color=v.color; o.uv=v.uv; return o; }
-            half4 Frag(V i):SV_Target
+            struct A { float4 positionOS:POSITION; float3 normalOS:NORMAL; float4 color:COLOR; float2 uv:TEXCOORD0; };
+            struct V { float4 positionCS:SV_POSITION; float3 normalWS:TEXCOORD1; float3 positionRWS:TEXCOORD2; float4 color:COLOR; float2 uv:TEXCOORD0; };
+            V HdrpVert(A v)
             {
-                if (_Mark > .5)
+                V o;
+                o.positionRWS = TransformObjectToWorld(v.positionOS.xyz);
+                o.normalWS = TransformObjectToWorldNormal(v.normalOS);
+                o.positionCS = TransformWorldToHClip(o.positionRWS);
+                o.color = v.color;
+                o.uv = v.uv;
+                return o;
+            }
+            float4 HdrpFrag(V i) : SV_Target0
+            {
+                if (_Mark > 0.5)
                 {
-                    float2 p = i.uv * 2 - 1;
-                    float angle = atan2(p.y,p.x);
-                    float edge = .74 + .1*sin(angle*7) + .06*cos(angle*13);
-                    float alpha = 1-smoothstep(edge-.2,edge,length(p));
-                    half3 normal = normalize(i.normalWS);
-                    Light light = GetMainLight(TransformWorldToShadowCoord(i.positionWS));
-                    half3 illumination = SampleSH(normal) + light.color * saturate(dot(normal,light.direction)) * light.shadowAttenuation;
-                    #if defined(_ADDITIONAL_LIGHTS)
-                    uint count = GetAdditionalLightsCount();
-                    InputData inputData = (InputData)0;
-                    inputData.positionWS = i.positionWS;
-                    inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(i.positionCS);
-                    #if USE_CLUSTER_LIGHT_LOOP
-                    for(uint lightIndex=0;lightIndex<min(URP_FP_DIRECTIONAL_LIGHTS_COUNT,MAX_VISIBLE_LIGHTS);lightIndex++)
-                    {
-                        Light extra=GetAdditionalLight(lightIndex,i.positionWS);
-                        illumination += extra.color*saturate(dot(normal,extra.direction))*extra.distanceAttenuation*extra.shadowAttenuation;
-                    }
-                    #endif
-                    LIGHT_LOOP_BEGIN(count)
-                        Light extra=GetAdditionalLight(lightIndex,i.positionWS);
-                        illumination += extra.color*saturate(dot(normal,extra.direction))*extra.distanceAttenuation*extra.shadowAttenuation;
-                    LIGHT_LOOP_END
-                    #endif
-                    return half4(_BaseColor.rgb*illumination,alpha*_BaseColor.a);
+                    float2 p = i.uv * 2.0 - 1.0;
+                    float angle = atan2(p.y, p.x);
+                    float edge = 0.74 + 0.1 * sin(angle * 7.0) + 0.06 * cos(angle * 13.0);
+                    float alpha = 1.0 - smoothstep(edge - 0.2, edge, length(p));
+                    LS_HdrpSurface s = (LS_HdrpSurface)0;
+                    s.albedo = _BaseColor.rgb;
+                    s.normalWS = normalize(i.normalWS);
+                    s.smoothness = 0.15;
+                    s.occlusion = 1.0;
+                    s.alpha = alpha * _BaseColor.a;
+                    float3 viewDirWS = GetWorldSpaceNormalizeViewDir(i.positionRWS);
+                    float3 lit = LS_EvaluateHdrpLit(i.positionCS.xy, i.positionRWS, viewDirWS, s);
+                    return float4(lit, s.alpha);
                 }
-                return i.color * _BaseColor;
+                float4 unlit = i.color * _BaseColor;
+                return float4(unlit.rgb * GetCurrentExposureMultiplier(), unlit.a);
             }
             ENDHLSL
         }
     }
+
 }

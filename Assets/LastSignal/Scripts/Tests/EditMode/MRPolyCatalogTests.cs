@@ -11,7 +11,7 @@ namespace LastSignal.Tests
         const string Root = "Assets/LastSignal/Prefabs/Combat/MRPoly";
 
         [Test]
-        public void EverySourceVariantHasAWorldPrefabWithValidMeshesAndUrpMaterials()
+        public void EverySourceVariantHasAWorldPrefabWithValidMeshesAndHdrpMaterials()
         {
             var source = Directory.GetFiles("Assets/ThirdParty/Weapons/MRPoly/Low Poly Weapons Set/Prefabs", "*.prefab", SearchOption.AllDirectories);
             Assert.That(source.Length, Is.EqualTo(16));
@@ -28,7 +28,7 @@ namespace LastSignal.Tests
                     foreach (var material in materials)
                     {
                         Assert.That(material, Is.Not.Null, path);
-                        Assert.That(material.shader.name, Is.EqualTo("Universal Render Pipeline/Lit"), path);
+                        Assert.That(material.shader.name, Is.EqualTo("HDRP/Lit"), path);
                     }
                 }
             }

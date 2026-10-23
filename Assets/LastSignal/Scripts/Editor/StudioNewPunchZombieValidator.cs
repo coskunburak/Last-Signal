@@ -41,8 +41,8 @@ namespace LastSignal.Editor
                 for (int submesh = 0; submesh < skin.sharedMesh.subMeshCount; submesh++)
                     triangles += (int)skin.sharedMesh.GetIndexCount(submesh) / 3;
                 foreach (var material in skin.sharedMaterials)
-                    if (!material || !material.shader || !material.shader.name.StartsWith("Universal Render Pipeline/"))
-                    { report.AppendLine("NON-URP or missing material: " + skin.name); valid = false; }
+                    if (!material || !material.shader || material.GetTag("RenderPipeline", false) != "HDRenderPipeline")
+                    { report.AppendLine("NON-HDRP or missing material: " + skin.name); valid = false; }
             }
             foreach (var meshName in requiredMeshes)
                 if (!names.Contains(meshName)) { report.AppendLine("MISSING body mesh: " + meshName); valid = false; }

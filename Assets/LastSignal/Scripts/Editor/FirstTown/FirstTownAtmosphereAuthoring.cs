@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using LastSignal.Atmosphere;
 using LastSignal.Audio;
+using LastSignal.Rendering;
 using LastSignal.WorldTime;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using Object=UnityEngine.Object;
 
@@ -55,10 +55,7 @@ namespace LastSignal.Editor.FirstTown
             var profile=AssetDatabase.LoadAssetAtPath<VolumeProfile>(Root+"/TownVolume.asset");
             if(!profile){profile=ScriptableObject.CreateInstance<VolumeProfile>();AssetDatabase.CreateAsset(profile,Root+"/TownVolume.asset");}
             else { foreach(var c in profile.components)if(c)Object.DestroyImmediate(c,true);profile.components.Clear(); }
-            var tone=profile.Add<Tonemapping>(true);tone.mode.value=TonemappingMode.ACES;
-            var color=profile.Add<ColorAdjustments>(true);color.postExposure.value=0;color.contrast.value=4;color.saturation.value=0;
-            var bloom=profile.Add<Bloom>(true);bloom.intensity.value=.12f;bloom.threshold.value=1.2f;bloom.scatter.value=.35f;
-            var vignette=profile.Add<Vignette>(true);vignette.intensity.value=.08f;vignette.smoothness.value=.35f;
+            RenderPipelineAdapter.ConfigureControlledAcesVolumeProfile(profile);
             foreach(var c in profile.components){c.name=c.GetType().Name;AssetDatabase.AddObjectToAsset(c,profile);}
             EditorUtility.SetDirty(profile);volume.sharedProfile=profile;volume.name="FirstTown controlled ACES";
             foreach(var old in All<LastSignal.Slice.S013EnvironmentPresentation>(scene).ToArray())Object.DestroyImmediate(old);
@@ -119,7 +116,7 @@ namespace LastSignal.Editor.FirstTown
             var fixture=GameObject.CreatePrimitive(PrimitiveType.Cylinder);fixture.name="Fixture";fixture.transform.SetParent(go.transform,false);
             fixture.transform.localScale=new Vector3(.28f,.06f,.28f);Object.DestroyImmediate(fixture.GetComponent<Collider>());
             var mat=AssetDatabase.LoadAssetAtPath<Material>(Root+"/Fixture.mat");
-            if(!mat){mat=new Material(Shader.Find("Universal Render Pipeline/Lit"));mat.SetColor("_BaseColor",new Color(.25f,.22f,.17f));mat.SetFloat("_Metallic",.6f);mat=SaveMaterial(mat,"Fixture");}
+            if(!mat){mat=new Material(RenderPipelineAdapter.FindStandardLitShader());mat.SetColor("_BaseColor",new Color(.25f,.22f,.17f));mat.SetFloat("_Metallic",.6f);mat=SaveMaterial(mat,"Fixture");}
             fixture.GetComponent<Renderer>().sharedMaterial=mat;
         }
         static TownRain Rain(Transform parent)
@@ -156,7 +153,7 @@ namespace LastSignal.Editor.FirstTown
         }
         static bool Response(Material m,out TownAtmosphere.Surface s)
         {
-            s=default;if(!m || m.shader.name!="Universal Render Pipeline/Lit" || m.GetFloat("_Surface")!=0 || m.GetFloat("_AlphaClip")>.5f)return false;
+            s=default;if(!RenderPipelineAdapter.IsOpaqueUnclippedStandardLitMaterial(m))return false;
             string n=SourceName(m);
             if(n.Contains("glass") || n.Contains("leaf") || n.Contains("leaves") || n.Contains("bark") || n.Contains("interior") || n.Contains("cloth") || n.Contains("water"))return false;
             if(n.Contains("road") || n.Contains("asphalt")){s.darkening=.27f;s.smoothness=.68f;}

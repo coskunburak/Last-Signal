@@ -7,10 +7,10 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using UnityEditor.Build.Reporting;
 using Unity.AI.Navigation;
 using LastSignal.Persistence;
+using LastSignal.Rendering;
 using LastSignal.WorldTime;
 using Object=UnityEngine.Object;
 
@@ -29,7 +29,7 @@ namespace LastSignal.Art.Editor
         {
             var path=Root+"/Materials/"+name+".mat";
             var m=AssetDatabase.LoadAssetAtPath<Material>(path);
-            if(!m){m=new Material(Shader.Find("Universal Render Pipeline/Lit"));m.name=name;m.SetColor("_BaseColor",Hex(color));m.SetFloat("_Smoothness",smoothness);m.SetFloat("_Metallic",metallic);m.enableInstancing=true;AssetDatabase.CreateAsset(m,path);}
+            if(!m){m=new Material(RenderPipelineAdapter.FindStandardLitShader());m.name=name;m.SetColor("_BaseColor",Hex(color));m.SetFloat("_Smoothness",smoothness);m.SetFloat("_Metallic",metallic);m.enableInstancing=true;AssetDatabase.CreateAsset(m,path);}
             materials[name]=m;return m;
         }
         // Original, tileable painterly surface textures. No copied promotional artwork.
@@ -204,7 +204,7 @@ namespace LastSignal.Art.Editor
         static Material Normalize(Material source)
         {
             string key="B_"+source.name;var path=Root+"/Materials/"+key+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);if(m)return m;
-            m=new Material(Shader.Find("Universal Render Pipeline/Lit"));m.name=key;m.SetTexture("_BaseMap",source.HasProperty("_MainTex")?source.GetTexture("_MainTex"):source.mainTexture);
+            m=new Material(RenderPipelineAdapter.FindStandardLitShader());m.name=key;m.SetTexture("_BaseMap",source.HasProperty("_MainTex")?source.GetTexture("_MainTex"):source.mainTexture);
             bool leaf=source.name.ToLowerInvariant().Contains("leaves")||source.name=="Plant";m.SetColor("_BaseColor",leaf?new Color(.64f,.72f,.68f):new Color(.8f,.80f,.78f));m.SetFloat("_Smoothness",leaf?.13f:.16f);m.SetFloat("_Metallic",0);m.enableInstancing=true;
             if(leaf){m.SetFloat("_AlphaClip",1);m.SetFloat("_Cutoff",.42f);m.SetFloat("_Cull",0);m.EnableKeyword("_ALPHATEST_ON");m.SetOverrideTag("RenderType","TransparentCutout");m.renderQueue=2450;}
             AssetDatabase.CreateAsset(m,path);return m;
@@ -264,13 +264,13 @@ namespace LastSignal.Art.Editor
             var root=Group("S013 Production Cabin");root.transform.position=Origin;BuildCabin(root.transform);BuildInterior(root.transform);Exterior(root.transform);
             var light=shelter.GetComponentInChildren<Light>();light.color=Hex("#FFD4A1");light.intensity=2.2f;light.range=7;light.shadows=LightShadows.Soft;
             RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.fog=true;RenderSettings.fogColor=Hex("#899B9D");RenderSettings.fogMode=FogMode.ExponentialSquared;RenderSettings.fogDensity=.006f;
-            var volume=Group("S013 fixed tonemapping").AddComponent<Volume>();volume.isGlobal=true;volume.priority=10;var profile=ScriptableObject.CreateInstance<VolumeProfile>();profile.Add<Tonemapping>().mode.Override(TonemappingMode.ACES);profile.Add<ColorAdjustments>().saturation.Override(-14);AssetDatabase.CreateAsset(profile,Root+"/ProductionVolume.asset");volume.sharedProfile=profile;
+            var volume=Group("S013 fixed tonemapping").AddComponent<Volume>();volume.isGlobal=true;volume.priority=10;var profile=ScriptableObject.CreateInstance<VolumeProfile>();RenderPipelineAdapter.ConfigureS013ProductionVolumeProfile(profile,-14);AssetDatabase.CreateAsset(profile,Root+"/ProductionVolume.asset");volume.sharedProfile=profile;
             // Time and weather continue to own the sun/rain. This observer only supplies presentation defaults.
             root.AddComponent<LastSignal.Slice.S013EnvironmentPresentation>();
             var save=Object.FindAnyObjectByType<SaveSession>();var valid=save.ValidateAuthoring();if(!valid.Success)throw new InvalidOperationException(valid.Message);
             var cameras=Group("S013 Benchmark Cameras");
             string[] names={"Exterior","Approach","Interior","Interaction","Threat","Flashlight"};Vector3[] pos={new Vector3(17,5,-14),new Vector3(10,1.7f,1),new Vector3(1.9f,1.65f,-2),new Vector3(1.1f,1.55f,-1.5f),new Vector3(12,1.7f,4),new Vector3(1.9f,1.65f,1.6f)};Vector3[] targets={new Vector3(0,2,0),new Vector3(3,1.5f,1),new Vector3(-.5f,1.3f,1),new Vector3(0,1.2f,0),new Vector3(20,1,4),new Vector3(-1.5f,1.4f,-1)};
-            for(int i=0;i<names.Length;i++){var c=Group(names[i],cameras.transform).AddComponent<Camera>();c.transform.position=Origin+pos[i];c.transform.LookAt(Origin+targets[i]);c.fieldOfView=65;c.nearClipPlane=.05f;c.farClipPlane=250;c.enabled=false;c.gameObject.AddComponent<UniversalAdditionalCameraData>().renderPostProcessing=true;}
+            for(int i=0;i<names.Length;i++){var c=Group(names[i],cameras.transform).AddComponent<Camera>();c.transform.position=Origin+pos[i];c.transform.LookAt(Origin+targets[i]);c.fieldOfView=65;c.nearClipPlane=.05f;c.farClipPlane=250;c.enabled=false;RenderPipelineAdapter.EnableCameraPostProcessingOnly(c);}
             EditorSceneManager.MarkSceneDirty(s);EditorSceneManager.SaveScene(s);AssetDatabase.SaveAssets();
         }
         // Invoked explicitly by Tools/s017-verify.py; never queued through the Editor poller.

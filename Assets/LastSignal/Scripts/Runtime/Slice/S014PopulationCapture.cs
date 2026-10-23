@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using LastSignal.Rendering;
 using Unity.Profiling;
 using Unity.Profiling.LowLevel.Unsafe;
 using UnityEngine;
@@ -74,10 +75,7 @@ namespace LastSignal.Slice
             var args = Environment.GetCommandLineArgs(); bool low = Array.IndexOf(args, "-s014Low") >= 0;
             if (low)
             {
-                var source = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline as UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset;
-                Require(source, "URP required."); var clone = Instantiate(source);
-                clone.shadowDistance = 25; clone.shadowCascadeCount = 1; clone.msaaSampleCount = 1;
-                QualitySettings.renderPipeline = clone;
+                Require(RenderPipelineAdapter.ApplyBenchmarkQualityTierOverride("Low"), "URP required.");
             }
             File.WriteAllText(Path.Combine(output, "environment.txt"),
                 $"Unity={Application.unityVersion}\nBuildGUID={Application.buildGUID}\nDevelopment={Debug.isDebugBuild}\nEditor={Application.isEditor}\nOS={SystemInfo.operatingSystem}\nDevice={SystemInfo.deviceModel}\nCPU={SystemInfo.processorType}\nCPUCount={SystemInfo.processorCount}\nGPU={SystemInfo.graphicsDeviceName}\nRAM_MB={SystemInfo.systemMemorySize}\nGraphicsMemory_MB={SystemInfo.graphicsMemorySize}\nResolution={Screen.width}x{Screen.height}\nFOV=75\nQuality={(low ? "S013 Low candidate" : "PC")}\nVSync={QualitySettings.vSyncCount}\nTargetFrameRate={Application.targetFrameRate}\n" +

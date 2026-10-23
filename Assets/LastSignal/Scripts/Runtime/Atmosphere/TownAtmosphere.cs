@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using LastSignal.Rendering;
 using LastSignal.WorldTime;
 using LastSignal.Vehicles;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 namespace LastSignal.Atmosphere
 {
@@ -66,10 +66,7 @@ namespace LastSignal.Atmosphere
         bool PhaseLighting => lightingProfile && lightingProfile.usePhaseLighting;
         bool[] originalLightEnabled;
         LightShadows[] originalShadows;
-        UniversalAdditionalCameraData cameraData;
-        bool oldPost;
-        AntialiasingMode oldAA;
-        AntialiasingQuality oldAAQuality;
+        RenderPipelineAdapter.CameraPostState cameraState;
         public bool IsBound => bound;
         public float RainBlend => rainBlend;
         public float SurfaceWetness => wetBlend;
@@ -92,6 +89,7 @@ namespace LastSignal.Atmosphere
                 oldVolume=volume.sharedProfile;
                 liveVolume=ScriptableObject.CreateInstance<VolumeProfile>();
                 foreach(var c in oldVolume.components) if(c) liveVolume.components.Add(Instantiate(c));
+                RenderPipelineAdapter.EnsureAtmosphereVolumeComponents(liveVolume, lightingProfile && lightingProfile.usePhysicalHdrpLighting);
                 volume.sharedProfile=liveVolume;
             }
             foreach(var s in surfaces) if(s.material && !replacements.ContainsKey(s.material)) AddMaterial(s.material,s);
@@ -107,7 +105,7 @@ namespace LastSignal.Atmosphere
         {
             var clone=new Material(material) { name=material.name+" (weather session)" };
             replacements.Add(material,clone); wet.Add(clone); responses.Add(response);
-            dryColors.Add(clone.GetColor("_BaseColor")); drySmoothness.Add(clone.GetFloat("_Smoothness"));
+            dryColors.Add(RenderPipelineAdapter.GetMaterialBaseColor(clone)); drySmoothness.Add(RenderPipelineAdapter.GetMaterialSmoothness(clone));
         }
         void Replace(Renderer r)
         {
@@ -182,6 +180,9 @@ namespace LastSignal.Atmosphere
                 RenderSettings.fog=true;RenderSettings.fogMode=FogMode.ExponentialSquared;
                 RenderSettings.fogDensity=p.fogDensity;RenderSettings.fogColor=p.fog;
                 RenderSettings.reflectionIntensity=p.reflection;
+                RenderPipelineAdapter.ApplyAtmosphereLightingAndVolume(liveVolume,sun,moon,day,altitude,daylight,gold,clouds,rainAmount,RenderSettings.fogDensity,RenderSettings.fogColor,RenderSettings.ambientLight,
+                lightingProfile && lightingProfile.usePhysicalHdrpLighting ? lightingProfile.hdrpSunLuxPerUnit : 0,
+                lightingProfile ? lightingProfile.hdrpMoonLuxPerUnit : .5f);
                 return;
             }
             sun.color=Color.Lerp(new Color(1,.97f,.89f),new Color(1,.64f,.36f),gold);
@@ -198,6 +199,9 @@ namespace LastSignal.Atmosphere
             RenderSettings.fogColor=Color.Lerp(new Color(.035f,.052f,.077f),Color.Lerp(new Color(.51f,.60f,.66f),new Color(.67f,.55f,.42f),gold*.5f),daylight);
             RenderSettings.fogColor=Color.Lerp(RenderSettings.fogColor,Color.Lerp(new Color(.04f,.055f,.07f),new Color(.37f,.43f,.47f),daylight),rainAmount);
             RenderSettings.reflectionIntensity=Mathf.Lerp(.18f,.75f,daylight)*Mathf.Lerp(1,.7f,rainAmount);
+            RenderPipelineAdapter.ApplyAtmosphereLightingAndVolume(liveVolume,sun,moon,day,altitude,daylight,gold,clouds,rainAmount,RenderSettings.fogDensity,RenderSettings.fogColor,RenderSettings.ambientLight,
+                lightingProfile && lightingProfile.usePhysicalHdrpLighting ? lightingProfile.hdrpSunLuxPerUnit : 0,
+                lightingProfile ? lightingProfile.hdrpMoonLuxPerUnit : .5f);
         }
         // Runtime and the owner-operated comparison window share these exact samplers.
         public void SampleSky(Material target,float day,float rainAmount,float clouds,float drift)
@@ -226,15 +230,15 @@ namespace LastSignal.Atmosphere
             if(!target)return;
             float light=Mathf.SmoothStep(0,1,Mathf.InverseLerp(-.08f,.28f,TownLightingProfile.Altitude(day)));
             var phase=PhaseLighting?lightingProfile.Evaluate(day,clouds,rainAmount):default;
-            if(target.TryGet<ColorAdjustments>(out var grade))
-            {
-                grade.postExposure.value=PhaseLighting?phase.exposure:Mathf.Lerp(.15f,0,light);
-                grade.saturation.value=-Mathf.Clamp01(rainAmount)*7;
-                if(PhaseLighting)grade.contrast.value=phase.contrast;
-            }
-            if(!PhaseLighting)return;
-            if(target.TryGet<Bloom>(out var bloom)){bloom.intensity.value=phase.bloom;bloom.threshold.value=1.25f;bloom.clamp.value=8;}
-            if(target.TryGet<Vignette>(out var vignette))vignette.intensity.value=.05f;
+            RenderPipelineAdapter.SampleAtmospherePostProcessing(
+                target,
+                PhaseLighting,
+                PhaseLighting?phase.exposure:Mathf.Lerp(.15f,0,light),
+                -Mathf.Clamp01(rainAmount)*7 - (lightingProfile && lightingProfile.usePhysicalHdrpLighting ? 6 : 0),
+                phase.contrast,
+                phase.bloom,
+                lightingProfile && lightingProfile.usePhysicalHdrpLighting
+                    ? (float?)lightingProfile.HdrpExposure(day, clouds, rainAmount) : null);
         }
         public void SampleSurface(Material target,Surface response,Color dryColor,float dryGloss,float wetness)
         {
@@ -247,8 +251,7 @@ namespace LastSignal.Atmosphere
                 gloss=Mathf.Max(dryGloss,Mathf.Min(gloss,response.wetOnly?lightingProfile.puddleWetCeiling:lightingProfile.opaqueWetCeiling));
             }
             float factor=1-wetness*dark;
-            target.SetColor("_BaseColor",new Color(dryColor.r*factor,dryColor.g*factor,dryColor.b*factor,dryColor.a*(response.wetOnly?wetness:1)));
-            target.SetFloat("_Smoothness",Mathf.Lerp(dryGloss,gloss,wetness));
+            RenderPipelineAdapter.SetMaterialWetSurface(target,new Color(dryColor.r*factor,dryColor.g*factor,dryColor.b*factor,dryColor.a*(response.wetOnly?wetness:1)),Mathf.Lerp(dryGloss,gloss,wetness),wetness);
         }
         void ApplyMaterials()
         {
@@ -291,7 +294,7 @@ namespace LastSignal.Atmosphere
                 int rank=0;
                 for(int j=0;j<lamps.Length;j++)if(lampScores[j]<lampScores[i] || (lampScores[j]==lampScores[i] && j<i))rank++;
                 item.light.enabled=rank<localLightBudget && distances[i]<10000;
-                item.light.intensity=item.intensity*gain*level*Mathf.Lerp(1,.92f,rainAmount);
+                item.light.intensity=RenderPipelineAdapter.ScalePracticalLightIntensity(item.intensity*gain*level*Mathf.Lerp(1,.92f,rainAmount));
                 if(custom)item.light.color=practical.color;
                 int shadowRank=0;
                 for(int j=0;j<lamps.Length;j++)if(selectedLampShadows[j] && distances[j]<900 &&
@@ -317,8 +320,7 @@ namespace LastSignal.Atmosphere
                 // This small luminous mesh encloses its own light origin. It must not
                 // occlude that light; surrounding architecture still casts normal shadows.
                 renderer.shadowCastingMode=ShadowCastingMode.Off;
-                if(!renderer.sharedMaterial || !renderer.sharedMaterial.IsKeywordEnabled("_EMISSION"))return;
-                renderer.GetPropertyBlock(working);working.SetColor("_EmissionColor",color);renderer.SetPropertyBlock(working);
+                RenderPipelineAdapter.ApplyFixtureEmission(renderer,working,color);
             }
             internal void Restore()
             {if(renderer){renderer.SetPropertyBlock(saved.isEmpty?null:saved);renderer.shadowCastingMode=savedShadows;}}
@@ -338,7 +340,7 @@ namespace LastSignal.Atmosphere
                 var item=lamps[i]; if(!item.light)continue;
                 int rank=0; for(int j=0;j<lamps.Length;j++) if(distances[j]<distances[i] || (distances[j]==distances[i] && j<i))rank++;
                 item.light.enabled=rank<localLightBudget && distances[i]<10000;
-                item.light.intensity=item.intensity*(item.interior?1:Mathf.Lerp(1,.08f,daylight)*(1-rainAmount*.1f));
+                item.light.intensity=RenderPipelineAdapter.ScalePracticalLightIntensity(item.intensity*(item.interior?1:Mathf.Lerp(1,.08f,daylight)*(1-rainAmount*.1f)));
                 int shadowRank=0;
                 for(int j=0;j<lamps.Length;j++) if(lamps[j].shadows && (distances[j]<distances[i] || (distances[j]==distances[i] && j<i)))shadowRank++;
                 item.light.shadows=item.light.enabled && item.shadows && distances[i]<900 && shadowRank<2?LightShadows.Soft:LightShadows.None;
@@ -351,18 +353,15 @@ namespace LastSignal.Atmosphere
             foreach(var r in vehicle.GetComponentsInChildren<Renderer>(true))
             {
                 foreach(var m in r.sharedMaterials)
-                    if(m && m.shader.name=="Universal Render Pipeline/Lit" && m.GetFloat("_Surface")==0 && m.GetFloat("_Metallic")>.2f && !replacements.ContainsKey(m))
+                    if(m && RenderPipelineAdapter.IsOpaqueMetallicVehicleLitMaterial(m) && !replacements.ContainsKey(m))
                         AddMaterial(m,new Surface { material=m,darkening=.12f,smoothness=.68f });
                 Replace(r);
             }
         }
         void BindCamera()
         {
-            if(cameraData || !Camera.main)return;
-            cameraData=Camera.main.GetUniversalAdditionalCameraData(); oldPost=cameraData.renderPostProcessing;
-            oldAA=cameraData.antialiasing; oldAAQuality=cameraData.antialiasingQuality;
-            cameraData.renderPostProcessing=true; cameraData.antialiasing=AntialiasingMode.SubpixelMorphologicalAntiAliasing;
-            cameraData.antialiasingQuality=AntialiasingQuality.Medium;
+            if(cameraState.Bound || !Camera.main)return;
+            cameraState=RenderPipelineAdapter.EnableGameplayPostAndAA(Camera.main);
         }
         public void Unbind()
         {
@@ -380,11 +379,11 @@ namespace LastSignal.Atmosphere
             if(moon){moon.intensity=oldMoonIntensity;moon.transform.rotation=oldMoonRotation;}
             for(int i=0;i<lamps.Length;i++)if(lamps[i].light){ lamps[i].light.intensity=originalLightIntensities[i]; lamps[i].light.enabled=originalLightEnabled[i]; lamps[i].light.shadows=originalShadows[i];lamps[i].light.color=originalLightColors[i]; }
             RestorePreviewFixtures();
-            if(cameraData){cameraData.renderPostProcessing=oldPost; cameraData.antialiasing=oldAA; cameraData.antialiasingQuality=oldAAQuality;}
+            RenderPipelineAdapter.RestoreCameraPostAndAA(ref cameraState);
             if(volume && liveVolume)volume.sharedProfile=oldVolume;
             if(liveVolume){foreach(var c in liveVolume.components)Destroy(c); Destroy(liveVolume);}
             if(liveSky)Destroy(liveSky);
-            clock=null; observedSimulation=null; vehicle=null; cameraData=null; bound=false; elapsed=0; reflectionCooldown=0; reflectionRender=-1; rainBlend=wetBlend=0;
+            clock=null; observedSimulation=null; vehicle=null; bound=false; elapsed=0; reflectionCooldown=0; reflectionRender=-1; rainBlend=wetBlend=0;
         }
         void OnDisable()=>Unbind();
     }

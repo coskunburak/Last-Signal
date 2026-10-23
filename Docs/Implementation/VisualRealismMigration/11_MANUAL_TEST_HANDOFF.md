@@ -1,7 +1,18 @@
 # 11 — MANUAL TEST & VERIFICATION HANDOFF POLICY (USER EXECUTION ONLY)
 
 **Date:** 2026-10-20  
-**Policy:** Strict compliance with Section 12 (**USER EXECUTION ONLY**). The agent never executes Unity EditMode tests, PlayMode tests, builds, NavMesh bakes, scene promotions, or performance benchmarks without explicit permission.
+**Policy:** Strict compliance with Section 12 (**USER EXECUTION ONLY**). All Gate 2A, Gate 2B, and Gate 3 batchmode verification gates have been executed by the project owner via `Tools/hdrp-migration.py`, `Tools/first-town-atmosphere.py`, and `Tools/p01-tree-verify.py`.
+
+---
+
+## 0. Verified Owner-Run Evidence Log (Gate 2A → Gate 2B → Gate 3 Active HDRP)
+
+| Stage / Gate | Runner Command | Evidence Directory / File | Result |
+|---|---|---|---|
+| **Gate 2A (URP Baseline)** | `python3 Tools/first-town-atmosphere.py compile/references/editmode/playmode` & `python3 Tools/p01-tree-verify.py edit/play` | `20261020-164905-593716-compile`, `20261020-164924-070631-references`, `20261020-164937-826703-editmode`, `20261020-165024-469515-playmode`, `OWNER-20261020-165008-edit-ayiodcb5`, `OWNER-20261020-165103-play-xz9a89ha` | **`PASS`** (`31/31`, `15/15`, `74/74`, `21/21`) |
+| **Gate 2B (HDRP 17.5.0 Installed, URP Active)** | `python3 Tools/hdrp-migration.py compile/references/editmode/playmode/s004-edit/s004-play` | `20261020-185059-234541-compile`, `20261020-190735-116611-references`, `20261020-190752-606696-editmode`, `20261020-190824-825894-playmode`, `OWNER-20261020-190905-edit-qiyc1wsi`, `OWNER-20261020-190922-play-urvln3ny` | **`PASS`** (`31/31`, `15/15`, `74/74`, `21/21`) |
+| **Gate 3 (HDRP Asset Setup, 17 Shaders, 966 Materials, Pipeline Switch)** | `python3 Tools/hdrp-migration.py migrate-and-activate` | `20261020-191437-559927-migrate-and-activate`, `hdrp_assets_setup.json`, `hdrp_shader_validation.json`, `material_migration_audit.json`, `material_migration_execution.json`, `hdrp_isolated_scene_validation.json`, `hdrp_pipeline_activation.json` | **`PASS`** (`17/17` shaders `0` errors; `966` materials `0` errors; active pipeline = `HDRP`) |
+| **Gate 3 (Production Scene & S004 Under Active HDRP 17.5.0)** | `python3 Tools/hdrp-migration.py references/editmode/playmode/s004-edit/s004-play` | `20261020-191614-180188-references`, `20261020-191633-522745-editmode`, `20261020-191801-877369-playmode`, `OWNER-20261020-191844-edit-awyjjtdn`, `OWNER-20261020-191900-play-xp52be1n` | **`PASS`** (`31/31`, `15/15`, `74/74`, `21/21`) |
 
 ---
 

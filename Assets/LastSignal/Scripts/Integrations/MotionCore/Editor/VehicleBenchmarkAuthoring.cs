@@ -54,15 +54,16 @@ namespace LastSignal.VehicleAuthoring
                         var vendorMaterial = slots[i]; if (!vendorMaterial) throw new InvalidOperationException("Missing source material.");
                         if (!materials.TryGetValue(vendorMaterial, out var owned))
                         {
-                            owned = new Material(Shader.Find("Universal Render Pipeline/Lit")); owned.name = "M_Vehicle_" + vendorMaterial.name;
-                            if (vendorMaterial.mainTexture) owned.SetTexture("_BaseMap", vendorMaterial.mainTexture);
+                            owned = new Material(Shader.Find("HDRP/Lit")); owned.name = "M_Vehicle_" + vendorMaterial.name;
+                            if (vendorMaterial.mainTexture) owned.SetTexture("_BaseColorMap", vendorMaterial.mainTexture);
                             owned.SetColor("_BaseColor", new Color(.58f, .61f, .57f)); owned.SetFloat("_Smoothness", .3f);
                             if (vendorMaterial.name.IndexOf("Glass", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
-                                owned.SetColor("_BaseColor", new Color(.3f, .37f, .4f, .22f)); owned.SetFloat("_Surface", 1);
-                                owned.SetFloat("_SrcBlend", 5); owned.SetFloat("_DstBlend", 10); owned.SetFloat("_ZWrite", 0);
-                                owned.EnableKeyword("_SURFACE_TYPE_TRANSPARENT"); owned.SetOverrideTag("RenderType", "Transparent"); owned.renderQueue = 3000;
+                                owned.SetColor("_BaseColor", new Color(.3f, .37f, .4f, .22f));
+                                owned.SetFloat("_SurfaceType", 1); owned.SetFloat("_BlendMode", 0);
+                                owned.SetFloat("_EnableBlendModePreserveSpecularLighting", 0);
                             }
+                            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(owned);
                             AssetDatabase.CreateAsset(owned, Root + "/Materials/" + owned.name + ".mat"); materials.Add(vendorMaterial, owned);
                         }
                         slots[i] = owned;
@@ -111,7 +112,8 @@ namespace LastSignal.VehicleAuthoring
                 PrefabUtility.SaveAsPrefabAsset(car, PrefabPath); Object.DestroyImmediate(car);
                 var testCar = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath), scene);
                 testCar.transform.position = new Vector3(0, .2f, 0);
-                var ground = new Material(Shader.Find("Universal Render Pipeline/Lit")); ground.color = new Color(.18f, .21f, .2f);
+                var ground = new Material(Shader.Find("HDRP/Lit")); ground.SetColor("_BaseColor", new Color(.18f, .21f, .2f));
+                UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(ground);
                 AssetDatabase.CreateAsset(ground, Root + "/Materials/M_BenchmarkGround.mat");
                 Primitive("FlatAsphalt_Straight100m", new Vector3(0, -.15f, 45), new Vector3(24, .3f, 130), ground);
                 Primitive("BrakingZone", new Vector3(0, .005f, 35), new Vector3(8, .01f, .1f), ground);

@@ -139,12 +139,12 @@ namespace LastSignal.Editor
         {
             var existing = AssetDatabase.LoadAssetAtPath<Material>(FrontMaterialPath);
             if (existing) return existing;
-            var shader = Shader.Find("Universal Render Pipeline/Lit");
-            if (!shader) throw new InvalidOperationException("URP Lit shader bulunamadı.");
+            var shader = Shader.Find("HDRP/Lit");
+            if (!shader) throw new InvalidOperationException("HDRP Lit shader bulunamadı.");
             var material = new Material(shader) { name = "MRPoly_FrontLens", renderQueue = 3000 };
-            material.SetFloat("_Surface", 1);
-            material.SetFloat("_Blend", 0);
-            material.SetFloat("_BlendModePreserveSpecular", 0);
+            material.SetFloat("_SurfaceType", 1);
+            material.SetFloat("_BlendMode", 0);
+            material.SetFloat("_EnableBlendModePreserveSpecularLighting", 0);
             material.SetFloat("_Metallic", 0);
             material.SetFloat("_Smoothness", .85f);
             material.SetFloat("_ZWrite", 0);
@@ -158,6 +158,7 @@ namespace LastSignal.Editor
             material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
             material.SetShaderPassEnabled("ShadowCaster", false);
             material.SetShaderPassEnabled("DepthOnly", false);
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(material);
             AssetDatabase.CreateAsset(material, FrontMaterialPath);
             return material;
         }

@@ -61,3 +61,49 @@ Regardless of whether URP or HDRP is active, the following runtime invariants ar
   1. We have a **heavily dirty working tree** (42 modified files, 52 untracked paths including S003/S004 physical tree chopping and VisualSlice Refinement 05b).
   2. Only **6 Runtime C# scripts**, **6 Editor C# scripts**, and **11 custom shaders** in `Assets/LastSignal/` depend on URP.
   3. By executing **Option C's pipeline abstraction + checkpointing first**, and then executing **Controlled HDRP Migration (Phase E)** on the project with parallel project-owned HDRP material/shader derivatives (preserving URP assets intact for instant rollback), we achieve HDRP's volumetric fog, god-rays, decals, and foliage transmission **without** risking a single line of S003/S004 tree physics or FirstTownCore gameplay state.
+
+---
+
+## 5. Gate 2B Deliverable B — Dual Pipeline Compatibility Report (B1 & B2 Verification)
+
+### 5.1. Direct Inspection of Local Unity 6000.5.0f1 Built-In HDRP Package
+Read-only inspection of `/Applications/Unity/Hub/Editor/6000.5.0f1/Unity.app/Contents/Resources/PackageManager/BuiltInPackages/` and `Library/PackageCache/` confirmed the following exact package and assembly contracts:
+
+| Package / Assembly Dimension | Verified Local Specification (`Unity 6000.5.0f1`) | Coexistence & Compatibility Status |
+|---|---|---|
+| **Built-In HDRP Package Path** | `/Applications/Unity/Hub/Editor/6000.5.0f1/Unity.app/Contents/Resources/PackageManager/BuiltInPackages/com.unity.render-pipelines.high-definition` | `CONFIRMED` (`version: "17.5.0"`, `unity: "6000.5"`) |
+| **Built-In HDRP Config Path** | `/Applications/Unity/Hub/Editor/6000.5.0f1/Unity.app/Contents/Resources/PackageManager/BuiltInPackages/com.unity.render-pipelines.high-definition-config` | `CONFIRMED` (`version: "17.5.0"`, `unity: "6000.5"`) |
+| **Shared SRP Dependencies** | `com.unity.render-pipelines.core: 17.5.0` and `com.unity.shadergraph: 17.5.0` are **already resolved** in `Library/PackageCache` (`com.unity.render-pipelines.core@f43b729f1f6e`). HDRP additionally pulls built-in `com.unity.visualeffectgraph: 17.5.0` and `com.unity.render-pipelines.high-definition-config: 17.5.0`. | `CONFIRMED` (Zero version conflict with `com.unity.render-pipelines.universal: 17.5.0`) |
+| **HDRP Runtime Assembly Name** | `Unity.RenderPipelines.HighDefinition.Runtime` (`Runtime/Unity.RenderPipelines.HighDefinition.Runtime.asmdef`, `autoReferenced: true`) | `CONFIRMED` |
+| **HDRP Editor Assembly Name** | `Unity.RenderPipelines.HighDefinition.Editor` (`Editor/Unity.RenderPipelines.HighDefinition.Editor.asmdef`) | `CONFIRMED` |
+| **Verified HDRP 17.5.0 C# APIs in `RenderPipelineAdapter.cs`** | Inspected in built-in package source:<br>• `HDAdditionalCameraData.AntialiasingMode.SubpixelMorphologicalAntiAliasing`<br>• `HDAdditionalCameraData.SMAAQualityLevel.Medium`<br>• `HDAdditionalCameraData.volumeLayerMask`<br>• `HDAdditionalCameraData.customRenderingSettings`, `renderingPathCustomFrameSettingsOverrideMask.mask[(uint)FrameSettingsField.Postprocess]`, `renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.Postprocess, false)`<br>• `Tonemapping` (`TonemappingMode.ACES`), `ColorAdjustments` (`postExposure`, `contrast`, `saturation`), `Bloom` (`intensity`, `threshold`, `scatter`), `Vignette` (`intensity`, `smoothness`) | `CONFIRMED` (100% signature match against Unity 6000.5.0f1 HDRP 17.5.0 source) |
+
+### 5.2. Separation of Conditional Compilation vs. Runtime Pipeline Selection (Objective B2)
+In `Assets/LastSignal/Scripts/Runtime/Rendering/RenderPipelineAdapter.cs`, compile-time symbols (`USING_URP`, `USING_HDRP`) and runtime pipeline dispatch (`IsHdrpActive` / `UseHdrpPath`) are strictly separated:
+
+| Dependency / Runtime State | `USING_URP` | `USING_HDRP` | `UseHdrpPath` | Resulting Adapter Execution Path |
+|---|---|---|---|---|
+| **1. URP-Only Installed (Current Gate 2A)** | `true` | `false` | `false` | Compiles only URP types; executes URP presentation path. |
+| **2. Both Installed · URP Active in `GraphicsSettings`** | `true` | `true` | `false` | Compiles both via type aliases (`UrpTonemapping` vs. `HdrpTonemapping`); `UseHdrpPath` is `false`, so 100% of URP presentation behavior runs with zero duplicate volume/camera writes. |
+| **3. Both Installed · HDRP Active in Stage/Quality** | `true` | `true` | `true` | Compiles both; `UseHdrpPath` is `true`, executing HDRP camera/volume/shader paths and returning before any URP fallback. |
+| **4. HDRP-Only Installed (Future Post-Migration)** | `false` | `true` | `true` | `#if USING_HDRP && !USING_URP` forces `UseHdrpPath = true`; compiles and runs without any URP assembly dependency. |
+
+> **Critical Assembly Reference Rule:** Adding `versionDefines` (`USING_HDRP`) does **not** automatically add an assembly reference when `"overrideReferences": false` with explicit `"references"` is used in `.asmdef`. Therefore, `"Unity.RenderPipelines.HighDefinition.Runtime"` is added to `"references"` in `LastSignal.Runtime.asmdef` **atomically in Step 1 of Gate 2B** at the exact same time `"com.unity.render-pipelines.high-definition": "17.5.0"` is added to `Packages/manifest.json` (and never before, so Gate 2A URP-only compilation has zero missing-assembly errors).
+
+---
+
+## 6. Gate 2B Deliverable D — Project-Owned HDRP Settings Specification
+
+When Gate 2B is approved and package resolution succeeds, project-owned HDRP configuration assets will be created under `Assets/LastSignal/Settings/Rendering/HDRP/` **without** assigning them to `GraphicsSettings.asset` or `QualitySettings.asset` (`HDRP_GLOBAL_ACTIVATION_NOT_APPROVED`):
+
+| Setting Category | Target Asset / Field (`PC_HDRPAsset.asset`) | Configured Value | Rationale |
+|---|---|---|---|
+| **Asset Paths** | `Assets/LastSignal/Settings/Rendering/HDRP/PC_HDRPAsset.asset`<br>`Assets/LastSignal/Settings/Rendering/HDRP/HDRenderPipelineGlobalSettings.asset`<br>`Assets/LastSignal/Settings/Rendering/HDRP/DefaultHDRPVolumeProfile.asset` | Project-owned assets created via Unity HDRP Editor API | Isolates all HDRP configuration from `Assets/LastSignal/Settings/Rendering/PC_RPAsset.asset` (URP). |
+| **Lit Shader Mode** | `currentPlatformRenderPipelineSettings.supportedLitShaderMode` | `Both` (or `ForwardOnly` during initial parity test) | Supports deferred decals/lighting while allowing forward foliage transmission and MSAA comparison. |
+| **SRP Batcher** | `useSRPBatcher` | `true` | Mandatory for CPU render-thread batching efficiency. |
+| **Volumetrics** | `supportVolumetrics` / `increaseResolutionOfVolumetrics` | `true` / `false` (Medium froxel budget) | Enables volumetric fog and golden-hour light shafts through forest canopy without 4K froxel cost. |
+| **Volumetric Clouds** | `supportVolumetricClouds` | `true` (Available in FrameSettings; disabled on secondary cameras) | Available for overcast/storm validation alongside `TownSky` panorama fallback. |
+| **Decals** | `supportDecals` / `supportDecalLayers` | `true` / `false` (`maxDecalDistance = 50m`) | Enables asphalt cracks, road shoulder transitions, moss, and blood/chop decals. |
+| **Subsurface Scattering & Transmission** | `supportSubsurfaceScattering` | `true` (Thin-object transmission for foliage) | Essential for backlit pine needles and fern fronds. |
+| **Dynamic Shadows** | Directional: 4 cascades, `60m` max distance<br>Punctual: bounded to match `TownAtmosphere` (`localLightBudget = 12`, max `2` shadowed within `30m`) | Controlled shadow atlas (`2048–4096`) | Prevents shadow-map VRAM and GPU frame-time blowups at night/rain. |
+| **Deliberately Disabled Features** | `supportRayTracing = false`<br>`supportSSGI = false`<br>`supportWater = false`<br>`supportMotionVectors` (camera/object only where required) | **DISABLED** | Hardware Ray Tracing is unsupported on macOS Apple Silicon dev host and exceeds our 16.67 ms budget; SSGI and Water are unnecessary for initial forest slice validation. |

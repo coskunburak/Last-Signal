@@ -58,13 +58,25 @@ namespace LastSignal.Tests
             Assert.That(float.IsFinite(probe.Residual), Is.True);
             if (neutral) Assert.That(probe.Residual, Is.LessThan(.02f), "A clamped contact alone is not a reachable authored pose.");
         }
-        [UnityTest] public IEnumerator PistolHipAdsAndShotStayRightHandOnly()
+        void PistolSupportContact()
         {
-            yield return Pistol(); Contact(); Assert.That(probe.Support, Is.Zero); Assert.That(probe.Reload, Is.Zero);
+            var profile = probe.World.ActiveProfile;
+            Assert.That(profile, Is.Not.Null);
+            Assert.That(probe.Support, Is.EqualTo(profile.WorldTwoHandedPistol ? profile.HandWeight : 0).Within(.01f));
+            if (profile.WorldTwoHandedPistol)
+            {
+                Assert.That(profile.ValidWorldPistolSupport, Is.True);
+                Assert.That(probe.WorldSecondaryError, Is.LessThan(.02f));
+                Assert.That(probe.WorldSecondaryResidual, Is.LessThan(.02f));
+            }
+        }
+        [UnityTest] public IEnumerator PistolHipAdsAndShotKeepAuthoredHandContacts()
+        {
+            yield return Pistol(); Contact(); PistolSupportContact(); Assert.That(probe.Reload, Is.Zero);
             InputFixtureIsolation.QueueButton(Mouse.current.rightButton, true);
             yield return new WaitForSeconds(.5f); yield return Sample(); Contact();
             Assert.That(combat.ActiveWeapon.RuntimeState.AimAmount, Is.GreaterThan(.99f));
-            Assert.That(probe.Support, Is.Zero); Assert.That(probe.Reload, Is.Zero);
+            PistolSupportContact(); Assert.That(probe.Reload, Is.Zero);
             var view = player.GetComponent<FirstPersonLook>().View.transform;
             var sight = view.InverseTransformPoint(probe.Sight);
             Assert.That(new Vector2(sight.x, sight.y).magnitude, Is.LessThan(.01f));
@@ -72,7 +84,7 @@ namespace LastSignal.Tests
             combat.ActiveWeapon.OnFirePressed(); combat.ActiveWeapon.OnFireReleased();
             yield return Sample(); Contact(false);
             Assert.That(combat.ActiveWeapon.RuntimeState.CurrentMagazine, Is.EqualTo(rounds - 1));
-            Assert.That(probe.Support, Is.Zero); Assert.That(probe.Reload, Is.Zero);
+            PistolSupportContact(); Assert.That(probe.Reload, Is.Zero);
         }
         [UnityTest] public IEnumerator ReloadInterruptionSwitchPauseAndEnableRestoreContacts()
         {
@@ -84,7 +96,7 @@ namespace LastSignal.Tests
             Assert.That(combat.SelectMeleeWeapon(MeleeWeaponDefinition.BladeId), Is.True);
             yield return null; Assert.That(probe.Fps.ReloadAssist, Is.Zero);
             Assert.That(combat.SelectFirearm("weapon.pistol"), Is.True);
-            yield return new WaitForSeconds(.7f); yield return Sample(); Contact(); Assert.That(probe.Support, Is.Zero);
+            yield return new WaitForSeconds(.7f); yield return Sample(); Contact(); PistolSupportContact();
             input.SetGameplay(false); Time.timeScale = 0;
             yield return Sample(); var palm = probe.Palm;
             for (int i = 0; i < 5; i++) yield return Sample();
@@ -123,7 +135,7 @@ namespace LastSignal.Tests
             input = player.GetComponent<PlayerInputReader>(); input.SetGameplay(true);
             combat = player.GetComponent<PlayerCombatController>();
             probe = player.AddComponent<WeaponGripProbe>(); probe.World = player.GetComponentInChildren<CharacterWeaponRig>();
-            yield return Pistol(); Contact(); Assert.That(probe.Reload, Is.Zero); Assert.That(probe.Support, Is.Zero);
+            yield return Pistol(); Contact(); Assert.That(probe.Reload, Is.Zero); PistolSupportContact();
         }
         [UnityTest] public IEnumerator CrouchSprintSlidePitchAndRapidSwitchReleaseFinalPoseOnDeath()
         {

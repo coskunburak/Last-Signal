@@ -69,7 +69,7 @@ namespace LastSignal.Editor.FirstTown
             art.Save(data, FirstTownAuthoring.Data + "Terrain.asset");
             var terrain = Terrain.CreateTerrainGameObject(data); terrain.name = "500 x 500 m core"; terrain.transform.SetParent(land, false);
             terrain.transform.localPosition = new Vector3(-250,-10,-250);
-            var terrainMaterial = new Material(Shader.Find("Universal Render Pipeline/Terrain/Lit")) { name = "FirstTown Terrain" };
+            var terrainMaterial = new Material(Shader.Find("HDRP/TerrainLit")) { name = "FirstTown Terrain" };
             art.Save(terrainMaterial, FirstTownAssets.Root + "/Materials/Terrain.mat"); terrain.GetComponent<Terrain>().materialTemplate = terrainMaterial;
             terrain.GetComponent<Terrain>().drawInstanced = true;
             var water = new Mesh { name = "FirstTown creek ribbon" };

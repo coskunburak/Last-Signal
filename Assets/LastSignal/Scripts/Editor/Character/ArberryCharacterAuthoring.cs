@@ -115,11 +115,11 @@ namespace LastSignal.Editor
             importer.SaveAndReimport();return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
         }
         static Texture2D Copy(string relative,string name,bool color,bool normal=false,int size=2048) => SaveTexture(Read(relative,size),name,color,normal);
-        public static Color32 PackOrm(Color32 source) => new Color32(source.b,source.r,0,(byte)(255-source.g));
+        public static Color32 PackOrm(Color32 source) => new Color32(source.b,source.r,255,(byte)(255-source.g));
         static void Packed(Material mat,string relative,string name,int size)
         {
             var raw=Read(relative,size);var px=raw.GetPixels32();
-            // Source OcclusionRoughnessMetallic: R occlusion, G roughness, B metal. URP: R metal, A smoothness; G occlusion.
+            // Source OcclusionRoughnessMetallic: R occlusion, G roughness, B metal. HDRP: R metal, G occlusion, B detail mask, A smoothness.
             var sum=new double[3];var min=new byte[]{255,255,255};var max=new byte[3];
             foreach(var p in px) {
                 sum[0]+=p.r/255.0;sum[1]+=p.g/255.0;sum[2]+=p.b/255.0;
@@ -129,23 +129,28 @@ namespace LastSignal.Editor
             File.AppendAllText(Docs+"/texture-channel-diagnostics.txt",relative+" RGB mean="+string.Join(",",sum.Select(v=>(v/px.Length).ToString("F4")))+" min="+string.Join(",",min)+" max="+string.Join(",",max)+"\n");
             for(int i=0;i<px.Length;i++) px[i]=PackOrm(px[i]);
             raw.SetPixels32(px);raw.Apply();var map=SaveTexture(raw,name+"_MetalSmoothAO",false,false,true);
-            mat.SetTexture("_MetallicGlossMap",map);mat.SetTexture("_OcclusionMap",map);mat.SetFloat("_Smoothness",1);mat.SetFloat("_Metallic",1);
-            mat.EnableKeyword("_METALLICSPECGLOSSMAP");mat.EnableKeyword("_OCCLUSIONMAP");
+            Rendering.HdrpMaterialMaskUtility.Apply(mat,map,true,true,1,1,1,true,Vector2.one,Vector2.zero);
         }
         static void Material(string name,string albedo,string normal,string orm=null,string opacity=null,string ao=null,int size=2048)
         {
             string path=Root+"/Materials/"+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);
-            if(!m){m=new Material(Shader.Find("Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(m,path);}
+            if(!m){m=new Material(Shader.Find("HDRP/Lit"));AssetDatabase.CreateAsset(m,path);}
+            m.shader=Shader.Find("HDRP/Lit");
             var color=Read(albedo,size);
             if(opacity!=null){var mask=Read(opacity,size);var c=color.GetPixels32();var a=mask.GetPixels32();if(c.Length!=a.Length)throw new InvalidOperationException("Opacity dimensions differ");for(int i=0;i<c.Length;i++)c[i].a=a[i].r;color.SetPixels32(c);color.Apply();Object.DestroyImmediate(mask);}
-            m.SetTexture("_BaseMap",SaveTexture(color,name+"_Base",true,false,opacity!=null));m.SetColor("_BaseColor",Color.white);
-            m.SetTexture("_BumpMap",Copy(normal,name+"_Normal",false,true,size));m.SetFloat("_BumpScale",1);m.EnableKeyword("_NORMALMAP");
-            m.SetFloat("_Metallic",0);m.SetFloat("_Smoothness",.25f);m.SetFloat("_Surface",0);m.SetFloat("_WorkflowMode",1);
-            m.SetFloat("_SmoothnessTextureChannel",0);m.DisableKeyword("_SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A");
+            m.SetTexture("_BaseColorMap",SaveTexture(color,name+"_Base",true,false,opacity!=null));m.SetColor("_BaseColor",Color.white);
+            m.SetTexture("_NormalMap",Copy(normal,name+"_Normal",false,true,size));m.SetFloat("_NormalScale",1);m.EnableKeyword("_NORMALMAP");
+            m.shader=Shader.Find("HDRP/Lit");
+            m.SetFloat("_SurfaceType",0);
+            Rendering.HdrpMaterialMaskUtility.Apply(m,null,false,false,0,.25f,1,false,Vector2.one,Vector2.zero);
             if(orm!=null)Packed(m,orm,name,size);
-            if(ao!=null){m.SetTexture("_OcclusionMap",Copy(ao,name+"_AO",false,false,size));m.EnableKeyword("_OCCLUSIONMAP");}
-            m.SetFloat("_AlphaClip",opacity!=null?1:0);m.SetFloat("_Cutoff",.45f);
+            if(ao!=null){
+                if(orm!=null)throw new InvalidOperationException("Separate AO plus ORM requires an explicit combined mask.");
+                Rendering.HdrpMaterialMaskUtility.Apply(m,Copy(ao,name+"_AO",false,false,size),false,false,0,.25f,1,true,Vector2.one,Vector2.zero);
+            }
+            m.SetFloat("_AlphaCutoffEnable",opacity!=null?1:0);m.SetFloat("_AlphaCutoff",.45f);
             if(opacity!=null){m.EnableKeyword("_ALPHATEST_ON");m.SetOverrideTag("RenderType","TransparentCutout");m.renderQueue=2450;m.SetFloat("_Cull",2);}
+            UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(m);
             EditorUtility.SetDirty(m);AssetDatabase.SaveAssetIfDirty(m);
         }
         [MenuItem("Last Signal/Character/Arberry/3 Reconstruct materials locally")]

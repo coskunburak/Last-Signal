@@ -122,7 +122,8 @@ namespace LastSignal.Editor
         }
         // Local authoring only: fit a planar three-segment route around the selected rigid frame.
         // This writes bind-relative poses; no runtime collision query, scaling or bone stretching.
-        static void FitFingerRoutes(Transform[] fingers,Vector3[] tips,Quaternion[] rest,GameObject visual,PistolFingerPose pose)
+        internal static void FitFingerRoutes(Transform[] fingers,Vector3[] tips,Quaternion[] rest,GameObject visual,PistolFingerPose pose,
+            bool allowPlaneTilt=false,float[] selectedPlaneTilts=null)
         {
             var frame=visual.transform.Find("Frame");
             if(!frame)return; // Legacy non-variant pistol retains its separate model contract.
@@ -131,23 +132,23 @@ namespace LastSignal.Editor
             var triangles=mesh.triangles;
             for(int finger=2;finger<5;finger++) {
                 int start=finger*3;Vector3 origin=visual.transform.InverseTransformPoint(fingers[start].position);
-                var sections=new Dictionary<int,float[]>();
-                float[] Section(float z) {
-                    int key=Mathf.RoundToInt(z/.00025f);
+                var sections=new Dictionary<Vector2Int,float[]>();
+                float[] Section(Vector3 point) {
+                    var key=new Vector2Int(allowPlaneTilt?Mathf.RoundToInt((point.y-origin.y)/.00025f):0,Mathf.RoundToInt(point.z/.00025f));
                     if(sections.TryGetValue(key,out var cached))return cached;
-                    float sampleZ=key*.00025f;var xs=new List<float>();
+                    float sampleY=origin.y+key.x*.00025f,sampleZ=key.y*.00025f;var xs=new List<float>();
                     for(int k=0;k<triangles.Length;k+=3) {
                         var a=vertices[triangles[k]];var b=vertices[triangles[k+1]];var c=vertices[triangles[k+2]];
                         float by=b.y-a.y,bz=b.z-a.z,cy=c.y-a.y,cz=c.z-a.z,det=by*cz-bz*cy;
                         if(Mathf.Abs(det)<1e-10f)continue;
-                        float py=origin.y-a.y,pz=sampleZ-a.z,u=(py*cz-pz*cy)/det,v=(by*pz-bz*py)/det;
+                        float py=sampleY-a.y,pz=sampleZ-a.z,u=(py*cz-pz*cy)/det,v=(by*pz-bz*py)/det;
                         if(u>=0&&v>=0&&u+v<=1)xs.Add(a.x+u*(b.x-a.x)+v*(c.x-a.x));
                     }
                     xs.Sort();return sections[key]=xs.ToArray();
                 }
                 bool Clear(Vector3 a,Vector3 b) {
                     for(int k=1;k<=20;k++) {
-                        var p=Vector3.Lerp(a,b,k/20f);var xs=Section(p.z);
+                        var p=Vector3.Lerp(a,b,k/20f);var xs=Section(p);
                         if(xs.Length<2||(xs.Length&1)!=0)continue;
                         for(int j=0;j<xs.Length;j+=2)if(p.x>xs[j]-.001f&&p.x<xs[j+1]+.001f)return false;
                     }
@@ -155,21 +156,31 @@ namespace LastSignal.Editor
                 }
                 var lengths=new float[3];
                 for(int j=0;j<3;j++)lengths[j]=Vector3.Distance(visual.transform.InverseTransformPoint(fingers[start+j].TransformPoint(tips[start+j])),visual.transform.InverseTransformPoint(fingers[start+j].position));
-                Vector3 Direction(float angle)=>new Vector3(-Mathf.Cos(angle*Mathf.Deg2Rad),0,Mathf.Sin(angle*Mathf.Deg2Rad));
+                float planeTilt=0;
+                Vector3 Direction(float angle)=>new Vector3(-Mathf.Cos(angle*Mathf.Deg2Rad)*Mathf.Cos(planeTilt*Mathf.Deg2Rad),
+                    Mathf.Cos(angle*Mathf.Deg2Rad)*Mathf.Sin(planeTilt*Mathf.Deg2Rad),Mathf.Sin(angle*Mathf.Deg2Rad));
                 float score=float.PositiveInfinity;Vector3 best=Vector3.zero;
-                for(int a=10;a<=85;a+=5) {
-                    var p1=origin+Direction(a)*lengths[0];if(!Clear(origin,p1))continue;
-                    for(int b=-85;b<=30;b+=5) {
-                        var p2=p1+Direction(b)*lengths[1];if(!Clear(p1,p2))continue;
-                        for(int c=-120;c<=-40;c+=5) {
-                            var p3=p2+Direction(c)*lengths[2];var section=Section(p3.z);
-                            if(section.Length<2||(section.Length&1)!=0||p3.x<section[0]-.014f||p3.x>section[0]-.002f||!Clear(p2,p3))continue;
-                            float cost=Mathf.Abs(p3.x-(section[0]-.005f))*1000+Mathf.Abs(a-35)*.03f+Mathf.Abs(b+35)*.03f+Mathf.Abs(c+85)*.02f;
-                            if(cost<score){score=cost;best=new Vector3(a,b,c);}
+                // FPS little knuckles can lie below the frame's heel. Try the original plane first,
+                // then the smallest bounded upward tilt; rotate joints only, never translate/stretch.
+                // World authoring retains the original fixed-height search by default.
+                for(int tilt=0;tilt<=(allowPlaneTilt?15:0);tilt+=5) {
+                    planeTilt=tilt;
+                    for(int a=10;a<=85;a+=5) {
+                        var p1=origin+Direction(a)*lengths[0];if(!Clear(origin,p1))continue;
+                        for(int b=-85;b<=30;b+=5) {
+                            var p2=p1+Direction(b)*lengths[1];if(!Clear(p1,p2))continue;
+                            for(int c=-120;c<=-40;c+=5) {
+                                var p3=p2+Direction(c)*lengths[2];var section=Section(p3);
+                                if(section.Length<2||(section.Length&1)!=0||p3.x<section[0]-.014f||p3.x>section[0]-.002f||!Clear(p2,p3))continue;
+                                float cost=Mathf.Abs(p3.x-(section[0]-.005f))*1000+Mathf.Abs(a-35)*.03f+Mathf.Abs(b+35)*.03f+Mathf.Abs(c+85)*.02f;
+                                if(cost<score){score=cost;best=new Vector3(a,b,c);}
+                            }
                         }
                     }
+                    if(float.IsFinite(score))break;
                 }
                 if(!float.IsFinite(score))throw new InvalidOperationException("No finger route around "+pose.Rig+" finger "+finger+"; retain previous asset and inspect contact authoring.");
+                if(selectedPlaneTilts!=null)selectedPlaneTilts[finger]=planeTilt;
                 for(int j=0;j<3;j++) {
                     int index=start+j;var bone=fingers[index];
                     bone.rotation=Quaternion.FromToRotation(bone.TransformPoint(tips[index])-bone.position,visual.transform.TransformDirection(Direction(best[j])))*bone.rotation;
@@ -188,8 +199,13 @@ namespace LastSignal.Editor
                 string[] keys={"Pistol","DXT","Glock17","Custom9mm"};
                 for(int i=0;i<keys.Length;i++) {
                     var profile=AssetDatabase.LoadAssetAtPath<CharacterWeaponPoseProfile>(Root+"/Profiles/"+keys[i]+".asset");
+                    // A separately calibrated FPS pose uses its own palm offset and must not be
+                    // replaced by the world-contact fit during broad character regeneration.
+                    bool dedicatedFps=profile.FpsPistolFingers && profile.FpsPistolFingers!=profile.WorldPistolFingers;
+                    if(dedicatedFps && !profile.FpsPistolFingers.Valid)
+                        throw new InvalidOperationException("Invalid dedicated FPS finger pose for "+keys[i]);
                     profile.WorldPistolFingers=Fingers(animator,profile,keys[i],i-1,palmDepth);
-                    profile.FpsPistolFingers=profile.WorldPistolFingers;
+                    if(!dedicatedFps)profile.FpsPistolFingers=profile.WorldPistolFingers;
                     EditorUtility.SetDirty(profile);AssetDatabase.SaveAssetIfDirty(profile);
                 }
             } finally {PrefabUtility.UnloadPrefabContents(body);}

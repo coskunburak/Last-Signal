@@ -58,7 +58,12 @@ namespace LastSignal.Tests
             Assert.That(probe.Active,Is.True);Assert.That(probe.FpsError,Is.LessThan(.02f));
             Assert.That(probe.WorldError,Is.LessThan(.02f));Assert.That(probe.Residual,Is.LessThan(.02f),"Do not hide an unreachable target by moving the gun.");
             Assert.That(probe.World.ActiveProfile,Is.SameAs(probe.World.ResolvePresentation(combat.ActiveWeapon.PistolVariants.Selected.Pose)));
-            Assert.That(probe.World.SupportHandWeight,Is.Zero);
+            Assert.That(probe.Support,Is.EqualTo(probe.World.ActiveProfile.WorldTwoHandedPistol ? probe.World.ActiveProfile.HandWeight : 0).Within(.01f));
+            if(probe.World.ActiveProfile.WorldTwoHandedPistol) {
+                Assert.That(probe.World.ActiveProfile.ValidWorldPistolSupport,Is.True);
+                Assert.That(probe.WorldSecondaryError,Is.LessThan(.02f));
+                Assert.That(probe.WorldSecondaryResidual,Is.LessThan(.02f));
+            }
         }
         [UnityTest] public IEnumerator DxtEquipAdsFireReloadAndLifecycle() => Exercise(PistolVisualVariant.DxtId);
         [UnityTest] public IEnumerator GlockEquipAdsFireReloadAndLifecycle() => Exercise(PistolVisualVariant.GlockId);
@@ -89,9 +94,9 @@ namespace LastSignal.Tests
             pistol.OnReloadRequested();yield return Ready(pistol);yield return Sample();
             Assert.That(state.TotalAmmo,Is.EqualTo(total));Assert.That(probe.Reload,Is.Zero);Contacts();
             player.SetActive(false);yield return null;Assert.That(probe.Fps.HasPose,Is.False);
-            player.SetActive(true);input.SetGameplay(true);pistol.RequestEquip();yield return Ready(pistol);yield return Sample();Contacts();
+            player.SetActive(true);input.SetGameplay(true);pistol.RequestEquip();yield return Ready(pistol);yield return new WaitForSeconds(probe.World.ActiveProfile.PoseBlendSeconds + .1f);yield return Sample();Contacts();
             combat.SetVehicleHolstered(true);yield return Sample();Assert.That(probe.Fps.HasPose,Is.False);
-            combat.SetVehicleHolstered(false);yield return Ready(pistol);yield return Sample();Contacts();
+            combat.SetVehicleHolstered(false);yield return Ready(pistol);yield return new WaitForSeconds(probe.World.ActiveProfile.PoseBlendSeconds + .1f);yield return Sample();Contacts();
             player.GetComponent<PlayerHealth>().TakeDamage(new DamageInfo{Amount=10000,Category=DamageCategory.Melee});
             yield return Sample();Assert.That(probe.Fps.HasPose,Is.False);Assert.That(probe.World.WeaponVisual.activeSelf,Is.False);
             Object.Destroy(player);yield return null;Spawn();yield return null;
@@ -159,7 +164,12 @@ namespace LastSignal.Tests
                     Assert.That(motor.IsSprinting,Is.True);Assert.That(probe.FpsError,Is.LessThan(.02f));
                     Assert.That(motor.TryStartSlide(),Is.True);yield return new WaitForSeconds(.15f);yield return Sample();
                     Assert.That(probe.FpsError,Is.LessThan(.02f));Assert.That(probe.WorldError,Is.LessThan(.02f));
-                    Assert.That(probe.World.SupportHandWeight,Is.Zero);
+                    Assert.That(probe.Support,Is.EqualTo(probe.World.ActiveProfile.WorldTwoHandedPistol ? probe.World.ActiveProfile.HandWeight : 0).Within(.01f));
+            if(probe.World.ActiveProfile.WorldTwoHandedPistol) {
+                Assert.That(probe.World.ActiveProfile.ValidWorldPistolSupport,Is.True);
+                Assert.That(probe.WorldSecondaryError,Is.LessThan(.02f));
+                Assert.That(probe.WorldSecondaryResidual,Is.LessThan(.02f));
+            }
                     InputSystem.QueueStateEvent(Keyboard.current,new UnityEngine.InputSystem.LowLevel.KeyboardState());
                     yield return new WaitForSeconds(1.2f);
                     player.GetComponent<PlayerStance>().TrySetCrouching(false);

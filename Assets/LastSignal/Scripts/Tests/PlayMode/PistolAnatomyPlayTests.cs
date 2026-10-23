@@ -80,10 +80,29 @@ namespace LastSignal.Tests
                 }
                 if(i%3==2)
                 {
-                    Assert.That(FrameSection(b,out float left,out _),Is.True,"Distal finger must overlap actual handle geometry.");
+                    Assert.That(FrameSection(b,out float left,out _),Is.True,
+                        $"Distal finger must overlap actual handle geometry: variant={combat.ActiveWeapon.PistolVariants.SelectedId}, profile={probe.Fps.Profile.name}, finger={i}, endpoint={b:F5}. " + FingerContactContext(i));
                     Assert.That(b.x,Is.InRange(left-.016f,left+.008f),"Finger must wrap the selected model's opposite side (bounded pad allowance).");
                 }
             }
+        }
+        string FingerContactContext(int index)
+        {
+            var grip = probe.Fps;
+            var frame = grip.Visual.Find("Frame");
+            var model = grip.Sockets.PrimaryGrip.parent;
+            var pose = grip.Profile.FpsPistolFingers;
+            var details = new System.Text.StringBuilder();
+            details.Append($"profileAsset={UnityEditor.AssetDatabase.GetAssetPath(grip.Profile)}; " +
+                $"fingerPose={UnityEditor.AssetDatabase.GetAssetPath(pose)}; rig={pose.Rig}; " +
+                $"bone={grip.RightFingers[index].name}; terminalChildren={grip.RightFingers[index].childCount}; " +
+                $"modelIsVisual={model == grip.Visual}; frameParentIsVisual={frame.parent == grip.Visual}; " +
+                $"frameLocalPosition={frame.localPosition:F5}; frameLocalRotation={frame.localRotation.eulerAngles:F3}; " +
+                $"frameLocalScale={frame.localScale:F5}; modelWorldScale={model.lossyScale:F5}; " +
+                $"state={combat.ActiveWeapon.RuntimeState.State}; ");
+            for (int i = 6; i < 15; i++)
+                details.Append($"segment[{i}]={probe.PistolFingerSegments[i * 2]:F5}->{probe.PistolFingerSegments[i * 2 + 1]:F5}; ");
+            return details.ToString();
         }
         [UnityTest] public IEnumerator PistolFingerWrapSurvivesAdsFireAndReloadCommit()
         {
@@ -119,7 +138,7 @@ namespace LastSignal.Tests
                         }
                     }
                     Assert.That(extracted&&committed,Is.True);yield return Sample();
-                    Assert.That(probe.Reload,Is.Zero);Assert.That(probe.Support,Is.Zero);PistolFingerContact();
+                    Assert.That(probe.Reload,Is.Zero);PistolSupportContact();PistolFingerContact();
                 }
                 finally
                 {

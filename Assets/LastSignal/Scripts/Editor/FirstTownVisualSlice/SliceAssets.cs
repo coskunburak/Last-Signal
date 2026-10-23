@@ -55,21 +55,13 @@ namespace LastSignal.Editor.FirstTownVisualSlice
         Material Normalize(Material m)
         {
             if(!m)throw new InvalidOperationException("Missing material in selected source.");
-            if(m.shader && (m.shader.name.StartsWith("Universal Render Pipeline/") || m.shader.name.StartsWith("LastSignal/")))return m;
+            if(m.shader && m.GetTag("RenderPipeline",false)=="HDRenderPipeline")return m;
             if(normalized.TryGetValue(m,out var existing))return existing;
-            var result=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=m.name+" Slice",enableInstancing=true};
-            foreach(var pair in new[]{new[]{"_MainTex","_BaseMap"},new[]{"_BumpMap","_BumpMap"},new[]{"_MetallicGlossMap","_MetallicGlossMap"},new[]{"_OcclusionMap","_OcclusionMap"}})
-                if(m.HasProperty(pair[0]) && m.GetTexture(pair[0])){result.SetTexture(pair[1],m.GetTexture(pair[0]));result.SetTextureScale(pair[1],m.GetTextureScale(pair[0]));result.SetTextureOffset(pair[1],m.GetTextureOffset(pair[0]));}
-            result.SetColor("_BaseColor",m.HasProperty("_Color")?m.GetColor("_Color"):Color.white);
-            result.SetFloat("_Metallic",m.HasProperty("_Metallic")?m.GetFloat("_Metallic"):0);
-            result.SetFloat("_Smoothness",m.HasProperty("_Glossiness")?Mathf.Min(.4f,m.GetFloat("_Glossiness")):.18f);
-            if(result.GetTexture("_BumpMap"))result.EnableKeyword("_NORMALMAP");
-            if(result.GetTexture("_MetallicGlossMap"))result.EnableKeyword("_METALLICSPECGLOSSMAP");
-            if(result.GetTexture("_OcclusionMap"))result.EnableKeyword("_OCCLUSIONMAP");
-            if(m.IsKeywordEnabled("_ALPHATEST_ON")){result.SetFloat("_AlphaClip",1);result.SetFloat("_Cutoff",m.HasProperty("_Cutoff")?m.GetFloat("_Cutoff"):.5f);result.EnableKeyword("_ALPHATEST_ON");result.renderQueue=2450;}
             AssetDatabase.TryGetGUIDAndLocalFileIdentifier(m,out string guid,out long id);
-            AssetDatabase.CreateAsset(result,folder+"/Source_"+guid+"_"+id+".mat");normalized.Add(m,result);return result;
+            var result=LastSignal.Editor.Rendering.HdrpMaterialMigrationUtility.CreateHdrpLitCopy(m,folder+"/Source_"+guid+"_"+id+".mat");
+            normalized.Add(m,result);return result;
         }
+
         internal Material Mat(string name)
         {
             if(palette.TryGetValue(name,out var result))return result;

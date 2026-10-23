@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LastSignal.Atmosphere;
+using LastSignal.Rendering;
 using LastSignal.VisualSlice;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using Object=UnityEngine.Object;
 
@@ -96,7 +96,7 @@ namespace LastSignal.Editor.FirstTownVisualSlice
                 camera.fieldOfView=pose.fieldOfView;camera.orthographic=pose.orthographic;camera.orthographicSize=pose.orthographicSize;
                 camera.aspect=16f/9;camera.nearClipPlane=.08f;camera.farClipPlane=700;camera.allowHDR=true;
                 camera.cullingMask=~((1<<5)|(1<<30));camera.clearFlags=CameraClearFlags.Skybox;
-                var data=camera.GetUniversalAdditionalCameraData();data.renderPostProcessing=true;data.antialiasing=AntialiasingMode.SubpixelMorphologicalAntiAliasing;data.antialiasingQuality=AntialiasingQuality.Medium;
+                RenderPipelineAdapter.EnableGameplayPostAndAA(camera);
                 d.SampleLighting(hour/24,rain,cloud[conditionIndex]);sky=new Material(d.sky){hideFlags=HideFlags.HideAndDontSave};RenderSettings.skybox=sky;
                 if(originalVolume)
                 {
@@ -134,9 +134,7 @@ namespace LastSignal.Editor.FirstTownVisualSlice
                 if(rt.sRGB)throw new InvalidOperationException("Expected a linear readback target; refusing double-encoded PNG output.");
                 camera.targetTexture=rt;
                 // Unity 6 URP's supported explicit render-request path, only on the user's button press.
-                var request=new UniversalRenderPipeline.SingleCameraRequest{destination=rt};
-                if(!RenderPipeline.SupportsRenderRequest(camera,request))throw new InvalidOperationException("Current renderer cannot service a single-camera capture. Use the fixed camera in Game View manually.");
-                RenderPipeline.SubmitRenderRequest(camera,request);
+                RenderPipelineAdapter.RenderSingleCameraToTarget(camera,rt);
                 var previous=RenderTexture.active;
                 try
                 {
@@ -175,7 +173,7 @@ namespace LastSignal.Editor.FirstTownVisualSlice
                     .Select(f=>f.sharedMesh).Distinct()
                     .Where(m=>AssetDatabase.GetAssetPath(m).StartsWith(SliceAuthoring.Root+"/Refinement05/",StringComparison.Ordinal))
                     .Select(m=>new MeshRecord{asset=AssetDatabase.GetAssetPath(m),assetHash=SliceAuthoring.Hash(AssetDatabase.GetAssetPath(m)),loadedBounds=m.bounds,vertices=m.vertexCount}).ToArray();
-                if(previewVolume && previewVolume.TryGet<ColorAdjustments>(out var grade))record.postExposure=grade.postExposure.value;
+                if(previewVolume && RenderPipelineAdapter.TryGetPostExposure(previewVolume,out var postExposure))record.postExposure=postExposure;
                 File.WriteAllText(stem+".json",JsonUtility.ToJson(record,true));Debug.Log("Editor comparison captured: "+stem+".png. Runtime acceptance NOT_RUN.");
             }
             finally

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LastSignal.Rendering;
 using UnityEngine;
 using UnityEditor;
 
@@ -33,8 +34,7 @@ namespace LastSignal.Art.Editor
                     {
                         if (!m) { issues.Add("MISSING_MATERIAL:" + t.name); continue; }
                         if (!m.shader || !m.shader.isSupported) issues.Add("UNSUPPORTED_SHADER:" + m.name);
-                        else if (m.GetTag("RenderPipeline", false, "") != "UniversalPipeline" &&
-                                 m.shader.name != "Universal Render Pipeline/Lit")
+                        else if (!RenderPipelineAdapter.IsSupportedPipelineMaterial(m))
                             issues.Add("NON_URP_SHADER:" + m.name);
                     }
                 }

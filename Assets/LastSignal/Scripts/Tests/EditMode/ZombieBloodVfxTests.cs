@@ -107,9 +107,9 @@ namespace LastSignal.Tests
             foreach (var w in skin.sharedMesh.boneWeights)
                 Assert.That(w.weight0 + w.weight1 + w.weight2 + w.weight3, Is.EqualTo(1).Within(.001f));
             Assert.That(skin.sharedMesh.bindposes.Length, Is.EqualTo(skin.bones.Length));
-            Assert.That(skin.sharedMaterial.shader.name, Is.EqualTo("Universal Render Pipeline/Lit"));
+            Assert.That(skin.sharedMaterial.shader.name, Is.EqualTo("HDRP/Lit"));
             Assert.That(skin.sharedMaterial.shader.isSupported, Is.True);
-            Assert.That(skin.sharedMaterial.GetTexture("_BaseMap"), Is.Not.Null);
+            Assert.That(skin.sharedMaterial.GetTexture("_BaseColorMap"), Is.Not.Null);
             Assert.That(skin.sharedMaterial.GetFloat("_Metallic"), Is.Zero);
             Assert.That(skin.sharedMaterial.GetFloat("_Smoothness"), Is.InRange(.25f, .5f));
             Assert.That(skin.receiveShadows, Is.True);

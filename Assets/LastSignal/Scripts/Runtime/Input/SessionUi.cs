@@ -16,7 +16,7 @@ namespace LastSignal
         AcceptanceHud hud;
         Inventory.UI.InventoryUI inventory;
         Shelter.ShelterStorageUI storage;
-        GameObject canvas, settings, bindingsPanel, journal;
+        GameObject canvas, settings, bindingsPanel, journal, graphicsPanel;
         Text bindingMessage, journalText;
         RectTransform cancelRebindRect;
         public bool PointerOverRebindCancel(Vector2 position) => cancelRebindRect && cancelRebindRect.gameObject.activeInHierarchy &&
@@ -53,13 +53,17 @@ namespace LastSignal
             var scaler = canvas.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080); scaler.matchWidthOrHeight = .5f;
             settings = Panel("Ayarlar", canvas.transform, new Vector2(0, 0), new Vector2(1720, 900));
-            Button("Ses", settings.transform, new Vector2(-600, 380), () => SetPage(0));
-            Button("Bakış ve görünüm", settings.transform, new Vector2(-300, 380), () => SetPage(1));
-            Button("Tuş atamaları", settings.transform, new Vector2(0, 380), () => SetPage(2));
-            Button("Öğretimi sıfırla", settings.transform, new Vector2(300, 380), () => flow.GetComponent<FirstUseGuide>()?.ResetGuide());
-            Button("Geri", settings.transform, new Vector2(600, 380), flow.CloseSettings);
+            Button("Ses", settings.transform, new Vector2(-700, 380), () => SetPage(0));
+            Button("Bakış ve görünüm", settings.transform, new Vector2(-420, 380), () => SetPage(1));
+            Button("Tuş atamaları", settings.transform, new Vector2(-140, 380), () => SetPage(2));
+            Button("Öğretimi sıfırla", settings.transform, new Vector2(420, 380), () => flow.GetComponent<FirstUseGuide>()?.ResetGuide());
+            Button("Geri", settings.transform, new Vector2(700, 380), flow.CloseSettings);
             bindingsPanel = Panel("Tuş atamaları", settings.transform, new Vector2(0, -20), new Vector2(1450, 680));
             CreateBindings();
+            Button("Grafik", settings.transform, new Vector2(140, 380), () => SetPage(3));
+            graphicsPanel = Panel("Grafik", settings.transform, new Vector2(0, -20), new Vector2(1450, 680));
+            graphicsPanel.AddComponent<RenderingQuality.GraphicsSettingsPresenter>().Initialize(RenderingQuality.GraphicsSettingsManager.Ensure());
+            graphicsPanel.SetActive(false);
             settings.SetActive(false);
             journal = Panel("Günlük", canvas.transform, Vector2.zero, new Vector2(1000, 650));
             journalText = Label(journal.transform, "", new Vector2(0, 30), new Vector2(900, 450), 24);
@@ -75,7 +79,7 @@ namespace LastSignal
             Ready = true;
         }
         void Quit() { flow.ReturnToMenu(); Application.Quit(); }
-        public void SetPage(int value) { page = Mathf.Clamp(value, 0, 2); nextRefresh = 0; lastSelected = null; }
+        public void SetPage(int value) { page = Mathf.Clamp(value, 0, 3); nextRefresh = 0; lastSelected = null; }
 
         void CreateBindings()
         {
@@ -121,6 +125,7 @@ namespace LastSignal
                 AdoptSettingsPanel(audioView.ControlsPanel);
             }
             settings.SetActive(flow.SettingsOpen); bindingsPanel.SetActive(flow.SettingsOpen && page == 2);
+            graphicsPanel.SetActive(flow.SettingsOpen && page == 3);
             journal.SetActive(flow.Screen == SessionScreen.Journal);
             if (journal.activeSelf && Time.unscaledTime >= nextJournal)
             { journalText.text = flow.GetComponent<Objectives.RelayMission>()?.Journal; nextJournal = Time.unscaledTime + .2f; }

@@ -168,13 +168,18 @@ namespace LastSignal.Tests
             var grip = weapon.GetComponent<FirstPersonWeaponGrip>();
             Assert.IsNotNull(grip, "Restored production rifle must bind its character grip.");
             Assert.IsTrue(grip.ValidAuthoring);
+            var probe = weapon.gameObject.AddComponent<WeaponGripProbe>();
+            probe.Fps = grip;
+            // Coroutine resumes before LateUpdate, after grip.Update restores the pose.
+            // Sample the completed presentation, just as the dedicated grip regressions do.
             float deadline = Time.realtimeSinceStartup + 5;
             while (weapon.RuntimeState.State != WeaponState.Ready ||
-                !grip.HasValidContact)
+                probe.Samples == 0 || !probe.ValidContact)
             {
                 Assert.Less(Time.realtimeSinceStartup, deadline, "Restored production rifle did not settle into Ready.");
                 yield return null;
             }
+            Object.Destroy(probe);
         }
     }
 }

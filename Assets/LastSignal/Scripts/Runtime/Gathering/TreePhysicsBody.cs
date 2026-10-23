@@ -268,7 +268,8 @@ namespace LastSignal.Gathering
         {
             try { FeedbackRequested?.Invoke(kind,point,gain); } catch(System.Exception e) { Debug.LogException(e,this); } // Observational only, never authorizes resources/noise.
             var clip=audioBank?audioBank.Clip(kind):null;
-            if(audioBank && audioBank.CanPlay(gameObject.scene.path) && clip && audioDirector) audioDirector.PlayTreeClip(clip,node.transform,point,gain);
+            bool essential=kind==TreeAudioEvent.JointFailure || kind==TreeAudioEvent.GroundImpact; // One-shot milestones must not lose to strike/crack tails.
+            if(audioBank && audioBank.CanPlay(gameObject.scene.path) && clip && audioDirector) audioDirector.PlayTreeClip(clip,node.transform,point,gain,essential);
         }
         public void Suspend()
         {

@@ -1,7 +1,27 @@
 # 07 — PRESERVATION & ROLLBACK PROTOCOL
 
 **Date:** 2026-10-20  
-**Status:** `CONFIRMED` · Backup Verification State: `BACKUP_NOT_VERIFIED` (External user copy not inspectable from sandbox; internal SHA-256 checkpoint mandatory).
+**Current Branch:** `s012-integrated-graybox-slice`  
+**Current HEAD Commit (Gate 2A Baseline):** `3fa3161f0d3d22f40d422fd5b404605f25088ce0` *(GitHub `main` merge commit: `0262ef1a3e43847e671821d25189dd3ba39855bf`; prior Gate 0 HEAD: `84aa7358be7b3f47517b7e083ff0734e762e210f`)*  
+**Status:** `GATE_2A_CHECKPOINT_VERIFIED` · `M0_CHECKPOINT_VERIFIED` · `ROLLBACK_MANIFESTS_ACTIVE` (`UrpPipelineRollbackState.json` & `MaterialRollbackManifest.json` recorded; `restore-urp` & `rollback-materials` ready)
+
+---
+
+## 0. Post-Push Git Reconciliation, M0 Checkpoint & Automated Rollback Tooling
+
+1. **M0 Post-Gate-2A Checkpoint (`/Users/burakcoskun/.gemini/antigravity/brain/e750ef1b-976f-4c5b-a78e-b81a3ab980db/checkpoints/m0_baseline/`):**
+   - `m0_post_gate2a_project_snapshot.tar.gz` (`SHA-256: 23e21b405549669e746662550f2864bec0b560c04442dccc54e4b5fe4152812e`) & `M0_CHECKPOINT_MANIFEST.json`: Full pre-HDRP archive of `Packages/`, `ProjectSettings/`, `Assets/Settings/`, `Assets/LastSignal/Scripts/`, `Assets/LastSignal/Shaders/`, `Assets/LastSignal/Art/FirstTownAtmosphere/`, and `Assets/LastSignal/Art/FirstTownForest/Shaders/`.
+2. **Automated Pipeline & Material Rollback (`Tools/hdrp-migration.py`):**
+   - Pipeline Rollback: `python3 Tools/hdrp-migration.py restore-urp` restores `GraphicsSettings.defaultRenderPipeline` and all `QualitySettings` custom render pipelines from `Assets/LastSignal/Settings/Rendering/HDRP/UrpPipelineRollbackState.json`.
+   - Material Rollback: `python3 Tools/hdrp-migration.py rollback-materials` restores all migrated materials (`750` converted `.mat` files) to their exact pre-migration URP shaders and texture/float/color properties from `Assets/LastSignal/Settings/Rendering/HDRP/MaterialRollbackManifest.json`.
+3. **Reconciliation of Pre-Push Dirty Working Tree Report (`41/42 Modified + 52 Untracked -> 0 Modified + 0 Untracked`):**
+   - Prior to the GitHub push, the working tree held 41/42 modified tracked files (`ProjectSettings/ProjectVersion.txt` clean/metadata-only diff) and 52 untracked paths (S003/S004 physical tree chopping, VisualSlice Refinement 05b, and the 13 `VisualRealismMigration` reports).
+   - Commit `3fa3161f0d3d22f40d422fd5b404605f25088ce0` on `s012-integrated-graybox-slice` (merged to GitHub `main` as `0262ef1a3e43847e671821d25189dd3ba39855bf`) captured 100% of those tracked/untracked project changes, leaving `git status --short --untracked-files=all` completely clean (`0` modified, `0` untracked) at Gate 2A entry.
+2. **External Gate 2A Checkpoint (`/Users/burakcoskun/.gemini/antigravity/brain/e750ef1b-976f-4c5b-a78e-b81a3ab980db/scratch/checkpoints/gate2a/`):**
+   - `gate2a_project_core_snapshot.tar.gz` (`100,932 B`, SHA-256: `a6cfc8c9ea1fbefd04f8ea4573f9d3949d22408e0b49822da8ce7282803163b5`): Full archive of `Packages/`, `ProjectSettings/`, `Assets/LastSignal/Settings/`, `Assets/LastSignal/Art/FirstTownAtmosphere/`, and all 15 pre-Adapter `.asmdef`/`.cs` files + `.meta` files.
+   - `gate2a_untracked_vendor_metas.tar.gz` (`1,510,153 B`, SHA-256: `a3954b85bdcd6ed9eea9327e4dd069c35ae19f482be78fc3093fae8dc430de1f`): Physical backup of all `11,270` git-ignored `.meta` files (`11,176` in `Assets/ThirdParty/`, `77` in `Assets/Noto_Sans/`, plus `Assets/_Recovery/` and `Assets/TestScene/`).
+   - `THIRDPARTY_AND_UNTRACKED_MANIFEST.json` & `CHECKPOINT_SHA256.txt`: Verifies all `21,515` files (`9,429,817,865` bytes) in `Assets/ThirdParty/` in-place (`tree_structural_sha256`: `03dfcb2204c1c4e6ed7f64f40b07776db7fe47e5c022810c5303021213bb59fa`, `meta_content_sha256`: `ca7a8e2265b819ffc2a195a55e8ecb49bea14953c4cb4c9ebcf9f07514c40596`) and `402` local `Evidence/` directories without duplicating 9.43 GB of binary assets.
+   - `restore_gate2a.py`: Executable verification (`--verify`) and rollback (`--restore-code`, `--restore-core`, `--restore-metas`) tool.
 
 ---
 

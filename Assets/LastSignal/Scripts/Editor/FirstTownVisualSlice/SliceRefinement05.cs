@@ -63,8 +63,8 @@ namespace LastSignal.Editor.FirstTownVisualSlice
                 if(File.Exists(path) || File.Exists(path+".meta"))throw new IOException("Partial/artist refinement asset exists; preserve and inspect: "+path);
             var metal=AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Art/S013/Production/Materials/RoofMetal.mat");
             var trim=AssetDatabase.LoadAssetAtPath<Material>("Assets/LastSignal/Art/S013/Production/Materials/Metal.mat");
-            var shader=Shader.Find("Universal Render Pipeline/Lit");
-            if(!metal || !trim || !shader)throw new InvalidOperationException("Project-owned roof materials or URP shader missing.");
+            var shader=Shader.Find("HDRP/Lit");
+            if(!metal || !trim || !shader)throw new InvalidOperationException("Project-owned roof materials or HDRP shader missing.");
             string folder=SliceAuthoring.Evidence+"/Refinement05";Directory.CreateDirectory(folder);
             string stamp=DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff");
             var report=new Report{checkpoint=folder+"/stage-before-"+stamp+".unity",sourceHashBefore=SliceAuthoring.Hash(SliceAuthoring.Source),stageHashBefore=SliceAuthoring.Hash(scene.path),vendorRoofBounds=roof,visualCanopyBounds=cover,approachPoleBefore=pole.position};
@@ -100,7 +100,7 @@ namespace LastSignal.Editor.FirstTownVisualSlice
                 var firstLens=lensMesh.CreateOwned("CanopyLensMesh",root.transform,Art+"/CanopyLens.asset",trim);
                 var lens=firstLens.GetComponent<MeshFilter>().sharedMesh;UnityEngine.Object.DestroyImmediate(firstLens);
                 var lensMat=new Material(shader){name="Station canopy warm lens",enableInstancing=true};
-                lensMat.SetColor("_BaseColor",new Color(.50f,.43f,.31f));lensMat.SetColor("_EmissionColor",new Color(1,.68f,.35f)*1.3f);lensMat.EnableKeyword("_EMISSION");
+                lensMat.SetColor("_BaseColor",new Color(.50f,.43f,.31f));lensMat.SetColor("_EmissiveColor",new Color(1,.68f,.35f)*1.3f);lensMat.SetFloat("_UseEmissiveIntensity",0);UnityEngine.Rendering.HighDefinition.HDMaterial.ValidateMaterial(lensMat);
                 AssetDatabase.CreateAsset(lensMat,Art+"/CanopyLens.mat");
                 var lamps=director.lamps.ToList();var practicals=director.lightingProfile.practicals.ToList();
                 for(int i=0;i<2;i++)

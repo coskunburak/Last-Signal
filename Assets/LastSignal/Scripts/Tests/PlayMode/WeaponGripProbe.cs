@@ -11,6 +11,9 @@ namespace LastSignal.Tests
         public float FpsError, WorldError, Residual, Support, Reload;
         public float FpsSecondaryError, FpsSecondaryResidual, WorldSecondaryError, WorldRightResidual, WorldSecondaryResidual;
         public bool Active;
+        public bool ValidContact;
+        public Vector3 PoseFrameLocalPosition;
+        public Quaternion PoseFrameLocalRotation;
         public Vector3 Palm, LeftHand, Sight, SecondaryPalm, PrimaryContact, VisualLocalPosition;
         public Quaternion VisualLocalRotation;
         public Vector3 SilhouetteViewport, PrimaryPalmViewport, SecondaryPalmViewport;
@@ -41,7 +44,10 @@ namespace LastSignal.Tests
             Samples++;
             SampleWorld();
             Active = Fps && Fps.HasPose;
+            ValidContact = Fps && Fps.HasValidContact;
             if (!Active) return;
+            PoseFrameLocalPosition = Fps.PoseFrame.localPosition;
+            PoseFrameLocalRotation = Fps.PoseFrame.localRotation;
             FpsSecondaryError = Fps.SecondaryContactError; FpsSecondaryResidual = Fps.SecondaryReachResidual;
             FpsError = Fps.ContactError; Residual = Fps.ReachResidual; Reload = Fps.ReloadAssist;
             SecondaryPalm = Fps.SecondaryPalmPosition; PrimaryContact = Fps.Sockets.PrimaryGrip.position;
