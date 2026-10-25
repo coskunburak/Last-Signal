@@ -55,5 +55,8 @@ namespace LastSignal.Shelter
         public double fuelSeconds, lastProcessed;
         public long sequence;
         public CraftSnapshot job;
+        // Optional, additive S005 contract. Zero means absent in legacy generations.
+        public int craftingVersion;
+        public MultiCraftSnapshot crafting;
     }
 }

@@ -119,9 +119,11 @@ namespace LastSignal.Persistence
                         string.IsNullOrEmpty(job.inputId) && string.IsNullOrEmpty(job.outputId) && job.revision == 0 &&
                         job.inputQuantity == 0 && job.outputQuantity == 0 && job.progress == 0 && job.duration == 0 && (int)job.status == 0);
                     if (emptyJob) production.job = null;
+                    if (production.crafting != null && Shelter.MultiCraftSnapshot.IsEmptyJob(production.crafting.job)) production.crafting.job = null;
+                    if (production.craftingVersion == 0 && Shelter.MultiCraftSnapshot.IsLegacyEmpty(production.crafting)) production.crafting = null;
                     if (production.version == 0 && string.IsNullOrEmpty(production.shelterId) && !production.claimed && !production.bed &&
                         !production.storage && !production.workbench && !production.upgraded && !production.generatorEnabled &&
-                        production.fuelSeconds == 0 && production.lastProcessed == 0 && production.sequence == 0 && emptyJob)
+                        production.fuelSeconds == 0 && production.lastProcessed == 0 && production.sequence == 0 && emptyJob && production.craftingVersion == 0 && production.crafting == null)
                         candidate.shelter.production = null;
                 }
                 if (candidate?.header != null && candidate.header.vehicleVersion == 0 && candidate.vehicles != null &&

@@ -260,15 +260,16 @@ namespace LastSignal.Inventory
 
         // Persistence adapter prevalidates detached slots. Replace rather than append so repeated
         // load cannot duplicate quantities; publish only after the whole container is coherent.
-        internal void ReplaceValidatedSlots(InventorySlot[] replacement)
+        internal void ReplaceValidatedSlots(InventorySlot[] replacement, long? restoredRevision = null)
         {
             if (IsBusy) throw new InvalidOperationException("Container transaction already in progress.");
+            long nextRevision = restoredRevision ?? checked(Revision + 1);
             IsBusy = true;
             try
             {
                 slots = replacement;
                 capacity = replacement.Length;
-                Revision++;
+                Revision = nextRevision;
                 InventoryChanged?.Invoke();
             }
             finally { IsBusy = false; }
@@ -355,6 +356,52 @@ namespace LastSignal.Inventory
         }
         // Stage on a detached copy, then commit inventory and its associated domain receipt
         // before publishing. Reentrant observers cannot spend or save intermediate ownership.
+        // Batch API is internal: commit/rollback are prepared domain-state assignments only.
+        // No callbacks occur while staging. A failed plan never changes live slots/revision.
+        internal bool ExchangeBatch(long expectedRevision, ItemAmount[] remove, ItemAmount[] add,
+            Action commit, Action rollback)
+        {
+            if (IsBusy || Persistence.OwnershipTransaction.Active || Revision != expectedRevision ||
+                Revision >= long.MaxValue - 1 || commit == null || rollback == null ||
+                !ValidAmounts(remove) || !ValidAmounts(add)) return false;
+            var staged = new InventoryContainer(capacity) { slots = (InventorySlot[])slots.Clone() };
+            foreach (var amount in remove)
+            {
+                if (!CanonicalSlots(amount.Item) || !staged.TryRemove(amount.Item, amount.Quantity)) return false;
+            }
+            foreach (var amount in add)
+            {
+                if (!CanonicalSlots(amount.Item) || staged.TryAdd(amount.Item, amount.Quantity) != amount.Quantity) return false;
+            }
+            var before = slots;
+            IsBusy = true; Persistence.OwnershipTransaction.Enter();
+            try
+            {
+                try { slots = staged.slots; commit(); Revision = expectedRevision + 1; }
+                catch { slots = before; Revision = expectedRevision; rollback(); throw; }
+                PublishTransfer();
+            }
+            finally { Persistence.OwnershipTransaction.Exit(); IsBusy = false; }
+            return true;
+        }
+        bool CanonicalSlots(ItemDefinition item)
+        {
+            foreach (var slot in slots)
+                if (!slot.IsEmpty && slot.Item.Id == item.Id && slot.Item != item) return false;
+            return true;
+        }
+        static bool ValidAmounts(ItemAmount[] amounts)
+        {
+            if (amounts == null || amounts.Length > 32) return false;
+            for (int i = 0; i < amounts.Length; i++)
+            {
+                var a = amounts[i];
+                if (!a.Item || !a.Item.Id.IsValid || a.Item.MaxStack < 1 || a.Item.MaxStack > int.MaxValue / 256 ||
+                    a.Quantity <= 0 || a.Quantity > 256L * a.Item.MaxStack) return false;
+                for (int j = 0; j < i; j++) if (amounts[j].Item.Id == a.Item.Id) return false;
+            }
+            return true;
+        }
         internal bool Exchange(ItemDefinition remove, int removeCount, ItemDefinition add, int addCount, Action commit, int sourceIndex = -1)
         {
             if (IsBusy || Persistence.OwnershipTransaction.Active || removeCount < 0 || addCount < 0 ||

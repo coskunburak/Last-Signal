@@ -13,8 +13,14 @@ namespace LastSignal.Shelter
         public string shelterId = "shelter.cabin", cellId = "resident";
         public ShelterRecipe recipe;
         public ShelterRecipe[] additionalRecipes = Array.Empty<ShelterRecipe>();
+        public RecipeDefinition[] multiRecipes = Array.Empty<RecipeDefinition>();
         int recipeIndex;
-        public ShelterRecipe SelectedRecipe => recipeIndex == 0 ? recipe : additionalRecipes[recipeIndex - 1];
+        int LegacyRecipeCount => 1 + (additionalRecipes?.Length ?? 0);
+        int RecipeCount => LegacyRecipeCount + (multiRecipes?.Length ?? 0);
+        public RecipeDefinition SelectedMultiRecipe => recipeIndex >= LegacyRecipeCount ? multiRecipes[recipeIndex - LegacyRecipeCount] : null;
+        public RecipeValidation ValidateCraftCatalog(ItemCatalog catalog = null) =>
+            RecipeCatalog.Validate(multiRecipes ?? Array.Empty<RecipeDefinition>(), multiRecipes != null && multiRecipes.Length > 0 ? Recipes() : null, catalog);
+        public ShelterRecipe SelectedRecipe => recipeIndex >= LegacyRecipeCount ? null : recipeIndex == 0 ? recipe : additionalRecipes[recipeIndex - 1];
         ShelterRecipe[] Recipes()
         {
             var all = new ShelterRecipe[1 + (additionalRecipes?.Length ?? 0)]; all[0] = recipe;
@@ -43,7 +49,7 @@ namespace LastSignal.Shelter
         public bool IsOpen => panel && panel.activeSelf;
         public bool Validate()
         {
-            if (string.IsNullOrWhiteSpace(shelterId) || cellId != "resident" || !ShelterRecipe.ValidateCatalog(Recipes()) || !material || !fuel ||
+            if (string.IsNullOrWhiteSpace(shelterId) || cellId != "resident" || !ShelterRecipe.ValidateCatalog(Recipes()) || !ValidateCraftCatalog().Valid || !material || !fuel ||
                 moduleCost < 1 || upgradeCost < 1 || !WorldTimeSettings.Finite(fuelUnitSeconds) || fuelUnitSeconds < 1 || fuelUnitSeconds > 86400 ||
                 generatorNoise == null || !generatorNoise.profile.Valid || !WorldTimeSettings.Finite(generatorNoise.interval) || generatorNoise.interval < 1 ||
                 sockets == null || sockets.Length != 3) return false;
@@ -56,7 +62,7 @@ namespace LastSignal.Shelter
             }
             return types == 7;
         }
-        ShelterProduction Create(double now) => new ShelterProduction(shelterId, recipe, material, fuel, moduleCost, upgradeCost, fuelUnitSeconds, now, additionalRecipes);
+        ShelterProduction Create(double now) => new ShelterProduction(shelterId, recipe, material, fuel, moduleCost, upgradeCost, fuelUnitSeconds, now, additionalRecipes, multiRecipes);
         public void Begin()
         {
             End(); recipeIndex = 0; if (!Validate()) throw new InvalidOperationException("Invalid authored S010 shelter.");
@@ -76,10 +82,24 @@ namespace LastSignal.Shelter
             if (Production != null) { if (bound != null) { bound.Unregister(Production); bound.Unregister(this); } Production.Generated -= Generated; }
             Production = null; bound = null; noiseElapsed = 0;
         }
-        void OnDisable() => End();
+        void OnDisable()
+        {
+            if (Production == null || CraftStateAbsent()) { End(); return; }
+            // S005 state is session-owned: temporary component disable must not discard escrow/receipts.
+            if (panel) panel.SetActive(false); selected = null;
+            if (bound != null) { bound.Unregister(Production); bound.Unregister(this); }
+            bound = null;
+        }
+        bool CraftStateAbsent() => Production.CraftHighWater == 0;
+        void OnEnable()
+        {
+            if (Production == null || !clock || clock.Simulation == null) return;
+            Production.SuspendCraftClockUntil(clock.Simulation.Seconds);
+            BindClock();
+        }
         public bool CanAccess(Transform point, bool modal)
         {
-            if (Production == null || !flow || !flow.Player || flow.PlayerDead || flow.Restoring || !point || point.gameObject.scene != gameObject.scene ||
+            if (!isActiveAndEnabled || Production == null || !flow || !flow.Player || flow.PlayerDead || flow.Restoring || !point || point.gameObject.scene != gameObject.scene ||
                 clock.Sleeping || (flow.Paused && !modal) || (flow.Player.transform.position - point.position).sqrMagnitude > 6.25f) return false;
             var cells = GetComponent<WorldCells.WorldCellManager>();
             return !cells || (cells.Stable && cells.CurrentCell == cellId);
@@ -115,20 +135,39 @@ namespace LastSignal.Shelter
             var source = loop.Storage.Container;
             switch (action)
             {
-                case 2: ok = Production.Start(source, SelectedRecipe.recipeId); break;
+                case 2:
+                    if (SelectedMultiRecipe)
+                    {
+                        if (Production.CraftHighWater == long.MaxValue) return CraftReason.SequenceExhausted.ToString();
+                        var selectedRecipe = SelectedMultiRecipe;
+                        return SubmitCraft(new CraftRequest(shelterId, Production.CraftEpoch, Production.CraftHighWater + 1, selectedRecipe.recipeId,
+                            selectedRecipe.definitionRevision, "shelter.storage", source.Revision)).reason.ToString();
+                    }
+                    ok = Production.Start(source, SelectedRecipe.recipeId); break;
                 case 3: ok = Production.Cancel(); break;
-                case 4: ok = Production.Collect(source); break;
+                case 4:
+                    if (Production.HasMultiJob) return Production.CollectCraft(source, "shelter.storage", source.Revision).ToString();
+                    ok = Production.Collect(source); break;
                 case 5: ok = Production.Refuel(source); break;
                 case 6: ok = Production.ToggleGenerator(); break;
                 case 7: ok = Production.Upgrade(source); break;
                 case 9:
                     if (Production.Status != null) return "Collect the current job before selecting another recipe.";
-                    recipeIndex = (recipeIndex + 1) % (1 + (additionalRecipes?.Length ?? 0));
-                    return "Selected: " + SelectedRecipe.output.DisplayName;
+                    recipeIndex = (recipeIndex + 1) % RecipeCount;
+                    return "Selected: " + (SelectedMultiRecipe ? SelectedMultiRecipe.name : SelectedRecipe.output.DisplayName);
                 default: return "Unknown action.";
             }
             return ok ? "Done. " + (action == 3 ? "Progress discarded; collect your full input refund." : "") :
                 "Rejected: check module, tool, ingredients, pending job or destination space. Nothing consumed.";
+        }
+        // Future notebook uses this facade; it cannot substitute a foreign container or grant capabilities.
+        public CraftReceipt SubmitCraft(CraftRequest request)
+        {
+            if (!selected || !CanAccess(selected.transform, IsOpen) || Production == null || selected.module != ShelterModule.Workbench)
+                return new CraftReceipt { nonce = request.Nonce, reason = CraftReason.Busy };
+            var source = request.SourceId == "shelter.storage" ? loop.Storage.Container :
+                request.SourceId == "player.inventory" ? loop.Inventory.Container : null;
+            return Production.StartCraft(request, source);
         }
         public bool CanRestore(ShelterProductionSnapshot snapshot, double now) => Validate() && (snapshot == null || Create(now).CanRestore(snapshot, now));
         public void Restore(ShelterProductionSnapshot snapshot)
@@ -157,6 +196,15 @@ namespace LastSignal.Shelter
         }
         void Update()
         {
+            if (Production != null && flow && flow.Player && !flow.Paused && !flow.Restoring && !flow.PlayerDead && clock && !clock.Sleeping)
+            {
+                var cells = GetComponent<WorldCells.WorldCellManager>();
+                if (!cells || (cells.Stable && cells.CurrentCell == cellId))
+                {
+                    double from = Production.CraftSimulationSeconds;
+                    Production.ApplySimulationElapsed(from, from + Time.deltaTime);
+                }
+            }
             if (!IsOpen) return;
             if (!selected || !CanAccess(selected.transform, true) || !flow.Paused) { Close(); return; }
             if (Time.unscaledTime >= nextRefresh) { Refresh(); nextRefresh = Time.unscaledTime + .2f; }
@@ -164,14 +212,27 @@ namespace LastSignal.Shelter
         void Refresh()
         {
             if (!status || Production == null) return;
-            var recipe = Production.Status != null ? Production.CurrentRecipe : SelectedRecipe;
+            var recipe = Production.Status != null && !Production.HasMultiJob ? Production.CurrentRecipe : SelectedRecipe;
+            RecipeDefinition multi = Production.Status != null && !Production.HasMultiJob ? null : SelectedMultiRecipe;
+            if (Production.HasMultiJob) foreach (var candidate in multiRecipes) if (candidate.recipeId == Production.MultiRecipeId) { multi = candidate; break; }
+            string description = multi ? Describe(multi) : recipe.inputQuantity + " " + recipe.input.DisplayName + " -> " + recipe.outputQuantity + " " + recipe.output.DisplayName +
+                " | power: " + (recipe.requiresPower ? "required" : "not required") + " | tool: " + (recipe.tool ? recipe.tool.DisplayName : "none") + " | " + recipe.durationWorldSeconds + " world seconds (base)";
             status.text = "SHELTER / " + (Production.Claimed ? "CLAIMED" : "UNCLAIMED") + " / " + (selected ? selected.module.ToString() : "") +
                 "\nModule: " + moduleCost + " scrap | Bench upgrade: " + upgradeCost + " scrap, twice as fast" +
-                "\n" + recipe.inputQuantity + " " + recipe.input.DisplayName + " -> " + recipe.outputQuantity + " " + recipe.output.DisplayName +
-                " | power: " + (recipe.requiresPower ? "required" : "not required") + " | tool: " + (recipe.tool ? recipe.tool.DisplayName : "none") + " | " + recipe.durationWorldSeconds + " world seconds (base)" +
+                "\n" + description +
                 "\nJob: " + (Production.Status?.ToString() ?? "Idle") + " " + (Production.Progress * 100).ToString("F0") + "% | Fuel: " + Production.FuelSeconds.ToString("F0") + " world seconds" +
                 " | Generator " + (Production.GeneratorEnabled ? "ON (auto resumes on refuel)" : "OFF") +
                 "\nAll production uses shelter storage. Close panel to advance time.\n" + Feedback;
+        }
+        static string Describe(RecipeDefinition recipe)
+        {
+            var text = new System.Text.StringBuilder(recipe.prototypeBalance ? "PROTOTYPE: " : "");
+            for (int i = 0; i < recipe.inputIngredients.Length; i++) { if (i > 0) text.Append(" + "); var a = recipe.inputIngredients[i]; text.Append(a.quantity).Append(' ').Append(a.item.DisplayName); }
+            text.Append(" -> ");
+            for (int i = 0; i < recipe.outputDefinitions.Length; i++) { if (i > 0) text.Append(" + "); var a = recipe.outputDefinitions[i]; text.Append(a.quantity).Append(' ').Append(a.item.DisplayName); }
+            text.Append(" | ").Append(recipe.duration).Append(' ').Append(recipe.timeBasis).Append(" | power: ").Append(recipe.requiresPower ? "required" : "not required");
+            foreach (var tool in recipe.requiredTools) text.Append(" | tool: ").Append(tool.DisplayName);
+            return text.ToString();
         }
         void CreatePanel()
         {

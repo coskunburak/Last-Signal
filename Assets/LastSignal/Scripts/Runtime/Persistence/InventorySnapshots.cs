@@ -24,7 +24,9 @@ namespace LastSignal.Persistence
                 var slot = container.GetSlot(i);
                 slots[i] = slot.IsEmpty ? new SlotSnapshot() : new SlotSnapshot { definitionId = slot.Item.Id.Value, quantity = slot.Quantity };
             }
-            snapshot = new ContainerSnapshot { id = id, capacity = slots.Length, slots = slots };
+            if (container.Revision < 0 || container.Revision == long.MaxValue)
+                return new SaveResult(SaveError.InvalidData, "Container revision exhausted.");
+            snapshot = new ContainerSnapshot { id = id, revisionVersion = 1, revision = container.Revision, capacity = slots.Length, slots = slots };
             return SaveResult.Ok;
         }
         public static SaveResult Restore(PlayerInventory inventory, ContainerSnapshot snapshot, string expectedId, ItemCatalog catalog)
@@ -34,7 +36,7 @@ namespace LastSignal.Persistence
         internal static SaveResult Restore(InventoryContainer container, ContainerSnapshot snapshot, string expectedId, ItemCatalog catalog)
         {
             if (container == null || !catalog || snapshot == null || string.IsNullOrWhiteSpace(expectedId) || snapshot.id != expectedId ||
-                snapshot.capacity < 1 || snapshot.capacity > 256 || snapshot.slots == null || snapshot.slots.Length != snapshot.capacity)
+                !snapshot.ValidRevision || snapshot.capacity < 1 || snapshot.capacity > 256 || snapshot.slots == null || snapshot.slots.Length != snapshot.capacity)
                 return new SaveResult(SaveError.InvalidData, "Invalid inventory restore request.");
             if (OwnershipTransaction.Active || container.IsBusy) return new SaveResult(SaveError.Busy, "Ownership transaction has not completed.");
             // Resolve and validate EVERY slot before mutating the existing container.
@@ -53,7 +55,7 @@ namespace LastSignal.Persistence
                 if (s.quantity < 1 || s.quantity > item.MaxStack) return new SaveResult(SaveError.InvalidData, "Invalid stack size.");
                 slots[i] = new InventorySlot(item, s.quantity);
             }
-            container.ReplaceValidatedSlots(slots);
+            container.ReplaceValidatedSlots(slots, snapshot.revisionVersion == 1 ? snapshot.revision : (long?)null);
             return SaveResult.Ok;
         }
     }

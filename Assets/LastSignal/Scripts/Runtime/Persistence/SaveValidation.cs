@@ -110,7 +110,18 @@ namespace LastSignal.Persistence
             }
             var production = save.shelter.production;
             if (production != null && (save.worldTime == null || !Shelter.ShelterProduction.ValidSnapshot(production, save.worldTime.seconds) ||
+                !Shelter.ShelterProduction.ValidCraftItems(production, stackLimits) ||
                 (production.job != null && (!stackLimits.ContainsKey(production.job.inputId) || !stackLimits.ContainsKey(production.job.outputId))))) return Invalid("Invalid shelter production extension.");
+            if (production != null && production.craftingVersion == 1)
+            {
+                if (save.inventory.revisionVersion != 1 || save.shelter.storage.revisionVersion != 1)
+                    return Invalid("Craft receipts require persisted source revisions.");
+                foreach (var receipt in production.crafting.receipts)
+                {
+                    long revision = receipt.sourceId == "player.inventory" ? save.inventory.revision : save.shelter.storage.revision;
+                    if (receipt.afterRevision > revision) return Invalid("Craft receipt is ahead of its source revision.");
+                }
+            }
             if (save.shelter.expeditionIndex < 0) return Invalid("Invalid expedition index.");
             if (save.weapon.definitionId != weaponId) return Fail(SaveError.UnknownDefinition, "Unknown weapon definition.");
             if (save.weapon.magazine < 0 || save.weapon.magazine > magazineCapacity) return Invalid("Invalid magazine quantity.");
@@ -332,7 +343,7 @@ namespace LastSignal.Persistence
         }
         SaveResult Container(ContainerSnapshot c, HashSet<string> ids)
         {
-            if (c == null || c.capacity < 1 || c.capacity > 256 || c.slots == null || c.slots.Length != c.capacity)
+            if (c == null || !c.ValidRevision || c.capacity < 1 || c.capacity > 256 || c.slots == null || c.slots.Length != c.capacity)
                 return Invalid("Invalid container shape.");
             if (!AddId(ids, c.id)) return Identity();
             foreach (var s in c.slots)
