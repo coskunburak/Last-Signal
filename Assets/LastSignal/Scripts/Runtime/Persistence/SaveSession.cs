@@ -57,6 +57,8 @@ namespace LastSignal.Persistence
                 (secondaryFirearm && (!secondaryFirearm.HasValidCombatConfiguration ||
                     secondaryFirearm.WeaponId == WeaponId)) || string.IsNullOrWhiteSpace(worldId))
                 return Invalid("Save world/catalog/firearm configuration is invalid.");
+            var site = GetComponent<ShelterSite>();
+            if (site && !site.ValidateCraftCatalog(catalog).Valid) return Invalid("Invalid multi-ingredient recipes or missing catalog items.");
             var mission = GetComponent<LastSignal.Objectives.RelayMission>();
             if (mission && !mission.Validate()) return Invalid("Invalid relay authoring.");
             var definitions = new HashSet<string>(StringComparer.Ordinal);

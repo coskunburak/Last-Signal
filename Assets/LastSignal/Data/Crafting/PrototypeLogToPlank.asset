@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c45acae97fdc42b5a1815eab322c63f7, type: 3}
+  m_Name: Prototype Log to Plank
+  m_EditorClassIdentifier: LastSignal.Runtime::LastSignal.Shelter.RecipeDefinition
+  recipeId: recipe.prototype.log_to_plank
+  definitionRevision: 1
+  catalogVersion: 1
+  inputIngredients:
+  - item: {fileID: 11400000, guid: 757507623744b48b799daba981280f0a, type: 2}
+    quantity: 1
+    sourcePolicy: 2
+  outputDefinitions:
+  - item: {fileID: 11400000, guid: d9c4d357cb204170af3e3bed796a554f, type: 2}
+    quantity: 1
+    sourcePolicy: 0
+  requiredTools:
+  - {fileID: 11400000, guid: 586f787a7485940748fc8ff5540befd7, type: 2}
+  requiredStation: 1
+  requiredCapabilities: 1
+  unlockRequirement: 1
+  timeBasis: 0
+  duration: 60
+  requiresPower: 0
+  prototypeBalance: 1

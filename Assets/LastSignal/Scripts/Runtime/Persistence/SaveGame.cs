@@ -62,6 +62,10 @@ namespace LastSignal.Persistence
     }
     [Serializable] public sealed class ContainerSnapshot
     {
+        // Optional S005 revision extension. Legacy zero marker retains pre-extension hydration.
+        public int revisionVersion;
+        public long revision;
+        public bool ValidRevision => revisionVersion == 0 ? revision == 0 : revisionVersion == 1 && revision >= 0 && revision < long.MaxValue;
         public string id;
         public int capacity;
         public SlotSnapshot[] slots;
