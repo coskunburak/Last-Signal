@@ -55,3 +55,23 @@ Commit scope includes implementation and this verified evidence summary. The rep
 - `OWNER-20261025-141701-regression-edit-ev5zrq9o/tests.xml`: `5b7d4efa0f7832260fc7a4f1ba9d1720013a9b0f2ba26c14210be75ea36b0213`
 
 - `OWNER-20261025-141717-regression-play-3mxdjkba/tests.xml`: `5522583378ad49b25b4a9bfbc2bb04208f4b72f8fbf1eb78f92b4e0d18d9bacd`
+
+## Post-closure authoring correction — S005_ITEM_ALIAS
+
+Owner invoked CreateStage and reported S005_ITEM_ALIAS: material.log at Include. Local inspection found the pilot log and WorldReconstruction generation copy have the same stable ID/gameplay values but distinct asset identities and world prefabs. Original preflight correctly rejected the mixed references before creating a stage.
+
+S005CraftAuthoring now clones only the prototype recipe and binds its ingredients/outputs/tools to the source catalog's canonical objects when gameplay fields match. The copy is persisted beside the new stage catalog. Missing definitions are included as before; duplicate source IDs, incompatible gameplay definitions and runtime aliases still reject. Existing source recipes/catalogs/scenes and WorldReconstruction assets are untouched. Two parameterized assertions cover canonical binding without source mutation and incompatible-item rejection. This correction is IMPLEMENTED / TEST_NOT_RUN; standalone Editor/EditMode compilation succeeded, no Unity or authoring tool executed by agent. Not part of the earlier 299 passing test claim or previous commit.
+
+Next owner command: `python3 Tools/bld-s005-verify.py focused-edit --filter LastSignal.Tests.P02RecipeValidationTests.IsolatedPrototypeBindsCanonicalItemsWithoutChangingSource`. Expected 2/2 passed; then retry the isolated stage menu in the original saved clean source scene. Unity AI Account API timeout belongs to com.unity.ai.assistant and is separate from this authoring exception; no package/account settings changed.
+
+## Post-closure authoring correction — transient recipe lifetime
+
+Owner retry failed with MissingReferenceException at CreateAsset(recipe). The previous correction created an unpersisted ScriptableObject clone before OpenScene; scene switching destroyed that transient object. CreateStage now persists the isolated recipe and catalog, saves assets, and verifies both are persistent before switching scenes. This also avoids referencing the source catalog across scene unload while constructing its clone. No source scene/catalog or runtime behavior changed. Standalone Editor compilation passed; native authoring retry remains OWNER_NOT_RUN for this fix.
+
+Partial attempt `Assets/LastSignal/Scenes/Validation/S005Craft_20261025124757-73972098.unity` and `Data/Crafting/Stage-20261025124757-73972098.meta` are preserved, not deleted or declared complete. Retry from the original clean source scene; do not use the partial S005 scene as the source. Expected S005_STAGE_CREATED log and persistent LogToPlank/S005Catalog assets bound to the newly created scene with a distinct save slot. No Unity tests/builds/authoring were executed by the agent.
+
+## Owner focused-edit failure — 15:52
+
+Evidence `OWNER-20261025-155208-focused-edit-44ysysq1`: 58 total, 57 passed, 1 failed, Unity exit 2. Failure: IsolatedPrototypeBindsCanonicalItemsWithoutChangingSource(False), line 40 before fix. Earlier binding/reference/quantity assertions passed; final catalog validity assertion failed. The new test supplied Array.Empty<ShelterRecipe>() as a legacy catalog. RecipeCatalog delegates non-null legacy lists to ShelterRecipe.ValidateCatalog, which correctly rejects length zero. This test intends no legacy catalog, represented by omitted/null argument. Changed only that test invocation and added error code/detail to the assertion message. Runtime/authoring validators and all safety assertions remain unchanged. Standalone EditMode source compilation passed; owner retest pending. The chained focused-play command did not execute.
+
+Next: `python3 Tools/bld-s005-verify.py focused-edit --filter LastSignal.Tests.P02RecipeValidationTests.IsolatedPrototypeBindsCanonicalItemsWithoutChangingSource`. Expected 2/2 pass; inspect before rerunning full focused gates.
