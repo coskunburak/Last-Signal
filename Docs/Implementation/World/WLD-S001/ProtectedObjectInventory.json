@@ -1,0 +1,3483 @@
+{
+  "status": "OWNER_ACCEPTANCE_PENDING",
+  "sourceScene": "Assets/LastSignal/Scenes/Production/FirstTownMain_HDRP.unity",
+  "sourceHash": "8fa11ca4081f18099a70d560eb6ce21f4392256e4effe74b46e7a858366c4d6f",
+  "terrainGuid": "e4ed8e8a1e0a4468874f95beffdfc638",
+  "terrainHash": "b7779d48fa86c9d46d65f5e08ac780ccecad20a25a9ee745f725ab2c1a5530a7",
+  "planHash": "22423e0e3085a53a5f37f3ff2465411ee1493d8b43dedd581d471ff44c98a38a",
+  "generatorVersion": "WLD-G1-preview-v1",
+  "stageGeneration": "NOT_RUN",
+  "gameplay": "NOT_RUN",
+  "performance": "NOT_RUN",
+  "sourceHasUnsavedChanges": true,
+  "seed": 261024,
+  "protectedBounds": 5290,
+  "perimeterCandidates": 196,
+  "sessionFlows": 1,
+  "missingScripts": 0,
+  "missingTreePhysics": 3,
+  "sourceMinHeight": -3.499969244003296,
+  "sourceMaxHeight": 6.353536605834961,
+  "vehicleResidentBounds": {
+    "m_Center": {
+      "x": 0,
+      "y": 10,
+      "z": 0
+    },
+    "m_Extent": {
+      "x": 250,
+      "y": 50,
+      "z": 250
+    }
+  },
+  "blockers": [
+    "EXPANSION_OWNERSHIP: VehicleWorld.residentBounds excludes the west tile; SaveSession.ValidateTopology rejects saved pickups there. G2/G3 writes remain unavailable.",
+    "HARVEST_BASELINE: 3 resource roots have no physicsBody; not a terrain regression or working tree-cutting proof.",
+    "NAVIGATION: existing NavMesh covers the old terrain; expansion and changed slopes require owner bake and route acceptance."
+  ],
+  "protectedObjects": [
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-276961209-0",
+      "hierarchy": "PlayerSpawn",
+      "position": {
+        "x": -178.20001220703125,
+        "y": 0.05000000074505806,
+        "z": -169
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "8388d63b9a1649c6bb7e37c160c4229f",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1680481941-0",
+      "hierarchy": "Session",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.safehouse.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2830419068828056582-0",
+      "hierarchy": "S013 Production Cabin/Persistent wood door",
+      "position": {
+        "x": -177.02000427246094,
+        "y": 0.009999999776482582,
+        "z": -169.5800018310547
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-616593634-0",
+      "hierarchy": "FirstTownCore - 500m resident world/01 Connected road network/Bridge -140/Route - bridge -140",
+      "position": {
+        "x": -116.0763168334961,
+        "y": 0.05000000074505806,
+        "z": -140
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-957059120-0",
+      "hierarchy": "FirstTownCore - 500m resident world/01 Connected road network/Bridge 80/Route - bridge 80",
+      "position": {
+        "x": -105.0597915649414,
+        "y": 0.05000000074505806,
+        "z": 80
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.starter.scrap",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1971401249-0",
+      "hierarchy": "FirstTownCore - 500m resident world/02 Safehouse Compound/Loot - starter.scrap",
+      "position": {
+        "x": -170,
+        "y": 0.9000000357627869,
+        "z": -181
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.starter.food",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1397749890-0",
+      "hierarchy": "FirstTownCore - 500m resident world/02 Safehouse Compound/Loot - starter.food",
+      "position": {
+        "x": -170,
+        "y": 0.9000000357627869,
+        "z": -185
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.starter.water",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2094196215-0",
+      "hierarchy": "FirstTownCore - 500m resident world/02 Safehouse Compound/Loot - starter.water",
+      "position": {
+        "x": -170,
+        "y": 0.9000000357627869,
+        "z": -189
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.starter.fuel",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1870545507-0",
+      "hierarchy": "FirstTownCore - 500m resident world/02 Safehouse Compound/Loot - starter.fuel",
+      "position": {
+        "x": -170,
+        "y": 0.9000000357627869,
+        "z": -193
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-893449186-0",
+      "hierarchy": "FirstTownCore - 500m resident world/02 Safehouse Compound/Route - safehouse gate",
+      "position": {
+        "x": -180,
+        "y": 0.05000000074505806,
+        "z": -138
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-499271440-0",
+      "hierarchy": "FirstTownCore - 500m resident world/02 Safehouse Compound/Route - safehouse porch",
+      "position": {
+        "x": -175,
+        "y": 0.05000000074505806,
+        "z": -169
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-578753386-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Route - 03 Town Center",
+      "position": {
+        "x": 0,
+        "y": 0.05000000074505806,
+        "z": 18
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.store.0.Workshop loot",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-5018918965505983346-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 0/Workshop loot",
+      "position": {
+        "x": -22.200000762939453,
+        "y": 0.10000000149011612,
+        "z": 24.700000762939453
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.store.0.Kitchen loot",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-5018918965505982686-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 0/Kitchen loot",
+      "position": {
+        "x": -23.799999237060547,
+        "y": 0.10000000149011612,
+        "z": 24.700000762939453
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.store.encounter.0",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-5018918965505982522-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 0/Encounter spawn",
+      "position": {
+        "x": -22,
+        "y": 0.07999999821186066,
+        "z": 23.299999237060547
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-5018918965505982522-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 0/Encounter spawn",
+      "position": {
+        "x": -22,
+        "y": 0.07999999821186066,
+        "z": 23.299999237060547
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.store.1.Workshop loot",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3528053148263505690-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 1/Workshop loot",
+      "position": {
+        "x": -22.200000762939453,
+        "y": 0.10000000149011612,
+        "z": 42.70000076293945
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.store.1.Kitchen loot",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3528053148263505078-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 1/Kitchen loot",
+      "position": {
+        "x": -23.799999237060547,
+        "y": 0.10000000149011612,
+        "z": 42.70000076293945
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.store.encounter.1",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3528053148263504978-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 1/Encounter spawn",
+      "position": {
+        "x": -22,
+        "y": 0.07999999821186066,
+        "z": 41.29999923706055
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3528053148263504978-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 1/Encounter spawn",
+      "position": {
+        "x": -22,
+        "y": 0.07999999821186066,
+        "z": 41.29999923706055
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.store.2.Workshop loot",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3018910269294154777-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 2/Workshop loot",
+      "position": {
+        "x": -22.200000762939453,
+        "y": 0.10000000149011612,
+        "z": 60.70000076293945
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.store.2.Kitchen loot",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3018910269294155701-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 2/Kitchen loot",
+      "position": {
+        "x": -23.799999237060547,
+        "y": 0.10000000149011612,
+        "z": 60.70000076293945
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.store.encounter.2",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3018910269294155601-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 2/Encounter spawn",
+      "position": {
+        "x": -22,
+        "y": 0.07999999821186066,
+        "z": 59.29999923706055
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3018910269294155601-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Rural store 2/Encounter spawn",
+      "position": {
+        "x": -22,
+        "y": 0.07999999821186066,
+        "z": 59.29999923706055
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.diner.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3023537490282004321-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/diner/Persistent wood door",
+      "position": {
+        "x": 27.420000076293945,
+        "y": 0.03999999910593033,
+        "z": 21.969999313354492
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.diner.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-9139625629934943120-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/diner/Persistent wood door",
+      "position": {
+        "x": 28.579999923706055,
+        "y": 0.03999999910593033,
+        "z": 32.029998779296875
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-755303192-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/diner/Route - diner entry",
+      "position": {
+        "x": 28,
+        "y": 0.07999999821186066,
+        "z": 20
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1573442984-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/diner/Route - diner interior",
+      "position": {
+        "x": 28,
+        "y": 0.07999999821186066,
+        "z": 27
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-221128026-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/diner/Route - diner retreat",
+      "position": {
+        "x": 28,
+        "y": 0.07999999821186066,
+        "z": 34
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.diner.food",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-33433705-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/diner/Loot - diner.food",
+      "position": {
+        "x": 23,
+        "y": 0.9300000071525574,
+        "z": 25
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.diner.water",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-67878670-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/diner/Loot - diner.water",
+      "position": {
+        "x": 23,
+        "y": 0.9300000071525574,
+        "z": 29
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.town-hall.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3048840995704751351-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/town-hall/Persistent wood door",
+      "position": {
+        "x": 29.420000076293945,
+        "y": 0.03999999910593033,
+        "z": 60.970001220703125
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.town-hall.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2379726022354304045-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/town-hall/Persistent wood door",
+      "position": {
+        "x": 30.579999923706055,
+        "y": 0.03999999910593033,
+        "z": 71.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-351031773-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/town-hall/Route - town-hall entry",
+      "position": {
+        "x": 30,
+        "y": 0.07999999821186066,
+        "z": 59
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1129734164-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/town-hall/Route - town-hall interior",
+      "position": {
+        "x": 30,
+        "y": 0.07999999821186066,
+        "z": 66
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1158943195-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/town-hall/Route - town-hall retreat",
+      "position": {
+        "x": 30,
+        "y": 0.07999999821186066,
+        "z": 73
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.hall.cloth",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1502959690-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/town-hall/Loot - hall.cloth",
+      "position": {
+        "x": 25,
+        "y": 0.9300000071525574,
+        "z": 67
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.market",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-852786449-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Encounter - market",
+      "position": {
+        "x": 18,
+        "y": 0.05000000074505806,
+        "z": 48
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-852786449-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Encounter - market",
+      "position": {
+        "x": 18,
+        "y": 0.05000000074505806,
+        "z": 48
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-473491993-0",
+      "hierarchy": "FirstTownCore - 500m resident world/03 Town Center/Route - market encounter",
+      "position": {
+        "x": 18,
+        "y": 0.05000000074505806,
+        "z": 48
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2036484360-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/Route - 04 Gas Station",
+      "position": {
+        "x": 65,
+        "y": 0.05000000074505806,
+        "z": -94
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.service-shop.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-6307278542001562690-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/service-shop/Persistent wood door",
+      "position": {
+        "x": 69.41999816894531,
+        "y": 0.03999999910593033,
+        "z": -59.029998779296875
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.service-shop.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3491311588375960704-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/service-shop/Persistent wood door",
+      "position": {
+        "x": 70.58000183105469,
+        "y": 0.03999999910593033,
+        "z": -50.970001220703125
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1055931027-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/service-shop/Route - service-shop entry",
+      "position": {
+        "x": 70,
+        "y": 0.07999999821186066,
+        "z": -61
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-643844859-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/service-shop/Route - service-shop interior",
+      "position": {
+        "x": 70,
+        "y": 0.07999999821186066,
+        "z": -55
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1346881894-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/service-shop/Route - service-shop retreat",
+      "position": {
+        "x": 70,
+        "y": 0.07999999821186066,
+        "z": -49
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.gas.fuel",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1307225160-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/service-shop/Loot - gas.fuel",
+      "position": {
+        "x": 67,
+        "y": 0.9300000071525574,
+        "z": -54
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.gas.scrap",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-727024273-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/service-shop/Loot - gas.scrap",
+      "position": {
+        "x": 73,
+        "y": 0.9300000071525574,
+        "z": -54
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.gas.wrench",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1661477493-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/Loot - gas.wrench",
+      "position": {
+        "x": 81,
+        "y": 0.9100000262260437,
+        "z": -96
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.gas",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-657227203-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/Encounter - gas",
+      "position": {
+        "x": 47,
+        "y": 0.05000000074505806,
+        "z": -75
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-657227203-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/Encounter - gas",
+      "position": {
+        "x": 47,
+        "y": 0.05000000074505806,
+        "z": -75
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-549868221-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/Route - gas encounter",
+      "position": {
+        "x": 47,
+        "y": 0.05000000074505806,
+        "z": -75
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1676092468-0",
+      "hierarchy": "FirstTownCore - 500m resident world/04 Gas Station/Route - gas forecourt",
+      "position": {
+        "x": 72,
+        "y": 0.05000000074505806,
+        "z": -94
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1163417264-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/Route - 05 Industrial Yard",
+      "position": {
+        "x": 168,
+        "y": 0.05000000074505806,
+        "z": -77
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.dispatch.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-4063078973454038821-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/dispatch/Persistent wood door",
+      "position": {
+        "x": 148.4199981689453,
+        "y": 0.03999999910593033,
+        "z": -113.02999877929688
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.dispatch.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-4014746909864950578-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/dispatch/Persistent wood door",
+      "position": {
+        "x": 149.5800018310547,
+        "y": 0.03999999910593033,
+        "z": -104.97000122070312
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1865473924-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/dispatch/Route - dispatch entry",
+      "position": {
+        "x": 149,
+        "y": 0.07999999821186066,
+        "z": -115
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1385198382-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/dispatch/Route - dispatch interior",
+      "position": {
+        "x": 149,
+        "y": 0.07999999821186066,
+        "z": -109
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1631741128-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/dispatch/Route - dispatch retreat",
+      "position": {
+        "x": 149,
+        "y": 0.07999999821186066,
+        "z": -103
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.dispatch.scrap",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-537113555-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/dispatch/Loot - dispatch.scrap",
+      "position": {
+        "x": 146,
+        "y": 0.9300000071525574,
+        "z": -108
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.dispatch.bandage",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1129220992-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/dispatch/Loot - dispatch.bandage",
+      "position": {
+        "x": 152,
+        "y": 0.9300000071525574,
+        "z": -108
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.yard.tools",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1825253688-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/Loot - yard.tools",
+      "position": {
+        "x": 139,
+        "y": 0.9100000262260437,
+        "z": -72
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.yard.fuel",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-56685971-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/Loot - yard.fuel",
+      "position": {
+        "x": 196,
+        "y": 0.9100000262260437,
+        "z": -83
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.yard.runner",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-731908319-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/Encounter - yard.runner",
+      "position": {
+        "x": 168,
+        "y": 0.05000000074505806,
+        "z": -77
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-731908319-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/Encounter - yard.runner",
+      "position": {
+        "x": 168,
+        "y": 0.05000000074505806,
+        "z": -77
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1938594474-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/Route - yard.runner encounter",
+      "position": {
+        "x": 168,
+        "y": 0.05000000074505806,
+        "z": -77
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.yard.lurker",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1416994058-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/Encounter - yard.lurker",
+      "position": {
+        "x": 140,
+        "y": 0.05000000074505806,
+        "z": -60
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1416994058-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/Encounter - yard.lurker",
+      "position": {
+        "x": 140,
+        "y": 0.05000000074505806,
+        "z": -60
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1114456248-0",
+      "hierarchy": "FirstTownCore - 500m resident world/05 Industrial Yard/Route - yard.lurker encounter",
+      "position": {
+        "x": 140,
+        "y": 0.05000000074505806,
+        "z": -60
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-176536445-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/Route - 06 Residential",
+      "position": {
+        "x": 125,
+        "y": 0.05000000074505806,
+        "z": 103
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-1.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1082919931656674553-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-1/Persistent wood door",
+      "position": {
+        "x": 51.41999816894531,
+        "y": 0.03999999910593033,
+        "z": 91.97000122070312
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-1.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-4117346614066023744-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-1/Persistent wood door",
+      "position": {
+        "x": 52.58000183105469,
+        "y": 0.03999999910593033,
+        "z": 100.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1379996527-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-1/Route - residence-1 entry",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 90
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-323421609-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-1/Route - residence-1 interior",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 96
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-14068012-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-1/Route - residence-1 retreat",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 102
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.home.0",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-77118461-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-1/Loot - home.0",
+      "position": {
+        "x": 49,
+        "y": 0.9300000071525574,
+        "z": 97
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-2.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-8699058127160084911-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-2/Persistent wood door",
+      "position": {
+        "x": 136.4199981689453,
+        "y": 0.03999999910593033,
+        "z": 91.97000122070312
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-2.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-5453123453405064200-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-2/Persistent wood door",
+      "position": {
+        "x": 137.5800018310547,
+        "y": 0.03999999910593033,
+        "z": 100.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-722489240-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-2/Route - residence-2 entry",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 90
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1954693933-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-2/Route - residence-2 interior",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 96
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-253839112-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-2/Route - residence-2 retreat",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 102
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.home.1",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1874206570-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-2/Loot - home.1",
+      "position": {
+        "x": 134,
+        "y": 0.9300000071525574,
+        "z": 97
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-3.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2876194898692034293-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-3/Persistent wood door",
+      "position": {
+        "x": 181.4199981689453,
+        "y": 0.03999999910593033,
+        "z": 91.97000122070312
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-3.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2898767777029315359-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-3/Persistent wood door",
+      "position": {
+        "x": 182.5800018310547,
+        "y": 0.03999999910593033,
+        "z": 100.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1521128308-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-3/Route - residence-3 entry",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 90
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-857189321-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-3/Route - residence-3 interior",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 96
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-418252083-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-3/Route - residence-3 retreat",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 102
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.home.2",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1195758117-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-3/Loot - home.2",
+      "position": {
+        "x": 179,
+        "y": 0.9300000071525574,
+        "z": 97
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-4.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2352388989701946502-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-4/Persistent wood door",
+      "position": {
+        "x": 51.41999816894531,
+        "y": 0.03999999910593033,
+        "z": 163.97000122070312
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-4.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-7125642195564487905-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-4/Persistent wood door",
+      "position": {
+        "x": 52.58000183105469,
+        "y": 0.03999999910593033,
+        "z": 172.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2030546056-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-4/Route - residence-4 entry",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 162
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1289208344-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-4/Route - residence-4 interior",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 168
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1313772241-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-4/Route - residence-4 retreat",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 174
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.home.3",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1064391320-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-4/Loot - home.3",
+      "position": {
+        "x": 49,
+        "y": 0.9300000071525574,
+        "z": 169
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-5.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-6635665043328103592-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-5/Persistent wood door",
+      "position": {
+        "x": 136.4199981689453,
+        "y": 0.03999999910593033,
+        "z": 163.97000122070312
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-5.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-7281570314435253728-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-5/Persistent wood door",
+      "position": {
+        "x": 137.5800018310547,
+        "y": 0.03999999910593033,
+        "z": 172.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-896557834-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-5/Route - residence-5 entry",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 162
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1813947144-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-5/Route - residence-5 interior",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 168
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-484512610-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-5/Route - residence-5 retreat",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 174
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.home.4",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2015634043-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-5/Loot - home.4",
+      "position": {
+        "x": 134,
+        "y": 0.9300000071525574,
+        "z": 169
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-6.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-8577762597167179276-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-6/Persistent wood door",
+      "position": {
+        "x": 181.4199981689453,
+        "y": 0.03999999910593033,
+        "z": 163.97000122070312
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.residence-6.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1518517842088829482-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-6/Persistent wood door",
+      "position": {
+        "x": 182.5800018310547,
+        "y": 0.03999999910593033,
+        "z": 172.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-290939062-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-6/Route - residence-6 entry",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 162
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1529555031-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-6/Route - residence-6 interior",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 168
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1531887421-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-6/Route - residence-6 retreat",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 174
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.home.5",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-635301217-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/residence-6/Loot - home.5",
+      "position": {
+        "x": 179,
+        "y": 0.9300000071525574,
+        "z": 169
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.residential",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1974380922-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/Encounter - residential",
+      "position": {
+        "x": 95,
+        "y": 0.05000000074505806,
+        "z": 127
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1974380922-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/Encounter - residential",
+      "position": {
+        "x": 95,
+        "y": 0.05000000074505806,
+        "z": 127
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-489098209-0",
+      "hierarchy": "FirstTownCore - 500m resident world/06 Residential/Route - residential encounter",
+      "position": {
+        "x": 95,
+        "y": 0.05000000074505806,
+        "z": 127
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-447299927-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/Route - 07 Clinic Pharmacy",
+      "position": {
+        "x": -55,
+        "y": 0.05000000074505806,
+        "z": -54
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.clinic-pharmacy.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3907488669527472227-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/clinic-pharmacy/Persistent wood door",
+      "position": {
+        "x": -55.58000183105469,
+        "y": 0.03999999910593033,
+        "z": -48.029998779296875
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.clinic-pharmacy.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-9058677764731482963-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/clinic-pharmacy/Persistent wood door",
+      "position": {
+        "x": -54.41999816894531,
+        "y": 0.03999999910593033,
+        "z": -35.970001220703125
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1839651963-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/clinic-pharmacy/Route - clinic-pharmacy entry",
+      "position": {
+        "x": -55,
+        "y": 0.07999999821186066,
+        "z": -50
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-542828813-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/clinic-pharmacy/Route - clinic-pharmacy interior",
+      "position": {
+        "x": -55,
+        "y": 0.07999999821186066,
+        "z": -42
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1696586782-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/clinic-pharmacy/Route - clinic-pharmacy retreat",
+      "position": {
+        "x": -55,
+        "y": 0.07999999821186066,
+        "z": -34
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.clinic.bandage",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-34140425-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/clinic-pharmacy/Loot - clinic.bandage",
+      "position": {
+        "x": -59,
+        "y": 0.9300000071525574,
+        "z": -42
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.clinic.dressing",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1255574174-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/clinic-pharmacy/Loot - clinic.dressing",
+      "position": {
+        "x": -51,
+        "y": 0.9300000071525574,
+        "z": -42
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.clinic",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1728278755-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/Encounter - clinic",
+      "position": {
+        "x": -44,
+        "y": 0.05000000074505806,
+        "z": -35
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1728278755-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/Encounter - clinic",
+      "position": {
+        "x": -44,
+        "y": 0.05000000074505806,
+        "z": -35
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1487125826-0",
+      "hierarchy": "FirstTownCore - 500m resident world/07 Clinic Pharmacy/Route - clinic encounter",
+      "position": {
+        "x": -44,
+        "y": 0.05000000074505806,
+        "z": -35
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2048391792-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/Route - 08 Police Checkpoint",
+      "position": {
+        "x": 0,
+        "y": 0.05000000074505806,
+        "z": -152
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.checkpoint.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-8873254201134903578-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/checkpoint/Persistent wood door",
+      "position": {
+        "x": 21.420000076293945,
+        "y": 0.03999999910593033,
+        "z": -144.02999877929688
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.checkpoint.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-4607380068162501015-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/checkpoint/Persistent wood door",
+      "position": {
+        "x": 22.579999923706055,
+        "y": 0.03999999910593033,
+        "z": -135.97000122070312
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1687466777-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/checkpoint/Route - checkpoint entry",
+      "position": {
+        "x": 22,
+        "y": 0.07999999821186066,
+        "z": -146
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-637173145-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/checkpoint/Route - checkpoint interior",
+      "position": {
+        "x": 22,
+        "y": 0.07999999821186066,
+        "z": -140
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-355512305-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/checkpoint/Route - checkpoint retreat",
+      "position": {
+        "x": 22,
+        "y": 0.07999999821186066,
+        "z": -134
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.police.ammo",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1216427482-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/checkpoint/Loot - police.ammo",
+      "position": {
+        "x": 19,
+        "y": 0.9300000071525574,
+        "z": -139
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.police.rag",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-75220728-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/checkpoint/Loot - police.rag",
+      "position": {
+        "x": 25,
+        "y": 0.9300000071525574,
+        "z": -139
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.checkpoint",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-899690788-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/Encounter - checkpoint",
+      "position": {
+        "x": 18,
+        "y": 0.05000000074505806,
+        "z": -150
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-899690788-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/Encounter - checkpoint",
+      "position": {
+        "x": 18,
+        "y": 0.05000000074505806,
+        "z": -150
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1559472536-0",
+      "hierarchy": "FirstTownCore - 500m resident world/08 Police Checkpoint/Route - checkpoint encounter",
+      "position": {
+        "x": 18,
+        "y": 0.05000000074505806,
+        "z": -150
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1261255251-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/Route - 09 Motel Roadside",
+      "position": {
+        "x": 80,
+        "y": 0.05000000074505806,
+        "z": -201
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.motel-room-1.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1120825937498034905-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-1/Persistent wood door",
+      "position": {
+        "x": 58.41999816894531,
+        "y": 0.03999999910593033,
+        "z": -175.02999877929688
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.motel-room-1.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-5241472407631863280-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-1/Persistent wood door",
+      "position": {
+        "x": 59.58000183105469,
+        "y": 0.03999999910593033,
+        "z": -166.97000122070312
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-10316618-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-1/Route - motel-room-1 entry",
+      "position": {
+        "x": 59,
+        "y": 0.07999999821186066,
+        "z": -177
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-400880995-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-1/Route - motel-room-1 interior",
+      "position": {
+        "x": 59,
+        "y": 0.07999999821186066,
+        "z": -171
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1582989832-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-1/Route - motel-room-1 retreat",
+      "position": {
+        "x": 59,
+        "y": 0.07999999821186066,
+        "z": -165
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.motel.0",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1841257015-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-1/Loot - motel.0",
+      "position": {
+        "x": 56,
+        "y": 0.9300000071525574,
+        "z": -170
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.motel-room-2.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-4448371696105012314-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-2/Persistent wood door",
+      "position": {
+        "x": 72.41999816894531,
+        "y": 0.03999999910593033,
+        "z": -175.02999877929688
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.motel-room-2.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1570662346593400210-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-2/Persistent wood door",
+      "position": {
+        "x": 73.58000183105469,
+        "y": 0.03999999910593033,
+        "z": -166.97000122070312
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1667515406-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-2/Route - motel-room-2 entry",
+      "position": {
+        "x": 73,
+        "y": 0.07999999821186066,
+        "z": -177
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1388194099-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-2/Route - motel-room-2 interior",
+      "position": {
+        "x": 73,
+        "y": 0.07999999821186066,
+        "z": -171
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1811471013-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-2/Route - motel-room-2 retreat",
+      "position": {
+        "x": 73,
+        "y": 0.07999999821186066,
+        "z": -165
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.motel.1",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1351363830-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-2/Loot - motel.1",
+      "position": {
+        "x": 70,
+        "y": 0.9300000071525574,
+        "z": -170
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.motel-room-3.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-8987177958500831950-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-3/Persistent wood door",
+      "position": {
+        "x": 86.41999816894531,
+        "y": 0.03999999910593033,
+        "z": -175.02999877929688
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.motel-room-3.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-4687393385266418039-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-3/Persistent wood door",
+      "position": {
+        "x": 87.58000183105469,
+        "y": 0.03999999910593033,
+        "z": -166.97000122070312
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1592467251-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-3/Route - motel-room-3 entry",
+      "position": {
+        "x": 87,
+        "y": 0.07999999821186066,
+        "z": -177
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-522505159-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-3/Route - motel-room-3 interior",
+      "position": {
+        "x": 87,
+        "y": 0.07999999821186066,
+        "z": -171
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1454415628-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-3/Route - motel-room-3 retreat",
+      "position": {
+        "x": 87,
+        "y": 0.07999999821186066,
+        "z": -165
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.motel.2",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1627656521-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-3/Loot - motel.2",
+      "position": {
+        "x": 84,
+        "y": 0.9300000071525574,
+        "z": -170
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.motel-room-4.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-5211120201336339139-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-4/Persistent wood door",
+      "position": {
+        "x": 100.41999816894531,
+        "y": 0.03999999910593033,
+        "z": -175.02999877929688
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.motel-room-4.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-389170145467571342-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-4/Persistent wood door",
+      "position": {
+        "x": 101.58000183105469,
+        "y": 0.03999999910593033,
+        "z": -166.97000122070312
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1176397453-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-4/Route - motel-room-4 entry",
+      "position": {
+        "x": 101,
+        "y": 0.07999999821186066,
+        "z": -177
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-895513773-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-4/Route - motel-room-4 interior",
+      "position": {
+        "x": 101,
+        "y": 0.07999999821186066,
+        "z": -171
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2039271979-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-4/Route - motel-room-4 retreat",
+      "position": {
+        "x": 101,
+        "y": 0.07999999821186066,
+        "z": -165
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.motel.3",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2046894469-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/motel-room-4/Loot - motel.3",
+      "position": {
+        "x": 98,
+        "y": 0.9300000071525574,
+        "z": -170
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.motel",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-73006556-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/Encounter - motel",
+      "position": {
+        "x": 103,
+        "y": 0.05000000074505806,
+        "z": -188
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-73006556-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/Encounter - motel",
+      "position": {
+        "x": 103,
+        "y": 0.05000000074505806,
+        "z": -188
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-810774443-0",
+      "hierarchy": "FirstTownCore - 500m resident world/09 Motel Roadside/Route - motel encounter",
+      "position": {
+        "x": 103,
+        "y": 0.05000000074505806,
+        "z": -188
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-708234617-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/Route - 10 School",
+      "position": {
+        "x": -45,
+        "y": 0.05000000074505806,
+        "z": 127
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.school.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3483673426242465599-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/school/Persistent wood door",
+      "position": {
+        "x": -45.58000183105469,
+        "y": 0.03999999910593033,
+        "z": 132.97000122070312
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.school.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3234971880086132836-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/school/Persistent wood door",
+      "position": {
+        "x": -44.41999816894531,
+        "y": 0.03999999910593033,
+        "z": 145.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-128998640-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/school/Route - school entry",
+      "position": {
+        "x": -45,
+        "y": 0.07999999821186066,
+        "z": 131
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2109265440-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/school/Route - school interior",
+      "position": {
+        "x": -45,
+        "y": 0.07999999821186066,
+        "z": 139
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1600620459-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/school/Route - school retreat",
+      "position": {
+        "x": -45,
+        "y": 0.07999999821186066,
+        "z": 147
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.school.supplies",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1683486257-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/school/Loot - school.supplies",
+      "position": {
+        "x": -45,
+        "y": 0.9300000071525574,
+        "z": 142
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.gym.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-8701615665668615739-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/gym/Persistent wood door",
+      "position": {
+        "x": -40.58000183105469,
+        "y": 0.03999999910593033,
+        "z": 157.97000122070312
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.gym.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-5643902561500889215-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/gym/Persistent wood door",
+      "position": {
+        "x": -39.41999816894531,
+        "y": 0.03999999910593033,
+        "z": 168.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-7482835-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/gym/Route - gym entry",
+      "position": {
+        "x": -40,
+        "y": 0.07999999821186066,
+        "z": 156
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1756686383-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/gym/Route - gym interior",
+      "position": {
+        "x": -40,
+        "y": 0.07999999821186066,
+        "z": 163
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-679016195-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/gym/Route - gym retreat",
+      "position": {
+        "x": -40,
+        "y": 0.07999999821186066,
+        "z": 170
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.gym.water",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-949618316-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/gym/Loot - gym.water",
+      "position": {
+        "x": -45,
+        "y": 0.9300000071525574,
+        "z": 164
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.school",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1079793294-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/Encounter - school",
+      "position": {
+        "x": -31,
+        "y": 0.05000000074505806,
+        "z": 139
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1079793294-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/Encounter - school",
+      "position": {
+        "x": -31,
+        "y": 0.05000000074505806,
+        "z": 139
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1365378351-0",
+      "hierarchy": "FirstTownCore - 500m resident world/10 School/Route - school encounter",
+      "position": {
+        "x": -31,
+        "y": 0.05000000074505806,
+        "z": 139
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1460172037-0",
+      "hierarchy": "FirstTownCore - 500m resident world/11 Farmland Edge/Route - 11 Farmland Edge",
+      "position": {
+        "x": 180,
+        "y": 0.05000000074505806,
+        "z": 193
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.farm.food",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-897731910-0",
+      "hierarchy": "FirstTownCore - 500m resident world/11 Farmland Edge/Loot - farm.food",
+      "position": {
+        "x": 152,
+        "y": 0.9000000357627869,
+        "z": 210
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.encounter.farm",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-379067704-0",
+      "hierarchy": "FirstTownCore - 500m resident world/11 Farmland Edge/Encounter - farm",
+      "position": {
+        "x": 208,
+        "y": 0.05000000074505806,
+        "z": 199
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-379067704-0",
+      "hierarchy": "FirstTownCore - 500m resident world/11 Farmland Edge/Encounter - farm",
+      "position": {
+        "x": 208,
+        "y": 0.05000000074505806,
+        "z": 199
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1911437864-0",
+      "hierarchy": "FirstTownCore - 500m resident world/11 Farmland Edge/Route - farm encounter",
+      "position": {
+        "x": 208,
+        "y": 0.05000000074505806,
+        "z": 199
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-434592710-0",
+      "hierarchy": "FirstTownCore - 500m resident world/12 Forest Edge/Route - 12 Forest Edge",
+      "position": {
+        "x": -185,
+        "y": 0.05000000074505806,
+        "z": 118
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.ranger-hut.front",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-8555696564793470907-0",
+      "hierarchy": "FirstTownCore - 500m resident world/12 Forest Edge/ranger-hut/Persistent wood door",
+      "position": {
+        "x": -197.5800018310547,
+        "y": 0.03999999910593033,
+        "z": 125.97000122070312
+      }
+    },
+    {
+      "category": "persistent",
+      "identity": "town.ranger-hut.rear",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-4656858640344138370-0",
+      "hierarchy": "FirstTownCore - 500m resident world/12 Forest Edge/ranger-hut/Persistent wood door",
+      "position": {
+        "x": -196.4199981689453,
+        "y": 0.03999999910593033,
+        "z": 134.02999877929688
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1295567128-0",
+      "hierarchy": "FirstTownCore - 500m resident world/12 Forest Edge/ranger-hut/Route - ranger-hut entry",
+      "position": {
+        "x": -197,
+        "y": 0.07999999821186066,
+        "z": 124
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-763514978-0",
+      "hierarchy": "FirstTownCore - 500m resident world/12 Forest Edge/ranger-hut/Route - ranger-hut interior",
+      "position": {
+        "x": -197,
+        "y": 0.07999999821186066,
+        "z": 130
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-472361709-0",
+      "hierarchy": "FirstTownCore - 500m resident world/12 Forest Edge/ranger-hut/Route - ranger-hut retreat",
+      "position": {
+        "x": -197,
+        "y": 0.07999999821186066,
+        "z": 136
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "town.ranger.bandage",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-896181772-0",
+      "hierarchy": "FirstTownCore - 500m resident world/12 Forest Edge/ranger-hut/Loot - ranger.bandage",
+      "position": {
+        "x": -200,
+        "y": 0.9300000071525574,
+        "z": 131
+      }
+    },
+    {
+      "category": "loot",
+      "identity": "relay.fuse-source.v1",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1525329937-0",
+      "hierarchy": "FirstTownCore - 500m resident world/Gas station guaranteed fuse source",
+      "position": {
+        "x": 82,
+        "y": 0.10999999940395355,
+        "z": -99
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1715756696-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - bridge -140",
+      "position": {
+        "x": -116.0763168334961,
+        "y": 0.05000000074505806,
+        "z": -140
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-497976716-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - bridge 80",
+      "position": {
+        "x": -105.0597915649414,
+        "y": 0.05000000074505806,
+        "z": 80
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-19300864-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - safehouse gate",
+      "position": {
+        "x": -180,
+        "y": 0.05000000074505806,
+        "z": -138
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1621334428-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - safehouse porch",
+      "position": {
+        "x": -175,
+        "y": 0.05000000074505806,
+        "z": -169
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-735713656-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 03 Town Center",
+      "position": {
+        "x": 0,
+        "y": 0.05000000074505806,
+        "z": 18
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1249612604-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - diner entry",
+      "position": {
+        "x": 28,
+        "y": 0.07999999821186066,
+        "z": 20
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-757701318-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - diner interior",
+      "position": {
+        "x": 28,
+        "y": 0.07999999821186066,
+        "z": 27
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1439567989-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - diner retreat",
+      "position": {
+        "x": 28,
+        "y": 0.07999999821186066,
+        "z": 34
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1301064277-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - town-hall entry",
+      "position": {
+        "x": 30,
+        "y": 0.07999999821186066,
+        "z": 59
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-930748918-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - town-hall interior",
+      "position": {
+        "x": 30,
+        "y": 0.07999999821186066,
+        "z": 66
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1638086549-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - town-hall retreat",
+      "position": {
+        "x": 30,
+        "y": 0.07999999821186066,
+        "z": 73
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-823474664-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - market encounter",
+      "position": {
+        "x": 18,
+        "y": 0.05000000074505806,
+        "z": 48
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1652756981-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 04 Gas Station",
+      "position": {
+        "x": 65,
+        "y": 0.05000000074505806,
+        "z": -94
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1969515882-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - service-shop entry",
+      "position": {
+        "x": 70,
+        "y": 0.07999999821186066,
+        "z": -61
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1868031537-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - service-shop interior",
+      "position": {
+        "x": 70,
+        "y": 0.07999999821186066,
+        "z": -55
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-936153404-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - service-shop retreat",
+      "position": {
+        "x": 70,
+        "y": 0.07999999821186066,
+        "z": -49
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-992320161-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - gas encounter",
+      "position": {
+        "x": 47,
+        "y": 0.05000000074505806,
+        "z": -75
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-878043038-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - gas forecourt",
+      "position": {
+        "x": 72,
+        "y": 0.05000000074505806,
+        "z": -94
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1960153814-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 05 Industrial Yard",
+      "position": {
+        "x": 168,
+        "y": 0.05000000074505806,
+        "z": -77
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1126820240-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - dispatch entry",
+      "position": {
+        "x": 149,
+        "y": 0.07999999821186066,
+        "z": -115
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1423668361-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - dispatch interior",
+      "position": {
+        "x": 149,
+        "y": 0.07999999821186066,
+        "z": -109
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-278530897-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - dispatch retreat",
+      "position": {
+        "x": 149,
+        "y": 0.07999999821186066,
+        "z": -103
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1825271819-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - yard.runner encounter",
+      "position": {
+        "x": 168,
+        "y": 0.05000000074505806,
+        "z": -77
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-82993888-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - yard.lurker encounter",
+      "position": {
+        "x": 140,
+        "y": 0.05000000074505806,
+        "z": -60
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1199599779-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 06 Residential",
+      "position": {
+        "x": 125,
+        "y": 0.05000000074505806,
+        "z": 103
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1953565576-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-1 entry",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 90
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-726164262-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-1 interior",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 96
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-149515032-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-1 retreat",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 102
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1123956610-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-2 entry",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 90
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-951905100-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-2 interior",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 96
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2111560504-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-2 retreat",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 102
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1972889932-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-3 entry",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 90
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1939944250-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-3 interior",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 96
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-558665170-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-3 retreat",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 102
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-67209406-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-4 entry",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 162
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-949474534-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-4 interior",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 168
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1536239044-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-4 retreat",
+      "position": {
+        "x": 52,
+        "y": 0.07999999821186066,
+        "z": 174
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-105145729-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-5 entry",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 162
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-635648299-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-5 interior",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 168
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-953907167-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-5 retreat",
+      "position": {
+        "x": 137,
+        "y": 0.07999999821186066,
+        "z": 174
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-772694213-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-6 entry",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 162
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-400989274-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-6 interior",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 168
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-302113939-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residence-6 retreat",
+      "position": {
+        "x": 182,
+        "y": 0.07999999821186066,
+        "z": 174
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1313542426-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - residential encounter",
+      "position": {
+        "x": 95,
+        "y": 0.05000000074505806,
+        "z": 127
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1730928476-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 07 Clinic Pharmacy",
+      "position": {
+        "x": -55,
+        "y": 0.05000000074505806,
+        "z": -54
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-837193873-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - clinic-pharmacy entry",
+      "position": {
+        "x": -55,
+        "y": 0.07999999821186066,
+        "z": -50
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1103346346-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - clinic-pharmacy interior",
+      "position": {
+        "x": -55,
+        "y": 0.07999999821186066,
+        "z": -42
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-789629736-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - clinic-pharmacy retreat",
+      "position": {
+        "x": -55,
+        "y": 0.07999999821186066,
+        "z": -34
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-550427315-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - clinic encounter",
+      "position": {
+        "x": -44,
+        "y": 0.05000000074505806,
+        "z": -35
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-577394676-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 08 Police Checkpoint",
+      "position": {
+        "x": 0,
+        "y": 0.05000000074505806,
+        "z": -152
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1253347641-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - checkpoint entry",
+      "position": {
+        "x": 22,
+        "y": 0.07999999821186066,
+        "z": -146
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-351495254-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - checkpoint interior",
+      "position": {
+        "x": 22,
+        "y": 0.07999999821186066,
+        "z": -140
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2115999541-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - checkpoint retreat",
+      "position": {
+        "x": 22,
+        "y": 0.07999999821186066,
+        "z": -134
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-125692258-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - checkpoint encounter",
+      "position": {
+        "x": 18,
+        "y": 0.05000000074505806,
+        "z": -150
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-917309071-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 09 Motel Roadside",
+      "position": {
+        "x": 80,
+        "y": 0.05000000074505806,
+        "z": -201
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1800420042-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-1 entry",
+      "position": {
+        "x": 59,
+        "y": 0.07999999821186066,
+        "z": -177
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1911623005-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-1 interior",
+      "position": {
+        "x": 59,
+        "y": 0.07999999821186066,
+        "z": -171
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-363108512-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-1 retreat",
+      "position": {
+        "x": 59,
+        "y": 0.07999999821186066,
+        "z": -165
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-841871790-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-2 entry",
+      "position": {
+        "x": 73,
+        "y": 0.07999999821186066,
+        "z": -177
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1760451243-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-2 interior",
+      "position": {
+        "x": 73,
+        "y": 0.07999999821186066,
+        "z": -171
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1925369471-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-2 retreat",
+      "position": {
+        "x": 73,
+        "y": 0.07999999821186066,
+        "z": -165
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-396759306-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-3 entry",
+      "position": {
+        "x": 87,
+        "y": 0.07999999821186066,
+        "z": -177
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2057574327-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-3 interior",
+      "position": {
+        "x": 87,
+        "y": 0.07999999821186066,
+        "z": -171
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-601308208-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-3 retreat",
+      "position": {
+        "x": 87,
+        "y": 0.07999999821186066,
+        "z": -165
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2015601741-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-4 entry",
+      "position": {
+        "x": 101,
+        "y": 0.07999999821186066,
+        "z": -177
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-823889567-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-4 interior",
+      "position": {
+        "x": 101,
+        "y": 0.07999999821186066,
+        "z": -171
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1938118120-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel-room-4 retreat",
+      "position": {
+        "x": 101,
+        "y": 0.07999999821186066,
+        "z": -165
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-380219585-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - motel encounter",
+      "position": {
+        "x": 103,
+        "y": 0.05000000074505806,
+        "z": -188
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-144190780-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 10 School",
+      "position": {
+        "x": -45,
+        "y": 0.05000000074505806,
+        "z": 127
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1167128974-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - school entry",
+      "position": {
+        "x": -45,
+        "y": 0.07999999821186066,
+        "z": 131
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-482291394-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - school interior",
+      "position": {
+        "x": -45,
+        "y": 0.07999999821186066,
+        "z": 139
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-275897309-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - school retreat",
+      "position": {
+        "x": -45,
+        "y": 0.07999999821186066,
+        "z": 147
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-130634137-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - gym entry",
+      "position": {
+        "x": -40,
+        "y": 0.07999999821186066,
+        "z": 156
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1915054713-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - gym interior",
+      "position": {
+        "x": -40,
+        "y": 0.07999999821186066,
+        "z": 163
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1416303908-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - gym retreat",
+      "position": {
+        "x": -40,
+        "y": 0.07999999821186066,
+        "z": 170
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-142861720-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - school encounter",
+      "position": {
+        "x": -31,
+        "y": 0.05000000074505806,
+        "z": 139
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-989457416-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 11 Farmland Edge",
+      "position": {
+        "x": 180,
+        "y": 0.05000000074505806,
+        "z": 193
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-365327821-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - farm encounter",
+      "position": {
+        "x": 208,
+        "y": 0.05000000074505806,
+        "z": 199
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-81464809-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - 12 Forest Edge",
+      "position": {
+        "x": -185,
+        "y": 0.05000000074505806,
+        "z": 118
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1916280345-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - ranger-hut entry",
+      "position": {
+        "x": -197,
+        "y": 0.07999999821186066,
+        "z": 124
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1917565814-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - ranger-hut interior",
+      "position": {
+        "x": -197,
+        "y": 0.07999999821186066,
+        "z": 130
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1617837147-0",
+      "hierarchy": "FirstTownCore - 500m resident world/98 Route acceptance markers/Route - ranger-hut retreat",
+      "position": {
+        "x": -197,
+        "y": 0.07999999821186066,
+        "z": 136
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-85290835-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/West forest vehicle loop/Route - forest 0",
+      "position": {
+        "x": -180,
+        "y": 0.07999999821186066,
+        "z": -140
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-136611119-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/West forest vehicle loop/Route - forest 1",
+      "position": {
+        "x": -204,
+        "y": 0.07999999821186066,
+        "z": -116
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-290065583-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/West forest vehicle loop/Route - forest 2",
+      "position": {
+        "x": -212,
+        "y": 0.07999999821186066,
+        "z": -68
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1630317221-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/West forest vehicle loop/Route - forest 3",
+      "position": {
+        "x": -194,
+        "y": 0.07999999821186066,
+        "z": -18
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-4304815-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/West forest vehicle loop/Route - forest 4",
+      "position": {
+        "x": -211,
+        "y": 0.07999999821186066,
+        "z": 31
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-869618773-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/West forest vehicle loop/Route - forest 5",
+      "position": {
+        "x": -197,
+        "y": 0.07999999821186066,
+        "z": 80
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1132744971-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/Ranger woodland foot loop/Route - forest 0",
+      "position": {
+        "x": -197,
+        "y": 0.07999999821186066,
+        "z": 136
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-536189514-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/Ranger woodland foot loop/Route - forest 1",
+      "position": {
+        "x": -211,
+        "y": 0.07999999821186066,
+        "z": 153
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-842797369-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/Ranger woodland foot loop/Route - forest 2",
+      "position": {
+        "x": -213,
+        "y": 0.07999999821186066,
+        "z": 180
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1628987777-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/Ranger woodland foot loop/Route - forest 3",
+      "position": {
+        "x": -187,
+        "y": 0.07999999821186066,
+        "z": 211
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1703359834-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/Ranger woodland foot loop/Route - forest 4",
+      "position": {
+        "x": -158,
+        "y": 0.07999999821186066,
+        "z": 216
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-2045415885-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/Ranger woodland foot loop/Route - forest 5",
+      "position": {
+        "x": -151,
+        "y": 0.07999999821186066,
+        "z": 173
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-732891920-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/Ranger woodland foot loop/Route - forest 6",
+      "position": {
+        "x": -160,
+        "y": 0.07999999821186066,
+        "z": 117
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-814121896-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/Ranger woodland foot loop/Route - forest 7",
+      "position": {
+        "x": -190,
+        "y": 0.07999999821186066,
+        "z": 80
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1658198064-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/North woodland to farm/Route - forest 0",
+      "position": {
+        "x": -75,
+        "y": 0.07999999821186066,
+        "z": 170
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-794205332-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/North woodland to farm/Route - forest 1",
+      "position": {
+        "x": -72,
+        "y": 0.07999999821186066,
+        "z": 191
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1378456318-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/North woodland to farm/Route - forest 2",
+      "position": {
+        "x": -47,
+        "y": 0.07999999821186066,
+        "z": 214
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-296465144-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/North woodland to farm/Route - forest 3",
+      "position": {
+        "x": 0,
+        "y": 0.07999999821186066,
+        "z": 224
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-61463682-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/North woodland to farm/Route - forest 4",
+      "position": {
+        "x": 65,
+        "y": 0.07999999821186066,
+        "z": 219
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1199005369-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/North woodland to farm/Route - forest 5",
+      "position": {
+        "x": 120,
+        "y": 0.07999999821186066,
+        "z": 210
+      }
+    },
+    {
+      "category": "route_or_spawn",
+      "identity": "",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-475784016-0",
+      "hierarchy": "FirstTown Forest — owned authoring/Generated — regenerate only this subtree/North woodland to farm/Route - forest 6",
+      "position": {
+        "x": 120,
+        "y": 0.07999999821186066,
+        "z": 200
+      }
+    },
+    {
+      "category": "harvest",
+      "identity": "harvest:f01ca8cb88a74783b46ada5c7112e482",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-428653581-0",
+      "hierarchy": "Authored harvest pilot — excluded from forest generation/Harvest anchor 1",
+      "position": {
+        "x": -173.46353149414062,
+        "y": 1.1605720520019531,
+        "z": -57.991790771484375
+      }
+    },
+    {
+      "category": "harvest",
+      "identity": "harvest:c9f22cf3b0f34ac1bfb3a050bd08e64d",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1069644616-0",
+      "hierarchy": "Authored harvest pilot — excluded from forest generation/Harvest anchor 2",
+      "position": {
+        "x": -158.52252197265625,
+        "y": 0.4317105710506439,
+        "z": -69.85575103759766
+      }
+    },
+    {
+      "category": "harvest",
+      "identity": "harvest:b255d940478d46898fe2871a2ed19e68",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1833546655-0",
+      "hierarchy": "Authored harvest pilot — excluded from forest generation/Harvest anchor 3",
+      "position": {
+        "x": -149.1138916015625,
+        "y": 0.3483562171459198,
+        "z": -64.93777465820312
+      }
+    },
+    {
+      "category": "vehicle_spawn",
+      "identity": "existing resident pickup",
+      "objectId": "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-1680481955-0",
+      "hierarchy": "Session",
+      "position": {
+        "x": -160,
+        "y": 0.20000000298023224,
+        "z": -156
+      }
+    }
+  ],
+  "perimeterObjectIds": [
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-206818444",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-851735931",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1272406255",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-628429667",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1557941929",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-140387976",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1238692633",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1747070535",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-15370117",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1391621948",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1856634829",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-971651414",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-302516311",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-318095958",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-704634211",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1847110202",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-869688682",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1512846257",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1979079360",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2068105952",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1734467136",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-816052957",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-358837243",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-720816621",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-363354030",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-902956780",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-436512197",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1380824475",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-167065061",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-766527776",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-123333404",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1290986034",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-853725307",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1489912230",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1549987904",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1006150351",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1520835608",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1513869944",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-482306136",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-523223561",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1436201199",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-580684764",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-490981902",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1111562194",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1451503294",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-142013128",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-278522012",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-742851278",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2078583065",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1762537256",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2034804039",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1865877627",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-698842099",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1191897989",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-946196883",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1423069324",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-597277516",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-331187623",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-664369237",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1235735392",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1011976372",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1231006184",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1426549491",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-725337873",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1650647860",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1361690038",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1926337135",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1553117265",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1893229595",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1724424809",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2060096760",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-105206893",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-967177319",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-383868911",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-518804478",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1897515206",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1426027158",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-836184662",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1583755156",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1901757228",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1394006889",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-249311310",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1587421602",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1431233563",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-104560001",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1301524535",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1383805956",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1008596858",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-484108091",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1644151061",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-11388081",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-885167294",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-579598963",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1573363351",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-238505354",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-557251881",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1708350464",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-44708154",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2025513631",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1258415119",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1460011788",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-173938308",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-175583207",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1651498645",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-17531346",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-127988028",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-546901282",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1925327038",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-428074439",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1793703659",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-43647606",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-868944941",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1994440510",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1868623721",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-10889434",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1349694364",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1215970431",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-916141657",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-65699293",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-573003498",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2130715622",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1220521830",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-795988896",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-855503100",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-903896346",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-925499496",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-963943591",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-752187899",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-63972116",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1174997818",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-386946178",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1097713909",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-272278739",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1646689759",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1443895141",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1879318601",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1534407523",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-85340826",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2141926183",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2026533382",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-773719143",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-617333121",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-841394192",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-902592963",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1323865825",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1511627841",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1513859776",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1402280278",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1048923159",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1108891481",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-802479722",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1325686590",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1286998783",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-500043236",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1651525660",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1725738410",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1593955599",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2080405566",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-765800892",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1834653634",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-535267505",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2008340510",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-215583953",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1607836492",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1486226876",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-751496071",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1795623692",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1179136395",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1249369073",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1395820300",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-409383054",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-254832740",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1565033105",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2063995701",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-482435084",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1735830415",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1297970850",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2044971105",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1184344950",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1425001939",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-341056452",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2131236981",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1230726702",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1904619426",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-212661115",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-49713778",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-921817758",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1887550150",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1467692530",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1524485575",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1924567064",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1842954371",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1525344310",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-914606089",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-2111591837",
+    "GlobalObjectId_V1-2-904b09b4f3fa41468f0edf5048174688-3920729507037140103-1702518735"
+  ]
+}

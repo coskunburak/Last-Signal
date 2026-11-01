@@ -15,6 +15,42 @@ namespace LastSignal.Editor
     public static class S005CraftAuthoring
     {
         const string RecipePath = "Assets/LastSignal/Data/Crafting/PrototypeLogToPlank.asset";
+        // Only an isolated prototype copy is rebound; live/runtime alias validation stays strict.
+        public static RecipeDefinition BindPrototypeToCatalog(RecipeDefinition template, IReadOnlyList<ItemDefinition> items)
+        {
+            if (!template || !template.prototypeBalance || items == null)
+                throw new InvalidOperationException("S005_PROTOTYPE_REQUIRED");
+            var canonical = new Dictionary<string, ItemDefinition>(StringComparer.Ordinal);
+            foreach (var item in items)
+            {
+                if (!item || !item.Id.IsValid || canonical.ContainsKey(item.Id.Value))
+                    throw new InvalidOperationException("S005_INVALID_SOURCE_CATALOG");
+                canonical.Add(item.Id.Value, item);
+            }
+            ItemDefinition Resolve(ItemDefinition item)
+            {
+                if (!item) throw new InvalidOperationException("S005_MISSING_ITEM");
+                if (!canonical.TryGetValue(item.Id.Value, out var existing) || existing == item) return item;
+                if (existing.Category != item.Category || existing.MaxStack != item.MaxStack ||
+                    existing.MassGrams != item.MassGrams || existing.Use != item.Use ||
+                    existing.HydrationPoints != item.HydrationPoints || existing.NutritionPoints != item.NutritionPoints ||
+                    existing.TreatmentSeconds != item.TreatmentSeconds || existing.BleedingReduction != item.BleedingReduction ||
+                    existing.BackpackSlotBonus != item.BackpackSlotBonus || existing.EquippedRecoveryMultiplier != item.EquippedRecoveryMultiplier)
+                    throw new InvalidOperationException("S005_ITEM_GAMEPLAY_MISMATCH: " + item.Id);
+                return existing;
+            }
+            RecipeAmount[] Amounts(RecipeAmount[] values) => Array.ConvertAll(values, a =>
+                new RecipeAmount { item = Resolve(a.item), quantity = a.quantity, sourcePolicy = a.sourcePolicy });
+            var copy = UnityEngine.Object.Instantiate(template);
+            try
+            {
+                copy.inputIngredients = Amounts(template.inputIngredients);
+                copy.outputDefinitions = Amounts(template.outputDefinitions);
+                copy.requiredTools = Array.ConvertAll(template.requiredTools, Resolve);
+                return copy;
+            }
+            catch { UnityEngine.Object.DestroyImmediate(copy); throw; }
+        }
         [MenuItem("Last Signal/BLD/P02/S005/Create Isolated Craft Stage")]
         public static void CreateStage()
         {
@@ -33,8 +69,11 @@ namespace LastSignal.Editor
             var recipe = AssetDatabase.LoadAssetAtPath<RecipeDefinition>(RecipePath);
             if (!site || !site.Validate() || !save || !save.Catalog || !recipe)
                 throw new InvalidOperationException("S005_SOURCE: valid ShelterSite, SaveSession/catalog and prototype recipe required.");
+            var template = recipe;
+            recipe = BindPrototypeToCatalog(template, save.Catalog.EditorItems);
             var definitions = new List<RecipeDefinition>(site.multiRecipes ?? Array.Empty<RecipeDefinition>());
-            if (!definitions.Contains(recipe)) definitions.Add(recipe);
+            definitions.Remove(template);
+            definitions.Add(recipe);
             var legacy = new List<ShelterRecipe> { site.recipe }; legacy.AddRange(site.additionalRecipes ?? Array.Empty<ShelterRecipe>());
             var check = RecipeCatalog.Validate(definitions.ToArray(), legacy.ToArray());
             if (!check.Valid) throw new InvalidOperationException(check.Code + ": " + check.Detail);
@@ -58,8 +97,10 @@ namespace LastSignal.Editor
             if (File.Exists(target)) throw new InvalidOperationException("S005_TARGET_EXISTS");
             // SaveAsCopy leaves source assets untouched. Everything after this point targets the new copy.
             if (!EditorSceneManager.SaveScene(source, target, true)) throw new IOException("Could not create isolated scene copy.");
-            EditorSceneManager.OpenScene(target, OpenSceneMode.Single);
+            // Opening a scene can destroy unpersisted ScriptableObject clones.
+            // Persist both isolated assets while the source scene is still loaded.
             AssetDatabase.CreateFolder("Assets/LastSignal/Data/Crafting", "Stage-" + stamp);
+            AssetDatabase.CreateAsset(recipe, folder + "/LogToPlank.asset");
             var catalog = UnityEngine.Object.Instantiate(sourceCatalog);
             catalog.name = "S005Catalog";
             var serialized = new SerializedObject(catalog);
@@ -67,6 +108,10 @@ namespace LastSignal.Editor
             for (int i = 0; i < items.Count; i++) entries.GetArrayElementAtIndex(i).objectReferenceValue = items[i];
             serialized.ApplyModifiedPropertiesWithoutUndo();
             AssetDatabase.CreateAsset(catalog, folder + "/S005Catalog.asset");
+            AssetDatabase.SaveAssets();
+            if (!EditorUtility.IsPersistent(recipe) || !EditorUtility.IsPersistent(catalog))
+                throw new InvalidOperationException("S005_STAGE_ASSETS_NOT_PERSISTED");
+            EditorSceneManager.OpenScene(target, OpenSceneMode.Single);
             site = UnityEngine.Object.FindAnyObjectByType<ShelterSite>(); save = UnityEngine.Object.FindAnyObjectByType<SaveSession>();
             site.multiRecipes = definitions.ToArray();
             var saveObject = new SerializedObject(save);

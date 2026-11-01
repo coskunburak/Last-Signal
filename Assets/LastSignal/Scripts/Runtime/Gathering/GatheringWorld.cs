@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using LastSignal.Inventory;
 using LastSignal.Persistence;
 using LastSignal.WorldCells;

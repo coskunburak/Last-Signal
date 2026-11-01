@@ -12,6 +12,44 @@ namespace LastSignal.Tests
         [SetUp] public void Setup() => f = new P02CraftFixture();
         [TearDown] public void Cleanup() => f.Dispose();
         RecipeValidation Validate(params RecipeDefinition[] recipes) => RecipeCatalog.Validate(recipes, new[] { f.Legacy });
+        [TestCase(false)] [TestCase(true)]
+        public void IsolatedPrototypeBindsCanonicalItemsWithoutChangingSource(bool incompatible)
+        {
+            var template = AssetDatabase.LoadAssetAtPath<RecipeDefinition>("Assets/LastSignal/Data/Crafting/PrototypeLogToPlank.asset");
+            var original = template.inputIngredients[0].item;
+            var canonical = UnityEngine.Object.Instantiate(original);
+            RecipeDefinition copy = null;
+            try
+            {
+                if (incompatible)
+                {
+                    var data = new SerializedObject(canonical);
+                    data.FindProperty("massGrams").intValue = original.MassGrams + 1;
+                    data.ApplyModifiedPropertiesWithoutUndo();
+                    Assert.Throws<InvalidOperationException>(() => LastSignal.Editor.S005CraftAuthoring.BindPrototypeToCatalog(template, new[] { canonical }));
+                }
+                else
+                {
+                    copy = LastSignal.Editor.S005CraftAuthoring.BindPrototypeToCatalog(template, new[] { canonical });
+                    Assert.AreNotSame(template, copy);
+                    Assert.AreSame(canonical, copy.inputIngredients[0].item);
+                    Assert.AreSame(template.outputDefinitions[0].item, copy.outputDefinitions[0].item);
+                    Assert.AreEqual(template.inputIngredients[0].quantity, copy.inputIngredients[0].quantity);
+                    Assert.AreEqual(template.recipeId, copy.recipeId);
+                    Assert.AreEqual(template.definitionRevision, copy.definitionRevision);
+                    // Null means no legacy catalog; an explicitly empty legacy catalog is invalid.
+                    var validation = RecipeCatalog.Validate(new[] { copy });
+                    Assert.IsTrue(validation.Valid, validation.Code + ": " + validation.Detail);
+                }
+                Assert.AreSame(original, template.inputIngredients[0].item);
+                Assert.AreEqual(original.MassGrams + (incompatible ? 1 : 0), canonical.MassGrams);
+            }
+            finally
+            {
+                if (copy) UnityEngine.Object.DestroyImmediate(copy);
+                UnityEngine.Object.DestroyImmediate(canonical);
+            }
+        }
         [Test] public void ValidMultiInputCatalogAndExistingLegacyCoexist() => Assert.IsTrue(Validate(f.Recipe).Valid);
         [TestCase("null", RecipeError.UnknownItem)] [TestCase("zero", RecipeError.InvalidQuantity)]
         [TestCase("negative", RecipeError.InvalidQuantity)] [TestCase("overflow", RecipeError.InvalidQuantity)]
